@@ -1,0 +1,30 @@
+{
+  "name": "restle",
+  "version": "0.0.1",
+  "description": "REST client",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/evert/restle.git"
+  },
+  "keywords": [
+    "rest",
+    "hypermedia",
+    "client",
+    "http",
+    "hateoas"
+  ],
+  "author": "Evert Pot",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/evert/restle/issues"
+  },
+  "homepage": "https://github.com/evert/restle#readme",
+  "dependencies": {
+    "request": "^2.79.0",
+    "request-promise-any": "^1.0.3"
+  }
+}
