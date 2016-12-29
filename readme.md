@@ -8,8 +8,8 @@ complete. Use at your own risk.**
 Introduction
 ------------
 
-This NPM package is an attempt at creating a 'generic' hypermedia client, that
-supports an opiniated set of modern features from REST services.
+This NPM package is an attempt at creating a 'generic' hypermedia client, it
+supports an opiniated set of modern features REST services might have.
 
 This means that there's a strong focus on links and link-relationships.
 Initially we'll build in strong support for [Web Linking][1], a.k.a. the HTTP
@@ -64,7 +64,7 @@ home.follow('author')
     // Follow the 'me' resource.
     return authorResource.follow('me');
 
-  }.then(function(meResource) { 
+  }.then(function(meResource) {
 
     // Get the full body
     return meResource.get();
@@ -117,7 +117,7 @@ var client = new Client(bookMark, options);
 
 #### `Client.getResource()`
 
-Returns a 'Resource' object based on the url. If 
+Returns a 'Resource' object based on the url. If
 
 ```js
 var resource = client.getResource(url);
