@@ -1,14 +1,14 @@
 {
-  "name": "restle",
+  "name": "restl",
   "version": "0.0.1",
-  "description": "REST client",
+  "description": "Generic hypermedia client.",
   "main": "lib/index.js",
   "scripts": {
     "test": "mocha"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/evert/restle.git"
+    "url": "git+https://github.com/evert/restl.git"
   },
   "keywords": [
     "rest",
@@ -20,9 +20,9 @@
   "author": "Evert Pot",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/evert/restle/issues"
+    "url": "https://github.com/evert/restl/issues"
   },
-  "homepage": "https://github.com/evert/restle#readme",
+  "homepage": "https://github.com/evert/restl#readme",
   "dependencies": {
     "request": "^2.79.0",
     "request-promise-any": "^1.0.3"

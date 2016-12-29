@@ -19,7 +19,7 @@ Initially we'll build in strong support for [Web Linking][1], a.k.a. the HTTP
 Installation
 ------------
 
-   npm install --save restle
+   npm install --save restl
 
 
 Goals
@@ -55,10 +55,10 @@ Usage
 ### Fetching a resource and following a link:
 
 ```js
-var restle = require('restle')('http://my-hal-api.example.org/');
+var restl = require('restl')('http://my-hal-api.example.org/');
 
 // Fetch the home resource
-var home = restle.getResource()
+var home = restl.getResource()
 // Then get the 'author' relationship from _links
 home.follow('author')
   .then(function(authorResource)) {
@@ -86,7 +86,7 @@ home.follow('author')
 
 ### Providing custom options
 
-restle uses [request][3] under the hood to do HTTP requests. Custom options
+restl uses [request][3] under the hood to do HTTP requests. Custom options
 can be specified as such:
 
 ```js
@@ -98,7 +98,7 @@ var options {
   }
 }
 
-var restle = require('restle')(bookMark, options);
+var restl = require('restl')(bookMark, options);
 ```
 
 For a full list of possible options, check out the [request][3] documentation.
