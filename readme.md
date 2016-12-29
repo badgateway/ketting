@@ -30,6 +30,8 @@ Goals
 * `PUT` request.
 * `DELETE` request.
 * Global resource cache.
+* Expand CURIES automatically.
+* Resolve every URI to an absolute URI.
 * Figuring out `_embedded`.
 * Support HTTP `Link` header.
 * Support non-JSON resources, including things like images.
