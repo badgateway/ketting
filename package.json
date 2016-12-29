@@ -15,7 +15,8 @@
     "hypermedia",
     "client",
     "http",
-    "hateoas"
+    "hateoas",
+    "hal"
   ],
   "author": "Evert Pot",
   "license": "MIT",
