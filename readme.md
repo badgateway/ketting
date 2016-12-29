@@ -1,5 +1,5 @@
-Restle - A hypermedia client for nodejs
-=======================================
+Restl - A hypermedia client for nodejs
+======================================
 
 **Important note: this package is currently pretty experimental and not
 complete. Use at your own risk.**
