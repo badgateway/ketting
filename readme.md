@@ -27,8 +27,6 @@ Goals
 
 ### For 1.0:
 
-* `PUT` request.
-* `DELETE` request.
 * Global resource cache.
 * Expand CURIES automatically.
 * Resolve every URI to an absolute URI.
@@ -48,6 +46,8 @@ Goals
 
 * Following links.
 * Basic HAL parsing.
+* `PUT` request.
+* `DELETE` request.
 
 Usage
 -----
