@@ -84,6 +84,37 @@ home.follow('author')
   });
 ```
 
+### Following a chain of links
+
+It's possible to follow a chain of links with follow:
+
+```js
+client.follow('rel1')
+  .then(function(resource1) {
+    return resource1.follow('rel2');
+  })
+  .then(function(resource2) {
+    return resource2.follow('rel3');
+  })
+  .then(function(resource3) {
+    console.log(resource3.getLinks());
+  });
+```
+
+As you can see, `follow()` returns a Promise. However, the returned promise
+has an additional `follow()` function itself, which makes it possible to
+shorten this to:
+
+```js
+client
+  .follow('rel1')
+  .follow('rel2')
+  .follow('rel3')
+  .then(function(resource3) {
+    console.log(resource3.getLinks());
+  });
+```
+
 ### Providing custom options
 
 restl uses [request][3] under the hood to do HTTP requests. Custom options
