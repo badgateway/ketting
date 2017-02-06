@@ -28,5 +28,11 @@
     "bluebird": "^3.4.7",
     "request": "^2.79.0",
     "request-promise-any": "^1.0.3"
+  },
+  "devDependencies": {
+    "eslint": "^3.15.0"
+  },
+  "scripts" : {
+    "test" : "eslint lib/"
   }
 }
