@@ -30,24 +30,32 @@ Goals
 * Global resource cache.
 * Expand CURIES automatically.
 * Resolve every URI to an absolute URI.
-* Figuring out `_embedded`.
+* Figuring caching resources from `_embedded`.
 * Support HTTP `Link` header.
 * Support non-JSON resources, including things like images.
 * Parse [HTML5 links][1].
 * Parse [Atom][5].
+* Built-in OAuth2.
+
 
 ### Post 1.0
 
 * Support for [HAL Forms][4].
 * Parse and respect HTTP Cache headers.
 * Support [`Prefer: return=representation`][6].
+* Browser support (nodejs only at the moment, but only because of the Request
+  library.)
+* Unittests
 
 ### Already done:
 
 * Following links.
 * Basic HAL parsing.
+* Normalizing `_links` and `_embedded`.
 * `PUT` request.
 * `DELETE` request.
+* `POST` request
+
 
 Usage
 -----
@@ -176,7 +184,49 @@ resource.get().then(function(body) {
 
 If the resource was fetched earlier, it will return a cached copy.
 
-### `Resource.refresh()`
+
+#### `Resource.put()`
+
+Updates the resource with a new respresentation
+
+```js
+resource.put({ 'foo' : 'bar' });
+```
+
+This function returns a Promise that resolves to `null`.
+
+#### `Resource.delete()`
+
+Deletes the resource.
+
+```js
+resource.delete();
+````
+
+This function returns a Promise that resolves to `null`.
+
+#### `Resource.post()`
+
+This function is meant to be an easy way to create new resources. It's not
+necessarily for any type of `POST` request, but it is really meant as a
+convenience method APIs that follow the typical pattern of using `POST` for
+creation.
+
+If the HTTP response from the server was successful and contained a `Location`
+header, this method will resolve into a new Resource. For example, this might
+create a new resource and then get a list of links after creation:
+
+```js
+resource.post({ property: 'value'})
+  .then(function(newResource) {
+    return newResource.links();
+  })
+  .then(function(links) {
+    console.log(links);
+  });
+```
+
+#### `Resource.refresh()`
 
 Refreshes the internal cache for a resource and does a `GET` request again.
 This function returns a `Promise` that resolves when the operation is complete,
@@ -190,7 +240,7 @@ resource.refresh().then(function() {
 });
 ```
 
-### `Resource.links()`
+#### `Resource.links()`
 
 Returns a list of `Link` objects for the resource.
 
@@ -200,7 +250,16 @@ resource.links().then(function(links) {
 });
 ```
 
-### `Resource.follow()`
+You can also request only the links for a relation-type you are interested in:
+
+```js
+resource.links('item').then(function(links) {
+
+});
+```
+
+
+#### `Resource.follow()`
 
 Follows a link, by it's relation-type and returns a new resource for the
 target.
@@ -212,6 +271,63 @@ resource.follow('author').then(function(author) {
   console.log(body);
 });
 ```
+
+The follow function returns a special kind of Promise that has a `follow()`
+function itself.
+
+This makes it possible to chain follows:
+
+```js
+resource
+  .follow('author')
+  .follow('homepage')
+  .follow('icon');
+```
+
+#### `Resource.followAll()`
+
+This method works like `follow()` but resolves into a list of resources.
+Multiple links with the same relation type can appear in resources; for
+example in collections.
+
+```js
+resource.followAll('item')
+  .then(function(items) {
+    console.log(items);
+  });
+```
+
+#### `Resource.representation()`
+
+This function is similar to `GET`, but instead of just returning a response
+body, it returns a `Representation` object.
+
+### `Representation`
+
+The Representation is typically the 'body' of a resource in REST terminology.
+It's the R in REST.
+
+The Representation is what gets sent by a HTTP server in response to a `GET`
+request, and it's what gets sent by a HTTP client in a `POST` request.
+
+The Representation provides access to the body, a list of links and HTTP
+headers that represent real meta-data of the resource. Currently this is only
+`Content-Type` but this might be extended to include encoding, language and
+cache-related information.
+
+
+#### `Representation.body`
+
+The `body` property has the body contents of a `PUT` request or a `GET` response.
+
+#### `Representation.links`
+
+The `links` property has the list of links for a resource.
+
+#### `Representation.contentType`
+
+The `contentType` property has the value of the `Content-Type` header for both
+requests and responses.
 
 
 [1]: https://tools.ietf.org/html/rfc5988 "Web Linking"
