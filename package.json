@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/evert/restl#readme",
   "dependencies": {
+    "bluebird": "^3.4.7",
     "request": "^2.79.0",
     "request-promise-any": "^1.0.3"
   }
