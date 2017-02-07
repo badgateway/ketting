@@ -9,7 +9,7 @@ Introduction
 ------------
 
 This NPM package is an attempt at creating a 'generic' hypermedia client, it
-supports an opiniated set of modern features REST services might have.
+supports an opinionated set of modern features REST services might have.
 
 This means that there's a strong focus on links and link-relationships.
 Initially we'll build in strong support for [Web Linking][1], a.k.a. the HTTP
@@ -187,7 +187,7 @@ If the resource was fetched earlier, it will return a cached copy.
 
 #### `Resource.put()`
 
-Updates the resource with a new respresentation
+Updates the resource with a new representation
 
 ```js
 resource.put({ 'foo' : 'bar' });
