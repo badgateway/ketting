@@ -14,6 +14,7 @@ ChangeLog
 * Fixed a bug in `post()`.
 * Allowing custom headers to be set, and allowing default headers to be
   overridden.
+* Automatically resolve all urls from `links()`.
 
 
 0.0.4 (2017-02-06)
