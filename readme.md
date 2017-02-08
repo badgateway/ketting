@@ -27,10 +27,7 @@ Goals
 
 ### For 1.0:
 
-* Global resource cache.
 * Expand CURIES automatically.
-* Resolve every URI to an absolute URI.
-* Figuring caching resources from `_embedded`.
 * Support HTTP `Link` header.
 * Support non-JSON resources, including things like images.
 * Parse [HTML5 links][1].
@@ -55,7 +52,9 @@ Goals
 * `PUT` request.
 * `DELETE` request.
 * `POST` request
-
+* Global resource cache.
+* Resolve every URI to an absolute URI.
+* Figuring caching resources from `_embedded`.
 
 Usage
 -----

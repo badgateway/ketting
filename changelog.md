@@ -1,9 +1,16 @@
 ChangeLog
 =========
 
-0.0.5 (????-??-??)
+0.1.0 (????-??-??)
 ------------------
 
+* #7: Strip `_embedded` and `_links` from `Representation.body`. They are
+  already available through `Representation.embedded` and
+  `Representation.links`.
+* Added a cache for resources in the Client object, which ensures that if you
+  request the same resource twice, you'll end up with the same object.
+* #6: Automatically parse `_embedded` and treat items in this object as real
+  resources.
 * Fixed a bug in `post()`.
 
 
