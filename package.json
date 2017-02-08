@@ -1,6 +1,6 @@
 {
   "name": "restl",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "Opiniated HAL client.",
   "main": "lib/index.js",
   "scripts": {
