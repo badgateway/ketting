@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-0.1.0 (????-??-??)
+0.1.0 (2017-02-13)
 ------------------
 
 * #7: Strip `_embedded` and `_links` from `Representation.body`. They are
