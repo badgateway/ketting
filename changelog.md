@@ -1,6 +1,13 @@
 ChangeLog
 =========
 
+0.1.1 (2017-04-03)
+------------------
+
+* #10: Returning the response body from the `refresh()` function, similar to
+  `GET` but cache-defeating.
+
+
 0.1.0 (2017-02-13)
 ------------------
 
