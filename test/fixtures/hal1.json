@@ -1,0 +1,7 @@
+{
+    "_links" : {
+        "self" : { "href" : "/hal1.json" },
+        "next" : { "href" : "/hal2.json" }
+    },
+    "foo" : "bar"
+}

@@ -1,0 +1,6 @@
+{
+    "_links" : {
+        "self" : { "href" : "/hal2.json" }
+    },
+    "title" : "HAL 2!"
+}
