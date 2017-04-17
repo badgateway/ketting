@@ -11,7 +11,7 @@ app.use(route('/:id')
   .get(ctx => {
 
     ctx.response.type = 'application/json';
-    ctx.response.body = fs.createReadStream('fixtures/' + ctx.params.id);
+    ctx.response.body = fs.createReadStream(__dirname + '/fixtures/' + ctx.params.id);
 
   })
 );

@@ -4,7 +4,7 @@
   "description": "Opiniated HAL client.",
   "main": "lib/index.js",
   "scripts": {
-    "test": "eslint lib/"
+    "test": "eslint lib/ && mocha"
   },
   "repository": {
     "type": "git",
