@@ -4,7 +4,7 @@
   "description": "Opiniated HAL client.",
   "main": "lib/index.js",
   "scripts": {
-    "test": "eslint lib/ && mocha"
+    "test": "eslint lib/ && nyc mocha"
   },
   "repository": {
     "type": "git",
@@ -27,12 +27,14 @@
   "dependencies": {
     "bluebird": "^3.4.7",
     "node-fetch": "^1.6.3",
+    "nyc": "^10.2.0",
     "request": "^2.79.0",
     "request-promise-any": "^1.0.3"
   },
   "devDependencies": {
     "chai": "^3.5.0",
     "eslint": "^3.15.0",
+    "istanbul": "^0.4.5",
     "koa": "^2.2.0",
     "koa-logger": "^2.0.1",
     "koa-path-match": "^2.0.0",
