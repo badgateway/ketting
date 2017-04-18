@@ -34,7 +34,8 @@ describe('Following a link', async () => {
 
     const items = await client.follow('collection').followAll('item');
     expect(items).to.have.length(2);
-    expect(items).to.all.be.an.instanceof(Resource);
+    expect(items[0]).to.be.an.instanceof(Resource);
+    expect(items[1]).to.be.an.instanceof(Resource);
 
   });
 
