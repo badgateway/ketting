@@ -1,7 +1,9 @@
 {
     "_links" : {
         "self" : { "href" : "/hal1.json" },
-        "next" : { "href" : "/hal2.json" }
+        "next" : { "href" : "/hal2.json" },
+        "collection" : { "href" : "/hal-collection.json" }
     },
+    "title"  : "Hal 1",
     "foo" : "bar"
 }

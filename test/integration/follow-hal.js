@@ -22,5 +22,20 @@ describe('Following a link', async () => {
     
 
   });
+  it('should be chainable', async() => {
+
+    const hal1 = await client.follow('next').follow('prev');
+    const body = await hal1.get();
+    expect(body).to.eql({'title': 'Hal 1', 'foo': 'bar'});
+
+  });
+
+  it('should work with embedded resources', async() => {
+
+    const items = await client.follow('collection').followAll('item');
+    expect(items).to.have.length(2);
+    expect(items).to.all.be.an.instanceof(Resource);
+
+  });
 
 });

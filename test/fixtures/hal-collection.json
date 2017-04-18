@@ -1,0 +1,25 @@
+{
+    "_links" : {
+        "self" : { "href" : "/hal-collection.json" }
+    },
+    "title"  : "Hal collection",
+    "_embedded" : {
+        "item" : [ 
+          {
+            "_links" : { 
+              "self": { "href" : "/hal1.json" },
+              "next" : { "href" : "/hal2.json" }
+            },
+            "title"  : "Hal 1",
+            "foo" : "bar"
+          },
+          {
+            "_links" : { 
+              "self": { "href" : "/hal2.json" },
+              "prev" : { "href" : "/hal1.json" }
+            },
+            "title" : "HAL 2!"
+          }
+        ] 
+    }
+}
