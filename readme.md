@@ -19,7 +19,7 @@ Initially we'll build in strong support for [Web Linking][1], a.k.a. the HTTP
 Installation
 ------------
 
-   npm install --save restl
+    npm install --save restl
 
 
 Features overview
@@ -41,32 +41,6 @@ served from a cache.
 This feature allows HAL servers to upgrade links to embedded resources, and
 allows any client to transparently take advantage of this change and issue
 less HTTP requests.
-
-
-Goals
------
-
-### For 1.0:
-
-* Expand CURIES automatically.
-* Support HTTP `Link` header.
-* Support non-JSON resources, including things like images.
-* Parse [HTML5 links][1].
-* Built-in OAuth2.
-* Browser support (nodejs only at the moment, but only because of the Request
-  library.)
-
-
-### Post 1.0
-
-* Support for [HAL Forms][4].
-* Parse and respect HTTP Cache headers.
-* Support [`Prefer: return=representation`][6].
-
-### Maybe later
-
-* Parse [Atom][5].
-* Support [Siren][7]
 
 
 Usage
@@ -343,7 +317,4 @@ requests and responses.
 [1]: https://tools.ietf.org/html/rfc5988 "Web Linking"
 [2]: http://stateless.co/hal_specification.html "HAL - Hypertext Application Language"
 [3]: https://www.npmjs.com/package/request
-[4]: https://rwcbook.github.io/hal-forms/ "HAL Forms"
-[5]: https://bitworking.org/projects/atom/rfc5023.html "AtomPub"
 [6]: https://tools.ietf.org/html/rfc7240 "Prefer Header for HTTP"
-[7]: https://github.com/kevinswiber/siren "Siren Hypermedia format"
