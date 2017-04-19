@@ -1,6 +1,13 @@
 ChangeLog
 =========
 
+0.1.2 (2017-??-??)
+------------------
+
+* #11: Added test framework.
+* #11: Added `follow()` function on Client object for an easy shortcut.
+
+
 0.1.1 (2017-04-03)
 ------------------
 
