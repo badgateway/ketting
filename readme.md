@@ -22,6 +22,27 @@ Installation
    npm install --save restl
 
 
+Features overview
+-----------------
+
+Restl is a library that sits on top of a HTTP client (currently Request, but
+soon the Fetch API).
+
+It provides some useful abstractions that make it easier to work with true
+hypermedia / HATEAOS servers. It currently parses [HAL][2] and has a deep
+understanding of links and embedded resources.
+
+Using this library it becomes very easy to follow links from a single bookmark,
+and discover resources and features on the server. Embedded resources are
+completely hidden. Embedded resources just show up as links, but when you're
+asking for the representation, the response to the `GET` request will be
+served from a cache.
+
+This feature allows HAL servers to upgrade links to embedded resources, and
+allows any client to transparently take advantage of this change and issue
+less HTTP requests.
+
+
 Goals
 -----
 
@@ -31,8 +52,9 @@ Goals
 * Support HTTP `Link` header.
 * Support non-JSON resources, including things like images.
 * Parse [HTML5 links][1].
-* Parse [Atom][5].
 * Built-in OAuth2.
+* Browser support (nodejs only at the moment, but only because of the Request
+  library.)
 
 
 ### Post 1.0
@@ -40,21 +62,12 @@ Goals
 * Support for [HAL Forms][4].
 * Parse and respect HTTP Cache headers.
 * Support [`Prefer: return=representation`][6].
-* Browser support (nodejs only at the moment, but only because of the Request
-  library.)
-* Unittests
 
-### Already done:
+### Maybe later
 
-* Following links.
-* Basic HAL parsing.
-* Normalizing `_links` and `_embedded`.
-* `PUT` request.
-* `DELETE` request.
-* `POST` request
-* Global resource cache.
-* Resolve every URI to an absolute URI.
-* Figuring caching resources from `_embedded`.
+* Parse [Atom][5].
+* Support [Siren][7]
+
 
 Usage
 -----
@@ -145,8 +158,6 @@ API
 ---
 
 ### Client
-
-#### Constructor
 
 ```js
 var client = new Client(bookMark, options);
@@ -335,3 +346,4 @@ requests and responses.
 [4]: https://rwcbook.github.io/hal-forms/ "HAL Forms"
 [5]: https://bitworking.org/projects/atom/rfc5023.html "AtomPub"
 [6]: https://tools.ietf.org/html/rfc7240 "Prefer Header for HTTP"
+[7]: https://github.com/kevinswiber/siren "Siren Hypermedia format"
