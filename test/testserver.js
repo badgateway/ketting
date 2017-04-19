@@ -65,6 +65,34 @@ app.use(
     ctx.response.body = '';
 
   })
+  .post(ctx => {
+
+    return new Promise( (res, rej) => {
+      let someId = 0;
+      do {
+        someId++;
+      } while (resources[someId + '.json']);
+
+      let body = '';
+      ctx.req.setEncoding('utf-8');
+      ctx.req.on('data', chunk => {
+
+        body += chunk;
+
+      });
+      ctx.req.on('end', () => {
+
+        resources[someId + '.json'] = body;
+        ctx.response.status = 201;
+        ctx.response.body = '';
+        ctx.response.set('Location', '/' + someId + '.json');
+        res();
+
+      });
+
+    });
+
+  })
 );
 
 app.listen(3000);
