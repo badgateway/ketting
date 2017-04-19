@@ -4,17 +4,35 @@ const logger = require('koa-logger')
 const fs = require('fs');
 const app = new Koa();
 
-const resources = {};
+let resources = {};
 
 // Log to console
 app.use(logger());
 
+// Reset the server to the beginning state
+app.use(
+  route('/reset')
+  .post(ctx => {
+    resources = {};
+    ctx.response.status = 204;
+    ctx.response.body = '';
+  })
+);
+
+
+// Rest stuff!
 app.use(
   route('/:id')
   .get(ctx => {
 
     if (typeof resources[ctx.params.id] === "undefined") {
       resources[ctx.params.id] = fs.readFileSync(__dirname + '/fixtures/' + ctx.params.id);
+    }
+
+    if (resources[ctx.params.id] === null) {
+      ctx.response.status = 404;
+      ctx.response.body = '';
+      return;
     }
     ctx.response.type = 'application/json';
     ctx.response.body = resources[ctx.params.id];
@@ -33,12 +51,18 @@ app.use(
       ctx.req.on('end', () => {
 
         resources[ctx.params.id] = body;
-        ctx.response.statusCode = 200;
+        ctx.response.status = 204;
         ctx.response.body = '';
         res();
 
       });
     });
+  })
+  .delete(ctx => {
+
+    resources[ctx.params.id] = null;
+    ctx.response.status = 204;
+    ctx.response.body = '';
 
   })
 );
