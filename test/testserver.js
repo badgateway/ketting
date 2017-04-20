@@ -9,6 +9,16 @@ let resources = {};
 // Log to console
 app.use(logger());
 
+app.use(
+  route('/headers')
+  .get(ctx => {
+
+    ctx.response.status = 200;
+    ctx.response.body = ctx.request.headers;
+
+  })
+);
+
 // Reset the server to the beginning state
 app.use(
   route('/reset')
