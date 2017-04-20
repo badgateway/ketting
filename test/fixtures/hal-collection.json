@@ -7,8 +7,10 @@
         "item" : [ 
           {
             "_links" : { 
-              "self": { "href" : "/hal1.json" },
-              "next" : { "href" : "/hal2.json" }
+              "self" : { "href" : "/hal1.json" },
+              "next" : { "href" : "/hal2.json" },
+              "collection" : { "href" : "/hal-collection.json" },
+              "headerTest": { "href" : "/headers" }
             },
             "title"  : "Hal 1",
             "foo" : "bar"
