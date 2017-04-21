@@ -29,6 +29,33 @@ app.use(
   })
 );
 
+// HTTP errors as a service
+app.use(
+  route('/error/:code')
+  .get(ctx => {
+     ctx.response.status = parseInt(ctx.params.code);
+     ctx.response.body = '';
+  })
+);
+
+// Redirect testing
+app.use(
+  route('/redirect')
+  .get(ctx => {
+    ctx.response.redirect('/hal2.json');
+  })
+);
+
+
+// Return request body as we received it
+app.use(
+  route('/echo')
+  .post(ctx => {
+    ctx.response.statusCode = 200;
+    ctx.response.type = ctx.request.headers['content-type'];
+    ctx.response.body = ctx.req;
+  })
+);
 
 // Rest stuff!
 app.use(
