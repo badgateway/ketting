@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+0.1.3 (2017-??-??)
+------------------
+
+* #25: the resourceCache was accidentally shared between Client instances.
+
+
 0.1.2 (2017-04-19)
 ------------------
 

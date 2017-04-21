@@ -3,7 +3,10 @@
         "self" : { "href" : "/hal1.json" },
         "next" : { "href" : "/hal2.json" },
         "collection" : { "href" : "/hal-collection.json" },
-        "headerTest": { "href" : "/headers" }
+        "headerTest": { "href" : "/headers" },
+        "error400" : { "href" : "/error/400" },
+        "redirect" : { "href" : "/redirect" },
+        "echo": { "href" : "/echo" }
     },
     "title"  : "Hal 1",
     "foo" : "bar"
