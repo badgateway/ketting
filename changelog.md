@@ -1,9 +1,11 @@
 ChangeLog
 =========
 
-0.1.3 (2017-??-??)
+0.2.0 (2017-04-21)
 ------------------
 
+* #17: Now using the Fetch API instead of the requests library. The requests
+  library is kept around for BC purposes, but this will eventually be removed.
 * #25: the resourceCache was accidentally shared between Client instances.
 
 
