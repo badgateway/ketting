@@ -33,4 +33,10 @@ describe('Issuing a PUT request', async () => {
     
   });
 
+  after( async() => {
+
+    await client.getResource('/reset').post({});
+
+  });
+
 });
