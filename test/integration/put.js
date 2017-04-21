@@ -9,7 +9,7 @@ describe('Issuing a PUT request', async () => {
 
   before( async() => {
 
-    resource = client.getResource();
+    resource = await client.getResource().follow('next');;
     // Priming the cache
     await resource.get();
 
@@ -28,9 +28,21 @@ describe('Issuing a PUT request', async () => {
   });
   it('should have cleared the global cache', async() => {
  
-    const newBody = await client.getResource().get();
+    const newBody = await (await client.follow('next')).get();
     expect(newBody).to.eql({newData: 'hi!'});
     
+  });
+  it('should throw an exception if there was an http error', async() => {
+
+    let ok = false;
+    try {
+      const errResource = await client.follow('error400');
+      await errResource.put({foo: 'bar'});
+    } catch (e) {
+      ok = true;
+    }
+    expect(ok).to.eql(true);
+
   });
 
   after( async() => {

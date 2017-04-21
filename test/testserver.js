@@ -31,10 +31,9 @@ app.use(
 
 // HTTP errors as a service
 app.use(
-  route('/error/:code')
-  .get(ctx => {
-     ctx.response.status = parseInt(ctx.params.code);
-     ctx.response.body = '';
+  route('/error/:code', ctx => {
+    ctx.response.status = parseInt(ctx.params.code);
+    ctx.response.body = '';
   })
 );
 
