@@ -12,7 +12,8 @@
               "collection" : { "href" : "/hal-collection.json" },
               "headerTest": { "href" : "/headers" },
               "error400" : { "href" : "/error/400" },
-              "redirect" : { "href" : "/redirect" }
+              "redirect" : { "href" : "/redirect" },
+              "auth-basic" : { "href" : "/auth/basic" }
             },
             "title"  : "Hal 1",
             "foo" : "bar"

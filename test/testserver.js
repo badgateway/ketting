@@ -56,6 +56,21 @@ app.use(
   })
 );
 
+app.use(
+  route('/auth/basic')
+  .get(ctx => {
+    const encoded = 'Basic dXNlcjpwYXNz'; // base64(user:pass)
+    if (!ctx.request.headers.authorization || ctx.request.headers.authorization!==encoded) {
+      ctx.response.status = 401;
+      ctx.response.body = '';
+      ctx.response.set('Authorization', 'Basic');
+    } else {
+      ctx.response.body = { ok: true };
+      ctx.response.status = 200;
+    }
+  })
+);
+
 // Rest stuff!
 app.use(
   route('/:id')
