@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-0.3.0 (????-??-??)
+0.3.0 (2017-04-24)
 ------------------
 
 * #28: Support for Basic Authentication
