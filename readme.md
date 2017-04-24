@@ -111,22 +111,30 @@ client
 
 ### Providing custom options
 
-restl uses [request][3] under the hood to do HTTP requests. Custom options
-can be specified as such:
+Options can be passed via the constructor o the client.
+
+Example:
 
 ```js
 var bookMark = 'https://my-hal-api.example.org';
 var options {
   auth: {
-    user: 'foo',
-    pass: 'bar'
-  }
+    type: 'basic',
+    userName: 'foo',
+    password: 'bar'
+  },
+  accept: 'application/json'
 }
 
 var restl = require('restl')(bookMark, options);
 ```
 
-For a full list of possible options, check out the [request][3] documentation.
+Currently the following options are supported:
+
+* `auth`, an object with autentication information.
+* `accept` a list of Content-Types which are accepted. Must follow the same
+   format as the HTTP header.
+
 
 API
 ---
@@ -138,7 +146,7 @@ var client = new Client(bookMark, options);
 ```
 
 * `bookMark` - The base URL of the web service.
-* `options` _optional_ - A list of options for [Request][3].
+* `options` _optional_ - A list of options.
 
 #### `Client.getResource()`
 
