@@ -6,7 +6,8 @@
         "headerTest": { "href" : "/headers" },
         "error400" : { "href" : "/error/400" },
         "redirect" : { "href" : "/redirect" },
-        "echo": { "href" : "/echo" }
+        "echo": { "href" : "/echo" },
+        "auth-basic" : { "href" : "/auth/basic" }
     },
     "title"  : "Hal 1",
     "foo" : "bar"
