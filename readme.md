@@ -134,6 +134,8 @@ Currently the following options are supported:
 * `auth`, an object with autentication information.
 * `accept` a list of Content-Types which are accepted. Must follow the same
    format as the HTTP header.
+* `contentType` the default contentType the client sends over. By default
+  this is `application/hal+json`.
 
 
 API

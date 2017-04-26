@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+0.3.1 (2017-04-26)
+------------------
+
+* #31: Support for setting a standard `Content-Type` HTTP header.
+
+
 0.3.0 (2017-04-24)
 ------------------
 
