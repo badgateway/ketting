@@ -78,7 +78,23 @@ describe('The Request API', async () => {
 
   });
 
-  it('should understand the auth.bearer setting');
+  it('should understand the auth.bearer setting', async() => {
+
+    client.auth = {
+      type: 'bearer',
+      token: 'foo'
+    };
+    const result = await (await resource.follow('headerTest')).request({
+      auth: {
+        bearer: 'foo'
+      },
+    });
+
+    expect(result.body).to.have.property('authorization');
+    expect(result.body.authorization).to.eql('Bearer foo');
+
+
+  });
 
   it('should allow posting json', async() => {
 

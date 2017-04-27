@@ -13,7 +13,8 @@
               "headerTest": { "href" : "/headers" },
               "error400" : { "href" : "/error/400" },
               "redirect" : { "href" : "/redirect" },
-              "auth-basic" : { "href" : "/auth/basic" }
+              "auth-basic" : { "href" : "/auth/basic" },
+              "auth-bearer" : { "href" : "/auth/bearer" }
             },
             "title"  : "Hal 1",
             "foo" : "bar"
