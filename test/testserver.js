@@ -70,6 +70,20 @@ app.use(
     }
   })
 );
+app.use(
+  route('/auth/bearer')
+  .get(ctx => {
+    const encoded = 'Bearer foo';
+    if (!ctx.request.headers.authorization || ctx.request.headers.authorization!==encoded) {
+      ctx.response.status = 401;
+      ctx.response.body = '';
+      ctx.response.set('Authorization', 'Bearer');
+    } else {
+      ctx.response.body = { ok: true };
+      ctx.response.status = 200;
+    }
+  })
+);
 
 // Rest stuff!
 app.use(
