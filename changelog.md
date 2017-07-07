@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+0.4.1 (2017-07-07)
+------------------
+
+* #38: Add HTTP response to HTTP-related exceptions.
+
+
 0.4.0 (2017-07-07)
 ------------------
 
