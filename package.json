@@ -28,7 +28,8 @@
     "bluebird": "^3.4.7",
     "node-fetch": "^1.6.3",
     "request": "^2.79.0",
-    "request-promise-any": "^1.0.3"
+    "request-promise-any": "^1.0.3",
+    "uri-template": "^1.0.1"
   },
   "devDependencies": {
     "chai": "^3.5.0",
