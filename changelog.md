@@ -1,7 +1,13 @@
 ChangeLog
 =========
 
-0.3.3 (2017-04-27)
+0.4.0 (2017-07-07)
+------------------
+
+* #37: Support for templated uris.
+
+
+0.3.2 (2017-04-27)
 ------------------
 
 * #33: Support for OAuth2 Bearer token.
