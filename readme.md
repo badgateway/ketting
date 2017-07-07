@@ -278,6 +278,23 @@ resource
   .follow('icon');
 ```
 
+Lastly, it's possible to follow [RFC6570](https://tools.ietf.org/html/rfc6570)
+templated links, using the second argument.
+
+For example, a link specified as:
+
+    { href: "/foo{?a}", templated: true}
+
+May be followed using
+
+```js
+resource
+  .follow('some-templated-link', { a: 'bar'})
+```
+
+This would result following a link to the `/foo?a=bar` uri.
+
+
 #### `Resource.followAll()`
 
 This method works like `follow()` but resolves into a list of resources.
