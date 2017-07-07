@@ -29,4 +29,17 @@ describe('Issuing a GET request', async () => {
 
   });
 
+  it('should throw an exception when there was a HTTP error', async() => {
+
+    const resource = await client.follow('error400');
+    let exception;
+    try {
+        await resource.get();
+    } catch (ex) {
+        exception = ex;
+    }
+    expect(exception.response.status).to.equal(400);
+
+  });
+
 });
