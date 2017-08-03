@@ -1,6 +1,14 @@
 ChangeLog
 =========
 
+0.4.2 (2017-08-03)
+------------------
+
+* #39: Making it easier to fire off custom HTTP requests on a resource using
+  the Fetch API. You can now just provide the `init` argument without providing
+  a url.
+
+
 0.4.1 (2017-07-07)
 ------------------
 
