@@ -27,13 +27,11 @@
   "dependencies": {
     "bluebird": "^3.4.7",
     "node-fetch": "^1.6.3",
-    "request": "^2.79.0",
-    "request-promise-any": "^1.0.3",
     "uri-template": "^1.0.1"
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "eslint": "^3.15.0",
+    "eslint": "^4.3.0",
     "koa": "^2.2.0",
     "koa-logger": "^2.0.1",
     "koa-path-match": "^2.0.0",
