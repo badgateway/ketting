@@ -1,6 +1,17 @@
 ChangeLog
 =========
 
+0.5.0 (2017-08-08)
+------------------
+
+* #41: Support for parsing HTML5. The library can now extract `link` and `a`
+  elements with `rel` attributes.
+* Removed the `accept` option. This should now be controlled with the
+  `contentTypes` property.
+* #40: Removed support for the Requests library. This library now only used
+  the Fetch API, to make it compatible with browsers in the future.
+
+
 0.4.2 (2017-08-03)
 ------------------
 

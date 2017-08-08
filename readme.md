@@ -1,10 +1,6 @@
 Restl - A hypermedia client for nodejs
 ======================================
 
-**Important note: this package is currently pretty experimental and not
-complete. Use at your own risk.**
-
-
 Introduction
 ------------
 
@@ -25,12 +21,13 @@ Installation
 Features overview
 -----------------
 
-Restl is a library that sits on top of a HTTP client (currently Request, but
-soon the Fetch API).
+Restl is a library that sits on top of a Fetch API to provide a RESTful
+interface and make it easier to follow REST best practices more strictly.
 
 It provides some useful abstractions that make it easier to work with true
 hypermedia / HATEAOS servers. It currently parses [HAL][2] and has a deep
-understanding of links and embedded resources.
+understanding of links and embedded resources. There's also support for parsing
+and following links from HTML documents.
 
 Using this library it becomes very easy to follow links from a single bookmark,
 and discover resources and features on the server. Embedded resources are
