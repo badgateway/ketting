@@ -1,7 +1,7 @@
 {
   "name": "restl",
-  "version": "0.4.2",
-  "description": "Opiniated HAL client.",
+  "version": "0.5.0",
+  "description": "Opiniated HATEAOS / Rest client.",
   "main": "lib/index.js",
   "scripts": {
     "test": "eslint lib/ && nyc mocha"
@@ -27,11 +27,12 @@
   "dependencies": {
     "bluebird": "^3.4.7",
     "node-fetch": "^1.6.3",
+    "sax": "^1.2.4",
     "uri-template": "^1.0.1"
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "eslint": "^3.15.0",
+    "eslint": "^4.3.0",
     "koa": "^2.2.0",
     "koa-logger": "^2.0.1",
     "koa-path-match": "^2.0.0",

@@ -13,6 +13,7 @@ describe('Issuing a DELETE request', async () => {
     // Priming the cache
     await resource.get();
 
+
   });
 
   it('should not fail', async() => {
@@ -44,6 +45,22 @@ describe('Issuing a DELETE request', async () => {
     }
     expect(ok).to.eql(true);
     
+  });
+
+  it('should throw an exception when there was a HTTP error', async() => {
+
+    // Resetting the server
+    await client.getResource('/reset').post({});
+    client.resourceCache = {};
+    const resource = await client.follow('error400');
+    let exception;
+    try {
+        await resource.delete();
+    } catch (ex) {
+        exception = ex;
+    }
+    expect(exception.response.status).to.equal(400);
+
   });
 
   after( async() => {
