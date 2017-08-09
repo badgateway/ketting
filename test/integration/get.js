@@ -42,4 +42,11 @@ describe('Issuing a GET request', async () => {
 
   });
 
+  it('should support the HTTP Link header', async() => {
+
+    const resource = await client.follow('linkHeader');
+    console.log(await resource.links());
+
+  });
+
 });

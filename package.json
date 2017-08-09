@@ -26,6 +26,7 @@
   "homepage": "https://github.com/evert/restl#readme",
   "dependencies": {
     "bluebird": "^3.4.7",
+    "http-link-header": "^0.8.0",
     "node-fetch": "^1.6.3",
     "sax": "^1.2.4",
     "uri-template": "^1.0.1"
