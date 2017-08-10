@@ -15,5 +15,6 @@ test:
 dist/bundle.js: lib/*.js
 	mkdir -p dist
 	webpack \
+		-p \
 		--display-modules \
 		--sort-modules-by size
