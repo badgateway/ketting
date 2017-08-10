@@ -6,7 +6,7 @@ build: dist/restl.js
 
 .PHONY: clean
 clean:
-	rm dist/bundle.js
+	rm dist/restl.js
 
 .PHONY: test
 test:
