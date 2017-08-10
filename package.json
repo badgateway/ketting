@@ -1,6 +1,6 @@
 {
   "name": "restl",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Opiniated HATEAOS / Rest client.",
   "main": "lib/index.js",
   "scripts": {
@@ -25,7 +25,6 @@
   },
   "homepage": "https://github.com/evert/restl#readme",
   "dependencies": {
-    "bluebird": "^3.4.7",
     "node-fetch": "^1.6.3",
     "sax": "^1.2.4",
     "uri-template": "^1.0.1"
