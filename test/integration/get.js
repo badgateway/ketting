@@ -1,5 +1,6 @@
 const Client = require('../../lib/client');
 const Resource = require('../../lib/resource');
+const Link = require('../../lib/link');
 const expect = require('chai').expect;
 
 describe('Issuing a GET request', async () => {
@@ -45,7 +46,16 @@ describe('Issuing a GET request', async () => {
   it('should support the HTTP Link header', async() => {
 
     const resource = await client.follow('linkHeader');
-    console.log(await resource.links());
+    const links = await resource.links();
+
+    const expected = [
+      new Link('next', 'http://localhost:3000/link-header', '/hal2.json'),
+      new Link('previous', 'http://localhost:3000/link-header', '/TheBook/chapter2'),
+      new Link('start', 'http://localhost:3000/link-header', 'http://example.org/'),
+      new Link('http://example.net/relation/other', 'http://localhost:3000/link-header', 'http://example.org/')
+    ];
+
+    expect(links).to.eql(expected);
 
   });
 
