@@ -2,7 +2,7 @@
 export PATH:=$(PATH):./node_modules/.bin/
 
 .PHONY: build
-build: dist/bundle.js
+build: dist/restl.js
 
 .PHONY: clean
 clean:
@@ -12,7 +12,7 @@ clean:
 test:
 	npm test
 
-dist/bundle.js: lib/*.js
+dist/restl.js: lib/*.js
 	mkdir -p dist
 	webpack \
 		-p \
