@@ -8,8 +8,12 @@ build: dist/bundle.js
 clean:
 	rm dist/bundle.js
 
+.PHONY: test
+test:
+	npm test
+
 dist/bundle.js: lib/*.js
 	mkdir -p dist
 	webpack \
 		--display-modules \
-		lib/index.js dist/bundle.js	
+		--sort-modules-by size
