@@ -10,7 +10,8 @@
         "auth-basic" : { "href" : "/auth/basic" },
         "auth-bearer" : { "href" : "/auth/bearer" },
         "templated" : { "href" : "/templated.json{?foo}", "templated": true },
-        "linkHeader" : { "href" : "/link-header" }
+        "linkHeader" : { "href" : "/link-header" },
+        "problem" : { "href" : "/problem" }
     },
     "title"  : "Hal 1",
     "foo" : "bar"

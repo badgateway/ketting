@@ -1,5 +1,7 @@
 const Client = require('../../lib/client');
 const Resource = require('../../lib/resource');
+const Problem = require('../../lib/http-error').Problem;
+
 const expect = require('chai').expect;
 
 describe('Issuing a DELETE request', async () => {
@@ -60,6 +62,24 @@ describe('Issuing a DELETE request', async () => {
         exception = ex;
     }
     expect(exception.response.status).to.equal(400);
+
+  });
+
+  it('should throw a Problem exception when there was a HTTP error with a application/problem+json response', async() => {
+
+    // Resetting the server
+    await client.getResource('/reset').post({});
+    client.resourceCache = {};
+    const resource = await client.follow('problem');
+    let exception;
+    try {
+        await resource.delete();
+    } catch (ex) {
+        exception = ex;
+    }
+    expect(exception.status).to.equal(410);
+    expect(exception).to.be.an.instanceof(Problem);
+    expect(exception.message).to.equal('HTTP Error 410: Some sort of error!');
 
   });
 

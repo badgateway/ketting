@@ -71,6 +71,21 @@ app.use(
   })
 );
 
+// Return a JSON problem document (RFC7807)
+app.use(
+  route('/problem')
+  .delete(ctx => {
+
+     ctx.response.status = 410;
+     ctx.response.body = {
+       type: "http://evertpot.com/problem-test",
+       title: "Some sort of error!"
+     };
+     ctx.response.type = 'application/problem+json';
+
+  })
+);
+
 app.use(
   route('/auth/basic')
   .get(ctx => {
