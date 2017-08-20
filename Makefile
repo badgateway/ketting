@@ -1,6 +1,3 @@
-
-export PATH:=$(PATH):./node_modules/.bin/
-
 .PHONY: build
 build: dist/restl.js
 
@@ -14,7 +11,8 @@ test:
 
 dist/restl.js: lib/*.js
 	mkdir -p dist
-	webpack \
+	node_modules/.bin/webpack \
+		--optimize-minimize \
 		-p \
 		--display-modules \
 		--sort-modules-by size
