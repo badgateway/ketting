@@ -56,6 +56,21 @@ app.use(
   })
 );
 
+// Return a HTTP Link header
+app.use(
+  route('/link-header')
+  .get(ctx => {
+
+     ctx.response.set('Link', [
+       '</hal2.json>; rel="next"',
+       '</TheBook/chapter2>; rel="previous"; title*=UTF-8\'de\'n%c3%a4chstes%20Kapitel',
+       '<http://example.org/>; rel="start http://example.net/relation/other"'
+     ]);
+     ctx.response.body = { ok: true };
+
+  })
+);
+
 app.use(
   route('/auth/basic')
   .get(ctx => {
