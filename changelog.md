@@ -9,6 +9,7 @@ ChangeLog
 * #16: Parsing the HTTP `Link` header (RFC5988).
 * #30: Added support for automatically parsing `application/problem+json` error
   responses and throwing better exceptions. (RFC7807).
+* #47: Link object now uses an object as its only constructor argument.
 
 
 0.5.0 (2017-08-08)
