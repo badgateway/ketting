@@ -1,10 +1,14 @@
 ChangeLog
 =========
 
-0.6.0 (2017-??-??)
+0.6.0 (2017-08-20)
 ------------------
 
-* Removed Bluebird dependency.
+* #15: Browser support via webpack!
+* #45: Removed Bluebird dependency.
+* #16: Parsing the HTTP `Link` header (RFC5988).
+* #30: Added support for automatically parsing `application/problem+json` error
+  responses and throwing better exceptions. (RFC7807).
 
 
 0.5.0 (2017-08-08)
