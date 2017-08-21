@@ -30,6 +30,16 @@ describe('Following a link', async () => {
 
   });
 
+  it('should automatically expand curies', async() => {
+
+    const resource = await client.follow('http://example.org/curie/foo');
+    expect(resource).to.be.an.instanceof(Resource);
+    expect(resource.uri).to.equal('http://localhost:3000/curietarget');
+
+
+  });
+
+
   it('should work with embedded resources', async() => {
 
     const items = await client.follow('collection').followAll('item');

@@ -11,7 +11,15 @@
         "auth-bearer" : { "href" : "/auth/bearer" },
         "templated" : { "href" : "/templated.json{?foo}", "templated": true },
         "linkHeader" : { "href" : "/link-header" },
-        "problem" : { "href" : "/problem" }
+        "problem" : { "href" : "/problem" },
+        "c:foo" : { "href": "/curietarget" },
+        "curies" : [
+          {
+            "name": "c",
+            "href": "http://example.org/curie/{rel}",
+            "templated": true
+          }
+        ]
     },
     "title"  : "Hal 1",
     "foo" : "bar"
