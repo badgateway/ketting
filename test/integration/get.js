@@ -24,7 +24,7 @@ describe('Issuing a GET request', async () => {
   it('should have sent the correct headers', async() => {
 
     expect(result).to.have.property('user-agent');
-    expect(result['user-agent']).to.match(/^Restl\//);
+    expect(result['user-agent']).to.match(/^Ketting\//);
     expect(result['accept']).to.eql('application/hal+json,application/json,text/html');
     expect(result['content-type']).to.eql('application/hal+json');
 
