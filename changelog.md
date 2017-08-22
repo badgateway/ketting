@@ -1,6 +1,14 @@
 ChangeLog
 =========
 
+0.7.0 (2017-08-21)
+------------------
+
+* This library is now called Ketting. It used to be called Restl. Ketting is
+  the dutch word for chain.
+* Automatically expanding Curies in the HAL `_link` object.
+
+
 0.6.0 (2017-08-20)
 ------------------
 
