@@ -1,5 +1,5 @@
-Restl - A hypermedia client for nodejs
-======================================
+Ketting - A hypermedia client for nodejs
+========================================
 
 Introduction
 ------------
@@ -15,13 +15,13 @@ Initially we'll build in strong support for [Web Linking][1], a.k.a. the HTTP
 Installation
 ------------
 
-    npm install --save restl
+    npm install --save ketting
 
 
 Features overview
 -----------------
 
-Restl is a library that sits on top of a Fetch API to provide a RESTful
+Ketting is a library that sits on top of a Fetch API to provide a RESTful
 interface and make it easier to follow REST best practices more strictly.
 
 It provides some useful abstractions that make it easier to work with true
@@ -46,10 +46,10 @@ Usage
 ### Fetching a resource and following a link:
 
 ```js
-var restl = require('restl')('http://my-hal-api.example.org/');
+var ketting = require('ketting')('http://my-hal-api.example.org/');
 
 // Fetch the home resource
-var home = restl.getResource()
+var home = ketting.getResource()
 // Then get the 'author' relationship from _links
 home.follow('author')
   .then(function(authorResource)) {
@@ -123,7 +123,7 @@ var options {
   accept: 'application/json'
 }
 
-var restl = require('restl')(bookMark, options);
+var ketting = require('ketting')(bookMark, options);
 ```
 
 Currently the following options are supported:

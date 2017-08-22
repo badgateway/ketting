@@ -1,9 +1,9 @@
 .PHONY: build
-build: dist/restl.js
+build: dist/ketting.js
 
 .PHONY: clean
 clean:
-	rm dist/restl.js
+	rm dist/ketting.js
 
 .PHONY: test
 test:
@@ -13,7 +13,7 @@ test:
 lint:
 	node_modules/.bin/eslint lib/
 
-dist/restl.js: lib/*.js
+dist/ketting.js: lib/*.js
 	mkdir -p dist
 	node_modules/.bin/webpack \
 		--optimize-minimize \
