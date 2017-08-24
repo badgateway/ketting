@@ -7,25 +7,27 @@ Introduction
 The Ketting library is an attempt at creating a 'generic' hypermedia client, it
 supports an opinionated set of modern features REST services might have.
 
-The library supports [HAL][2], [Web Linking (HTTP Link Header)][1] and HTML5.
+The library supports [HAL][2], [Web Linking (HTTP Link Header)][1] and HTML5
+links. It uses the Fetch API and is meant for client and server-side
+javascript.
 
 ### Example
 
 ```js
 var ketting = new Ketting('https://api.example.org/');
 
-// Follow a link with rel="currentUser". This could be a HTML5 `<link>`, a
+// Follow a link with rel="author". This could be a HTML5 `<link>`, a
 // HAL `_links` or a HTTP `Link:`.
-var currentUser = await ketting.follow('current-user');
+var author = await ketting.follow('author');
 
 // Grab the current state
-var userState = await currentUser.get();
+var authorState = await author.get();
 
 // Change the firstName property of the object. Note that this assumes JSON.
-userState.firstName = 'Evert';
+authorState.firstName = 'Evert';
 
 // Save the new state
-await currentUser.put(userState);
+await author.put(authorState);
 ```
 
 Installation
@@ -46,7 +48,7 @@ interface and make it easier to follow REST best practices more strictly.
 
 It provides some useful abstractions that make it easier to work with true
 hypermedia / HATEAOS servers. It currently parses [HAL][2] and has a deep
-understanding of links and embedded resources. There's also support for parsing
+understanding of inks and embedded resources. There's also support for parsing
 and following links from HTML documents, and it understands the HTTP `Link:`
 header.
 
@@ -55,13 +57,13 @@ and discover resources and features on the server.
 
 ### Following links
 
-One core tennet of building a good REST service, is that links should be
+One core tennet of building a good REST service, is that URIs should be
 discovered, not hardcoded in an application. It's for this reason that the
-emphasis in this library is _not_ on links (like most libraries) but on
-relation-types (the `rel`).
+emphasis in this library is _not_ on URIs (like most libraries) but on
+relation-types (the `rel`) and links.
 
 Generally when interacting with a REST service, you'll want to only hardcode
-a single URI and discover all the other APIs from there on on.
+a single URI (a bookmark) and discover all the other APIs from there on on.
 
 For example, consider that there is a some API at `https://api.example.org/`.
 This API has a link to an API for news articles (`rel="articleCollection"`),
@@ -83,10 +85,6 @@ var author = await newArticle.follow('author');
 console.log(await author.get());
 ```
 
-As you can see, links can be chained. This is possible because the `Promise`
-object that's been returned from `follow` has been extended with new functions
-such as `follow` and `followAll`.
-
 ### Embedded resources
 
 Embedded resources are a HAL feature. In situations when you are modelling a
@@ -94,7 +92,7 @@ Embedded resources are a HAL feature. In situations when you are modelling a
 all the items in the collection. However, if a client wants to fetch all these
 items, this can result in a lot of HTTP requests. HAL uses `_embedded` to work
 around this. Using `_embedded` a user can effectively tell the HAL client about
-the links in the collection and immediately send along the content of those
+the links in the collection and immediately send along the contents of those
 resources, thus avoiding the overhead.
 
 Ketting understands `_embedded` and completely abstracts them away. If you use
@@ -114,15 +112,14 @@ for (i in items) {
 }
 ```
 
-Given the last example, if the server did not use embedding, this example
-will result in a `GET` request for every item + a `GET` request for the
-collection. If the items _did_ show up in `_embedded`, the result was
-cached and only 1 `GET` request is done (for the collection).
+Given the last example, if the server did _not_ use embedding, it will result
+in a HTTP GET request for every item in the collection.
 
-One major advantage of this design is that a server might realize that
-api clients often follow the same chain of links. In that case the server
-might be changed to always embed these common links, which will cause
-clients to automatically upgrade and take advantage of this optimization.
+If the server _did_ use embedding, there will only be 1 GET request.
+
+A major advantage of this, is that it allows a server to be upgradable. Hot
+paths might be optimized using embedding, and the client seamlessly adjusts
+to the new information.
 
 Further reading:
 
@@ -167,8 +164,8 @@ Only the full relation type (`http://ns.example.org/website`) can be used in
 functions such as `follow` and `followAll`.
 
 
-Support
--------
+Node and Browser
+----------------
 
 Ketting works on any stable node.js version and modern browsers. To run Ketting
 in a browser, the following must be supported by a browser:
@@ -403,7 +400,7 @@ For example, this is how you might do a HTTP `PATCH` request:
 ```js
 var init = {
   method: 'PATCH',
-  body: JSON.serialize(['some', 'patch, 'object']);
+  body: JSON.serialize(['some', 'patch, 'object'])
 };
 var response = await resource.fetch(init);
 console.log(response.statusCode);
