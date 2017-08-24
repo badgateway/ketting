@@ -1,17 +1,17 @@
-const Client = require('../../lib/client');
+const Ketting = require('../../lib/ketting');
 const Resource = require('../../lib/resource');
 const Link = require('../../lib/link');
 const expect = require('chai').expect;
 
 describe('Issuing a GET request', async () => {
 
-  const client = new Client('http://localhost:3000/hal1.json');
+  const ketting = new Ketting('http://localhost:3000/hal1.json');
   let resource;
   let result;
 
   before( async() => {
 
-    resource = await client.follow('headerTest');
+    resource = await ketting.follow('headerTest');
 
   });
 
@@ -32,7 +32,7 @@ describe('Issuing a GET request', async () => {
 
   it('should throw an exception when there was a HTTP error', async() => {
 
-    const resource = await client.follow('error400');
+    const resource = await ketting.follow('error400');
     let exception;
     try {
         await resource.get();
@@ -45,7 +45,7 @@ describe('Issuing a GET request', async () => {
 
   it('should support the HTTP Link header', async() => {
 
-    const resource = await client.follow('linkHeader');
+    const resource = await ketting.follow('linkHeader');
     const links = await resource.links();
 
     const expected = [

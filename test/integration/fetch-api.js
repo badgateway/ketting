@@ -1,4 +1,4 @@
-const Client = require('../../lib/client');
+const Ketting = require('../../lib/ketting');
 const Resource = require('../../lib/resource');
 const expect = require('chai').expect;
 const Request = require('node-fetch').Request;
@@ -6,10 +6,10 @@ const Request = require('node-fetch').Request;
 describe('Using the fetch api', () => {
 
   let hal2;
-  let client;
+  let ketting;
   before( async () => {
-    client = new Client('http://localhost:3000/hal1.json');
-    hal2 = await client.follow('next');
+    ketting = new Ketting('http://localhost:3000/hal1.json');
+    hal2 = await ketting.follow('next');
   });
 
   it('should return a response object', async() => {
@@ -39,7 +39,7 @@ describe('Using the fetch api', () => {
   after( async() => {
 
     // Clearing any changes.
-    await client.getResource('/reset').post({});
+    await ketting.getResource('/reset').post({});
 
   });
 

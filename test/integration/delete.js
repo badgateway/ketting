@@ -1,4 +1,4 @@
-const Client = require('../../lib/client');
+const Ketting = require('../../lib/ketting');
 const Resource = require('../../lib/resource');
 const Problem = require('../../lib/http-error').Problem;
 
@@ -6,12 +6,12 @@ const expect = require('chai').expect;
 
 describe('Issuing a DELETE request', async () => {
 
-  const client = new Client('http://localhost:3000/hal1.json');
+  const ketting = new Ketting('http://localhost:3000/hal1.json');
   let resource;
 
   before( async() => {
 
-    resource = client.getResource();
+    resource = ketting.getResource();
     // Priming the cache
     await resource.get();
 
@@ -40,7 +40,7 @@ describe('Issuing a DELETE request', async () => {
 
     let ok = false;
     try { 
-      const newBody = await client.getResource().get();
+      const newBody = await ketting.getResource().get();
     } catch (e) {
       // we're expecting an exception
       ok = true;
@@ -52,9 +52,9 @@ describe('Issuing a DELETE request', async () => {
   it('should throw an exception when there was a HTTP error', async() => {
 
     // Resetting the server
-    await client.getResource('/reset').post({});
-    client.resourceCache = {};
-    const resource = await client.follow('error400');
+    await ketting.getResource('/reset').post({});
+    ketting.resourceCache = {};
+    const resource = await ketting.follow('error400');
     let exception;
     try {
         await resource.delete();
@@ -68,9 +68,9 @@ describe('Issuing a DELETE request', async () => {
   it('should throw a Problem exception when there was a HTTP error with a application/problem+json response', async() => {
 
     // Resetting the server
-    await client.getResource('/reset').post({});
-    client.resourceCache = {};
-    const resource = await client.follow('problem');
+    await ketting.getResource('/reset').post({});
+    ketting.resourceCache = {};
+    const resource = await ketting.follow('problem');
     let exception;
     try {
         await resource.delete();
@@ -85,7 +85,7 @@ describe('Issuing a DELETE request', async () => {
 
   after( async() => {
 
-    await client.getResource('/reset').post({});
+    await ketting.getResource('/reset').post({});
 
   });
 

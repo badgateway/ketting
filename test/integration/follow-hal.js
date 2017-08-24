@@ -1,16 +1,16 @@
-const Client = require('../../lib/client');
+const Ketting = require('../../lib/ketting');
 const Resource = require('../../lib/resource');
 const expect = require('chai').expect;
 
 describe('Following a link', async () => {
 
-  const client = new Client('http://localhost:3000/hal1.json');
+  const ketting = new Ketting('http://localhost:3000/hal1.json');
 
   let hal2;
 
   it('should return a resource', async() => {
   
-    hal2 = await client.follow('next');
+    hal2 = await ketting.follow('next');
     expect(hal2).to.be.an.instanceof(Resource);
 
   
@@ -24,7 +24,7 @@ describe('Following a link', async () => {
   });
   it('should be chainable', async() => {
 
-    const hal1 = await client.follow('next').follow('prev');
+    const hal1 = await ketting.follow('next').follow('prev');
     const body = await hal1.get();
     expect(body).to.eql({'title': 'Hal 1', 'foo': 'bar'});
 
@@ -32,7 +32,7 @@ describe('Following a link', async () => {
 
   it('should automatically expand curies', async() => {
 
-    const resource = await client.follow('http://example.org/curie/foo');
+    const resource = await ketting.follow('http://example.org/curie/foo');
     expect(resource).to.be.an.instanceof(Resource);
     expect(resource.uri).to.equal('http://localhost:3000/curietarget');
 
@@ -42,7 +42,7 @@ describe('Following a link', async () => {
 
   it('should work with embedded resources', async() => {
 
-    const items = await client.follow('collection').followAll('item');
+    const items = await ketting.follow('collection').followAll('item');
     expect(items).to.have.length(2);
     expect(items[0]).to.be.an.instanceof(Resource);
     expect(items[1]).to.be.an.instanceof(Resource);

@@ -1,15 +1,15 @@
-const Client = require('../../lib/client');
+const Ketting = require('../../lib/ketting');
 const Resource = require('../../lib/resource');
 const expect = require('chai').expect;
 
 describe('Issuing a PUT request', async () => {
 
-  const client = new Client('http://localhost:3000/hal1.json');
+  const ketting = new Ketting('http://localhost:3000/hal1.json');
   let resource;
 
   before( async() => {
 
-    resource = await client.getResource().follow('next');;
+    resource = await ketting.getResource().follow('next');;
     // Priming the cache
     await resource.get();
 
@@ -28,7 +28,7 @@ describe('Issuing a PUT request', async () => {
   });
   it('should have cleared the global cache', async() => {
  
-    const newBody = await (await client.follow('next')).get();
+    const newBody = await (await ketting.follow('next')).get();
     expect(newBody).to.eql({newData: 'hi!'});
     
   });
@@ -36,7 +36,7 @@ describe('Issuing a PUT request', async () => {
 
     let ok = false;
     try {
-      const errResource = await client.follow('error400');
+      const errResource = await ketting.follow('error400');
       await errResource.put({foo: 'bar'});
     } catch (e) {
       ok = true;
@@ -47,7 +47,7 @@ describe('Issuing a PUT request', async () => {
 
   after( async() => {
 
-    await client.getResource('/reset').post({});
+    await ketting.getResource('/reset').post({});
 
   });
 

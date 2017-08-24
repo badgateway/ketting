@@ -1,16 +1,16 @@
-const Client = require('../../lib/client');
+const Ketting = require('../../lib/ketting');
 const Resource = require('../../lib/resource');
 const expect = require('chai').expect;
 
 describe('Issuing a POST request', async () => {
 
-  const client = new Client('http://localhost:3000/hal1.json');
+  const ketting = new Ketting('http://localhost:3000/hal1.json');
   let resource;
   let newResource;
 
   before( async() => {
 
-    resource = client.getResource();
+    resource = ketting.getResource();
 
   });
 
@@ -37,7 +37,7 @@ describe('Issuing a POST request', async () => {
 
   it('should throw an exception when there was a HTTP error', async() => {
 
-    const resource = await client.follow('error400');
+    const resource = await ketting.follow('error400');
     let exception;
     try {
         await resource.post({foo: 'bar'});
