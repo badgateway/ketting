@@ -1,197 +1,294 @@
-Ketting - A hypermedia client for nodejs
-========================================
+Ketting - A hypermedia client for javascript
+============================================
 
 Introduction
 ------------
 
-This NPM package is an attempt at creating a 'generic' hypermedia client, it
+The Ketting library is an attempt at creating a 'generic' hypermedia client, it
 supports an opinionated set of modern features REST services might have.
 
-This means that there's a strong focus on links and link-relationships.
-Initially we'll build in strong support for [Web Linking][1], a.k.a. the HTTP
-`Link` header, and [HAL][2].
+The library supports [HAL][2], [Web Linking (HTTP Link Header)][1] and HTML5.
 
+### Example
+
+```js
+var ketting = new Ketting('https://api.example.org/');
+
+// Follow a link with rel="currentUser". This could be a HTML5 `<link>`, a
+// HAL `_links` or a HTTP `Link:`.
+var currentUser = await ketting.follow('current-user');
+
+// Grab the current state
+var userState = await currentUser.get();
+
+// Change the firstName property of the object. Note that this assumes JSON.
+userState.firstName = 'Evert';
+
+// Save the new state
+await currentUser.put(userState);
+```
 
 Installation
 ------------
 
-    npm install --save ketting
+    npm install ketting
+
+or:
+
+    yarn add ketting
 
 
 Features overview
 -----------------
 
-Ketting is a library that sits on top of a Fetch API to provide a RESTful
+Ketting is a library that sits on top of a [Fetch API][3] to provide a RESTful
 interface and make it easier to follow REST best practices more strictly.
 
 It provides some useful abstractions that make it easier to work with true
 hypermedia / HATEAOS servers. It currently parses [HAL][2] and has a deep
 understanding of links and embedded resources. There's also support for parsing
-and following links from HTML documents.
+and following links from HTML documents, and it understands the HTTP `Link:`
+header.
 
 Using this library it becomes very easy to follow links from a single bookmark,
-and discover resources and features on the server. Embedded resources are
-completely hidden. Embedded resources just show up as links, but when you're
-asking for the representation, the response to the `GET` request will be
-served from a cache.
+and discover resources and features on the server.
 
-This feature allows HAL servers to upgrade links to embedded resources, and
-allows any client to transparently take advantage of this change and issue
-less HTTP requests.
+### Following links
 
+One core tennet of building a good REST service, is that links should be
+discovered, not hardcoded in an application. It's for this reason that the
+emphasis in this library is _not_ on links (like most libraries) but on
+relation-types (the `rel`).
 
-Usage
------
+Generally when interacting with a REST service, you'll want to only hardcode
+a single URI and discover all the other APIs from there on on.
 
-### Fetching a resource and following a link:
+For example, consider that there is a some API at `https://api.example.org/`.
+This API has a link to an API for news articles (`rel="articleCollection"`),
+which has a link for creating a new article (`rel="new"`). When `POST`ing on
+that uri, the api returns `201 Created` along with a `Location` header pointing
+to the new article. On this location, a new `rel="author"` appears
+automatically, pointing to the person that created the article.
+
+This is how that iteraction might look like:
 
 ```js
-var ketting = require('ketting')('http://my-hal-api.example.org/');
+var ketting = new Ketting('https://api.example.org/');
+var createArticle = await ketting.follow('articleCollection').follow('new'); // chained follow
 
-// Fetch the home resource
-var home = ketting.getResource()
-// Then get the 'author' relationship from _links
-home.follow('author')
-  .then(function(authorResource)) {
+var newArticle = await createArticle.post({title: 'Hello world'});
+var author = await newArticle.follow('author');
 
-    // Follow the 'me' resource.
-    return authorResource.follow('me');
-
-  }.then(function(meResource) {
-
-    // Get the full body
-    return meResource.get();
-
-  }.then(function(meBody) {
-
-    // Output the body
-    console.log(meBody);
-
-  }).catch(function(err) {
-
-    // Error
-    console.log(err);
-
-  });
+// Output author information
+console.log(await author.get());
 ```
 
-### Following a chain of links
+As you can see, links can be chained. This is possible because the `Promise`
+object that's been returned from `follow` has been extended with new functions
+such as `follow` and `followAll`.
 
-It's possible to follow a chain of links with follow:
+### Embedded resources
 
-```js
-client.follow('rel1')
-  .then(function(resource1) {
-    return resource1.follow('rel2');
-  })
-  .then(function(resource2) {
-    return resource2.follow('rel3');
-  })
-  .then(function(resource3) {
-    console.log(resource3.getLinks());
-  });
-```
+Embedded resources are a HAL feature. In situations when you are modelling a
+'collection' of resources, in HAL you should generally just create links to
+all the items in the collection. However, if a client wants to fetch all these
+items, this can result in a lot of HTTP requests. HAL uses `_embedded` to work
+around this. Using `_embedded` a user can effectively tell the HAL client about
+the links in the collection and immediately send along the content of those
+resources, thus avoiding the overhead.
 
-As you can see, `follow()` returns a Promise. However, the returned promise
-has an additional `follow()` function itself, which makes it possible to
-shorten this to:
+Ketting understands `_embedded` and completely abstracts them away. If you use
+ketting with a HAL server, you can therefore completely ignore them.
 
-```js
-client
-  .follow('rel1')
-  .follow('rel2')
-  .follow('rel3')
-  .then(function(resource3) {
-    console.log(resource3.getLinks());
-  });
-```
-
-### Providing custom options
-
-Options can be passed via the constructor o the client.
-
-Example:
+For example, given a collection resource with many resources that hal the
+relationshiptype `item`, you might use the following API:
 
 ```js
-var bookMark = 'https://my-hal-api.example.org';
-var options {
-  auth: {
-    type: 'basic',
-    userName: 'foo',
-    password: 'bar'
-  },
-  accept: 'application/json'
+var ketting = new Ketting('https://api.example.org/');
+var articleCollection = await ketting.follow('articleCollection');
+
+var items = await someCollection.followAll('item');
+
+for (i in items) {
+   console.log(await items[i].get());
 }
-
-var ketting = require('ketting')(bookMark, options);
 ```
 
-Currently the following options are supported:
+Given the last example, if the server did not use embedding, this example
+will result in a `GET` request for every item + a `GET` request for the
+collection. If the items _did_ show up in `_embedded`, the result was
+cached and only 1 `GET` request is done (for the collection).
 
-* `auth`, an object with autentication information.
-* `accept` a list of Content-Types which are accepted. Must follow the same
-   format as the HTTP header.
-* `contentType` the default contentType the client sends over. By default
-  this is `application/hal+json`.
+One major advantage of this design is that a server might realize that
+api clients often follow the same chain of links. In that case the server
+might be changed to always embed these common links, which will cause
+clients to automatically upgrade and take advantage of this optimization.
 
+Further reading:
+
+* [Further reading](https://evertpot.com/rest-embedding-hal-http2/).
+* [Hypertext Cache Pattern in HAL spec](https://tools.ietf.org/html/draft-kelly-json-hal-08#section-8.3).
+
+### HAL and Curies
+
+HAL has a CURIES feature. If your api uses them, the Ketting library will
+automatically expand them.
+
+For example, from a Ketting perspective, the following HAL document:
+
+```js
+{
+  "_links" : {
+    "foo:website" : {
+      "href": "https://github.com/evert/ketting/",
+    },
+    "curies" : {
+      "href": "http://ns.example.org/{rel}",
+      "templated": true,
+      "name": "foo",
+    }
+  }
+}
+```
+
+Is parsed like this:
+
+```js
+{
+  "_links" : {
+    "http://ns.example.org/website" : {
+      "href": "https://github.com/evert/ketting/",
+    }
+  }
+}
+```
+
+Only the full relation type (`http://ns.example.org/website`) can be used in
+functions such as `follow` and `followAll`.
+
+
+Support
+-------
+
+Ketting works on any stable node.js version and modern browsers. To run Ketting
+in a browser, the following must be supported by a browser:
+
+* The [Fetch API][3].
+* Promises (async/await is not required)
 
 API
 ---
 
-### Client
+### `Ketting`
+
+The 'Ketting' class is the main class you'll use to access anything else.
+
+#### Constructor
 
 ```js
-var client = new Client(bookMark, options);
+var options = {}; // options are optional
+var ketting = new Ketting('https://api.example.org/', options);
 ```
 
-* `bookMark` - The base URL of the web service.
-* `options` _optional_ - A list of options.
+Currently the only supported option is `auth`. `auth` can be used to specify
+authentication information. HTTP Basic auth and OAUth2 Bearer token are
+supported.
 
-#### `Client.getResource()`
-
-Returns a 'Resource' object based on the url. If
+Basic example:
 
 ```js
-var resource = client.getResource(url);
+var options = {
+  auth: {
+    type: 'basic',
+    userName: 'foo',
+    password: 'bar'
+  }
+};
 ```
 
-* `url` - URL to fetch. Might be relative. If not provided, the bookMark is
-  fetched instead.
+Bearer example:
 
-This function returns a `Resource`.
+```js
+var options = {
+  auth: {
+    type: 'bearer',
+    token: 'bar'
+  }
+};
+```
 
+
+#### `Ketting.getResource()`
+
+Return a 'resource' object, based on it's url. If the url is not supplied,
+a resource will be returned pointing to the bookmark.
+
+If a relative url is given, it will be resolved based on the bookmark uri.
+
+```js
+var resource = client.getResource('http://example.org'); // absolute uri
+var resource = client.getResource('/foo'); // relative uri
+var resource = client.getResource(); // bookmark
+```
+
+The resource is returned immediately, and not as a promise.
+
+#### `Ketting.follow()`
+
+The `follow` function on the `Ketting` follows a link based on it's relation
+type from the bookmark resource.
+
+```js
+var someResource = await ketting.follow('author');
+```
+
+This is just a shortcut to:
+
+```js
+var someResource = await ketting.getResource().follow('author');
+```
+
+#### `Ketting.fetch`
+
+The `fetch` function is a wrapper for the new [Fetch][3] web standard. This
+function takes the same arguments (`input` and `init`), but it decorates the
+HTTP request with Authentication headers.
+
+```js
+var response = await ketting.fetch('https://example.org');
+```
 
 ### Resource
+
+The `Resource` class is the most important object, and represents a REST
+resource. Functions such `follow` and `getResource` always return `Resource`
+objects.
 
 #### `Resource.get()`
 
 Returns the result of a `GET` request. This function returns a `Promise`.
 
 ```js
-resource.get().then(function(body) {
-  console.log(body);
-});
+await resource.get();
 ```
 
 If the resource was fetched earlier, it will return a cached copy.
-
 
 #### `Resource.put()`
 
 Updates the resource with a new representation
 
 ```js
-resource.put({ 'foo' : 'bar' });
+await resource.put({ 'foo' : 'bar' });
 ```
 
-This function returns a Promise that resolves to `null`.
 
 #### `Resource.delete()`
 
 Deletes the resource.
 
 ```js
-resource.delete();
+await resource.delete();
 ````
 
 This function returns a Promise that resolves to `null`.
@@ -208,27 +305,21 @@ header, this method will resolve into a new Resource. For example, this might
 create a new resource and then get a list of links after creation:
 
 ```js
-resource.post({ property: 'value'})
-  .then(function(newResource) {
-    return newResource.links();
-  })
-  .then(function(links) {
-    console.log(links);
-  });
+var newResource = await parentResource.post({ foo: 'bar' });
+// Output a list of links on the newly created resource
+console.log(await newResource.links());
 ```
 
 #### `Resource.refresh()`
 
-Refreshes the internal cache for a resource and does a `GET` request again.
-This function returns a `Promise` that resolves when the operation is complete,
-but the `Promise` does not have a value.
+The `refresh` function behaves the same as the `get()` function, but it ignores
+the cache. It's equivalent to a user hitting the "refresh" button in a browser.
+
+This function is useful to ditching the cache of a specific resource if the
+server state has changed.
 
 ```js
-resource.refresh().then(function() {
-  return resource.get()
-}).then(function(body) {
-  // A fresh body!
-});
+console.log(await resource.refresh());
 ```
 
 #### `Resource.links()`
@@ -236,17 +327,14 @@ resource.refresh().then(function() {
 Returns a list of `Link` objects for the resource.
 
 ```js
-resource.links().then(function(links) {
-  console.log(links);
+console.log(await resource.links());
 });
 ```
 
 You can also request only the links for a relation-type you are interested in:
 
 ```js
-resource.links('item').then(function(links) {
-
-});
+resource.links('author'); // Get links with rel=author
 ```
 
 
@@ -256,14 +344,11 @@ Follows a link, by it's relation-type and returns a new resource for the
 target.
 
 ```js
-resource.follow('author').then(function(author) {
-  return author.get();
-}).then(function(body) {
-  console.log(body);
-});
+var author = await resource.follow('author');
+console.log(await author.get());
 ```
 
-The follow function returns a special kind of Promise that has a `follow()`
+The `follow` function returns a special kind of Promise that has a `follow()`
 function itself.
 
 This makes it possible to chain follows:
@@ -276,7 +361,7 @@ resource
 ```
 
 Lastly, it's possible to follow [RFC6570](https://tools.ietf.org/html/rfc6570)
-templated links, using the second argument.
+templated links (templated URI), using the second argument.
 
 For example, a link specified as:
 
@@ -299,46 +384,72 @@ Multiple links with the same relation type can appear in resources; for
 example in collections.
 
 ```js
-resource.followAll('item')
-  .then(function(items) {
-    console.log(items);
-  });
+var items = await resource.followAll('item');
+console.log(items);
 ```
 
-#### `Resource.representation()`
+#### `resource.fetch()`
 
-This function is similar to `GET`, but instead of just returning a response
-body, it returns a `Representation` object.
+The `fetch` function is a wrapper for the `Fetch API`. It takes very similar
+arguments to the regular fetch, but it does a few things special:
 
-### `Representation`
+1. The uri can be omitted completely. If it's omitted, the uri of the
+   resource is used.
+2. If a uri is supplied and it's relative, it will be resolved with the
+   uri of the resource.
 
-The Representation is typically the 'body' of a resource in REST terminology.
-It's the R in REST.
+For example, this is how you might do a HTTP `PATCH` request:
 
-The Representation is what gets sent by a HTTP server in response to a `GET`
-request, and it's what gets sent by a HTTP client in a `POST` request.
+```js
+var init = {
+  method: 'PATCH',
+  body: JSON.serialize(['some', 'patch, 'object']);
+};
+var response = await resource.fetch(init);
+console.log(response.statusCode);
+```
 
-The Representation provides access to the body, a list of links and HTTP
-headers that represent real meta-data of the resource. Currently this is only
-`Content-Type` but this might be extended to include encoding, language and
-cache-related information.
+#### `resource.fetchAndThrow()`
 
+This function is identical to `fetch`, except that it will throw a (async)
+exception if the server responsed with a HTTP error.
 
-#### `Representation.body`
+### Link
 
-The `body` property has the body contents of a `PUT` request or a `GET` response.
+The link class represents any Link of any type of document. It has the
+following properties:
 
-#### `Representation.links`
+* rel - relation type
+* href - The uri
+* baseHref - the uri of the parent document. Used for resolving relative uris.
+* type - A mimetype, if specified
+* templated - If it's a URI Template. Most of the time this is false.
+* title - Hunman readable label for the uri
+* name - Unique identifier for the link within the document (rarely used).
 
-The `links` property has the list of links for a resource.
+#### `Link.resolve()`
 
-#### `Representation.contentType`
+Returns the absolute uri to the link. For example:
 
-The `contentType` property has the value of the `Content-Type` header for both
-requests and responses.
+```js
+var link = new Link({href: '/foo', baseHref: "http://example.org/bar" });
 
+console.log(link.resolve());
+// output is http://example.org/foo
+```
+
+#### `Link.expand()`
+
+Expands a templated link. Example:
+
+```js
+var link = new Link({href: 'http://example.org/foo{?q}', templated: true});
+
+console.log(link.expand({q: 'bla bla'});
+// output is http://example.org/foo?q=bla+bla
+```
 
 [1]: https://tools.ietf.org/html/rfc5988 "Web Linking"
 [2]: http://stateless.co/hal_specification.html "HAL - Hypertext Application Language"
-[3]: https://www.npmjs.com/package/request
 [6]: https://tools.ietf.org/html/rfc7240 "Prefer Header for HTTP"
+[3]: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API
