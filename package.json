@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "test": "eslint lib/ && nyc mocha",
-    "prepublish" : "make test build"
+    "prepare" : "make test build"
   },
   "repository": {
     "type": "git",

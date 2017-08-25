@@ -1,5 +1,5 @@
 .PHONY: build
-build: dist/ketting.js
+build: dist/ketting.min.js
 
 .PHONY: clean
 clean:
