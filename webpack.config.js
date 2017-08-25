@@ -4,7 +4,7 @@ module.exports = {
   output: {
     path: __dirname + "/dist",
     filename: "ketting.min.js",
-    library: "ketting"
+    library: "Ketting"
   },
 
   resolve: {

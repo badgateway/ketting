@@ -1,10 +1,11 @@
 ChangeLog
 =========
 
-0.7.1 (2017-08-??)
+0.7.1 (2017-08-24)
 ------------------
 
 * Lots of documentation updates.
+* Including web distribution in NPM package.
 
 
 0.7.0 (2017-08-21)
