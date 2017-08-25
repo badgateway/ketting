@@ -4,7 +4,8 @@
   "description": "Opiniated HATEAOS / Rest client.",
   "main": "lib/index.js",
   "scripts": {
-    "test": "eslint lib/ && nyc mocha"
+    "test": "eslint lib/ && nyc mocha",
+    "prepublish" : "make test build"
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,10 @@
     "url": "https://github.com/evert/ketting/issues"
   },
   "homepage": "https://github.com/evert/ketting#readme",
+  "files" : [
+    "lib",
+    "dist/ketting.min.js"
+  ],
   "dependencies": {
     "http-link-header": "^0.8.0",
     "node-fetch": "^1.7.2",
