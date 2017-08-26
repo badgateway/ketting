@@ -10,6 +10,21 @@ let resources = {};
 app.use(logger());
 
 app.use(
+  route('/')
+  .get(ctx => {
+    ctx.response.body = fs.readFileSync('fixtures/index.html');
+    ctx.response.type = 'text/html';
+  })
+);
+app.use(
+  route('/ketting.min.js')
+  .get(ctx => {
+    ctx.response.body = fs.readFileSync('../dist/ketting.min.js');
+    ctx.response.type = 'text/javascript';
+  })
+);
+
+app.use(
   route('/headers')
   .get(ctx => {
 
