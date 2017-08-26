@@ -126,43 +126,6 @@ Further reading:
 * [Further reading](https://evertpot.com/rest-embedding-hal-http2/).
 * [Hypertext Cache Pattern in HAL spec](https://tools.ietf.org/html/draft-kelly-json-hal-08#section-8.3).
 
-### HAL and Curies
-
-HAL has a CURIES feature. If your api uses them, the Ketting library will
-automatically expand them.
-
-For example, from a Ketting perspective, the following HAL document:
-
-```js
-{
-  "_links" : {
-    "foo:website" : {
-      "href": "https://github.com/evert/ketting/",
-    },
-    "curies" : {
-      "href": "http://ns.example.org/{rel}",
-      "templated": true,
-      "name": "foo",
-    }
-  }
-}
-```
-
-Is parsed like this:
-
-```js
-{
-  "_links" : {
-    "http://ns.example.org/website" : {
-      "href": "https://github.com/evert/ketting/",
-    }
-  }
-}
-```
-
-Only the full relation type (`http://ns.example.org/website`) can be used in
-functions such as `follow` and `followAll`.
-
 
 Node and Browser
 ----------------
