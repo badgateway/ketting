@@ -13,7 +13,7 @@ test:
 lint:
 	node_modules/.bin/eslint lib/
 
-dist/ketting.min.js: lib/*.js
+dist/ketting.min.js: lib/*.js lib/*/*.js
 	mkdir -p dist
 	node_modules/.bin/webpack \
 		--optimize-minimize \
