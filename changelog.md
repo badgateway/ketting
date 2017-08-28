@@ -1,6 +1,14 @@
 ChangeLog
 =========
 
+0.8.0 (2017-08-28)
+------------------
+
+* #49: Removed support for expanding CURIEs in HAL. This was in conflict with
+  the HAL standard. The canonical relation type is the prefix in the REL, not
+  the expanded CURIE uri.
+
+
 0.7.1 (2017-08-24)
 ------------------
 
