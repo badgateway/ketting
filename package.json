@@ -36,13 +36,13 @@
     "uri-template": "^1.0.1"
   },
   "devDependencies": {
-    "chai": "^3.5.0",
+    "chai": "^4.1.1",
     "eslint": "^4.5.0",
     "koa": "^2.2.0",
-    "koa-logger": "^2.0.1",
+    "koa-logger": "^3.0.1",
     "koa-path-match": "^2.0.0",
     "mocha": "^3.2.0",
-    "nyc": "^10.2.0",
+    "nyc": "^11.1.0",
     "webpack": "^3.5.2"
   }
 }
