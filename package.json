@@ -36,8 +36,8 @@
     "uri-template": "^1.0.1"
   },
   "devDependencies": {
-    "chai": "^4.1.1",
-    "eslint": "^4.5.0",
+    "chai": "^4.1.2",
+    "eslint": "^4.6.1",
     "koa": "^2.2.0",
     "koa-logger": "^3.0.1",
     "koa-path-match": "^2.0.0",
