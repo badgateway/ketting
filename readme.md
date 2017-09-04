@@ -127,6 +127,15 @@ Further reading:
 * [Hypertext Cache Pattern in HAL spec](https://tools.ietf.org/html/draft-kelly-json-hal-08#section-8.3).
 
 
+Automatically parsing problem+json
+----------------------------------
+
+If your server emits application/problem+json documents ([rfc7807][4]) on HTTP
+errors, the library will automatically extract the information from that
+object, and also provide a better exception message (if the title property is
+provided).
+
+
 Node and Browser
 ----------------
 
@@ -135,6 +144,7 @@ in a browser, the following must be supported by a browser:
 
 * The [Fetch API][3].
 * Promises (async/await is not required)
+
 
 API
 ---
@@ -150,8 +160,9 @@ var options = {}; // options are optional
 var ketting = new Ketting('https://api.example.org/', options);
 ```
 
-Currently the only supported option is `auth`. `auth` can be used to specify
-authentication information. HTTP Basic auth and OAUth2 Bearer token are
+2 keys or `options` are currently supported: `auth` and `fetchInit`.  `auth`
+can be used to specify authentication information. HTTP Basic auth and OAUth2
+Bearer token are
 supported.
 
 Basic example:
@@ -176,6 +187,25 @@ var options = {
   }
 };
 ```
+
+The `fetchInit` option is a default list of settings that's automatically
+passed to `fetch()`. This is especially useful in a browser, where there's a
+few more settings highly relevant to the security sandbox.
+
+For example, to ensure that the browser automatically passed relevant cookies
+to the endpoint, you would specifiy this as such:
+
+```js
+var options = {
+  fetchInit : {
+    credentials: 'include'
+  }
+};
+```
+
+Other options that you may want to set might be `mode` or `cache`. See the
+documentation for the [Request constructor](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request)
+for the full list.
 
 
 #### `Ketting.getResource()`
@@ -413,3 +443,4 @@ console.log(link.expand({q: 'bla bla'});
 [2]: http://stateless.co/hal_specification.html "HAL - Hypertext Application Language"
 [6]: https://tools.ietf.org/html/rfc7240 "Prefer Header for HTTP"
 [3]: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API
+[4]: https://tools.ietf.org/html/rfc7807

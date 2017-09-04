@@ -1,6 +1,13 @@
 ChangeLog
 =========
 
+0.8.1 (2017-09-04)
+------------------
+
+* #50: Allow Fetch settings to be passed to the constructor of Ketting, so that
+  settings such as `credentials: include` may be passed.
+
+
 0.8.0 (2017-08-28)
 ------------------
 
