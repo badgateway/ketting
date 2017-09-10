@@ -1,6 +1,13 @@
 ChangeLog
 =========
 
+0.8.2 (2017-09-10)
+-----------------
+
+* #53: Regression related to the new 'fetchInit' option.
+* Now generating source maps.
+
+
 0.8.1 (2017-09-04)
 ------------------
 
