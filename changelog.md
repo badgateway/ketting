@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+0.8.3 (2017-09-10)
+-----------------
+
+* Including the sourcemap file in the NPM distribution.
+
+
 0.8.2 (2017-09-10)
 -----------------
 
