@@ -20,3 +20,4 @@ dist/ketting.min.js: lib/*.js lib/*/*.js
 		-p \
 		--display-modules \
 		--sort-modules-by size
+

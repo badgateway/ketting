@@ -23,6 +23,13 @@ app.use(
     ctx.response.type = 'text/javascript';
   })
 );
+app.use(
+  route('/ketting.min.js.map')
+  .get(ctx => {
+    ctx.response.body = fs.readFileSync('../dist/ketting.min.js.map');
+    ctx.response.type = 'text/plain';
+  })
+);
 
 app.use(
   route('/headers')

@@ -1,13 +1,15 @@
 module.exports = {
 
-  entry: "./lib/index",
+  entry: './lib/index',
   output: {
-    path: __dirname + "/dist",
-    filename: "ketting.min.js",
-    library: "Ketting"
+    path: __dirname + '/dist',
+    filename: 'ketting.min.js',
+    library: 'Ketting'
   },
 
   resolve: {
-    extensions: [".web.js", ".js", ".json"]
-  }
+    extensions: ['.web.js', '.js', '.json']
+  },
+
+  devtool: 'source-map'
 }
