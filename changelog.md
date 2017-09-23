@@ -1,6 +1,18 @@
 ChangeLog
 =========
 
+0.9.0 (2017-09-23)
+------------------
+
+* #52: Now using the new URL object in browsers for resolving relative urls,
+  and falling back to a DOM based url resolving mechanism if it's not
+  available. This causes the browser distribution to drop another 10KB to
+  46KB.
+* Moved a bunch of utility objects into a `util/` directory, so it's more
+  clear what the important API's are.
+* #55: Fixed another problem related to the fetchInit function in firefox.
+
+
 0.8.3 (2017-09-10)
 -----------------
 
