@@ -1,4 +1,5 @@
 const Koa = require('koa');
+const bodyParser = require('koa-bodyparser');
 const route = require('koa-path-match')();
 const logger = require('koa-logger')
 const fs = require('fs');
@@ -8,6 +9,9 @@ let resources = {};
 
 // Log to console
 app.use(logger());
+
+// Use body parser
+app.use(bodyParser());
 
 app.use(
   route('/')
@@ -122,6 +126,7 @@ app.use(
     }
   })
 );
+
 app.use(
   route('/auth/bearer')
   .get(ctx => {
@@ -135,6 +140,43 @@ app.use(
       ctx.response.status = 200;
     }
   })
+);
+
+app.use(
+  route('/auth/oauth')
+  .get(ctx => {
+    const encoded = 'Bearer foo';
+    if (!ctx.request.headers.authorization || ctx.request.headers.authorization!==encoded) {
+      ctx.response.status = 401;
+      ctx.response.body = '';
+      ctx.response.set('Authorization', 'Bearer');
+    } else {
+      ctx.response.body = { ok: true };
+      ctx.response.status = 200;
+    }
+  })
+);
+
+app.use(
+  route('/oauth-token')
+    .post(ctx => {
+      const requestBody = ctx.request.body;
+      const clientInfo = Buffer.from(ctx.request.headers.authorization.split(' ')[1], 'base64').toString('ascii');
+      if (clientInfo === 'fooClient:barSecret'
+        && requestBody.username === 'fooOwner'
+        && requestBody.password === 'barPassword'
+      ){
+        ctx.response.body = {
+          token_type: 'bearer',
+          access_token: 'foo',
+          refresh_token: 'bar'
+        };
+        ctx.response.status = 200;
+      } else {
+        ctx.response.status = 401;
+        ctx.response.body = '';
+      }
+    })
 );
 
 // Rest stuff!

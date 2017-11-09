@@ -9,6 +9,7 @@
         "echo": { "href" : "/echo" },
         "auth-basic" : { "href" : "/auth/basic" },
         "auth-bearer" : { "href" : "/auth/bearer" },
+        "auth-oauth" : { "href" : "/auth/oauth" },
         "templated" : { "href" : "/templated.json{?foo}", "templated": true },
         "linkHeader" : { "href" : "/link-header" },
         "problem" : { "href" : "/problem" },

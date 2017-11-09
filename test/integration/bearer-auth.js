@@ -3,10 +3,10 @@ const Resource = require('../../lib/resource');
 const expect = require('chai').expect;
 const Request = require('node-fetch').Request;
 
-describe('OAuth Authentication', () => {
+describe('Bearer Authentication', () => {
 
   it('should return 401 if no credentials were passed.', async() => {
-  
+
     const ketting = new Ketting('http://localhost:3000/hal1.json');
     const resource = await ketting.follow('auth-bearer');
     const response = await resource.fetch();
@@ -20,7 +20,7 @@ describe('OAuth Authentication', () => {
       auth: {
         type: 'bearer',
         token: 'bar'
-      } 
+      }
     });
     const resource = await ketting.follow('auth-bearer');
     const response = await resource.fetch();
@@ -34,7 +34,7 @@ describe('OAuth Authentication', () => {
       auth: {
         type: 'bearer',
         token: 'foo'
-      } 
+      }
     });
     const resource = await ketting.follow('auth-bearer');
     const response = await resource.fetch();
