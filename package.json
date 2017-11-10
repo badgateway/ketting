@@ -31,6 +31,7 @@
     "dist/ketting.min.js.map"
   ],
   "dependencies": {
+    "client-oauth2": "^4.1.0",
     "http-link-header": "^0.8.0",
     "node-fetch": "^1.7.3",
     "sax": "^1.2.4",
@@ -40,6 +41,7 @@
     "chai": "^4.1.2",
     "eslint": "^4.6.1",
     "koa": "^2.2.0",
+    "koa-bodyparser": "^4.2.0",
     "koa-logger": "^3.0.1",
     "koa-path-match": "^2.0.0",
     "mocha": "^3.5.2",
