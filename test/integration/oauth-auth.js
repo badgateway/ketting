@@ -89,6 +89,71 @@ describe('OAuth2 Authentication', () => {
       expect(response.status).to.eql(200);
 
     });
+
+    it('should refresh token if 401 is returned and retry request', async() => {
+
+      const ketting = new Ketting('http://localhost:3000/hal1.json', {
+        auth: {
+          type: 'oauth2',
+          client: {
+            clientId: 'fooClient',
+            clientSecret: 'barSecret',
+            accessTokenUri: 'http://localhost:3000/oauth-token',
+            scopes: ['test']
+          },
+          owner: {
+            userName: 'fooOwner',
+            password: 'barPassword'
+          }
+        }
+      });
+
+      const token = ketting.auth.oauth.client.createToken(
+        'barToken',
+        'fooRefresh',
+        'bearer'
+      );
+      ketting.auth.oauth.token = token;
+
+      const resource = await ketting.follow('auth-oauth');
+      const response = await resource.fetch();
+      expect(response.status).to.eql(200);
+
+    });
+
+    it('should refresh token if 401 is returned and throw error if refresh is invalid', async() => {
+
+      const ketting = new Ketting('http://localhost:3000/hal1.json', {
+        auth: {
+          type: 'oauth2',
+          client: {
+            clientId: 'fooClient',
+            clientSecret: 'barSecret',
+            accessTokenUri: 'http://localhost:3000/oauth-token',
+            scopes: ['test']
+          },
+          owner: {
+            userName: 'fooOwner',
+            password: 'barPassword'
+          }
+        }
+      });
+
+      const token = ketting.auth.oauth.client.createToken(
+        'barToken',
+        'barRefresh',
+        'bearer'
+      );
+      ketting.auth.oauth.token = token;
+
+      try {
+        const resource = await ketting.follow('auth-oauth');
+        const response = await resource.fetch();
+
+      } catch (error){
+        expect(error).to.be.an('error');
+      }
+    });
   });
 
   it('should throw error when using unsupported flow', (done) => {
@@ -106,6 +171,7 @@ describe('OAuth2 Authentication', () => {
         }
       }
     });
+
     ketting.follow('auth-oauth')
       .catch((error) => {
         expect(error).to.be.an('error');

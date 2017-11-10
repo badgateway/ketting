@@ -162,9 +162,19 @@ app.use(
     .post(ctx => {
       const requestBody = ctx.request.body;
       const clientInfo = Buffer.from(ctx.request.headers.authorization.split(' ')[1], 'base64').toString('ascii');
+
+      // Check that the client info is legitimate an then check if the user
+      // information is correct if a password grant or the refresh token is
+      // valid if doing a refresh grant
       if (clientInfo === 'fooClient:barSecret'
-        && requestBody.username === 'fooOwner'
-        && requestBody.password === 'barPassword'
+        && (
+          (requestBody.grant_type === 'password'
+          && requestBody.username === 'fooOwner'
+          && requestBody.password === 'barPassword')
+        ||
+          (requestBody.grant_type === 'refresh_token'
+          && requestBody.refresh_token === 'fooRefresh')
+        )
       ){
         ctx.response.body = {
           token_type: 'bearer',
