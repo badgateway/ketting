@@ -57,7 +57,7 @@ and discover resources and features on the server.
 
 ### Following links
 
-One core tennet of building a good REST service, is that URIs should be
+One core tenet of building a good REST service, is that URIs should be
 discovered, not hardcoded in an application. It's for this reason that the
 emphasis in this library is _not_ on URIs (like most libraries) but on
 relation-types (the `rel`) and links.
@@ -72,7 +72,7 @@ that uri, the api returns `201 Created` along with a `Location` header pointing
 to the new article. On this location, a new `rel="author"` appears
 automatically, pointing to the person that created the article.
 
-This is how that iteraction might look like:
+This is how that interaction might look like:
 
 ```js
 var ketting = new Ketting('https://api.example.org/');
@@ -87,7 +87,7 @@ console.log(await author.get());
 
 ### Embedded resources
 
-Embedded resources are a HAL feature. In situations when you are modelling a
+Embedded resources are a HAL feature. In situations when you are modeling a
 'collection' of resources, in HAL you should generally just create links to
 all the items in the collection. However, if a client wants to fetch all these
 items, this can result in a lot of HTTP requests. HAL uses `_embedded` to work
@@ -161,9 +161,7 @@ var ketting = new Ketting('https://api.example.org/', options);
 ```
 
 2 keys or `options` are currently supported: `auth` and `fetchInit`.  `auth`
-can be used to specify authentication information. HTTP Basic auth and OAUth2
-Bearer token are
-supported.
+can be used to specify authentication information. Support authentication methods are: HTTP Basic auth, OAuth2 Bearer tokens, and OAuth2 managed client.
 
 Basic example:
 
@@ -177,7 +175,7 @@ var options = {
 };
 ```
 
-Bearer example:
+OAuth2 Bearer example:
 
 ```js
 var options = {
@@ -188,12 +186,33 @@ var options = {
 };
 ```
 
+##### OAuth2 Managed Client
+The only currently supported authorization flow is the [Resource Owner Password Credentials Grant](https://tools.ietf.org/html/rfc6749#section-4.3).
+
+Resource Owner Password Credentials Grant example:
+
+```js
+var options = auth: {
+  type: 'oauth2',
+  client: {
+    clientId: 'fooClient',
+    clientSecret: 'barSecret',
+    accessTokenUri: 'https://api.example.org//oauth/token',
+    scopes: ['test']
+  },
+  owner: {
+    userName: 'fooOwner',
+    password: 'barPassword'
+  }
+}
+```
+
 The `fetchInit` option is a default list of settings that's automatically
 passed to `fetch()`. This is especially useful in a browser, where there's a
 few more settings highly relevant to the security sandbox.
 
 For example, to ensure that the browser automatically passed relevant cookies
-to the endpoint, you would specifiy this as such:
+to the endpoint, you would specify this as such:
 
 ```js
 var options = {
@@ -393,7 +412,7 @@ For example, this is how you might do a HTTP `PATCH` request:
 ```js
 var init = {
   method: 'PATCH',
-  body: JSON.serialize(['some', 'patch, 'object'])
+  body: JSON.serialize(['some', 'patch', 'object'])
 };
 var response = await resource.fetch(init);
 console.log(response.statusCode);
@@ -402,7 +421,7 @@ console.log(response.statusCode);
 #### `resource.fetchAndThrow()`
 
 This function is identical to `fetch`, except that it will throw a (async)
-exception if the server responsed with a HTTP error.
+exception if the server responded with a HTTP error.
 
 ### Link
 
@@ -414,7 +433,7 @@ following properties:
 * baseHref - the uri of the parent document. Used for resolving relative uris.
 * type - A mimetype, if specified
 * templated - If it's a URI Template. Most of the time this is false.
-* title - Hunman readable label for the uri
+* title - Human readable label for the uri
 * name - Unique identifier for the link within the document (rarely used).
 
 #### `Link.resolve()`
@@ -438,6 +457,35 @@ var link = new Link({href: 'http://example.org/foo{?q}', templated: true});
 console.log(link.expand({q: 'bla bla'});
 // output is http://example.org/foo?q=bla+bla
 ```
+
+### OAuth2 Managed Client
+The underlying OAuth2 client is implemented using [js-client-oauth2](https://github.com/mulesoft/js-client-oauth2) and is exposed via the 'Ketting' class.
+```js
+var ketting = new Ketting('https://api.example.org/', {
+  auth: {
+    type: 'oauth2',
+    client: {
+      clientId: 'fooClient',
+      clientSecret: 'barSecret',
+      accessTokenUri: 'https://api.example.org/oauth/token',
+      scopes: ['test']
+    },
+    owner: {
+      userName: 'fooOwner',
+      password: 'barPassword'
+    }
+  }
+});
+
+var oAuthClient = ketting.auth.oauth.client;
+// Interact with the underlying OAuth2 client
+
+
+// Helper functions are also exposed for fetching and refreshing the access token
+ketting.auth.oauth.getToken();
+ketting.auth.oauth.refreshToken();
+```
+
 
 [1]: https://tools.ietf.org/html/rfc5988 "Web Linking"
 [2]: http://stateless.co/hal_specification.html "HAL - Hypertext Application Language"
