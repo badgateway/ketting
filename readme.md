@@ -160,8 +160,12 @@ var options = {}; // options are optional
 var ketting = new Ketting('https://api.example.org/', options);
 ```
 
-2 keys or `options` are currently supported: `auth` and `fetchInit`.  `auth`
-can be used to specify authentication information. Support authentication methods are: HTTP Basic auth, OAuth2 Bearer tokens, and OAuth2 managed client.
+2 keys or `options` are currently supported: `auth` and `fetchInit`.  
+
+`auth` can be used to specify authentication information. Supported authentication methods are:
+- HTTP Basic auth
+- OAuth2 Bearer tokens
+- OAuth2 managed client
 
 Basic example:
 
@@ -197,7 +201,7 @@ var options = auth: {
   client: {
     clientId: 'fooClient',
     clientSecret: 'barSecret',
-    accessTokenUri: 'https://api.example.org//oauth/token',
+    accessTokenUri: 'https://api.example.org/oauth/token',
     scopes: ['test']
   },
   owner: {
