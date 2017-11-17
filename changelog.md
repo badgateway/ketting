@@ -1,6 +1,14 @@
 ChangeLog
 =========
 
+0.10.0 (2017-11-16)
+-------------------
+
+* #19: Support for OAuth2 access and refresh tokens. When used, the library
+  can automatically refresh the access token if the previous one expired. It
+  can also supports the `client_credentials` OAuth2 grant (@mhum).
+
+
 0.9.0 (2017-09-23)
 ------------------
 
