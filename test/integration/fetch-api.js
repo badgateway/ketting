@@ -39,7 +39,15 @@ describe('Using the fetch api', () => {
 
   it('should allow overriding the Content-Type header', async() => {
 
-    const headersResource = await ketting.follow('headerTest');
+    const tempKetting = new Ketting('http://localhost:3000/hal1.json', {
+      fetchInit: {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    });
+
+    const headersResource = await tempKetting.follow('headerTest');
     const response = await headersResource.fetch({
       method: 'POST',
       headers: {
