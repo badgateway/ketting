@@ -30,6 +30,14 @@ describe('Following a link', async () => {
 
   });
 
+  it('should be chainable several times', async() => {
+
+    const hal1 = await ketting.follow('next').follow('prev').follow('next').follow('prev');
+    const body = await hal1.get();
+    expect(body).to.eql({'title': 'Hal 1', 'foo': 'bar'});
+
+  });
+
   it('should work with embedded resources', async() => {
 
     const items = await ketting.follow('collection').followAll('item');
