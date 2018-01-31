@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+0.10.1 (2018-01-31)
+-------------------
+
+* #60: Chaining more than 2 `follow` statements did not work.
+
+
 0.10.0 (2017-11-16)
 -------------------
 
