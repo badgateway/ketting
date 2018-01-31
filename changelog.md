@@ -1,12 +1,19 @@
 ChangeLog
 =========
 
+0.10.3 (2018-01-31)
+-------------------
+
+* #63: It was not possible to expand templated links with variables after more
+  than one chained hop. (@mhum).
+
+
 0.10.2 (2018-01-31)
 -------------------
 
-* #62: It was not possible t to override headers such as `Content-Type` when
+* #62: It was not possible to override headers such as `Content-Type` when
   calling `Resource.fetch()`, if these were also set in the `fetchInit`
-  defaults.
+  defaults. (@mhum).
 
 
 0.10.1 (2018-01-31)
