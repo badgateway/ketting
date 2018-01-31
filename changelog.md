@@ -1,6 +1,14 @@
 ChangeLog
 =========
 
+0.10.2 (2018-01-31)
+-------------------
+
+* #62: It was not possible t to override headers such as `Content-Type` when
+  calling `Resource.fetch()`, if these were also set in the `fetchInit`
+  defaults.
+
+
 0.10.1 (2018-01-31)
 -------------------
 
