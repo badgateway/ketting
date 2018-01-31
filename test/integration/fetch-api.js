@@ -36,6 +36,22 @@ describe('Using the fetch api', () => {
     expect(response.status).to.eql(204);
 
   });
+
+  it('should allow overriding the Content-Type header', async() => {
+
+    const headersResource = await ketting.follow('headerTest');
+    const response = await headersResource.fetch({
+      method: 'POST',
+      headers: {
+        'Content-Type' : 'image/png'
+      }
+    });
+
+    const body = await response.json();
+    expect(body['content-type']).to.eql('image/png');
+
+  });
+
   after( async() => {
 
     // Clearing any changes.

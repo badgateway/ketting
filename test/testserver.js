@@ -36,12 +36,9 @@ app.use(
 );
 
 app.use(
-  route('/headers')
-  .get(ctx => {
-
+  route('/headers', ctx => {
     ctx.response.status = 200;
     ctx.response.body = ctx.request.headers;
-
   })
 );
 
