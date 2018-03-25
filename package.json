@@ -1,11 +1,12 @@
 {
   "name": "ketting",
-  "version": "0.10.3",
+  "version": "0.11.0",
   "description": "Opiniated HATEAOS / Rest client.",
   "main": "lib/index.js",
   "scripts": {
     "test": "eslint lib/ && nyc mocha",
-    "prepare": "make test build"
+    "prepare": "make build",
+    "build": "make build"
   },
   "repository": {
     "type": "git",
