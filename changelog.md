@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+0.11.0 (2018-??-??)
+-------------------
+
+* #66: Support for Accept header weighing with the q= parameter.
+
+
 0.10.3 (2018-01-31)
 -------------------
 
