@@ -1,10 +1,11 @@
 ChangeLog
 =========
 
-1.0.0 (2018-03-24)
+1.0.0 (2018-03-25)
 ------------------
 
 * #66: Support for Accept header weighing with the q= parameter.
+* #68: Updated all dependencies to their latest version.
 
 
 0.10.3 (2018-01-31)

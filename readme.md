@@ -8,8 +8,7 @@ The Ketting library is an attempt at creating a 'generic' hypermedia client, it
 supports an opinionated set of modern features REST services might have.
 
 The library supports [HAL][2], [Web Linking (HTTP Link Header)][1] and HTML5
-links. It uses the Fetch API and is meant for client and server-side
-javascript.
+links. It uses the Fetch API and works both in the browsers and in node.js.
 
 ### Example
 
