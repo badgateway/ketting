@@ -1,3 +1,4 @@
 test
 --recursive
 --require test/testserver.js
+--exit
