@@ -1,6 +1,13 @@
 ChangeLog
 =========
 
+1.1.0 (????-??-??)
+------------------
+
+* #70: Moved all source from `lib/` to `src/`. This is prepping for typescript
+  support.
+
+
 1.0.0 (2018-03-25)
 ------------------
 
