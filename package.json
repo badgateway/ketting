@@ -34,6 +34,7 @@
   "dependencies": {
     "client-oauth2": "^4.1.0",
     "http-link-header": "^0.8.0",
+    "koa-static": "^4.0.2",
     "node-fetch": "^2.1.1",
     "sax": "^1.2.4",
     "uri-template": "^1.0.1"

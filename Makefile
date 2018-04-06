@@ -21,3 +21,5 @@ dist/ketting.min.js: src/*.js src/*/*.js
 		--display-modules \
 		--sort-modules-by size
 
+testserver:
+	cd test; node testserver.js
