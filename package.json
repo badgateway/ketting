@@ -2,9 +2,9 @@
   "name": "ketting",
   "version": "1.0.0",
   "description": "Opiniated HATEAOS / Rest client.",
-  "main": "lib/index.js",
+  "main": "src/index.js",
   "scripts": {
-    "test": "eslint lib/ && nyc mocha",
+    "test": "eslint src/ && nyc mocha",
     "prepare": "make build",
     "build": "make build"
   },
@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/evert/ketting#readme",
   "files": [
-    "lib",
+    "src",
     "dist/ketting.min.js",
     "dist/ketting.min.js.map"
   ],

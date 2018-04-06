@@ -1,6 +1,6 @@
 module.exports = {
 
-  entry: './lib/index',
+  entry: './src/index',
   output: {
     path: __dirname + '/dist',
     filename: 'ketting.min.js',

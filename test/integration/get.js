@@ -1,6 +1,6 @@
-const Ketting = require('../../lib/ketting');
-const Resource = require('../../lib/resource');
-const Link = require('../../lib/link');
+const Ketting = require('../../src/ketting');
+const Resource = require('../../src/resource');
+const Link = require('../../src/link');
 const expect = require('chai').expect;
 
 describe('Issuing a GET request', async () => {
