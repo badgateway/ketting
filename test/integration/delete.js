@@ -1,6 +1,6 @@
-const Ketting = require('../../lib/ketting');
-const Resource = require('../../lib/resource');
-const Problem = require('../../lib/http-error').Problem;
+const Ketting = require('../../src/ketting');
+const Resource = require('../../src/resource');
+const Problem = require('../../src/http-error').Problem;
 
 const expect = require('chai').expect;
 
