@@ -2,6 +2,7 @@ const Koa = require('koa');
 const bodyParser = require('koa-bodyparser');
 const route = require('koa-path-match')();
 const logger = require('koa-logger')
+const koaStatic = require('koa-static');
 const fs = require('fs');
 const app = new Koa();
 
@@ -13,27 +14,24 @@ app.use(logger());
 // Use body parser
 app.use(bodyParser());
 
-app.use(
-  route('/')
-  .get(ctx => {
-    ctx.response.body = fs.readFileSync('fixtures/index.html');
-    ctx.response.type = 'text/html';
-  })
-);
-app.use(
-  route('/ketting.min.js')
-  .get(ctx => {
-    ctx.response.body = fs.readFileSync('../dist/ketting.min.js');
-    ctx.response.type = 'text/javascript';
-  })
-);
-app.use(
-  route('/ketting.min.js.map')
-  .get(ctx => {
-    ctx.response.body = fs.readFileSync('../dist/ketting.min.js.map');
-    ctx.response.type = 'text/plain';
-  })
-);
+function staticFile(url, path, type) {
+  app.use(
+    route(url)
+    .get(ctx => {
+      ctx.response.body = fs.readFileSync(path);
+      ctx.response.type = type;
+    })
+  );
+
+}
+
+app.use(koaStatic(__dirname + '/../dist/'));
+
+staticFile('/', 'fixtures/index.html', 'text/html');
+staticFile('/mocha.js', __dirname + '/../node_modules/mocha/mocha.js', 'text/javascript');
+staticFile('/mocha.css', __dirname + '/../node_modules/mocha/mocha.css', 'text/css');
+
+
 
 app.use(
   route('/headers', ctx => {

@@ -1,15 +1,31 @@
-module.exports = {
+const webpack = require('webpack');
 
-  entry: './src/index',
-  output: {
-    path: __dirname + '/dist',
-    filename: 'ketting.min.js',
-    library: 'Ketting'
+module.exports = [
+  {
+    entry: './src/index',
+    output: {
+      path: __dirname + '/dist',
+      filename: 'ketting.min.js',
+      library: 'Ketting'
+    },
+
+    resolve: {
+      extensions: ['.web.js', '.js', '.json']
+    },
+
+    devtool: 'source-map'
   },
-
-  resolve: {
-    extensions: ['.web.js', '.js', '.json']
+  {
+    entry: [
+      './test/test-entrypoint',
+    ],
+    output: {
+      path: __dirname + '/dist',
+      filename: 'mocha-tests.js'
+    },
+    resolve: {
+      extensions: ['.web.js', '.js', '.json']
+    },
+    mode: 'development'
   },
-
-  devtool: 'source-map'
-}
+];

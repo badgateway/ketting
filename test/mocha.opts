@@ -1,4 +1,4 @@
-test
+test/unit test/integration
 --recursive
 --require test/testserver.js
 --exit
