@@ -259,4 +259,7 @@ app.use(
   })
 );
 
-app.listen(3000);
+var port = 3000;
+app.listen(port);
+
+console.log('Server is now online. Head to http://localhost:' + port + '/ to run tests in a browser');
