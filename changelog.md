@@ -1,12 +1,13 @@
 ChangeLog
 =========
 
-1.1.0 (????-??-??)
+1.1.0 (2018-04-07)
 ------------------
 
 * #70: Moved all source from `lib/` to `src/`. This is prepping for typescript
   support.
 * #73: Mocha tests can now be ran in a browser.
+* #76: Fixed a browser bug: Headers is not a constructor.
 
 
 1.0.0 (2018-03-25)

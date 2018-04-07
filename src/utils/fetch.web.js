@@ -17,3 +17,4 @@ module.exports = function(input, init) {
 };
 
 module.exports.Request = Request;
+module.exports.Headers = Headers;
