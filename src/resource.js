@@ -6,6 +6,7 @@ var fetch = require('./utils/fetch');
 var problemFactory = require('./http-error');
 var LinkHeader = require('http-link-header');
 var Link = require('./link');
+var mergeHeaders = require('./utils/fetch-helper').mergeHeaders;
 
 /**
  * A 'resource' represents an endpoint on the server.
@@ -353,11 +354,10 @@ Resource.prototype = {
         }
         newInit[key] = init[key];
       }
-      if (init.headers) {
-        for (var headerName in init.headers) {
-          newInit.headers.set(headerName, init.headers[headerName]);
-        }
-      }
+      newInit.headers = mergeHeaders([
+        newInit.headers,
+        init.headers
+      ]);
     }
 
     var request = new fetch.Request(uri, newInit);
