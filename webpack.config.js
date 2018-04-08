@@ -1,5 +1,3 @@
-const webpack = require('webpack');
-
 module.exports = [
   {
     entry: './src/index',
@@ -24,7 +22,12 @@ module.exports = [
       filename: 'mocha-tests.js'
     },
     resolve: {
-      extensions: ['.web.js', '.js', '.json']
+      extensions: ['.web.js', '.js', '.json'],
+      alias: {
+        // We need an alternative 'querystring', because the default is not
+        // 100% compatible
+        querystring: 'querystring-browser'
+      }
     },
     mode: 'development'
   },
