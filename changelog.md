@@ -6,6 +6,8 @@ ChangeLog
 
 * #78: Webpack build had a broken version of `querystring`, which caused
   `Link:` header parsing to fail in browsers.
+* #80: `resource.fetch()` would throw an exception with some combinations
+  of arguments.
 
 
 1.1.0 (2018-04-07)
