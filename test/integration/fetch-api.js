@@ -73,6 +73,21 @@ describe('Using the fetch api', () => {
 
   });
 
+  it('should allow overriding the User-Agent  header', async() => {
+
+    const headersResource = await ketting.follow('headerTest');
+    const response = await headersResource.fetch({
+      method: 'POST',
+      headers: {
+        'User-Agent': 'foo-bar/1.2'
+      }
+    });
+
+    const body = await response.json();
+    expect(body['user-agent']).to.eql('foo-bar/1.2');
+
+  });
+
   it('Calling fetch on the client itself should also work', async() => {
 
     const response = await ketting.fetch('http://localhost:3000/hal1.json',{
@@ -83,6 +98,18 @@ describe('Using the fetch api', () => {
     });
     expect(response).to.have.property('status');
     expect(response.status).to.eql(204);
+
+  });
+
+  it('should throw a TypeError when passing an incorrect value for input', async() => {
+
+    let result;
+    try {
+      hal2.fetch(42);
+    } catch (e) {
+      result = e;
+    }
+    expect(result).to.be.instanceof(TypeError);
 
   });
 

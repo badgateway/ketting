@@ -53,6 +53,14 @@ describe('HTML representor', () => {
       `<a rel="icon favicon" href="favicon.ico">`,
       new Link({rel: 'icon', baseHref: '/index.html', href: 'favicon.ico'}),
       new Link({rel: 'favicon', baseHref: '/index.html', href: 'favicon.ico'}),
+    ],
+    [
+      // Ignoring links without rel
+      `<link href="https://evertpot.com/" />`,
+    ],
+    [
+      // Ignoring links without href
+      `<link rel="me" />`,
     ]
   ];
 
@@ -62,12 +70,7 @@ describe('HTML representor', () => {
 
       const html = new Html('/index.html', 'text/html', value[0]);
 
-      const links = [
-        value[1]
-      ];
-      if (value[2]) {
-        links.push(value[2]);
-      }
+      const links = value.slice(1);
 
       expect(html.uri).to.equal('/index.html');
       expect(html.contentType).to.equal('text/html');
