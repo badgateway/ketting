@@ -4,7 +4,7 @@
   "description": "Opiniated HATEAOS / Rest client.",
   "main": "src/index.js",
   "scripts": {
-    "test": "eslint src/ && nyc mocha",
+    "test": "nyc mocha",
     "prepare": "make build",
     "build": "make build"
   },

@@ -9,17 +9,17 @@ describe('Following a link', async () => {
   let hal2;
 
   it('should return a resource', async() => {
-  
+
     hal2 = await ketting.follow('next');
     expect(hal2).to.be.an.instanceof(Resource);
 
-  
+
   });
   it('should get the correct response to GET', async() => {
-  
+
     const body = await hal2.get();
     expect(body).to.eql({'title': 'HAL 2!'});
-    
+
 
   });
   it('should be chainable', async() => {
@@ -27,6 +27,20 @@ describe('Following a link', async () => {
     const hal1 = await ketting.follow('next').follow('prev');
     const body = await hal1.get();
     expect(body).to.eql({'title': 'Hal 1', 'foo': 'bar'});
+
+  });
+
+  it('should throw an error following non-existent relationships', async() => {
+
+    let result;
+    try {
+      const hal1 = await ketting.follow('next').follow('unknown');
+      const body = await hal1.get();
+    } catch (e) {
+      result = e;
+    }
+
+    expect(result).to.be.instanceof(Error);
 
   });
 

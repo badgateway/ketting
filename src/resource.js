@@ -342,6 +342,8 @@ Resource.prototype = {
       // in the resource, specifying the uri is optional.
       uri = this.uri;
       newInit = input;
+    } else {
+      throw new TypeError('When specified, input must be a string, Request object or a key-value object');
     }
 
     // if the 'init' argument is specified, we're using it to override things

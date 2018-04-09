@@ -6,7 +6,7 @@ clean:
 	rm dist/ketting.js
 
 .PHONY: test
-test:
+test: lint
 	npm test
 
 .PHONY: lint
