@@ -33,8 +33,6 @@
     "browser/ketting.min.js.map"
   ],
   "dependencies": {
-    "@types/node": "^10.3.3",
-    "awesome-typescript-loader": "^5.0.0",
     "client-oauth2": "^4.2.0",
     "http-link-header": "^0.8.0",
     "koa-static": "^4.0.2",
@@ -44,6 +42,8 @@
     "uri-template": "^1.0.1"
   },
   "devDependencies": {
+    "@types/node": "^10.3.3",
+    "awesome-typescript-loader": "^5.0.0",
     "chai": "^4.1.2",
     "eslint": "^4.19.1",
     "koa": "^2.5.0",
