@@ -2,9 +2,9 @@
   "name": "ketting",
   "version": "1.1.1",
   "description": "Opiniated HATEAOS / Rest client.",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "nyc mocha",
+    "test": "make test",
     "prepare": "make build",
     "build": "make build"
   },
@@ -28,8 +28,9 @@
   "homepage": "https://github.com/evert/ketting#readme",
   "files": [
     "src",
-    "dist/ketting.min.js",
-    "dist/ketting.min.js.map"
+    "dist/",
+    "browser/ketting.min.js",
+    "browser/ketting.min.js.map"
   ],
   "dependencies": {
     "client-oauth2": "^4.2.0",
@@ -41,6 +42,8 @@
     "uri-template": "^1.0.1"
   },
   "devDependencies": {
+    "@types/node": "^10.3.3",
+    "awesome-typescript-loader": "^5.0.0",
     "chai": "^4.1.2",
     "eslint": "^4.19.1",
     "koa": "^2.5.0",
@@ -49,6 +52,8 @@
     "koa-path-match": "^2.0.0",
     "mocha": "^5.0.5",
     "nyc": "^11.6.0",
+    "ts-node": "^6.1.1",
+    "typescript": "^2.9.2",
     "webpack": "^4.5.0",
     "webpack-cli": "^2.0.14"
   }
