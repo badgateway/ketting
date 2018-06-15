@@ -19,6 +19,10 @@ lint:
 tsbuild:
 	tsc
 
+.PHONY: watch
+watch:
+	tsc --watch
+
 browser/ketting.min.js: src/*/*.ts src/*.js src/*/*.js webpack.config.js package.json
 	mkdir -p browser
 	webpack \

@@ -1,5 +1,4 @@
-'use strict';
-var fetch = require('./fetch');
+import * as crossFetch from 'cross-fetch';
 
 /**
  * Creates a Fetch Request object, based on a number of settings.
@@ -10,13 +9,9 @@ var fetch = require('./fetch');
  *                              weren't overridden by init.
  * @return {Response}
  */
-function createFetchRequest(
-  input,
-  init,
-  defaultInit
-) {
+function createFetchRequest(input: any, init: any, defaultInit: any): Request {
 
-  var trueInit = {};
+  const trueInit:any = {};
 
   if (init) {
     Object.assign(trueInit, defaultInit, init);
@@ -26,13 +21,17 @@ function createFetchRequest(
 
   trueInit.headers = mergeHeaders([
     defaultInit.headers,
-    input instanceof fetch.Request ? input.headers : null,
+    // @ts-ignore cross-fetch definitions are broken. See https://github.com/lquixada/cross-fetch/pull/19
+    input instanceof crossFetch.Request ? input.headers : null,
     init && init.headers ? init.headers : null
   ]);
 
-  return new fetch.Request(input, trueInit);
+    // @ts-ignore cross-fetch definitions are broken. See https://github.com/lquixada/cross-fetch/pull/19
+  return new crossFetch.Request(input, trueInit);
 
 }
+
+type HeaderSet = any;
 
 /**
  * Merges sets of HTTP headers.
@@ -42,16 +41,13 @@ function createFetchRequest(
  *
  * Any headers that appear more than once get replaced. The last occurence
  * wins.
- *
- * @param {Object|undefined|fetch.Headers[]} headerSets
- * @return {fetch.Headers}
  */
-function mergeHeaders(headerSets) {
+function mergeHeaders(headerSets: HeaderSet[]): any {
 
-  var result = new fetch.Headers();
-  for(var headerSet of headerSets) {
+  var result = new crossFetch.Headers();
+  for(const headerSet of headerSets) {
 
-    if (headerSet instanceof fetch.Headers) {
+    if (headerSet instanceof crossFetch.Headers) {
       for(var key of headerSet.keys()) {
         result.set(key, headerSet.get(key));
       }
