@@ -1,4 +1,5 @@
 test/unit test/integration
 --recursive
+--require ts-node/register
 --require test/testserver.js
 --exit
