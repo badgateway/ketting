@@ -25,7 +25,7 @@ function staticFile(url, path, type) {
 
 }
 
-app.use(koaStatic(__dirname + '/../dist/'));
+app.use(koaStatic(__dirname + '/../browser/'));
 
 staticFile('/', 'fixtures/index.html', 'text/html');
 staticFile('/mocha.js', __dirname + '/../node_modules/mocha/mocha.js', 'text/javascript');
