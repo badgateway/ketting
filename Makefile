@@ -1,9 +1,9 @@
 .PHONY: build
-build: dist/ketting.min.js
+build: browser/ketting.min.js tsbuild
 
 .PHONY: clean
 clean:
-	rm dist/ketting.js
+	rm browser/ketting.js
 
 .PHONY: test
 test: lint
@@ -13,8 +13,12 @@ test: lint
 lint:
 	node_modules/.bin/eslint src/
 
-dist/ketting.min.js: src/*.js src/*/*.js webpack.config.js package.json
-	mkdir -p dist
+.PHONY: tsbuild
+tsbuild:
+	node_modules/.bin/tsc
+
+browser/ketting.min.js: src/*/*.ts src/*.js src/*/*.js webpack.config.js package.json
+	mkdir -p browser
 	node_modules/.bin/webpack \
 		--optimize-minimize \
 		-p \
