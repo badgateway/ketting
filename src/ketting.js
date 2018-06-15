@@ -3,7 +3,7 @@ var representor = require('./representor');
 
 var base64 = require('./utils/base64');
 var oauth = require('./utils/oauth');
-var fetch = require('./utils/fetch');
+var fetch = require('cross-fetch');
 var url = require('./utils/url');
 var fetchHelper = require('./utils/fetch-helper');
 

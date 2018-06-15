@@ -2,7 +2,7 @@
 
 var url = require('./utils/url');
 var FollowablePromise = require('./followable-promise');
-var fetch = require('./utils/fetch');
+var fetch = require('cross-fetch');
 var problemFactory = require('./http-error');
 var LinkHeader = require('http-link-header');
 var Link = require('./link');

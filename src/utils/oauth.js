@@ -1,6 +1,6 @@
 var ClientOAuth2 = require('client-oauth2');
 
-var fetch = require('./fetch');
+var fetch = require('cross-fetch');
 
 /**
  * Fetches an oauth2 token using the owner flow

@@ -34,8 +34,8 @@
   ],
   "dependencies": {
     "client-oauth2": "^4.2.1",
+    "cross-fetch": "^2.2.1",
     "http-link-header": "^0.8.0",
-    "node-fetch": "^2.1.2",
     "querystring-browser": "^1.0.4",
     "sax": "^1.2.4",
     "uri-template": "^1.0.1"
@@ -52,9 +52,9 @@
     "koa-static": "^4.0.3",
     "mocha": "^5.2.0",
     "nyc": "^11.9.0",
-    "webpack": "^4.12.0",
-    "webpack-cli": "^3.0.7",
     "ts-node": "^6.1.1",
-    "typescript": "^2.9.2"
+    "typescript": "^2.9.2",
+    "webpack": "^4.12.0",
+    "webpack-cli": "^3.0.7"
   }
 }
