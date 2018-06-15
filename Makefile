@@ -5,7 +5,7 @@ build: browser/ketting.min.js tsbuild
 
 .PHONY: clean
 clean:
-	rm browser/ketting.js
+	rm -r browser/ dist/ node_modules/
 
 .PHONY: test
 test: lint
