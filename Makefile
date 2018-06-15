@@ -1,3 +1,5 @@
+export PATH:=./node_modules/.bin/:$(PATH)
+
 .PHONY: build
 build: browser/ketting.min.js tsbuild
 
@@ -7,19 +9,19 @@ clean:
 
 .PHONY: test
 test: lint
-	npm test
+	nyc mocha
 
 .PHONY: lint
 lint:
-	node_modules/.bin/eslint src/
+	eslint src/
 
 .PHONY: tsbuild
 tsbuild:
-	node_modules/.bin/tsc
+	tsc
 
 browser/ketting.min.js: src/*/*.ts src/*.js src/*/*.js webpack.config.js package.json
 	mkdir -p browser
-	node_modules/.bin/webpack \
+	webpack \
 		--optimize-minimize \
 		-p \
 		--display-modules \

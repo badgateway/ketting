@@ -1,14 +1,8 @@
 /**
  * Encoding a string to base64 in a browser.
  */
-export default { 
+export function encode(input: string): string {
 
-  /**
-   * Encodes a string as base64
-   */
-  encode : function(input: string): string {
+  return btoa(input);
 
-    return btoa(input);
-
-  }
 };
