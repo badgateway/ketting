@@ -33,6 +33,7 @@
     "browser/ketting.min.js.map"
   ],
   "dependencies": {
+
     "client-oauth2": "^4.2.1",
     "cross-fetch": "^2.2.1",
     "http-link-header": "^0.8.0",
@@ -42,6 +43,7 @@
   },
   "devDependencies": {
     "@types/node": "^10.3.3",
+    "@types/http-link-header": "^0.6.1",
     "awesome-typescript-loader": "^5.0.0",
     "chai": "^4.1.2",
     "eslint": "^4.19.1",
