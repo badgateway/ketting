@@ -1,4 +1,4 @@
-const Link = require('../../src/link');
+const Link = require('../../src/link').default;
 const expect = require('chai').expect;
 
 describe('Link', () => {

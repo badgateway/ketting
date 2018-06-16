@@ -1,4 +1,4 @@
-var FollowablePromise = require('../../src/followable-promise');
+var FollowablePromise = require('../../src/followable-promise').default;
 var expect = require('chai').expect;
 
 describe('FollowablePromise', () => {

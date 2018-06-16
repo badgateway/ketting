@@ -9,7 +9,7 @@ import * as crossFetch from 'cross-fetch';
  *                              weren't overridden by init.
  * @return {Response}
  */
-function createFetchRequest(input: any, init: any, defaultInit: any): Request {
+export function createFetchRequest(input: any, init: any, defaultInit: any): Request {
 
   const trueInit:any = {};
 
@@ -20,7 +20,7 @@ function createFetchRequest(input: any, init: any, defaultInit: any): Request {
   }
 
   trueInit.headers = mergeHeaders([
-    defaultInit.headers,
+    defaultInit ? defaultInit.headers : null,
     // @ts-ignore cross-fetch definitions are broken. See https://github.com/lquixada/cross-fetch/pull/19
     input instanceof crossFetch.Request ? input.headers : null,
     init && init.headers ? init.headers : null
@@ -42,7 +42,7 @@ type HeaderSet = any;
  * Any headers that appear more than once get replaced. The last occurence
  * wins.
  */
-function mergeHeaders(headerSets: HeaderSet[]): any {
+export function mergeHeaders(headerSets: HeaderSet[]): Headers {
 
   var result = new crossFetch.Headers();
   for(const headerSet of headerSets) {
@@ -62,8 +62,3 @@ function mergeHeaders(headerSets: HeaderSet[]): any {
   return result;
 
 }
-
-module.exports = {
-  createFetchRequest: createFetchRequest,
-  mergeHeaders: mergeHeaders
-};

@@ -1,4 +1,11 @@
-'use strict';
+import Resource from './resource';
+
+type Executor =
+  (
+    res: ((value: FollowablePromise) => void),
+    rej: ((reason: any) => any)
+  )
+  => void;
 
 /**
  * The FollowablePromise is a Promise that adds the follow and followAll
@@ -11,36 +18,29 @@
  * @param {Function} executor
  * @constructor
  */
-var FollowablePromise = function(executor) {
+export default class FollowablePromise {
 
-  this.realPromise = new Promise(executor);
+  realPromise: Promise<Resource>
 
-};
-
-FollowablePromise.prototype = {
+  constructor(executor: Executor ) {
+    this.realPromise = new Promise(executor);
+  }
 
   /**
    * The then function maps to a standard then function, as it appears on the
    * promise.
-   *
-   * @param {Function} onResolve
-   * @param {Function} onReject
-   * @returns {Promise}
    */
-  then: function(onResolve, onReject) {
+  then(onResolve: (result: any) => Resource | Promise<Resource>, onReject?: (reason: any) => never): Promise<Resource> {
     return this.realPromise.then(onResolve, onReject);
-  },
+  }
 
   /**
    * The catch function maps to a standard then function, as it appears on the
    * promise.
-   *
-   * @param {Function} onReject
-   * @returns {Promise}
    */
-  catch: function(onReject) {
+  catch<T>(onReject: (reason: any) => Promise<T>): Promise<Resource | T> {
     return this.realPromise.catch(onReject);
-  },
+  }
 
   /**
    * The follow function will wait for this promise to resolve, assume the
@@ -50,26 +50,21 @@ FollowablePromise.prototype = {
    * 'follow' function.
    *
    * In practice this means you can chain multiple 'follow' calls.
-   *
-   * @param {string} rel - Relationship type
-   * @param {object} variables - Templated variables for templated links.
-   * @async
-   * @returns {Resource}
    */
-  follow: function(rel, variables) {
+  follow(rel: string, variables?: object): FollowablePromise {
 
-    return new FollowablePromise(function(resolve, reject) {
+    return new FollowablePromise((resolve: (value: FollowablePromise) => void, reject: Function) => {
 
-      this.realPromise.then(function(resource) {
+      this.realPromise.then((resource: Resource) => {
         resolve(resource.follow(rel, variables));
 
       }).catch(function(err) {
         reject(err);
       });
 
-    }.bind(this));
+    });
 
-  },
+  }
 
   /**
    * The followAll function will wait for this promise to resolve, assume the
@@ -84,16 +79,11 @@ FollowablePromise.prototype = {
    * It's really the same idea as the follow function, except that you can't
    * keep on chaining after the followAll, because it resolves in an array of
    * resources.
-   *
-   * @param {string} rel
-   * @returns {Resource[]}
    */
-  followAll: function(rel) {
-    return this.realPromise.then(function(resource) {
+  followAll(rel: string): Promise<Resource[]> {
+    return this.realPromise.then((resource: Resource) => {
       return resource.followAll(rel);
     });
   }
 
-};
-
-module.exports = FollowablePromise;
+}

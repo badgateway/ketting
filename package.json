@@ -41,7 +41,9 @@
     "uri-template": "^1.0.1"
   },
   "devDependencies": {
+    "@types/http-link-header": "^0.6.1",
     "@types/node": "^10.3.3",
+    "@types/sax": "^1.0.0",
     "awesome-typescript-loader": "^5.0.0",
     "chai": "^4.1.2",
     "eslint": "^4.19.1",
