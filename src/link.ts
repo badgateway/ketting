@@ -6,7 +6,7 @@ type LinkInit = {
   href: string,
   name?: string,
   rel: string,
-  templated?: string,
+  templated?: boolean,
   title?: string,
   type?: string,
 }

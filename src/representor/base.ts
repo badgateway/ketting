@@ -8,7 +8,7 @@ import Link from '../link';
  */
 export default class Representation {
 
-  body: string | object
+  body: any
   contentType: string
   embedded: {
     [uri: string]: object
@@ -16,7 +16,7 @@ export default class Representation {
   links: Link[]
   uri: string
 
-  constructor(uri: string, contentType: string, body: string | object) {
+  constructor(uri: string, contentType: string, body: any) {
 
     this.uri = uri;
     this.contentType = contentType;

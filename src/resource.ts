@@ -150,7 +150,7 @@ export default class Resource {
     }
 
     // Parsing and storing embedded uris
-    for (const uri in this.repr.embedded) {
+    for (const uri of Object.keys(this.repr.embedded)) {
       const subResource = this.client.getResource(uri);
       subResource.repr = new (this.client.getRepresentor(contentType))(
         uri,
@@ -186,7 +186,7 @@ export default class Resource {
    * This function can also follow templated uris. You can specify uri
    * variables in the optional variables argument.
    */
-  follow(rel: string, variables: object): PromiseLike<Resource> {
+  follow(rel: string, variables: object): FollowablePromise {
 
     return new FollowablePromise(async(res: any, rej: any) => {
 

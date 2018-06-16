@@ -1,6 +1,6 @@
 import Representation from './base';
 import Link from '../link';
-import url from '../utils/url';
+import { resolve } from '../utils/url';
 
 /**
  * The Representation class is basically a 'body' of a request
@@ -8,11 +8,13 @@ import url from '../utils/url';
  *
  * This class is for HAL JSON responses.
  */
-class Hal extends Representation {
-  
-  constructor(uri: string, contentType: string, body: string|object) {
+export default class Hal extends Representation {
 
-    super(this, uri, contentType, body);
+  body: { [s: string]: any }
+
+  constructor(uri: string, contentType: string, body: any) {
+
+    super(uri, contentType, body);
 
     if (typeof body === 'string') {
       this.body = JSON.parse(body);
@@ -36,15 +38,12 @@ class Hal extends Representation {
 
 /**
  * Parse the Hal _links object and populate the 'links' property.
- *
- * @param {Hal} representation
- * @return {void}
  */
-var parseHalLinks = function(representation) {
+const parseHalLinks = function(representation: Hal): void {
 
-  for(var relType in representation.body._links) {
+  for(const relType of Object.keys((<any>representation.body)._links)) {
 
-    var links = representation.body._links[relType];
+    let links = (<any>representation.body)._links[relType];
     if (!Array.isArray(links)) {
       links = [links];
     }
@@ -54,25 +53,27 @@ var parseHalLinks = function(representation) {
 
 };
 
+type HalLink = {
+  href: string,
+  name?: string,
+  templated?: boolean,
+  type?: string
+};
+
 /**
  * Parses a single HAL link from a _links object, or a list of links.
- *
- * @param {Hal} representation
- * @param {string} rel - Relationship type
- * @param {Link|Link[]} links - Link object(s)
- * @returns {void}
  */
-var parseHalLink = function(representation, rel, links) {
+const parseHalLink = function(representation: Hal, rel: string, links: HalLink[]): void {
 
-  for(var ii in links) {
+  for(const link of links) {
     representation.links.push(
       new Link({
         rel: rel,
         baseHref: representation.uri,
-        href: links[ii].href,
-        type: links[ii].type,
-        templated: links[ii].templated,
-        name: links[ii].name
+        href: link.href,
+        type: link.type,
+        templated: link.templated,
+        name: link.name
       })
     );
   }
@@ -82,37 +83,32 @@ var parseHalLink = function(representation, rel, links) {
 /**
  * Parse the HAL _embedded object. Right now we're just grabbing the
  * information from _embedded and turn it into links.
- *
- * @param {Hal} representation
- * @return {void}
  */
-var parseHalEmbedded = function(representation) {
+const parseHalEmbedded = function(representation: Hal): void {
 
-  for(var relType in representation.body._embedded) {
+  for(const relType of Object.keys((<any>representation).body._embedded)) {
 
-    var embedded = representation.body._embedded[relType];
+    let embedded = (<any>representation).body._embedded[relType];
     if (!Array.isArray(embedded)) {
       embedded = [embedded];
     }
-    for(var ii in embedded) {
+    for(const embeddedItem of embedded) {
 
-      var uri = url.resolve(
+      const uri = resolve(
         representation.uri,
-        embedded[ii]._links.self.href
+        embeddedItem._links.self.href
       );
 
       representation.links.push(
         new Link({
           rel: relType,
           baseHref: representation.uri,
-          href: embedded[ii]._links.self.href
+          href: embeddedItem._links.self.href
         })
       );
 
-      representation.embedded[uri] = embedded[ii];
+      representation.embedded[uri] = embeddedItem;
 
     }
   }
 };
-
-module.exports = Hal;

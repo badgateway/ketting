@@ -13,7 +13,15 @@
             "*": [
                 "src/types/*"
             ]
-        }
+        },
+        "lib": [
+          "DOM",
+          "ES5",
+          "ES2015",
+          "ES2016",
+          "ES2017",
+          "DOM.Iterable"
+        ]
     },
     "include": [
         "src/**/*"

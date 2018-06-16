@@ -2,18 +2,41 @@ import Resource from './resource';
 import Representor from './representor/base';
 import HalRepresentor from './representor/hal';
 import HtmlRepresentor from './representor/html';
-
-import base64 from './utils/base64';
+import FollowablePromise from './followable-promise';
+import * as base64 from './utils/base64';
 import oauth from './utils/oauth';
 import fetch from 'cross-fetch';
-import url from './utils/url';
-import fetchHelper from './utils/fetch-helper';
+import { resolve } from './utils/url';
+import * as fetchHelper from './utils/fetch-helper';
 
 type ContentType = {
   mime: string,
   representor: string,
   q: string
 };
+
+type AuthOptionsBasic = {
+  type: 'basic'
+  password: string
+  userName: string
+}
+type AuthOptionsBearer = {
+  type: 'bearer'
+  token: string
+}
+type AuthOptionsOAuth2 = {
+  type: 'oauth2'
+}
+type AuthOptions =
+  AuthOptionsBasic |
+  AuthOptionsBearer |
+  AuthOptionsOAuth2;
+
+type KettingOptions = {
+  auth?: AuthOptions
+  fetchInit?: RequestInit
+};
+
 
 /**
  * The main Ketting client object.
@@ -49,7 +72,7 @@ export default class Ketting {
       this.auth = options.auth;
 
       if (options.auth.type == 'oauth2') {
-        this.auth.oauth = oauth.setupOAuthObject(this, options.auth);
+        oauth.setupOAuthObject(this, options.auth);
       }
     }
 
@@ -62,11 +85,16 @@ export default class Ketting {
   }
 
   /**
+   * The url from which all discovery starts.
+   */
+  bookMark: string;
+
+  /**
    * Here we store all the resources that were ever requested. This will
    * ensure that if the same resource is requested twice, the same object is
    * returned.
    */
-  resourceCache: null
+  resourceCache: { [url: string]: Resource }
 
   /**
    * Autentication settings.
@@ -74,7 +102,7 @@ export default class Ketting {
    * If set, must have at least a `type` property.
    * If type=basic, userName and password must be set.
    */
-  auth: null
+  auth: AuthOptions
 
   /**
    * Content-Type settings and mappings.
@@ -93,13 +121,8 @@ export default class Ketting {
 
   /**
    * This function is a shortcut for getResource().follow(x);
-   *
-   * @async
-   * @param {string} rel - Relationship
-   * @param {object} variables - Templated variables for templated links.
-   * @returns {Resource}
    */
-  follow(rel, variables) {
+  follow(rel: string, variables?: object): FollowablePromise> {
 
     return this.getResource().follow(rel, variables);
 
@@ -116,7 +139,7 @@ export default class Ketting {
     if (typeof uri === 'undefined') {
       uri = '';
     }
-    uri = url.resolve(this.bookMark, uri);
+    uri = resolve(this.bookMark, uri);
 
     if (!this.resourceCache[uri]) {
       this.resourceCache[uri] = new Resource(this, uri);
