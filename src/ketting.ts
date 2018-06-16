@@ -25,7 +25,8 @@ type AuthOptionsBearer = {
   token: string
 }
 type AuthOptionsOAuth2 = {
-  type: 'oauth2'
+  type: 'oauth2',
+  oauth: any
 }
 type AuthOptions =
   AuthOptionsBasic |
@@ -71,8 +72,8 @@ export default class Ketting {
     if (options.auth) {
       this.auth = options.auth;
 
-      if (options.auth.type == 'oauth2') {
-        oauth.setupOAuthObject(this, options.auth);
+      if (options.auth.type === 'oauth2') {
+        (<AuthOptionsOAuth2>this.auth).oauth = oauth.setupOAuthObject(this, options.auth);
       }
     }
 
@@ -117,12 +118,14 @@ export default class Ketting {
    * It's effectively a list of defaults that are passed as the 'init' argument.
    * @see https://developer.mozilla.org/en-US/docs/Web/API/Request/Request
    */
-  fetchInit : {}
+  fetchInit : RequestInit
+
+  _oauthHelper: any
 
   /**
    * This function is a shortcut for getResource().follow(x);
    */
-  follow(rel: string, variables?: object): FollowablePromise> {
+  follow(rel: string, variables?: object): FollowablePromise {
 
     return this.getResource().follow(rel, variables);
 
@@ -228,4 +231,4 @@ export default class Ketting {
 
   }
 
-};
+}

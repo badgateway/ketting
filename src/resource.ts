@@ -340,7 +340,7 @@ export default class Resource {
     if (response.ok) {
       return response;
     } else {
-      throw problemFactory(response);
+      throw await problemFactory(response);
     }
 
   }

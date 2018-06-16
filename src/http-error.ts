@@ -8,15 +8,18 @@
  * @constructor
  * @param {Response} response
  */
-var HttpError = function(response) {
+class HttpError extends Error {
 
-  this.response = response;
-  this.status = response.status;
-  this.message = 'HTTP error ' + this.status;
+  response: Response
+  status: number
+
+  constructor(response: Response) {
+    super('HTTP error ' + response.status);
+    this.response = response;
+    this.status = response.status;
+  }
 
 };
-
-HttpError.prototype = Object.create(Error);
 
 /**
  * Problem extends the HttpError object. If a server emits a HTTP error, and
@@ -29,17 +32,21 @@ HttpError.prototype = Object.create(Error);
  * @param {Response} response
  * @param {object} problemBody
  */
-var Problem = function(response, problemBody) {
+class Problem extends HttpError {
 
-  HttpError.call(this, response);
-  this.body = problemBody;
-  if (this.body.title) {
-    this.message = 'HTTP Error ' + this.status + ': ' + this.body.title;
+  body: {
+    title?: string
   }
 
-};
+  constructor(response: Response, problemBody: object) {
+    super(response);
+    this.body = problemBody;
+    if (this.body.title) {
+      this.message = 'HTTP Error ' + this.status + ': ' + this.body.title;
+    }
+  }
 
-Problem.prototype = Object.create(HttpError);
+}
 
 /**
  * This function creates problems, not unlike the the author of this file.
@@ -50,24 +57,15 @@ Problem.prototype = Object.create(HttpError);
  *
  * Because parsing the response might be asynchronous, the function returns
  * a Promise resolving in either object.
- *
- * @async
- * @param {Response} response
- * @return {HttpError|Problem}
  */
-var problemFactory = function(response) {
+export default async function problemFactory(response: Response): Promise<HttpError | Problem> {
 
-  var contentType = response.headers.get('Content-Type');
+  const contentType = response.headers.get('Content-Type');
   if (contentType && contentType.match(/^application\/problem\+json/i)) {
-    return response.json().then( function(problemBody) {
-
-      return new Problem(response, problemBody);
-
-    });
+    const problemBody = await response.json();
+    return new Problem(response, problemBody);
   } else {
-    var error = new HttpError(response);
-    return Promise.resolve(error);
-
+    return new HttpError(response);
   }
 
 };

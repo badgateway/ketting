@@ -42,7 +42,7 @@ export default class Link {
   /**
    * Is it a URI template or not?
    */
-  templated?: boolean
+  templated: boolean
 
   /**
    * A human-readable label for the link.
@@ -52,12 +52,12 @@ export default class Link {
   /**
    * A mimetype
    */
-  type?: string
+  type: string | null
 
   constructor(properties: LinkInit) {
 
     this.templated = false;
-
+    this.type = null;
     Object.assign(this, properties);
 
   }

@@ -1,5 +1,5 @@
-const Ketting = require('../../src/ketting');
-const Resource = require('../../src/resource');
+const Ketting = require('../../src/ketting').default;
+const Resource = require('../../src/resource').default;
 const Problem = require('../../src/http-error').Problem;
 
 const expect = require('chai').expect;

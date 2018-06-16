@@ -1,5 +1,5 @@
-const Html = require('../../../src/representor/html');
-const Link = require('../../../src/link');
+const Html = require('../../../src/representor/html').default;
+const Link = require('../../../src/link').default;
 const expect = require('chai').expect;
 
 describe('HTML representor', () => {

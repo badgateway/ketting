@@ -1,5 +1,5 @@
-const Ketting = require('../../src/ketting');
-const Resource = require('../../src/resource');
+const Ketting = require('../../src/ketting').default;
+const Resource = require('../../src/resource').default;
 const expect = require('chai').expect;
 const Request = require('node-fetch').Request;
 

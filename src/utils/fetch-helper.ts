@@ -20,7 +20,7 @@ export function createFetchRequest(input: any, init: any, defaultInit: any): Req
   }
 
   trueInit.headers = mergeHeaders([
-    defaultInit.headers,
+    defaultInit ? defaultInit.headers : null,
     // @ts-ignore cross-fetch definitions are broken. See https://github.com/lquixada/cross-fetch/pull/19
     input instanceof crossFetch.Request ? input.headers : null,
     init && init.headers ? init.headers : null

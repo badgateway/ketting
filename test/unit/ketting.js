@@ -1,6 +1,6 @@
-const Ketting = require('../../src/ketting');
-const Html = require('../../src/representor/html');
-const Hal = require('../../src/representor/hal');
+const Ketting = require('../../src/ketting').default;
+const Html = require('../../src/representor/html').default;
+const Hal = require('../../src/representor/hal').default;
 const expect = require('chai').expect;
 
 describe('Ketting', () => {
