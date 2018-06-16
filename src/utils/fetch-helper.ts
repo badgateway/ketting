@@ -9,7 +9,7 @@ import * as crossFetch from 'cross-fetch';
  *                              weren't overridden by init.
  * @return {Response}
  */
-function createFetchRequest(input: any, init: any, defaultInit: any): Request {
+export function createFetchRequest(input: any, init: any, defaultInit: any): Request {
 
   const trueInit:any = {};
 
@@ -42,7 +42,7 @@ type HeaderSet = any;
  * Any headers that appear more than once get replaced. The last occurence
  * wins.
  */
-function mergeHeaders(headerSets: HeaderSet[]): any {
+export function mergeHeaders(headerSets: HeaderSet[]): Headers {
 
   var result = new crossFetch.Headers();
   for(const headerSet of headerSets) {
@@ -62,8 +62,3 @@ function mergeHeaders(headerSets: HeaderSet[]): any {
   return result;
 
 }
-
-module.exports = {
-  createFetchRequest: createFetchRequest,
-  mergeHeaders: mergeHeaders
-};
