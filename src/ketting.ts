@@ -1,11 +1,19 @@
 import Resource from './resource';
-import representor from './representor';
+import Representor from './representor/base';
+import HalRepresentor from './representor/hal';
+import HtmlRepresentor from './representor/html';
 
 import base64 from './utils/base64';
 import oauth from './utils/oauth';
 import fetch from 'cross-fetch';
 import url from './utils/url';
 import fetchHelper from './utils/fetch-helper';
+
+type ContentType = {
+  mime: string,
+  representor: string,
+  q: string
+};
 
 /**
  * The main Ketting client object.
@@ -73,7 +81,7 @@ export default class Ketting {
    *
    * See the constructor for an example of the structure.
    */
-  contentTypes: []
+  contentTypes: ContentType[]
 
   /**
    * A list of settings passed to the Fetch API.
@@ -171,13 +179,13 @@ export default class Ketting {
    * For example, given text/html, this function might return the constructor
    * stored in representor/html.
    */
-  getRepresentor(contentType: string): Representor {
+  getRepresentor(contentType: string): typeof Representor {
 
     if (contentType.indexOf(';') !== -1) {
       contentType = contentType.split(';')[0];
     }
     contentType = contentType.trim();
-    var result = this.contentTypes.find(function(item) {
+    const result = this.contentTypes.find(function(item) {
       return item.mime === contentType;
     });
 
@@ -187,9 +195,9 @@ export default class Ketting {
 
     switch(result.representor) {
     case 'html' :
-      return representor.html;
+      return HtmlRepresentor;
     case 'hal' :
-      return representor.hal;
+      return HalRepresentor;
     default :
       throw new Error('Unknown representor: ' + result.representor);
 

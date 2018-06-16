@@ -16,7 +16,7 @@ export default class Representation {
   links: Link[]
   uri: string
 
-  constructor(uri: string, contentType: string, body: string) {
+  constructor(uri: string, contentType: string, body: string | object) {
 
     this.uri = uri;
     this.contentType = contentType;

@@ -1,44 +1,38 @@
-var Representation = require('./base');
-var Link = require('../link');
-var url = require('../utils/url');
+import Representation from './base';
+import Link from '../link';
+import url from '../utils/url';
 
 /**
  * The Representation class is basically a 'body' of a request
  * or response.
  *
  * This class is for HAL JSON responses.
- *
- * @constructor
- * @extends Base
- * @param {string} uri
- * @param {string} contentType
- * @param {string} body
- * @property {object} body - The parsed JSON body
- * @property {object} embedded - A list of embedded resources.
  */
-var Hal = function(uri, contentType, body) {
+class Hal extends Representation {
+  
+  constructor(uri: string, contentType: string, body: string|object) {
 
-  Representation.call(this, uri, contentType, body);
+    super(this, uri, contentType, body);
 
-  if (typeof body === 'string') {
-    this.body = JSON.parse(body);
-  } else {
-    this.body = body;
+    if (typeof body === 'string') {
+      this.body = JSON.parse(body);
+    } else {
+      this.body = body;
+    }
+
+    if (typeof this.body._links !== 'undefined') {
+      parseHalLinks(this);
+    }
+    if (typeof this.body._embedded !== 'undefined') {
+      parseHalEmbedded(this);
+    }
+
+    delete this.body._links;
+    delete this.body._embedded;
+
   }
 
-  if (typeof this.body._links !== 'undefined') {
-    parseHalLinks(this);
-  }
-  if (typeof this.body._embedded !== 'undefined') {
-    parseHalEmbedded(this);
-  }
-
-  delete this.body._links;
-  delete this.body._embedded;
-
-};
-
-Hal.prototype = Object.create(Representation);
+}
 
 /**
  * Parse the Hal _links object and populate the 'links' property.
