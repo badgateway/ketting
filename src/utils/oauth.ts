@@ -45,10 +45,8 @@ export class OAuth2Helper {
    */
   async fetch(request: Request): Promise<Response> {
  
-    if (!this.token) {
-      await this.getToken();
-    }
-    request.headers.set('Authorization', 'Bearer ' + this.token.accessToken);
+    let token = await this.getToken();
+    request.headers.set('Authorization', 'Bearer ' + token.accessToken);
     
     const response = await fetch(request);
 
@@ -57,8 +55,8 @@ export class OAuth2Helper {
     }
 
     // If we receive 401, refresh token and try again once
-    await this.refreshToken();
-    request.headers.set('Authorization', 'Bearer ' + this.token.accessToken);
+    token = await this.refreshToken();
+    request.headers.set('Authorization', 'Bearer ' + token.accessToken);
 
     return fetch(request);
 
@@ -67,17 +65,25 @@ export class OAuth2Helper {
   /**
    * Retrieves an access token and refresh token.
    */
-  async getToken() {
+  async getToken(): Promise<Token> {
 
-    this.token = await this.client.owner.getToken(
-      this.owner.userName,
-      this.owner.password
-    );
+    if (!this.token) {
+      this.token = await this.client.owner.getToken(
+        this.owner.userName,
+        this.owner.password
+      );
+    }
+    return this.token;
 
   }
 
-  async refreshToken() {
-    this.token = await this.token.refresh();
+  async refreshToken(): Promise<Token> {
+    if (!this.token) {
+      return this.getToken();
+    } else {
+      this.token = await this.token.refresh();
+      return this.token;
+    }
   }
 
 }

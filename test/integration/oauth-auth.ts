@@ -1,5 +1,4 @@
 import Ketting from '../../src/ketting';
-import Resource from '../../src/resource';
 import { expect } from 'chai';
 
 describe('OAuth2 Authentication', () => {
@@ -149,7 +148,7 @@ describe('OAuth2 Authentication', () => {
 
       try {
         const resource = await ketting.follow('auth-oauth');
-        const response = await resource.fetch();
+        await resource.fetch();
 
       } catch (error){
         expect(error).to.be.an('error');
@@ -161,7 +160,7 @@ describe('OAuth2 Authentication', () => {
 
     let ex;
     try {
-      const ketting = new Ketting('http://localhost:3000/hal1.json', {
+      new Ketting('http://localhost:3000/hal1.json', {
         auth: {
           type: 'oauth2',
           client: {

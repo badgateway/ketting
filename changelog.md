@@ -1,13 +1,19 @@
 ChangeLog
 =========
 
-1.1.1 (????-??-??)
+2.0.0 (????-??-??)
 ------------------
 
+* #71: Total conversion to Typescript.
+* BC break: Minified files are now in the `browser/` directory, not the `dist/`
+  directory.
 * #78: Webpack build had a broken version of `querystring`, which caused
   `Link:` header parsing to fail in browsers.
 * #80: `resource.fetch()` would throw an exception with some combinations
   of arguments.
+* #90: `get()` and `refresh()` will now throw an Error when a server did not
+  include a content-type.
+* #89: Refactored OAuth utility to be a bit more clear.
 
 
 1.1.0 (2018-04-07)

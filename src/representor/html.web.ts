@@ -9,7 +9,7 @@ import Link from '../link';
  * intended for browsers. The regular html.js is intended for node.js.
  */
 export default class Html extends Representation {
-  
+
   constructor(uri: string, contentType: string, body: string) {
 
     super(uri, contentType, body);
@@ -37,7 +37,7 @@ function linkFromTags(htmlDoc: Html, elements: NodeListOf<HTMLElement>) {
 
     const rels = node.getAttribute('rel');
     const href = node.getAttribute('href');
-    const type = node.getAttribute('type');
+    const type = node.getAttribute('type') || undefined;
 
     if (!rels || !href) {
       continue;

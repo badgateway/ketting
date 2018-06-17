@@ -1,7 +1,5 @@
-const Ketting = require('../../src/ketting').default;
-const Resource = require('../../src/resource').default;
-const expect = require('chai').expect;
-const Request = require('node-fetch').Request;
+import Ketting from '../../src/ketting';
+import { expect } from 'chai';
 
 describe('Basic Authentication', () => {
 

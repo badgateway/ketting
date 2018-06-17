@@ -44,17 +44,17 @@ type HeaderSet = any;
  */
 export function mergeHeaders(headerSets: HeaderSet[]): Headers {
 
-  var result = new crossFetch.Headers();
+  const result = new crossFetch.Headers();
   for(const headerSet of headerSets) {
 
     if (headerSet instanceof crossFetch.Headers) {
-      for(var key of headerSet.keys()) {
-        result.set(key, headerSet.get(key));
+      for(const key of headerSet.keys()) {
+        result.set(key, <string>headerSet.get(key));
       }
     } else if (headerSet) {
       // not falsey, must be a key->value object.
-      for(var index in headerSet) {
-        result.set(index, headerSet[key]);
+      for(const index in headerSet) {
+        result.set(index, headerSet[index]);
       }
     }
   }

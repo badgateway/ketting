@@ -1,8 +1,5 @@
 import Ketting from '../../src/ketting';
-import Resource from '../../src/resource';
 import { expect } from 'chai';
-import { Request } from 'cross-fetch';
-import Problem from '../../src/http-error';
 
 describe('Bearer Authentication', () => {
 

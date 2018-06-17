@@ -34,7 +34,7 @@ export default class Html extends Representation {
           rel: rel,
           baseHref: this.uri,
           href: <string>node.attributes.HREF,
-          type: node.attributes.TYPE ? <string>node.attributes.TYPE : null
+          type: <string>node.attributes.TYPE || undefined
         });
         this.links.push(link);
 
