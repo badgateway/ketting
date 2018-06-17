@@ -5,7 +5,9 @@ build: browser/ketting.min.js browser/mocha-tests.js tsbuild
 
 .PHONY: clean
 clean:
-	rm -r browser/ dist/ node_modules/
+	-rm -r browser/
+	-rm -r dist/
+	-rm -rf node_modules/
 
 .PHONY: test
 test: lint
@@ -20,11 +22,11 @@ lint:
 	eslint src/
 
 .PHONY: tsbuild
-tsbuild:
+tsbuild: node_modules
 	tsc
 
 .PHONY: watch
-watch:
+watch: node_modules
 	tsc --watch
 
 .PHONY: browserbuild
@@ -37,7 +39,11 @@ browerbuild:
 		--sort-modules-by size
 
 
-browser/%.js: browserbuild
+browser/ketting.min.js: browserbuild
+browser/mocha-tests.js: browserbuild
+
+node_modules: package-lock.json
+	npm install
 
 testserver: build
 	cd test; node testserver.js
