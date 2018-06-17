@@ -8,7 +8,7 @@
  * @constructor
  * @param {Response} response
  */
-class HttpError extends Error {
+export class HttpError extends Error {
 
   response: Response
   status: number
@@ -32,7 +32,7 @@ class HttpError extends Error {
  * @param {Response} response
  * @param {object} problemBody
  */
-class Problem extends HttpError {
+export class Problem extends HttpError {
 
   body: {
     title?: string
@@ -70,6 +70,3 @@ export default async function problemFactory(response: Response): Promise<HttpEr
 
 };
 
-module.exports = problemFactory;
-module.exports.HttpError = HttpError;
-module.exports.Problem = Problem;

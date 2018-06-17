@@ -1,6 +1,7 @@
 import Koa from 'koa';
 import { Context as KoaContext } from 'koa';
 import bodyParser from 'koa-bodyparser';
+// @ts-ignore don't have a definition for this.
 import Route from 'koa-path-match';
 import logger from 'koa-logger';
 import koaStatic from 'koa-static';

@@ -1,7 +1,7 @@
 import Ketting from '../../src/ketting';
 import Resource from '../../src/resource';
 import { expect } from 'chai';
-import Problem from '../../src/http-error';
+import { Problem } from '../../src/http-error';
 
 describe('Issuing a DELETE request', async () => {
 

@@ -1,6 +1,6 @@
 --recursive
 --require ts-node/register
---require test/testserver.js
---exclude test/test-entrypoint.js
+--require test/testserver.ts
+--exclude test/test-entrypoint.ts
 --exit
-test/**/*.ts test/**/*.js
+test/**/*.ts

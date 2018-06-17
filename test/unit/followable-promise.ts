@@ -50,7 +50,7 @@ describe('FollowablePromise', () => {
         res({
           follow: function(rel: string, vars: object) {
             // @ts-ignore: I know what I'm doing
-            result = 'follow:' + rel + ':' + vars.B;
+            return 'follow:' + rel + ':' + vars.B;
           }
         });
 
