@@ -30,7 +30,7 @@ watch: node_modules
 	tsc --watch
 
 .PHONY: browserbuild
-browerbuild:
+browserbuild:
 	mkdir -p browser
 	webpack \
 		--optimize-minimize \
