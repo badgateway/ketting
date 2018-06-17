@@ -80,7 +80,7 @@ describe('FollowablePromise', () => {
       } catch (e) {
         result = e;
       }
-      expect(result).to.equal('Hi');
+      expect(result.message).to.equal('Hi');
 
     });
 
