@@ -31,5 +31,5 @@ browser/ketting.min.js: src/*/*.ts src/*.js src/*/*.js webpack.config.js package
 		--display-modules \
 		--sort-modules-by size
 
-testserver:
+testserver: build
 	cd test; node testserver.js

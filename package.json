@@ -41,7 +41,9 @@
     "uri-template": "^1.0.1"
   },
   "devDependencies": {
+    "@types/chai": "^4.1.4",
     "@types/http-link-header": "^0.6.1",
+    "@types/mocha": "^5.2.2",
     "@types/node": "^10.3.3",
     "@types/sax": "^1.0.0",
     "awesome-typescript-loader": "^5.0.0",

@@ -4,7 +4,7 @@ import HalRepresentor from './representor/hal';
 import HtmlRepresentor from './representor/html';
 import FollowablePromise from './followable-promise';
 import * as base64 from './utils/base64';
-import oauth from './utils/oauth';
+import { OAuth2Helper, OAuth2Init } from './utils/oauth';
 import fetch from 'cross-fetch';
 import { resolve } from './utils/url';
 import * as fetchHelper from './utils/fetch-helper';
@@ -26,8 +26,8 @@ type AuthOptionsBearer = {
 }
 type AuthOptionsOAuth2 = {
   type: 'oauth2',
-  oauth: any
-}
+} & OAuth2Init
+
 type AuthOptions =
   AuthOptionsBasic |
   AuthOptionsBearer |
@@ -73,7 +73,9 @@ export default class Ketting {
       this.auth = options.auth;
 
       if (options.auth.type === 'oauth2') {
-        (<AuthOptionsOAuth2>this.auth).oauth = oauth.setupOAuthObject(this, options.auth);
+        this.oauth2Helper = new OAuth2Helper(
+          options.auth
+        );
       }
     }
 
@@ -120,7 +122,11 @@ export default class Ketting {
    */
   fetchInit : RequestInit
 
-  _oauthHelper: any
+  /**
+   * If OAuth2 was configured, this property gives access to OAuth2-related
+   * operations.
+   */
+  oauth2Helper: OAuth2Helper
 
   /**
    * This function is a shortcut for getResource().follow(x);
@@ -190,7 +196,7 @@ export default class Ketting {
         request.headers.set('Authorization', 'Bearer ' + this.auth.token);
         break;
       case 'oauth2' :
-        return oauth.fetch(this, request);
+        return this.oauth2Helper.fetch(request);
       }
 
     }

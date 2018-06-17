@@ -1,6 +1,86 @@
-var ClientOAuth2 = require('client-oauth2');
+import ClientOAuth2 from 'client-oauth2';
+import { Token } from 'client-oauth2';
+import fetch from 'cross-fetch';
 
-var fetch = require('cross-fetch');
+export type OAuth2Init = {
+  client: {
+    clientId: string,
+    clientSecret: string,
+    accessTokenUri: string,
+    scopes: string[]
+  },
+  owner: {
+    userName: string,
+    password: string,
+  }
+};
+
+export class OAuth2Helper {
+
+  client: ClientOAuth2
+  flow: 'owner'
+  token: null | Token 
+  owner: {
+    userName: string,
+    password: string
+  }
+
+  constructor(options: OAuth2Init) {
+
+    this.client = new ClientOAuth2(options.client);
+    this.token = null;
+    this.flow = 'owner';
+
+  }
+
+  /**
+   * Does a HTTP request with OAuth2 enabled.
+   *
+   * This function will automatically grab an access token if it didn't have
+   * one, and attempt to refresh the token if it was expired.
+   */
+  async fetch(request: Request): Promise<Response> {
+ 
+    if (!this.token) {
+      await this.getToken();
+    }
+    request.headers.set('Authorization', 'Bearer ' + this.token.accessToken);
+    
+    const response = await fetch(request);
+
+    if (response.status !== 401) {
+      return response;
+    }
+
+    // If we receive 401, refresh token and try again once
+    await this.refreshToken();
+    request.headers.set('Authorization', 'Bearer ' + this.token.accessToken);
+
+    return fetch(request);
+
+  }
+
+  /**
+   * Retrieves an access token and refresh token.
+   */
+  async getToken() {
+
+    if (this.flow !== 'owner') {
+      throw new Error('Unsupported oauth2 flow');
+    }
+
+    this.token = await this.client.owner.getToken(
+      this.owner.userName,
+      this.owner.password
+    );
+
+  }
+
+  async refreshToken() {
+    await this.token.refresh();
+  }
+
+}
 
 /**
  * Fetches an oauth2 token using the owner flow
@@ -9,7 +89,7 @@ var fetch = require('cross-fetch');
  * @param {object} auth - auth object.
  * @return {object}
  */
-function ownerFlow(auth) {
+  /*function ownerFlow(auth) {
   return auth.oauth.client.owner.getToken(
     auth.owner.userName,
     auth.owner.password
@@ -32,7 +112,7 @@ function ownerFlow(auth) {
  * @param {object} init - A list of settings.
  * @return {object}
  */
-function fetchWithAccessToken(ketting, request) {
+  /*function fetchWithAccessToken(ketting, request) {
   request.headers.set('Authorization', 'Bearer ' + ketting.auth.oauth.token.accessToken);
 
   return fetch(request)
@@ -50,7 +130,7 @@ function fetchWithAccessToken(ketting, request) {
     });
 }
 
-module.exports = {
+//module.exports = {
   /**
    * Makes a request using OAuth2
    *
@@ -59,7 +139,7 @@ module.exports = {
    * @param {Request} request - Request object.
    * @return {object}
    */
-  fetch : function(ketting, request) {
+  /*(fetch : function(ketting, request) {
     if (ketting.auth.oauth.token) {
       return fetchWithAccessToken(ketting, request);
     }
@@ -79,7 +159,7 @@ module.exports = {
    * @param {object} auth - Auth object.
    * @return {object}
    */
-  getToken : function(auth) {
+  /*getToken : function(auth) {
     if (auth.oauth.flow === 'owner') {
       return ownerFlow(auth);
     }
@@ -95,7 +175,7 @@ module.exports = {
    * @param {object} auth - Auth object.
    * @return {object}
    */
-  refreshToken : function(auth) {
+  /*refreshToken : function(auth) {
     return auth.oauth.token.refresh()
       .then(function(updatedToken) {
         auth.oauth.token = updatedToken;
@@ -111,7 +191,7 @@ module.exports = {
    * @param {object} auth - Auth options object
    * @return {object}
    */
-  setupOAuthObject : function(ketting, auth) {
+  /*setupOAuthObject : function(ketting, auth) {
     var oauth = this;
     var oAuthObject = {
       client: new ClientOAuth2(auth.client),
@@ -129,4 +209,4 @@ module.exports = {
 
     return oAuthObject;
   }
-};
+};*/

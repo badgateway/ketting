@@ -1,5 +1,6 @@
 import Link from '../link';
 
+
 /**
  * The Representation class is basically a 'body' of a request
  * or response.
