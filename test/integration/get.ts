@@ -1,13 +1,13 @@
-const Ketting = require('../../src/ketting').default;
-const Resource = require('../../src/resource').default;
-const Link = require('../../src/link').default;
-const expect = require('chai').expect;
+import Ketting from '../../src/ketting';
+import Resource from '../../src/resource';
+import { expect } from 'chai';
+import Link from '../../src/link';
 
 describe('Issuing a GET request', async () => {
 
   const ketting = new Ketting('http://localhost:3000/hal1.json');
-  let resource;
-  let result;
+  let resource: Resource;
+  let result: any;
 
   before( async() => {
 

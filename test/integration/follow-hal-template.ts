@@ -1,12 +1,12 @@
-const Ketting = require('../../src/ketting').default;
-const Resource = require('../../src/resource').default;
-const expect = require('chai').expect;
+import Ketting from '../../src/ketting';
+import Resource from '../../src/resource';
+import { expect } from 'chai';
 
 describe('Following a templated link', async () => {
 
   const ketting = new Ketting('http://localhost:3000/hal1.json');
 
-  let hal2;
+  let hal2:Resource;
 
   it('should have expanded the uri', async() => {
 

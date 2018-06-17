@@ -1,12 +1,23 @@
-const Koa = require('koa');
-const bodyParser = require('koa-bodyparser');
-const route = require('koa-path-match')();
-const logger = require('koa-logger')
-const koaStatic = require('koa-static');
-const fs = require('fs');
-const app = new Koa();
+import Koa from 'koa';
+import { Context as KoaContext } from 'koa';
+import bodyParser from 'koa-bodyparser';
+// @ts-ignore don't have a definition for this.
+import Route from 'koa-path-match';
+import logger from 'koa-logger';
+import koaStatic from 'koa-static';
+import fs from 'fs';
 
-let resources = {};
+type Context = KoaContext & {
+  params: { [s: string]: string }
+};
+
+
+const app = new Koa();
+const route = Route();
+
+let resources: {
+  [uri: string] : Buffer | string | null
+} = {};
 
 // Log to console
 app.use(logger());
@@ -14,10 +25,10 @@ app.use(logger());
 // Use body parser
 app.use(bodyParser());
 
-function staticFile(url, path, type) {
+function staticFile(url: string, path: string, type: string) {
   app.use(
     route(url)
-    .get(ctx => {
+    .get((ctx: Context) => {
       ctx.response.body = fs.readFileSync(path);
       ctx.response.type = type;
     })
@@ -34,7 +45,7 @@ staticFile('/mocha.css', __dirname + '/../node_modules/mocha/mocha.css', 'text/c
 
 
 app.use(
-  route('/headers', ctx => {
+  route('/headers', (ctx: Context) => {
     ctx.response.status = 200;
     ctx.response.body = ctx.request.headers;
   })
@@ -43,7 +54,7 @@ app.use(
 // Reset the server to the beginning state
 app.use(
   route('/reset')
-  .post(ctx => {
+  .post((ctx: Context) => {
     resources = {};
     ctx.response.status = 204;
     ctx.response.body = '';
@@ -52,7 +63,7 @@ app.use(
 
 // HTTP errors as a service
 app.use(
-  route('/error/:code', ctx => {
+  route('/error/:code', (ctx: Context) => {
     ctx.response.status = parseInt(ctx.params.code);
     ctx.response.body = '';
   })
@@ -61,7 +72,7 @@ app.use(
 // Redirect testing
 app.use(
   route('/redirect')
-  .get(ctx => {
+  .get((ctx: Context) => {
     ctx.response.redirect('/hal2.json');
   })
 );
@@ -70,8 +81,8 @@ app.use(
 // Return request body as we received it
 app.use(
   route('/echo')
-  .post(ctx => {
-    ctx.response.statusCode = 200;
+  .post((ctx: Context)=> {
+    ctx.response.status = 200;
     ctx.response.type = ctx.request.headers['content-type'];
     ctx.response.body = ctx.req;
   })
@@ -80,7 +91,7 @@ app.use(
 // Return a HTTP Link header
 app.use(
   route('/link-header')
-  .get(ctx => {
+  .get((ctx: Context) => {
 
      ctx.response.set('Link', [
        '</hal2.json>; rel="next"',
@@ -95,7 +106,7 @@ app.use(
 // Return a JSON problem document (RFC7807)
 app.use(
   route('/problem')
-  .delete(ctx => {
+  .delete((ctx: Context) => {
 
      ctx.response.status = 410;
      ctx.response.body = {
@@ -109,7 +120,7 @@ app.use(
 
 app.use(
   route('/auth/basic')
-  .get(ctx => {
+  .get((ctx: Context) => {
     const encoded = 'Basic dXNlcjpwYXNz'; // base64(user:pass)
     if (!ctx.request.headers.authorization || ctx.request.headers.authorization!==encoded) {
       ctx.response.status = 401;
@@ -124,7 +135,7 @@ app.use(
 
 app.use(
   route('/auth/bearer')
-  .get(ctx => {
+  .get((ctx: Context) => {
     const encoded = 'Bearer foo';
     if (!ctx.request.headers.authorization || ctx.request.headers.authorization!==encoded) {
       ctx.response.status = 401;
@@ -139,7 +150,7 @@ app.use(
 
 app.use(
   route('/auth/oauth')
-  .get(ctx => {
+  .get((ctx: Context) => {
     const encoded = 'Bearer foo';
     if (!ctx.request.headers.authorization || ctx.request.headers.authorization!==encoded) {
       ctx.response.status = 401;
@@ -154,7 +165,7 @@ app.use(
 
 app.use(
   route('/oauth-token')
-    .post(ctx => {
+    .post((ctx: Context) => {
       const requestBody = ctx.request.body;
       const clientInfo = Buffer.from(ctx.request.headers.authorization.split(' ')[1], 'base64').toString('ascii');
 
@@ -187,7 +198,7 @@ app.use(
 // Rest stuff!
 app.use(
   route('/:id')
-  .get(ctx => {
+  .get((ctx: Context) => {
 
     if (typeof resources[ctx.params.id] === "undefined") {
       resources[ctx.params.id] = fs.readFileSync(__dirname + '/fixtures/' + ctx.params.id);
@@ -202,7 +213,7 @@ app.use(
     ctx.response.body = resources[ctx.params.id];
 
   })
-  .put(ctx => {
+  .put((ctx: Context) => {
 
     return new Promise( (res, rej) => {
       let body = '';
@@ -222,14 +233,14 @@ app.use(
       });
     });
   })
-  .delete(ctx => {
+  .delete((ctx: Context) => {
 
     resources[ctx.params.id] = null;
     ctx.response.status = 204;
     ctx.response.body = '';
 
   })
-  .post(ctx => {
+  .post((ctx: Context) => {
 
     return new Promise( (res, rej) => {
       let someId = 0;
@@ -239,7 +250,7 @@ app.use(
 
       let body = '';
       ctx.req.setEncoding('utf-8');
-      ctx.req.on('data', chunk => {
+      ctx.req.on('data', (chunk:string) => {
 
         body += chunk;
 

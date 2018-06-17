@@ -1,12 +1,12 @@
-const Ketting = require('../../src/ketting').default;
-const Resource = require('../../src/resource').default;
-const expect = require('chai').expect;
-const Request = require('node-fetch').Request;
+import Ketting from '../../src/ketting';
+import Resource from '../../src/resource';
+import { expect } from 'chai';
+import { Request } from 'cross-fetch';
 
 describe('Using the fetch api', () => {
 
-  let hal2;
-  let ketting;
+  let hal2: Resource;
+  let ketting: Ketting;
   before( async () => {
     ketting = new Ketting('http://localhost:3000/hal1.json');
     hal2 = await ketting.follow('next');
@@ -22,6 +22,7 @@ describe('Using the fetch api', () => {
 
   it('should also work when passing a Request object', async() => {
 
+    // @ts-ignore cross-fetch has broken types.
     const request = new Request('?foo=bar');
     const response = await hal2.fetch(request);
     expect(response).to.have.property('status');
@@ -105,6 +106,7 @@ describe('Using the fetch api', () => {
 
     let result;
     try {
+      // @ts-ignore intentional
       hal2.fetch(42);
     } catch (e) {
       result = e;

@@ -1,10 +1,12 @@
-const Html = require('../../../src/representor/html').default;
-const Link = require('../../../src/link').default;
-const expect = require('chai').expect;
+import Html from '../../../src/representor/html';
+import Link from '../../../src/link';
+import { expect } from 'chai';
 
 describe('HTML representor', () => {
 
-  const tests = [
+  type TestTuple = [string] | [string, Link] | [string, Link, Link];
+
+  const tests:TestTuple[] = [
     [
       `<link rel="me" href="https://evertpot.com/" />`,
       new Link({rel: 'me', baseHref: '/index.html', href: 'https://evertpot.com/'})

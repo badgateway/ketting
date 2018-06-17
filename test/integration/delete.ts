@@ -1,20 +1,18 @@
-const Ketting = require('../../src/ketting').default;
-const Resource = require('../../src/resource').default;
-const Problem = require('../../src/http-error').Problem;
-
-const expect = require('chai').expect;
+import Ketting from '../../src/ketting';
+import Resource from '../../src/resource';
+import { expect } from 'chai';
+import { Problem } from '../../src/http-error';
 
 describe('Issuing a DELETE request', async () => {
 
   const ketting = new Ketting('http://localhost:3000/hal1.json');
-  let resource;
+  let resource: Resource;
 
   before( async() => {
 
     resource = ketting.getResource();
     // Priming the cache
     await resource.get();
-
 
   });
 
@@ -28,7 +26,7 @@ describe('Issuing a DELETE request', async () => {
 
     let ok = false;
     try { 
-      const newBody = await resource.get();
+      await resource.get();
     } catch (e) {
       // we're expecting an exception
       ok = true;
@@ -40,7 +38,7 @@ describe('Issuing a DELETE request', async () => {
 
     let ok = false;
     try { 
-      const newBody = await ketting.getResource().get();
+      await ketting.getResource().get();
     } catch (e) {
       // we're expecting an exception
       ok = true;

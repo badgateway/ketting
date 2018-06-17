@@ -12,7 +12,7 @@ import * as fetchHelper from './utils/fetch-helper';
 type ContentType = {
   mime: string,
   representor: string,
-  q: string
+  q?: string
 };
 
 type AuthOptionsBasic = {

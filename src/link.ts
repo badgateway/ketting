@@ -47,7 +47,7 @@ export default class Link {
   /**
    * A human-readable label for the link.
    */
-  title?: string
+  title: string | null
 
   /**
    * A mimetype
@@ -57,8 +57,13 @@ export default class Link {
   constructor(properties: LinkInit) {
 
     this.templated = false;
+    this.title = null;
     this.type = null;
-    Object.assign(this, properties);
+    for(const key of ['baseHref', 'href', 'name', 'rel', 'templated', 'title', 'type']) {
+      if ((<any>properties)[key]) {
+        (<any>this)[key] = (<any>properties)[key];
+      }
+    }
 
   }
 

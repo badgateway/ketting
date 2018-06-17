@@ -1,6 +1,6 @@
 import { resolve } from './utils/url';
 import FollowablePromise from './followable-promise';
-import { fetch, Request, Headers } from 'cross-fetch';
+import { Request, Headers } from 'cross-fetch';
 import problemFactory from './http-error';
 import LinkHeader from 'http-link-header';
 import Link from './link';
@@ -24,7 +24,7 @@ import Ketting from './ketting';
 export default class Resource {
 
   client: Ketting
-  repr: Representation
+  repr: Representation | null
   uri: string
 
   constructor(client: Ketting, uri:string) {
@@ -88,7 +88,7 @@ export default class Resource {
    * If no Location header was given, it will resolve still, but with an empty
    * value.
    */
-  async post(body: object): Promise<Resource|void> {
+  async post(body: object): Promise<Resource|null> {
 
     const response = await this.fetchAndThrow(
       {
@@ -101,7 +101,7 @@ export default class Resource {
       return this.client.getResource(
         resolve(
           this.uri,
-          response.headers.get('location')
+          <string>response.headers.get('location')
         )
       );
     }
@@ -123,6 +123,9 @@ export default class Resource {
     const body = await response.text();
     
     const contentType = response.headers.get('Content-Type');
+    if (!contentType) {
+      throw new Error('Server did not respond with a Content-Type header');
+    }
     this.repr = new (this.client.getRepresentor(contentType))(
        this.uri,
        contentType,
@@ -186,7 +189,7 @@ export default class Resource {
    * This function can also follow templated uris. You can specify uri
    * variables in the optional variables argument.
    */
-  follow(rel: string, variables: object): FollowablePromise {
+  follow(rel: string, variables?: object): FollowablePromise {
 
     return new FollowablePromise(async(res: any, rej: any) => {
 
@@ -197,7 +200,7 @@ export default class Resource {
         if (links.length === 0) {
           throw new Error('Relation with type ' + rel + ' not found on resource ' + this.uri);
         }
-        if (links[0].templated) {
+        if (links[0].templated && variables) {
           href = links[0].expand(variables);
         } else {
           href = links[0].resolve();
@@ -248,7 +251,7 @@ export default class Resource {
       await this.refresh();
     }
 
-    return this.repr;
+    return <Representation>this.repr;
 
   }
 
@@ -298,7 +301,7 @@ export default class Resource {
       // is not allowed in the default Fetch API, but we do allow it because
       // in the resource, specifying the uri is optional.
       uri = this.uri;
-      newInit = input;
+      newInit = <RequestInit>input;
     } else {
       throw new TypeError('When specified, input must be a string, Request object or a key-value object');
     }

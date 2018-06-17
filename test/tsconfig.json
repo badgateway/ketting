@@ -4,6 +4,14 @@
         "esModuleInterop": true,
         "target": "es2017",
         "noImplicitAny": true,
+
+        "strictFunctionTypes": true,
+        "noImplicitThis": true,
+        "alwaysStrict": true,
+        "noUnusedLocals": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+
         "moduleResolution": "node",
         "noEmit": true,
         "baseUrl": ".",
