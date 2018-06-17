@@ -30,7 +30,7 @@ watch: node_modules
 	tsc --watch
 
 .PHONY: browserbuild
-browerbuild:
+browserbuild:
 	mkdir -p browser
 	webpack \
 		--optimize-minimize \
@@ -46,4 +46,4 @@ node_modules: package-lock.json
 	npm install
 
 testserver: build
-	cd test; node testserver.js
+	ts-node test/testserver.ts
