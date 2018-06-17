@@ -11,7 +11,7 @@ describe('Link', () => {
       href: '/foo/bar',
       rel: 'foo',
 
-      name: 'foo-link'
+      name: 'foo-link',
       type: 'text/css',
       templated: false,
       title: 'Foo Link',
@@ -56,7 +56,7 @@ describe('Link', () => {
 
     const link = new Link({
       baseHref: 'http://example.org/',
-      href: '/foo/bar'
+      href: '/foo/bar',
       rel: 'about',
     });
 

@@ -39,7 +39,7 @@ export default class Hal extends Representation {
 /**
  * Parse the Hal _links object and populate the 'links' property.
  */
-const parseHalLinks = (representation: Hal): void {
+const parseHalLinks = (representation: Hal): void => {
 
   for (const relType of Object.keys((<any> representation.body)._links)) {
 

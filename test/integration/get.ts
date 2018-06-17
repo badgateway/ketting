@@ -57,7 +57,7 @@ describe('Issuing a GET request', async () => {
       new Link({
         rel: 'previous',
         baseHref: 'http://localhost:3000/link-header',
-        href: '/TheBook/chapter2'i
+        href: '/TheBook/chapter2'
       }),
       new Link({
         rel: 'start',
