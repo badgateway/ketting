@@ -4,7 +4,7 @@ import { fetch, Request, Headers } from 'cross-fetch';
 import problemFactory from './http-error';
 import LinkHeader from 'http-link-header';
 import Link from './link';
-import { mergeHeaders } from './utils/fetch-helper';
+import { mergeHeaders } from './u | nulltils/fetch-helper';
 import Representation from './representor/base';
 import Ketting from './ketting';
 
@@ -186,7 +186,7 @@ export default class Resource {
    * This function can also follow templated uris. You can specify uri
    * variables in the optional variables argument.
    */
-  follow(rel: string, variables: object): FollowablePromise {
+  follow(rel: string, variables?: object): FollowablePromise {
 
     return new FollowablePromise(async(res: any, rej: any) => {
 

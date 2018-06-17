@@ -43,6 +43,9 @@
   "devDependencies": {
     "@types/chai": "^4.1.4",
     "@types/http-link-header": "^0.6.1",
+    "@types/koa-bodyparser": "^4.2.0",
+    "@types/koa-logger": "^3.1.0",
+    "@types/koa-static": "^4.0.0",
     "@types/mocha": "^5.2.2",
     "@types/node": "^10.3.3",
     "@types/sax": "^1.0.0",

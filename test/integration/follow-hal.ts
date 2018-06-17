@@ -1,6 +1,6 @@
-const Ketting = require('../../src/ketting').default;
-const Resource = require('../../src/resource').default;
-const expect = require('chai').expect;
+import Ketting from '../../src/ketting';
+import Resource from '../../src/resource';
+import { expect } from 'chai';
 
 describe('Following a link', async () => {
 

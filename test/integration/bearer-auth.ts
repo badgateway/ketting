@@ -1,7 +1,8 @@
-const Ketting = require('../../src/ketting').default;
-const Resource = require('../../src/resource').default;
-const expect = require('chai').expect;
-const Request = require('node-fetch').Request;
+import Ketting from '../../src/ketting';
+import Resource from '../../src/resource';
+import { expect } from 'chai';
+import { Request } from 'cross-fetch';
+import Problem from '../../src/http-error';
 
 describe('Bearer Authentication', () => {
 

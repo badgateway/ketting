@@ -1,5 +1,5 @@
-var FollowablePromise = require('../../src/followable-promise').default;
-var expect = require('chai').expect;
+import FollowablePromise from '../../src/followable-promise';
+import { expect } from 'chai';
 
 describe('FollowablePromise', () => {
 
@@ -7,8 +7,9 @@ describe('FollowablePromise', () => {
 
     it('should work when resolving', async () => {
 
-      var p = new FollowablePromise( (res, rej) => {
+      const p = new FollowablePromise( (res) => {
 
+        // @ts-ignore: I know what I'm doing
         res('hi');
 
       });
@@ -19,13 +20,13 @@ describe('FollowablePromise', () => {
     
     it('should work when rejecting', async () => {
 
-      var p = new FollowablePromise( (res, rej) => {
+      const p = new FollowablePromise( (res, rej) => {
 
         rej('hi');
 
       });
 
-      var rejected = false;
+      let rejected = false;
 
       try {
         await p;
@@ -43,35 +44,36 @@ describe('FollowablePromise', () => {
 
     it('should call follow function of resolved value', async () => {
 
-      var result = false;
+      const p = new FollowablePromise( (res) => {
 
-      var p = new FollowablePromise( (res, rej) => {
-
+        // @ts-ignore: I know what I'm doing
         res({
-          follow: function(rel, vars) {
-            result = 'follow:' + rel + ':' + vars;
+          follow: function(rel: string, vars: object) {
+            // @ts-ignore: I know what I'm doing
+            result = 'follow:' + rel + ':' + vars.B;
           }
         });
 
       });
 
-      expect(await p.follow('A','B'), 'follow:A:B');
+      expect(await p.follow('A',{B: 'C'}), 'follow:A:C');
 
     });
 
     it('should bubble up exceptions from follow', async () => {
 
-      var p = new FollowablePromise( (res, rej) => {
+      const p = new FollowablePromise( (res) => {
 
+        // @ts-ignore: I know what I'm doing
         res({
-          follow: function(rel, vars) {
+          follow: function() {
             throw "Hi";
           }
         });
 
       });
 
-      var result = null;
+      let result = null;
       try {
         await p.follow('foo');
       } catch (e) {

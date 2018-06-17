@@ -1,8 +1,8 @@
-const Ketting = require('../../src/ketting').default;
-const Resource = require('../../src/resource').default;
-const Problem = require('../../src/http-error').Problem;
-
-const expect = require('chai').expect;
+import Ketting from '../../src/ketting';
+import Resource from '../../src/resource';
+import { expect } from 'chai';
+import { Request } from 'cross-fetch';
+import Problem from '../../src/http-error';
 
 describe('Issuing a DELETE request', async () => {
 

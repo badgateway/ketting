@@ -1,11 +1,11 @@
-const Ketting = require('../../src/ketting').default;
-const Resource = require('../../src/resource').default;
-const expect = require('chai').expect;
+import Ketting from '../../src/ketting';
+import Resource from '../../src/resource';
+import { expect } from 'chai';
 
 describe('Issuing a PUT request', async () => {
 
   const ketting = new Ketting('http://localhost:3000/hal1.json');
-  let resource;
+  let resource: Resource;
 
   before( async() => {
 
