@@ -18,7 +18,7 @@ test-debug:
 
 .PHONY: lint
 lint:
-	eslint src/
+	tslint -c tslint.json 'src/**/*.ts' 'test/**/*.ts'
 
 .PHONY: tsbuild
 tsbuild:

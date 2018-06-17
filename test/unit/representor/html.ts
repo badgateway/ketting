@@ -8,35 +8,35 @@ describe('HTML representor', () => {
 
   const tests:TestTuple[] = [
     [
-      `<link rel="me" href="https://evertpot.com/" />`,
+      '<link rel="me" href="https://evertpot.com/" />',
       new Link({rel: 'me', baseHref: '/index.html', href: 'https://evertpot.com/'})
     ],
     [
-      `<link rel="me" href="https://evertpot.com/">`,
+      '<link rel="me" href="https://evertpot.com/">',
       new Link({rel: 'me', baseHref: '/index.html', href: 'https://evertpot.com/'})
     ],
     [
-      `<LINK rel="me" href="https://evertpot.com/">`,
+      '<LINK rel="me" href="https://evertpot.com/">',
       new Link({rel: 'me', baseHref: '/index.html', href: 'https://evertpot.com/'})
     ],
     [
-      `<link REL="me" href="https://evertpot.com/">`,
+      '<link REL="me" href="https://evertpot.com/">',
       new Link({rel: 'me', baseHref: '/index.html', href: 'https://evertpot.com/'})
     ],
     [
-      `<link href="https://evertpot.com/" rel="me" />`,
+      '<link href="https://evertpot.com/" rel="me" />',
       new Link({rel: 'me', baseHref: '/index.html', href: 'https://evertpot.com/'})
     ],
     [
-      `<link href="https://evertpot.com/" rel="me" title="my website!"/>`,
+      '<link href="https://evertpot.com/" rel="me" title="my website!"/>',
       new Link({rel: 'me', baseHref: '/index.html', href: 'https://evertpot.com/'})
     ],
     [
-      `<link href="foo.css" rel="stylesheet" type="text/css" />`,
+      '<link href="foo.css" rel="stylesheet" type="text/css" />',
       new Link({rel: 'stylesheet', baseHref: '/index.html', href: 'foo.css', type: 'text/css'})
     ],
     [
-      `<a href="https://evertpot.com/" rel="me">`,
+      '<a href="https://evertpot.com/" rel="me">',
       new Link({rel: 'me', baseHref: '/index.html', href: 'https://evertpot.com/'})
     ],
     [
@@ -44,25 +44,25 @@ describe('HTML representor', () => {
       new Link({rel: 'me', baseHref: '/index.html', href: 'https://evertpot.com/'})
     ],
     [
-      `<a HREF="https://evertpot.com/" rel="me">`,
+      '<a HREF="https://evertpot.com/" rel="me">',
       new Link({rel: 'me', baseHref: '/index.html', href: 'https://evertpot.com/'})
     ],
     [
-      `<a rel="me" href="https://evertpot.com/">`,
+      '<a rel="me" href="https://evertpot.com/">',
       new Link({rel: 'me', baseHref: '/index.html', href: 'https://evertpot.com/'})
     ],
     [
-      `<a rel="icon favicon" href="favicon.ico">`,
+      '<a rel="icon favicon" href="favicon.ico">',
       new Link({rel: 'icon', baseHref: '/index.html', href: 'favicon.ico'}),
       new Link({rel: 'favicon', baseHref: '/index.html', href: 'favicon.ico'}),
     ],
     [
       // Ignoring links without rel
-      `<link href="https://evertpot.com/" />`,
+      '<link href="https://evertpot.com/" />',
     ],
     [
       // Ignoring links without href
-      `<link rel="me" />`,
+      '<link rel="me" />',
     ]
   ];
 
