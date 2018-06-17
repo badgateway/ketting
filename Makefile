@@ -1,7 +1,7 @@
 export PATH:=./node_modules/.bin/:$(PATH)
 
 .PHONY: build
-build: browser/ketting.min.js tsbuild
+build: browser/ketting.min.js browser/mocha-tests.js tsbuild
 
 .PHONY: clean
 clean:
@@ -27,13 +27,17 @@ tsbuild:
 watch:
 	tsc --watch
 
-browser/ketting.min.js: src/*/*.ts src/*.js src/*/*.js webpack.config.js package.json
+.PHONY: browserbuild
+browerbuild:
 	mkdir -p browser
 	webpack \
 		--optimize-minimize \
 		-p \
 		--display-modules \
 		--sort-modules-by size
+
+
+browser/%.js: browserbuild
 
 testserver: build
 	cd test; node testserver.js
