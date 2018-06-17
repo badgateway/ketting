@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-2.0.0 (????-??-??)
+2.0.0 (2018-06-17)
 ------------------
 
 * #71: Total conversion to Typescript.
