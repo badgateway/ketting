@@ -1,5 +1,5 @@
-const Link = require('../../src/link').default;
-const expect = require('chai').expect;
+import Link from '../../src/link';
+import { expect } from 'chai';
 
 describe('Link', () => {
 
@@ -28,6 +28,7 @@ describe('Link', () => {
   it('should be able to resolve relative links', () => {
 
     const link = new Link({
+      rel: 'about',
       baseHref: 'http://example.org/',
       href: '/foo/bar'
     });
@@ -39,6 +40,7 @@ describe('Link', () => {
   it('should be able to expand templated links', () => {
 
     const link = new Link({
+      rel: 'about',
       baseHref: 'http://example.org/',
       href: '/foo/{bar}',
       templated: true
@@ -51,6 +53,7 @@ describe('Link', () => {
   it('should not error when expanding non-templated links', () => {
 
     const link = new Link({
+      rel: 'about',
       baseHref: 'http://example.org/',
       href: '/foo/bar'
     });
