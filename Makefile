@@ -46,4 +46,4 @@ node_modules: package-lock.json
 	npm install
 
 testserver: build
-	cd test; node testserver.js
+	ts-node test/testserver.ts
