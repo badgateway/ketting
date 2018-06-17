@@ -80,11 +80,14 @@ app.use(
 
 // Return request body as we received it
 app.use(
-  route('/echo')
-  .post((ctx: Context)=> {
+  route('/echo', (ctx: Context)=> {
     ctx.response.status = 200;
     ctx.response.type = ctx.request.headers['content-type'];
-    ctx.response.body = ctx.req;
+    ctx.response.body = {
+      headers: ctx.request.headers,
+      body: ctx.request.body,
+      method: ctx.request.method,
+    }
   })
 );
 

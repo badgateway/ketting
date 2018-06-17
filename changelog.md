@@ -14,6 +14,8 @@ ChangeLog
 * #90: `get()` and `refresh()` will now throw an Error when a server did not
   include a content-type.
 * #89: Refactored OAuth utility to be a bit more clear.
+* #83: Support for `resource.patch()`. The implementation is pretty basic. Let
+  us know how you would like to use it!
 
 
 1.1.0 (2018-04-07)

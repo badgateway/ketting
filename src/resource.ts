@@ -110,6 +110,28 @@ export default class Resource {
   }
 
   /**
+   * Sends a PATCH request to the resource.
+   *
+   * This function defaults to a application/json content-type header.
+   */
+  async patch(body: object): Promise<void> {
+
+    await this.fetchAndThrow(
+      {
+        method: 'PATCH',
+        body: JSON.stringify(body),
+        headers: {
+          'Content-Type' : 'application/json'
+        }
+      }
+    );
+
+    // Wipe out the local cache
+    this.repr = null;
+
+  }
+
+  /**
    * Refreshes the representation for this resource.
    *
    * This function will return the a parsed JSON object, like the get
