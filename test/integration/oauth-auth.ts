@@ -1,7 +1,6 @@
-const Ketting = require('../../src/ketting').default;
-const Resource = require('../../src/resource').default;
-const expect = require('chai').expect;
-const Request = require('node-fetch').Request;
+import Ketting from '../../src/ketting';
+import Resource from '../../src/resource';
+import { expect } from 'chai';
 
 describe('OAuth2 Authentication', () => {
 
@@ -108,12 +107,13 @@ describe('OAuth2 Authentication', () => {
         }
       });
 
-      const token = ketting.auth.oauth.client.createToken(
+      const token = ketting.oauth2Helper.client.createToken(
         'barToken',
         'fooRefresh',
+        // @ts-ignore. Something breaks here, but I think everything is correct.
         'bearer'
       );
-      ketting.auth.oauth.token = token;
+      ketting.oauth2Helper.token = token;
 
       const resource = await ketting.follow('auth-oauth');
       const response = await resource.fetch();
@@ -139,12 +139,13 @@ describe('OAuth2 Authentication', () => {
         }
       });
 
-      const token = ketting.auth.oauth.client.createToken(
+      const token = ketting.oauth2Helper.client.createToken(
         'barToken',
         'barRefresh',
+        // @ts-ignore. Something breaks here, but I think everything is correct.
         'bearer'
       );
-      ketting.auth.oauth.token = token;
+      ketting.oauth2Helper.token = token;
 
       try {
         const resource = await ketting.follow('auth-oauth');
@@ -156,28 +157,30 @@ describe('OAuth2 Authentication', () => {
     });
   });
 
-  it('should throw error when using unsupported flow', (done) => {
-    const ketting = new Ketting('http://localhost:3000/hal1.json', {
-      auth: {
-        type: 'oauth2',
-        client: {
-          clientId: 'fooClient',
-          clientSecret: 'barSecret',
-          accessTokenUri: 'http://localhost:3000/oauth-token',
-          scopes: ['test']
-        },
-        foo: {
-          bar: ''
-        }
-      }
-    });
+  it('should throw error when using unsupported flow', () => {
 
-    ketting.follow('auth-oauth')
-      .catch((error) => {
-        expect(error).to.be.an('error');
-        expect(error.message).to.equal('Unsupported oauth2 flow');
-        done();
+    let ex;
+    try {
+      const ketting = new Ketting('http://localhost:3000/hal1.json', {
+        auth: {
+          type: 'oauth2',
+          client: {
+            clientId: 'fooClient',
+            clientSecret: 'barSecret',
+            accessTokenUri: 'http://localhost:3000/oauth-token',
+            scopes: ['test']
+          },
+          // @ts-ignore: Ignoring the addition of the foo property for testing.
+          foo: {
+            bar: ''
+          }
+        }
       });
+    } catch (e) {
+      ex = e;
+    }
+    expect(ex.message).to.equal('Unsupported oauth2 flow. Only the "owner" flow is currently supported.');
   });
+
 
 });

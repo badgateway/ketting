@@ -38,7 +38,7 @@ export default class FollowablePromise {
    * The catch function maps to a standard then function, as it appears on the
    * promise.
    */
-  catch<T>(onReject: (reason: any) => Promise<T>): Promise<Resource | T> {
+  catch<T>(onReject: (reason: any) => Promise<T> | T): Promise<Resource | T> {
     return this.realPromise.catch(onReject);
   }
 

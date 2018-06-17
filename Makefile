@@ -1,29 +1,36 @@
 export PATH:=./node_modules/.bin/:$(PATH)
 
 .PHONY: build
-build: browser/ketting.min.js tsbuild
+build: browser/ketting.min.js browser/mocha-tests.js tsbuild
 
 .PHONY: clean
 clean:
-	rm -r browser/ dist/ node_modules/
+	-rm -r browser/
+	-rm -r dist/
+	-rm -rf node_modules/
 
 .PHONY: test
 test: lint
 	nyc mocha
+
+.PHONY: test-debug
+test-debug:
+	mocha --inspect-brk
 
 .PHONY: lint
 lint:
 	eslint src/
 
 .PHONY: tsbuild
-tsbuild:
+tsbuild: node_modules
 	tsc
 
 .PHONY: watch
-watch:
+watch: node_modules
 	tsc --watch
 
-browser/ketting.min.js: src/*/*.ts src/*.js src/*/*.js webpack.config.js package.json
+.PHONY: browserbuild
+browerbuild:
 	mkdir -p browser
 	webpack \
 		--optimize-minimize \
@@ -31,5 +38,12 @@ browser/ketting.min.js: src/*/*.ts src/*.js src/*/*.js webpack.config.js package
 		--display-modules \
 		--sort-modules-by size
 
-testserver:
+
+browser/ketting.min.js: browserbuild
+browser/mocha-tests.js: browserbuild
+
+node_modules: package-lock.json
+	npm install
+
+testserver: build
 	cd test; node testserver.js

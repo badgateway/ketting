@@ -3,3 +3,4 @@
 --require test/testserver.js
 --exclude test/test-entrypoint.js
 --exit
+test/**/*.ts test/**/*.js
