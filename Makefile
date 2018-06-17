@@ -11,6 +11,10 @@ clean:
 test: lint
 	nyc mocha
 
+.PHONY: test-debug
+test-debug:
+	mocha --inspect-brk
+
 .PHONY: lint
 lint:
 	eslint src/

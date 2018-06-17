@@ -18,7 +18,6 @@ export type OAuth2Init = {
 export class OAuth2Helper {
 
   client: ClientOAuth2
-  flow: 'owner'
   token: null | Token 
   owner: {
     userName: string,
@@ -29,7 +28,12 @@ export class OAuth2Helper {
 
     this.client = new ClientOAuth2(options.client);
     this.token = null;
-    this.flow = 'owner';
+
+    if (options.owner === undefined) {
+      throw new Error('Unsupported oauth2 flow. Only the "owner" flow is currently supported.');
+    }
+
+    this.owner = options.owner;
 
   }
 
@@ -65,10 +69,6 @@ export class OAuth2Helper {
    */
   async getToken() {
 
-    if (this.flow !== 'owner') {
-      throw new Error('Unsupported oauth2 flow');
-    }
-
     this.token = await this.client.owner.getToken(
       this.owner.userName,
       this.owner.password
@@ -77,7 +77,7 @@ export class OAuth2Helper {
   }
 
   async refreshToken() {
-    await this.token.refresh();
+    this.token = await this.token.refresh();
   }
 
 }

@@ -157,30 +157,30 @@ describe('OAuth2 Authentication', () => {
     });
   });
 
-  it('should throw error when using unsupported flow', (done) => {
+  it('should throw error when using unsupported flow', () => {
 
-    const ketting = new Ketting('http://localhost:3000/hal1.json', {
-      auth: {
-        type: 'oauth2',
-        client: {
-          clientId: 'fooClient',
-          clientSecret: 'barSecret',
-          accessTokenUri: 'http://localhost:3000/oauth-token',
-          scopes: ['test']
-        },
-        // @ts-ignore: Ignoring the addition of the foo property for testing.
-        foo: {
-          bar: ''
+    let ex;
+    try {
+      const ketting = new Ketting('http://localhost:3000/hal1.json', {
+        auth: {
+          type: 'oauth2',
+          client: {
+            clientId: 'fooClient',
+            clientSecret: 'barSecret',
+            accessTokenUri: 'http://localhost:3000/oauth-token',
+            scopes: ['test']
+          },
+          // @ts-ignore: Ignoring the addition of the foo property for testing.
+          foo: {
+            bar: ''
+          }
         }
-      }
-    });
-
-    ketting.follow('auth-oauth')
-      .catch((error: Error) => {
-        expect(error).to.be.an('error');
-        expect(error.message).to.equal('Unsupported oauth2 flow');
-        done();
       });
+    } catch (e) {
+      ex = e;
+    }
+    expect(ex.message).to.equal('Unsupported oauth2 flow. Only the "owner" flow is currently supported.');
   });
+
 
 });
