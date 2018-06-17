@@ -13,6 +13,7 @@
         "templated" : { "href" : "/templated.json{?foo}", "templated": true },
         "linkHeader" : { "href" : "/link-header" },
         "problem" : { "href" : "/problem" },
+        "no-content-type": { "href": "/no-content-type" },
         "c:foo" : { "href": "/curietarget" },
         "curies" : [
           {

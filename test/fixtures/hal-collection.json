@@ -14,7 +14,8 @@
               "error400" : { "href" : "/error/400" },
               "redirect" : { "href" : "/redirect" },
               "auth-basic" : { "href" : "/auth/basic" },
-              "auth-bearer" : { "href" : "/auth/bearer" }
+              "auth-bearer" : { "href" : "/auth/bearer" },
+              "no-content-type": { "href": "/no-content-type" }
             },
             "title"  : "Hal 1",
             "foo" : "bar"

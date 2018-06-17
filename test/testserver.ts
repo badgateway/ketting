@@ -88,6 +88,15 @@ app.use(
   })
 );
 
+// Return no content-type
+app.use(
+  route('/no-content-type', (ctx: Context) => {
+    ctx.response.status = 200;
+    ctx.response.body = 'hi';
+    ctx.response.set('Content-Type', '');
+  })
+);
+
 // Return a HTTP Link header
 app.use(
   route('/link-header')

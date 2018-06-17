@@ -55,8 +55,8 @@ export class OAuth2Helper {
     }
 
     // If we receive 401, refresh token and try again once
-    token = await this.refreshToken();
-    request.headers.set('Authorization', 'Bearer ' + token.accessToken);
+    this.token = await this.token.refresh();
+    request.headers.set('Authorization', 'Bearer ' + this.token.accessToken);
 
     return fetch(request);
 
@@ -74,19 +74,6 @@ export class OAuth2Helper {
       );
     }
     return this.token;
-
-  }
-
-  /**
-   * Refreshes the access token and updates the existing token with a new one.
-   */
-  async refreshToken(): Promise<Token> {
-    if (!this.token) {
-      return this.getToken();
-    } else {
-      this.token = await this.token.refresh();
-      return this.token;
-    }
 
   }
 
