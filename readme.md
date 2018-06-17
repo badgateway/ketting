@@ -13,14 +13,14 @@ links. It uses the Fetch API and works both in the browsers and in node.js.
 ### Example
 
 ```js
-var ketting = new Ketting('https://api.example.org/');
+const ketting = new Ketting('https://api.example.org/');
 
 // Follow a link with rel="author". This could be a HTML5 `<link>`, a
 // HAL `_links` or a HTTP `Link:`.
-var author = await ketting.follow('author');
+const author = await ketting.follow('author');
 
 // Grab the current state
-var authorState = await author.get();
+const authorState = await author.get();
 
 // Change the firstName property of the object. Note that this assumes JSON.
 authorState.firstName = 'Evert';
@@ -74,11 +74,11 @@ automatically, pointing to the person that created the article.
 This is how that interaction might look like:
 
 ```js
-var ketting = new Ketting('https://api.example.org/');
-var createArticle = await ketting.follow('articleCollection').follow('new'); // chained follow
+const ketting = new Ketting('https://api.example.org/');
+const createArticle = await ketting.follow('articleCollection').follow('new'); // chained follow
 
-var newArticle = await createArticle.post({title: 'Hello world'});
-var author = await newArticle.follow('author');
+const newArticle = await createArticle.post({title: 'Hello world'});
+const author = await newArticle.follow('author');
 
 // Output author information
 console.log(await author.get());
@@ -101,13 +101,13 @@ For example, given a collection resource with many resources that hal the
 relationshiptype `item`, you might use the following API:
 
 ```js
-var ketting = new Ketting('https://api.example.org/');
-var articleCollection = await ketting.follow('articleCollection');
+const ketting = new Ketting('https://api.example.org/');
+const articleCollection = await ketting.follow('articleCollection');
 
-var items = await someCollection.followAll('item');
+const items = await someCollection.followAll('item');
 
-for (i in items) {
-   console.log(await items[i].get());
+for (const item of items) {
+   console.log(await item.get());
 }
 ```
 
@@ -155,8 +155,8 @@ The 'Ketting' class is the main class you'll use to access anything else.
 #### Constructor
 
 ```js
-var options = {}; // options are optional
-var ketting = new Ketting('https://api.example.org/', options);
+const options = {}; // options are optional
+const ketting = new Ketting('https://api.example.org/', options);
 ```
 
 2 keys or `options` are currently supported: `auth` and `fetchInit`.  
@@ -169,7 +169,7 @@ var ketting = new Ketting('https://api.example.org/', options);
 Basic example:
 
 ```js
-var options = {
+const options = {
   auth: {
     type: 'basic',
     userName: 'foo',
@@ -181,7 +181,7 @@ var options = {
 OAuth2 Bearer example:
 
 ```js
-var options = {
+const options = {
   auth: {
     type: 'bearer',
     token: 'bar'
@@ -195,19 +195,21 @@ The only currently supported authorization flow is the [Resource Owner Password 
 Resource Owner Password Credentials Grant example:
 
 ```js
-var options = auth: {
-  type: 'oauth2',
-  client: {
-    clientId: 'fooClient',
-    clientSecret: 'barSecret',
-    accessTokenUri: 'https://api.example.org/oauth/token',
-    scopes: ['test']
-  },
-  owner: {
-    userName: 'fooOwner',
-    password: 'barPassword'
+const options = {
+  auth: {
+    type: 'oauth2',
+    client: {
+      clientId: 'fooClient',
+      clientSecret: 'barSecret',
+      accessTokenUri: 'https://api.example.org/oauth/token',
+      scopes: ['test']
+    },
+    owner: {
+      userName: 'fooOwner',
+      password: 'barPassword'
+    }
   }
-}
+};
 ```
 
 The `fetchInit` option is a default list of settings that's automatically
@@ -218,7 +220,7 @@ For example, to ensure that the browser automatically passed relevant cookies
 to the endpoint, you would specify this as such:
 
 ```js
-var options = {
+const options = {
   fetchInit : {
     credentials: 'include'
   }
@@ -238,9 +240,9 @@ a resource will be returned pointing to the bookmark.
 If a relative url is given, it will be resolved based on the bookmark uri.
 
 ```js
-var resource = client.getResource('http://example.org'); // absolute uri
-var resource = client.getResource('/foo'); // relative uri
-var resource = client.getResource(); // bookmark
+const resource = client.getResource('http://example.org'); // absolute uri
+const resource = client.getResource('/foo'); // relative uri
+const resource = client.getResource(); // bookmark
 ```
 
 The resource is returned immediately, and not as a promise.
@@ -251,13 +253,13 @@ The `follow` function on the `Ketting` follows a link based on it's relation
 type from the bookmark resource.
 
 ```js
-var someResource = await ketting.follow('author');
+const someResource = await ketting.follow('author');
 ```
 
 This is just a shortcut to:
 
 ```js
-var someResource = await ketting.getResource().follow('author');
+const someResource = await ketting.getResource().follow('author');
 ```
 
 #### `Ketting.fetch`
@@ -267,7 +269,7 @@ function takes the same arguments (`input` and `init`), but it decorates the
 HTTP request with Authentication headers.
 
 ```js
-var response = await ketting.fetch('https://example.org');
+const response = await ketting.fetch('https://example.org');
 ```
 
 ### Resource
@@ -317,7 +319,7 @@ header, this method will resolve into a new Resource. For example, this might
 create a new resource and then get a list of links after creation:
 
 ```js
-var newResource = await parentResource.post({ foo: 'bar' });
+const newResource = await parentResource.post({ foo: 'bar' });
 // Output a list of links on the newly created resource
 console.log(await newResource.links());
 ```
@@ -340,7 +342,6 @@ Returns a list of `Link` objects for the resource.
 
 ```js
 console.log(await resource.links());
-});
 ```
 
 You can also request only the links for a relation-type you are interested in:
@@ -356,7 +357,7 @@ Follows a link, by it's relation-type and returns a new resource for the
 target.
 
 ```js
-var author = await resource.follow('author');
+const author = await resource.follow('author');
 console.log(await author.get());
 ```
 
@@ -413,11 +414,11 @@ arguments to the regular fetch, but it does a few things special:
 For example, this is how you might do a HTTP `PATCH` request:
 
 ```js
-var init = {
+const init = {
   method: 'PATCH',
   body: JSON.serialize(['some', 'patch', 'object'])
 };
-var response = await resource.fetch(init);
+const response = await resource.fetch(init);
 console.log(response.statusCode);
 ```
 
@@ -444,7 +445,7 @@ following properties:
 Returns the absolute uri to the link. For example:
 
 ```js
-var link = new Link({href: '/foo', baseHref: "http://example.org/bar" });
+const link = new Link({href: '/foo', baseHref: "http://example.org/bar" });
 
 console.log(link.resolve());
 // output is http://example.org/foo
@@ -455,16 +456,19 @@ console.log(link.resolve());
 Expands a templated link. Example:
 
 ```js
-var link = new Link({href: 'http://example.org/foo{?q}', templated: true});
+const link = new Link({href: 'http://example.org/foo{?q}', templated: true});
 
 console.log(link.expand({q: 'bla bla'});
 // output is http://example.org/foo?q=bla+bla
 ```
 
 ### OAuth2 Managed Client
-The underlying OAuth2 client is implemented using [js-client-oauth2](https://github.com/mulesoft/js-client-oauth2) and is exposed via the 'Ketting' class.
+
+The underlying OAuth2 client is implemented using [js-client-oauth2][5] is
+exposed via the 'Ketting' class.
+
 ```js
-var ketting = new Ketting('https://api.example.org/', {
+const ketting = new Ketting('https://api.example.org/', {
   auth: {
     type: 'oauth2',
     client: {
@@ -480,18 +484,13 @@ var ketting = new Ketting('https://api.example.org/', {
   }
 });
 
-var oAuthClient = ketting.auth.oauth.client;
+const oAuthClient = ketting.oauth2Helper.client;
 // Interact with the underlying OAuth2 client
-
-
-// Helper functions are also exposed for fetching and refreshing the access token
-ketting.auth.oauth.getToken();
-ketting.auth.oauth.refreshToken();
 ```
-
 
 [1]: https://tools.ietf.org/html/rfc5988 "Web Linking"
 [2]: http://stateless.co/hal_specification.html "HAL - Hypertext Application Language"
-[6]: https://tools.ietf.org/html/rfc7240 "Prefer Header for HTTP"
 [3]: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API
 [4]: https://tools.ietf.org/html/rfc7807
+[5]: https://github.com/mulesoft/js-client-oauth2
+[6]: https://tools.ietf.org/html/rfc7240 "Prefer Header for HTTP"
