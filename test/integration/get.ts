@@ -59,4 +59,16 @@ describe('Issuing a GET request', async () => {
 
   });
 
+  it('should throw an exception when no content-type was returned', async() => {
+
+    const resource = await ketting.follow('no-content-type');
+    let hadException = false;
+    try {
+      await resource.get();
+    } catch (ex) {
+      hadException = true;
+    }
+    expect(hadException).to.eql(true);
+
+  });
 });
