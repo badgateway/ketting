@@ -1,10 +1,10 @@
-import Ketting from '../../src/ketting';
 import { expect } from 'chai';
+import Ketting from '../../src/ketting';
 
 describe('Basic Authentication', () => {
 
-  it('should return 401 if no credentials were passed.', async() => {
-  
+  it('should return 401 if no credentials were passed.', async () => {
+
     const ketting = new Ketting('http://localhost:3000/hal1.json');
     const resource = await ketting.follow('auth-basic');
     const response = await resource.fetch();
@@ -12,14 +12,14 @@ describe('Basic Authentication', () => {
 
   });
 
-  it('should return 401 if incorrect credentials were passed.', async() => {
+  it('should return 401 if incorrect credentials were passed.', async () => {
 
     const ketting = new Ketting('http://localhost:3000/hal1.json', {
       auth: {
         type: 'basic',
         userName: 'foo',
         password: 'bar'
-      } 
+      }
     });
     const resource = await ketting.follow('auth-basic');
     const response = await resource.fetch();
@@ -27,14 +27,14 @@ describe('Basic Authentication', () => {
 
   });
 
-  it('should return 200 OK if correct credentials were passed.', async() => {
+  it('should return 200 OK if correct credentials were passed.', async () => {
 
     const ketting = new Ketting('http://localhost:3000/hal1.json', {
       auth: {
         type: 'basic',
         userName: 'user',
         password: 'pass'
-      } 
+      }
     });
     const resource = await ketting.follow('auth-basic');
     const response = await resource.fetch();

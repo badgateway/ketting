@@ -13,23 +13,22 @@ export function resolve(base: string, relative: string): string {
   // Code taken from this gist:;
   // https://gist.github.com/johan/3915545#file-resolveurl-js
 
-  var doc      = document
-    , old_base = doc.getElementsByTagName('base')[0]
-    , old_href = old_base && old_base.href
-    , doc_head = doc.head || doc.getElementsByTagName('head')[0]
-    , our_base = old_base || doc_head.appendChild(doc.createElement('base'))
-    , resolver = doc.createElement('a')
-    , resolved_url
-  ;
-  our_base.href = base;
-  resolver.href = relative;
-  resolved_url  = resolver.href; // browser magic at work here
+  const doc     = document;
+  const oldBase = doc.getElementsByTagName('base')[0];
+  const oldHref = oldBase && oldBase.href;
+  const docHead = doc.head || doc.getElementsByTagName('head')[0];
+  const ourBase = oldBase || docHead.appendChild(doc.createElement('base'));
+  const resolver = doc.createElement('a');
 
-  if (old_base) {
-    old_base.href = old_href;
+  ourBase.href = base;
+  resolver.href = relative;
+  const resolvedUrl  = resolver.href; // browser magic at work here
+
+  if (oldBase) {
+    oldBase.href = oldHref;
   } else {
-    doc_head.removeChild(our_base);
+    docHead.removeChild(ourBase);
   }
-  return resolved_url;
+  return resolvedUrl;
 
 }

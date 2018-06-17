@@ -1,1 +1,2 @@
-module.exports = require('./ketting');
+import Ketting from './ketting';
+module.exports = Ketting;

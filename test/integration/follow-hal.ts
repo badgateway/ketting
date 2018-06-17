@@ -1,36 +1,36 @@
+import { expect } from 'chai';
 import Ketting from '../../src/ketting';
 import Resource from '../../src/resource';
-import { expect } from 'chai';
 
 describe('Following a link', async () => {
 
   const ketting = new Ketting('http://localhost:3000/hal1.json');
 
-  let hal2:Resource;
+  let hal2: Resource;
 
-  it('should return a resource', async() => {
+  it('should return a resource', async () => {
 
     hal2 = await ketting.follow('next');
     expect(hal2).to.be.an.instanceof(Resource);
 
 
   });
-  it('should get the correct response to GET', async() => {
+  it('should get the correct response to GET', async () => {
 
     const body = await hal2.get();
-    expect(body).to.eql({'title': 'HAL 2!'});
+    expect(body).to.eql({title: 'HAL 2!'});
 
 
   });
-  it('should be chainable', async() => {
+  it('should be chainable', async () => {
 
     const hal1 = await ketting.follow('next').follow('prev');
     const body = await hal1.get();
-    expect(body).to.eql({'title': 'Hal 1', 'foo': 'bar'});
+    expect(body).to.eql({title: 'Hal 1', foo: 'bar'});
 
   });
 
-  it('should throw an error following non-existent relationships', async() => {
+  it('should throw an error following non-existent relationships', async () => {
 
     let result;
     try {
@@ -44,15 +44,15 @@ describe('Following a link', async () => {
 
   });
 
-  it('should be chainable several times', async() => {
+  it('should be chainable several times', async () => {
 
     const hal1 = await ketting.follow('next').follow('prev').follow('next').follow('prev');
     const body = await hal1.get();
-    expect(body).to.eql({'title': 'Hal 1', 'foo': 'bar'});
+    expect(body).to.eql({title: 'Hal 1', foo: 'bar'});
 
   });
 
-  it('should work with embedded resources', async() => {
+  it('should work with embedded resources', async () => {
 
     const items = await ketting.follow('collection').followAll('item');
     expect(items).to.have.length(2);

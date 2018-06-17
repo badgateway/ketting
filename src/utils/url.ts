@@ -1,4 +1,4 @@
-import url  from 'url';
+import url from 'url';
 
 /**
  * Resolves a relative url using another url.

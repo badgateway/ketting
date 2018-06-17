@@ -1,6 +1,6 @@
-import Representation from './base';
-import Link from '../link';
 import sax from 'sax';
+import Link from '../link';
+import Representation from './base';
 
 /**
  * The Representation class is basically a 'body' of a request
@@ -10,7 +10,7 @@ import sax from 'sax';
  * intended for browsers. The regular html.js is intended for node.js.
  */
 export default class Html extends Representation {
-  
+
   constructor(uri: string, contentType: string, body: string) {
 
     super(uri, contentType, body);
@@ -26,15 +26,15 @@ export default class Html extends Representation {
         return;
       }
 
-      const rels = <string>node.attributes.REL;
+      const rels = <string> node.attributes.REL;
 
-      for(const rel of rels.split(' ')) {
+      for (const rel of rels.split(' ')) {
 
         const link = new Link({
           rel: rel,
           baseHref: this.uri,
-          href: <string>node.attributes.HREF,
-          type: <string>node.attributes.TYPE || undefined
+          href: <string> node.attributes.HREF,
+          type: <string> node.attributes.TYPE || undefined
         });
         this.links.push(link);
 

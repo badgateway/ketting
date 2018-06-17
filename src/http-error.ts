@@ -10,8 +10,8 @@
  */
 export class HttpError extends Error {
 
-  response: Response
-  status: number
+  response: Response;
+  status: number;
 
   constructor(response: Response) {
     super('HTTP error ' + response.status);
@@ -19,7 +19,7 @@ export class HttpError extends Error {
     this.status = response.status;
   }
 
-};
+}
 
 /**
  * Problem extends the HttpError object. If a server emits a HTTP error, and
@@ -36,7 +36,7 @@ export class Problem extends HttpError {
 
   body: {
     title?: string
-  }
+  };
 
   constructor(response: Response, problemBody: object) {
     super(response);
@@ -68,5 +68,5 @@ export default async function problemFactory(response: Response): Promise<HttpEr
     return new HttpError(response);
   }
 
-};
+}
 

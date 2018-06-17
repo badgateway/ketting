@@ -1,12 +1,12 @@
-import { resolve } from './utils/url';
-import FollowablePromise from './followable-promise';
-import { Request, Headers } from 'cross-fetch';
-import problemFactory from './http-error';
+import { Headers, Request } from 'cross-fetch';
 import LinkHeader from 'http-link-header';
-import Link from './link';
-import { mergeHeaders } from './utils/fetch-helper';
-import Representation from './representor/base';
+import FollowablePromise from './followable-promise';
+import problemFactory from './http-error';
 import Ketting from './ketting';
+import Link from './link';
+import Representation from './representor/base';
+import { mergeHeaders } from './utils/fetch-helper';
+import { resolve } from './utils/url';
 
 /**
  * A 'resource' represents an endpoint on the server.
@@ -23,11 +23,11 @@ import Ketting from './ketting';
  */
 export default class Resource {
 
-  client: Ketting
-  repr: Representation | null
-  uri: string
+  client: Ketting;
+  repr: Representation | null;
+  uri: string;
 
-  constructor(client: Ketting, uri:string) {
+  constructor(client: Ketting, uri: string) {
 
     this.client = client;
     this.uri = uri;
@@ -40,7 +40,7 @@ export default class Resource {
    * Returns a promise that resolves to a parsed json object.
    */
   async get(): Promise<object | string> {
-    
+
     const r = await this.representation();
     return r.body;
 
@@ -101,7 +101,7 @@ export default class Resource {
       return this.client.getResource(
         resolve(
           this.uri,
-          <string>response.headers.get('location')
+          <string> response.headers.get('location')
         )
       );
     }
@@ -143,7 +143,7 @@ export default class Resource {
 
     const response = await this.fetchAndThrow({method: 'GET'});
     const body = await response.text();
-    
+
     const contentType = response.headers.get('Content-Type');
     if (!contentType) {
       throw new Error('Server did not respond with a Content-Type header');
@@ -198,7 +198,7 @@ export default class Resource {
 
     const r = await this.representation();
 
-    if (!rel) return r.links;
+    if (!rel) { return r.links; }
 
     return r.links.filter( item => item.rel === rel );
 
@@ -213,7 +213,7 @@ export default class Resource {
    */
   follow(rel: string, variables?: object): FollowablePromise {
 
-    return new FollowablePromise(async(res: any, rej: any) => {
+    return new FollowablePromise(async (res: any, rej: any) => {
 
       try {
         const links = await this.links(rel);
@@ -273,7 +273,7 @@ export default class Resource {
       await this.refresh();
     }
 
-    return <Representation>this.repr;
+    return <Representation> this.repr;
 
   }
 
@@ -291,7 +291,7 @@ export default class Resource {
   fetch(input: Request|string|RequestInit, init?: RequestInit): Promise<Response> {
 
     let uri = null;
-    let newInit:RequestInit = {};
+    let newInit: RequestInit = {};
 
     if (input === undefined) {
       // Nothing was provided, we're operating on the resource uri.
@@ -304,7 +304,7 @@ export default class Resource {
     } else if (input instanceof Request) {
       // We were passed a request object. We need to extract all its
       // information into the init object.
-      uri = resolve(this.uri, (<Request>input).url);
+      uri = resolve(this.uri, (<Request> input).url);
 
       newInit.method = input.method;
       newInit.headers = new Headers(input.headers);
@@ -323,7 +323,7 @@ export default class Resource {
       // is not allowed in the default Fetch API, but we do allow it because
       // in the resource, specifying the uri is optional.
       uri = this.uri;
-      newInit = <RequestInit>input;
+      newInit = <RequestInit> input;
     } else {
       throw new TypeError('When specified, input must be a string, Request object or a key-value object');
     }
@@ -332,12 +332,12 @@ export default class Resource {
     // in newInit.
     if (init) {
 
-      for(const key of Object.keys(init)) {
-        if (key==='headers') {
+      for (const key of Object.keys(init)) {
+        if (key === 'headers') {
           // special case.
           continue;
         }
-        (<any>newInit)[key] = (<any>init)[key];
+        (<any> newInit)[key] = (<any> init)[key];
       }
       newInit.headers = mergeHeaders([
         newInit.headers,

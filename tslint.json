@@ -5,7 +5,18 @@
     ],
     "jsRules": {},
     "rules": {
-      "quotemark": [true, "single", "avoid-template", "avoid-escape"]
+      "arrow-parens": false,
+      "interface-name": false,
+      "interface-over-type-literal": false,
+      "max-classes-per-file": false,
+      "max-line-length": false,
+      "member-access": false,
+      "no-consecutive-blank-lines": [true, 2],
+      "no-angle-bracket-type-assertion": false,
+      "object-literal-shorthand": false,
+      "object-literal-sort-keys": false,
+      "quotemark": [true, "single", "avoid-template", "avoid-escape"],
+      "trailing-comma": "never"
     },
     "rulesDirectory": []
 }

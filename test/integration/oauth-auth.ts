@@ -1,11 +1,11 @@
-import Ketting from '../../src/ketting';
 import { expect } from 'chai';
+import Ketting from '../../src/ketting';
 
 describe('OAuth2 Authentication', () => {
 
   describe('Owner flow', () => {
 
-    it('should return 401 if no credentials were passed.', async() => {
+    it('should return 401 if no credentials were passed.', async () => {
 
       const ketting = new Ketting('http://localhost:3000/hal1.json');
       const resource = await ketting.follow('auth-oauth');
@@ -64,7 +64,7 @@ describe('OAuth2 Authentication', () => {
 
     });
 
-    it('should return 200 OK if correct credentials were passed.', async() => {
+    it('should return 200 OK if correct credentials were passed.', async () => {
 
       const ketting = new Ketting('http://localhost:3000/hal1.json', {
         auth: {
@@ -88,7 +88,7 @@ describe('OAuth2 Authentication', () => {
 
     });
 
-    it('should refresh token if 401 is returned and retry request', async() => {
+    it('should refresh token if 401 is returned and retry request', async () => {
 
       const ketting = new Ketting('http://localhost:3000/hal1.json', {
         auth: {
@@ -120,7 +120,7 @@ describe('OAuth2 Authentication', () => {
 
     });
 
-    it('should refresh token if 401 is returned and throw error if refresh is invalid', async() => {
+    it('should refresh token if 401 is returned and throw error if refresh is invalid', async () => {
 
       const ketting = new Ketting('http://localhost:3000/hal1.json', {
         auth: {
@@ -150,7 +150,7 @@ describe('OAuth2 Authentication', () => {
         const resource = await ketting.follow('auth-oauth');
         await resource.fetch();
 
-      } catch (error){
+      } catch (error) {
         expect(error).to.be.an('error');
       }
     });
@@ -160,6 +160,7 @@ describe('OAuth2 Authentication', () => {
 
     let ex;
     try {
+      // tslint:disable-next-line
       new Ketting('http://localhost:3000/hal1.json', {
         auth: {
           type: 'oauth2',
