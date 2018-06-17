@@ -9,7 +9,7 @@ type LinkInit = {
   templated?: boolean,
   title?: string,
   type?: string,
-}
+};
 
 /**
  * The Link object represents a hyperlink.
@@ -19,12 +19,12 @@ export default class Link {
   /**
    * The base href of the parent document. Used for expanding relative links.
    */
-  baseHref: string
+  baseHref: string;
 
   /**
    * The URI of the link. Might be relative
    */
-  href: string
+  href: string;
 
   /**
    * The name for a link. This might be used to disambiguate the link.
@@ -32,36 +32,36 @@ export default class Link {
    * If you're looking at this, chances are that you might want 'title'
    * instead.
    */
-  name?: string
+  name?: string;
 
   /**
    * The relationship type
    */
-  rel: string
+  rel: string;
 
   /**
    * Is it a URI template or not?
    */
-  templated: boolean
+  templated: boolean;
 
   /**
    * A human-readable label for the link.
    */
-  title: string | null
+  title: string | null;
 
   /**
    * A mimetype
    */
-  type: string | null
+  type: string | null;
 
   constructor(properties: LinkInit) {
 
     this.templated = false;
     this.title = null;
     this.type = null;
-    for(const key of ['baseHref', 'href', 'name', 'rel', 'templated', 'title', 'type']) {
-      if ((<any>properties)[key]) {
-        (<any>this)[key] = (<any>properties)[key];
+    for (const key of ['baseHref', 'href', 'name', 'rel', 'templated', 'title', 'type']) {
+      if ((<any> properties)[key]) {
+        (<any> this)[key] = (<any> properties)[key];
       }
     }
 
@@ -93,6 +93,6 @@ export default class Link {
       return resolve(this.baseHref, expanded);
     }
 
-  };
+  }
 
 }

@@ -11,18 +11,18 @@ export type OAuth2Init = {
   },
   owner: {
     userName: string,
-    password: string,
+    password: string
   }
 };
 
 export class OAuth2Helper {
 
-  client: ClientOAuth2
-  token: null | Token 
+  client: ClientOAuth2;
+  token: null | Token;
   owner: {
     userName: string,
     password: string
-  }
+  };
 
   constructor(options: OAuth2Init) {
 
@@ -44,10 +44,10 @@ export class OAuth2Helper {
    * one, and attempt to refresh the token if it was expired.
    */
   async fetch(request: Request): Promise<Response> {
- 
-    let token = await this.getToken();
+
+    const token = await this.getToken();
     request.headers.set('Authorization', 'Bearer ' + token.accessToken);
-    
+
     const response = await fetch(request);
 
     if (response.status !== 401) {

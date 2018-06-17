@@ -1,7 +1,7 @@
-import Ketting from '../../src/ketting';
-import Resource from '../../src/resource';
 import { expect } from 'chai';
 import { Request } from 'cross-fetch';
+import Ketting from '../../src/ketting';
+import Resource from '../../src/resource';
 
 describe('Using the fetch api', () => {
 
@@ -12,7 +12,7 @@ describe('Using the fetch api', () => {
     hal2 = await ketting.follow('next');
   });
 
-  it('should return a response object', async() => {
+  it('should return a response object', async () => {
 
     const response = await hal2.fetch('?foo=bar');
     expect(response).to.have.property('status');
@@ -20,7 +20,7 @@ describe('Using the fetch api', () => {
 
   });
 
-  it('should also work when passing a Request object', async() => {
+  it('should also work when passing a Request object', async () => {
 
     // @ts-ignore cross-fetch has broken types.
     const request = new Request('?foo=bar');
@@ -30,7 +30,7 @@ describe('Using the fetch api', () => {
 
   });
 
-  it('should allow overriding the HTTP method', async() => {
+  it('should allow overriding the HTTP method', async () => {
 
     const response = await hal2.fetch({ method: 'PUT' });
     expect(response).to.have.property('status');
@@ -38,7 +38,7 @@ describe('Using the fetch api', () => {
 
   });
 
-  it('should allow overriding the url', async() => {
+  it('should allow overriding the url', async () => {
 
     const response = await hal2.fetch('?foo=bar', {
       method: 'PUT',
@@ -51,7 +51,7 @@ describe('Using the fetch api', () => {
 
   });
 
-  it('should allow overriding the Content-Type header', async() => {
+  it('should allow overriding the Content-Type header', async () => {
 
     const tempKetting = new Ketting('http://localhost:3000/hal1.json', {
       fetchInit: {
@@ -74,7 +74,7 @@ describe('Using the fetch api', () => {
 
   });
 
-  it('should allow overriding the User-Agent  header', async() => {
+  it('should allow overriding the User-Agent  header', async () => {
 
     const headersResource = await ketting.follow('headerTest');
     const response = await headersResource.fetch({
@@ -89,9 +89,9 @@ describe('Using the fetch api', () => {
 
   });
 
-  it('Calling fetch on the client itself should also work', async() => {
+  it('Calling fetch on the client itself should also work', async () => {
 
-    const response = await ketting.fetch('http://localhost:3000/hal1.json',{
+    const response = await ketting.fetch('http://localhost:3000/hal1.json', {
       method: 'PUT',
       headers: {
         'X-Foo' : 'Bar'
@@ -102,7 +102,7 @@ describe('Using the fetch api', () => {
 
   });
 
-  it('should throw a TypeError when passing an incorrect value for input', async() => {
+  it('should throw a TypeError when passing an incorrect value for input', async () => {
 
     let result;
     try {
@@ -115,7 +115,7 @@ describe('Using the fetch api', () => {
 
   });
 
-  after( async() => {
+  after( async () => {
 
     // Clearing any changes.
     await ketting.getResource('/reset').post({});

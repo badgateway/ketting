@@ -1,9 +1,9 @@
-import Ketting from '../../src/ketting';
 import { expect } from 'chai';
+import Ketting from '../../src/ketting';
 
 describe('Bearer Authentication', () => {
 
-  it('should return 401 if no credentials were passed.', async() => {
+  it('should return 401 if no credentials were passed.', async () => {
 
     const ketting = new Ketting('http://localhost:3000/hal1.json');
     const resource = await ketting.follow('auth-bearer');
@@ -12,7 +12,7 @@ describe('Bearer Authentication', () => {
 
   });
 
-  it('should return 401 if incorrect credentials were passed.', async() => {
+  it('should return 401 if incorrect credentials were passed.', async () => {
 
     const ketting = new Ketting('http://localhost:3000/hal1.json', {
       auth: {
@@ -26,7 +26,7 @@ describe('Bearer Authentication', () => {
 
   });
 
-  it('should return 200 OK if correct credentials were passed.', async() => {
+  it('should return 200 OK if correct credentials were passed.', async () => {
 
     const ketting = new Ketting('http://localhost:3000/hal1.json', {
       auth: {

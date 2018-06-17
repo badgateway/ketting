@@ -1,46 +1,46 @@
+import { expect } from 'chai';
 import Ketting from '../../src/ketting';
 import Resource from '../../src/resource';
-import { expect } from 'chai';
 
 describe('Issuing a POST request', async () => {
 
   const ketting = new Ketting('http://localhost:3000/hal1.json');
-  let resource:Resource;
-  let newResource:Resource;
+  let resource: Resource;
+  let newResource: Resource;
 
-  before( async() => {
+  before( async () => {
 
     resource = ketting.getResource();
 
   });
 
-  it('should not fail', async() => {
+  it('should not fail', async () => {
 
-    newResource = <Resource>await resource.post({
+    newResource = await resource.post({
       title: 'Posted resource'
-    });
-  
+    }) as Resource;
+
   });
 
-  it('should have returned a new resource', async() => {
+  it('should have returned a new resource', async () => {
 
     expect(newResource).to.be.an.instanceof(Resource);
     expect(newResource.uri).to.match(/\.json$/);
-    
+
   });
-  it('should have created the new resource', async() => {
+  it('should have created the new resource', async () => {
 
     const newBody = await newResource.get();
     expect(newBody).to.eql({title: 'Posted resource'});
-    
+
   });
 
-  it('should throw an exception when there was a HTTP error', async() => {
+  it('should throw an exception when there was a HTTP error', async () => {
 
-    const resource = await ketting.follow('error400');
+    const resource400 = await ketting.follow('error400');
     let exception;
     try {
-        await resource.post({foo: 'bar'});
+        await resource400.post({foo: 'bar'});
     } catch (ex) {
         exception = ex;
     }

@@ -9,13 +9,13 @@ import Link from '../link';
  */
 export default class Representation {
 
-  body: any
-  contentType: string
+  body: any;
+  contentType: string;
   embedded: {
     [uri: string]: object
-  }
-  links: Link[]
-  uri: string
+  };
+  links: Link[];
+  uri: string;
 
   constructor(uri: string, contentType: string, body: any) {
 
@@ -27,4 +27,4 @@ export default class Representation {
 
   }
 
-};
+}

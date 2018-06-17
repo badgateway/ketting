@@ -1,7 +1,8 @@
-import Ketting from '../../src/ketting';
-import Html from '../../src/representor/html';
-import Hal from '../../src/representor/hal';
 import { expect } from 'chai';
+
+import Ketting from '../../src/ketting';
+import Hal from '../../src/representor/hal';
+import Html from '../../src/representor/html';
 
 describe('Ketting', () => {
 
@@ -38,6 +39,5 @@ describe('Ketting', () => {
     expect( () => ketting.getRepresentor('text/plain') ).to.throw(Error);
 
   });
-
 
 });

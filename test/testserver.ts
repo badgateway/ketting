@@ -1,22 +1,21 @@
+import fs from 'fs';
 import Koa from 'koa';
 import { Context as KoaContext } from 'koa';
 import bodyParser from 'koa-bodyparser';
+import logger from 'koa-logger';
 // @ts-ignore don't have a definition for this.
 import Route from 'koa-path-match';
-import logger from 'koa-logger';
 import koaStatic from 'koa-static';
-import fs from 'fs';
 
 type Context = KoaContext & {
   params: { [s: string]: string }
 };
 
-
 const app = new Koa();
 const route = Route();
 
 let resources: {
-  [uri: string] : Buffer | string | null
+  [uri: string]: Buffer | string | null
 } = {};
 
 // Log to console
@@ -42,8 +41,6 @@ staticFile('/', __dirname + '/fixtures/index.html', 'text/html');
 staticFile('/mocha.js', __dirname + '/../node_modules/mocha/mocha.js', 'text/javascript');
 staticFile('/mocha.css', __dirname + '/../node_modules/mocha/mocha.css', 'text/css');
 
-
-
 app.use(
   route('/headers', (ctx: Context) => {
     ctx.response.status = 200;
@@ -64,7 +61,7 @@ app.use(
 // HTTP errors as a service
 app.use(
   route('/error/:code', (ctx: Context) => {
-    ctx.response.status = parseInt(ctx.params.code);
+    ctx.response.status = parseInt(ctx.params.code, 10);
     ctx.response.body = '';
   })
 );
@@ -80,14 +77,14 @@ app.use(
 
 // Return request body as we received it
 app.use(
-  route('/echo', (ctx: Context)=> {
+  route('/echo', (ctx: Context) => {
     ctx.response.status = 200;
     ctx.response.type = ctx.request.headers['content-type'];
     ctx.response.body = {
       headers: ctx.request.headers,
       body: ctx.request.body,
       method: ctx.request.method,
-    }
+    };
   })
 );
 
@@ -122,8 +119,8 @@ app.use(
 
      ctx.response.status = 410;
      ctx.response.body = {
-       type: "http://evertpot.com/problem-test",
-       title: "Some sort of error!"
+       type: 'http://evertpot.com/problem-test',
+       title: 'Some sort of error!'
      };
      ctx.response.type = 'application/problem+json';
 
@@ -134,7 +131,7 @@ app.use(
   route('/auth/basic')
   .get((ctx: Context) => {
     const encoded = 'Basic dXNlcjpwYXNz'; // base64(user:pass)
-    if (!ctx.request.headers.authorization || ctx.request.headers.authorization!==encoded) {
+    if (!ctx.request.headers.authorization || ctx.request.headers.authorization !== encoded) {
       ctx.response.status = 401;
       ctx.response.body = '';
       ctx.response.set('Authorization', 'Basic');
@@ -149,7 +146,7 @@ app.use(
   route('/auth/bearer')
   .get((ctx: Context) => {
     const encoded = 'Bearer foo';
-    if (!ctx.request.headers.authorization || ctx.request.headers.authorization!==encoded) {
+    if (!ctx.request.headers.authorization || ctx.request.headers.authorization !== encoded) {
       ctx.response.status = 401;
       ctx.response.body = '';
       ctx.response.set('Authorization', 'Bearer');
@@ -164,7 +161,7 @@ app.use(
   route('/auth/oauth')
   .get((ctx: Context) => {
     const encoded = 'Bearer foo';
-    if (!ctx.request.headers.authorization || ctx.request.headers.authorization!==encoded) {
+    if (!ctx.request.headers.authorization || ctx.request.headers.authorization !== encoded) {
       ctx.response.status = 401;
       ctx.response.body = '';
       ctx.response.set('Authorization', 'Bearer');
@@ -193,7 +190,7 @@ app.use(
           (requestBody.grant_type === 'refresh_token'
           && requestBody.refresh_token === 'fooRefresh')
         )
-      ){
+      ) {
         ctx.response.body = {
           token_type: 'bearer',
           access_token: 'foo',
@@ -212,7 +209,7 @@ app.use(
   route('/:id')
   .get((ctx: Context) => {
 
-    if (typeof resources[ctx.params.id] === "undefined") {
+    if (resources[ctx.params.id] === undefined) {
       resources[ctx.params.id] = fs.readFileSync(__dirname + '/fixtures/' + ctx.params.id);
     }
 
@@ -262,7 +259,7 @@ app.use(
 
       let body = '';
       ctx.req.setEncoding('utf-8');
-      ctx.req.on('data', (chunk:string) => {
+      ctx.req.on('data', (chunk: string) => {
 
         body += chunk;
 
@@ -282,7 +279,8 @@ app.use(
   })
 );
 
-var port = 3000;
+const port = 3000;
 app.listen(port);
 
+// tslint:disable no-console
 console.log('Server is now online. Head to http://localhost:' + port + '/ to run tests in a browser');

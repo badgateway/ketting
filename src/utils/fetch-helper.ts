@@ -11,7 +11,7 @@ import * as crossFetch from 'cross-fetch';
  */
 export function createFetchRequest(input: any, init: any, defaultInit: any): Request {
 
-  const trueInit:any = {};
+  const trueInit: any = {};
 
   if (init) {
     Object.assign(trueInit, defaultInit, init);
@@ -45,15 +45,15 @@ type HeaderSet = any;
 export function mergeHeaders(headerSets: HeaderSet[]): Headers {
 
   const result = new crossFetch.Headers();
-  for(const headerSet of headerSets) {
+  for (const headerSet of headerSets) {
 
     if (headerSet instanceof crossFetch.Headers) {
-      for(const key of headerSet.keys()) {
-        result.set(key, <string>headerSet.get(key));
+      for (const key of headerSet.keys()) {
+        result.set(key, <string> headerSet.get(key));
       }
     } else if (headerSet) {
       // not falsey, must be a key->value object.
-      for(const index in headerSet) {
+      for (const index of Object.keys(headerSet)) {
         result.set(index, headerSet[index]);
       }
     }

@@ -1,7 +1,7 @@
-import Ketting from '../../src/ketting';
-import Resource from '../../src/resource';
 import { expect } from 'chai';
+import Ketting from '../../src/ketting';
 import Link from '../../src/link';
+import Resource from '../../src/resource';
 
 describe('Issuing a GET request', async () => {
 
@@ -9,33 +9,33 @@ describe('Issuing a GET request', async () => {
   let resource: Resource;
   let result: any;
 
-  before( async() => {
+  before( async () => {
 
     resource = await ketting.follow('headerTest');
 
   });
 
-  it('should not fail', async() => {
+  it('should not fail', async () => {
 
     result = await resource.get();
 
   });
 
-  it('should have sent the correct headers', async() => {
+  it('should have sent the correct headers', async () => {
 
     expect(result).to.have.property('user-agent');
     expect(result['user-agent']).to.match(/^Ketting\//);
-    expect(result['accept']).to.eql('application/hal+json;q=1.0, application/json;q=0.9, text/html;q=0.8');
+    expect(result.accept).to.eql('application/hal+json;q=1.0, application/json;q=0.9, text/html;q=0.8');
     expect(result['content-type']).to.eql('application/hal+json');
 
   });
 
-  it('should throw an exception when there was a HTTP error', async() => {
+  it('should throw an exception when there was a HTTP error', async () => {
 
-    const resource = await ketting.follow('error400');
+    const resource2 = await ketting.follow('error400');
     let exception;
     try {
-        await resource.get();
+        await resource2.get();
     } catch (ex) {
         exception = ex;
     }
@@ -43,28 +43,44 @@ describe('Issuing a GET request', async () => {
 
   });
 
-  it('should support the HTTP Link header', async() => {
+  it('should support the HTTP Link header', async () => {
 
-    const resource = await ketting.follow('linkHeader');
-    const links = await resource.links();
+    const resource2 = await ketting.follow('linkHeader');
+    const links = await resource2.links();
 
     const expected = [
-      new Link({rel: 'next', baseHref: 'http://localhost:3000/link-header', href: '/hal2.json'}),
-      new Link({rel: 'previous', baseHref: 'http://localhost:3000/link-header', href: '/TheBook/chapter2'}),
-      new Link({rel: 'start', baseHref: 'http://localhost:3000/link-header', href: 'http://example.org/'}),
-      new Link({rel: 'http://example.net/relation/other', baseHref: 'http://localhost:3000/link-header', href: 'http://example.org/'})
+      new Link({
+        rel: 'next',
+        baseHref: 'http://localhost:3000/link-header',
+        href: '/hal2.json'
+      }),
+      new Link({
+        rel: 'previous',
+        baseHref: 'http://localhost:3000/link-header',
+        href: '/TheBook/chapter2'
+      }),
+      new Link({
+        rel: 'start',
+        baseHref: 'http://localhost:3000/link-header',
+        href: 'http://example.org/'
+      }),
+      new Link({
+        rel: 'http://example.net/relation/other',
+        baseHref: 'http://localhost:3000/link-header',
+        href: 'http://example.org/'
+      })
     ];
 
     expect(links).to.eql(expected);
 
   });
 
-  it('should throw an exception when no content-type was returned', async() => {
+  it('should throw an exception when no content-type was returned', async () => {
 
-    const resource = await ketting.follow('no-content-type');
+    const resource2 = await ketting.follow('no-content-type');
     let hadException = false;
     try {
-      await resource.get();
+      await resource2.get();
     } catch (ex) {
       hadException = true;
     }

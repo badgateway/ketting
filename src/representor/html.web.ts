@@ -1,5 +1,5 @@
-import Representation from './base';
 import Link from '../link';
+import Representation from './base';
 
 /**
  * The Representation class is basically a 'body' of a request
@@ -29,11 +29,11 @@ export default class Html extends Representation {
 
   }
 
-};
+}
 
 function linkFromTags(htmlDoc: Html, elements: NodeListOf<HTMLElement>) {
 
-  for(const node of elements) {
+  for (const node of elements) {
 
     const rels = node.getAttribute('rel');
     const href = node.getAttribute('href');
@@ -43,7 +43,7 @@ function linkFromTags(htmlDoc: Html, elements: NodeListOf<HTMLElement>) {
       continue;
     }
 
-    for(const rel of rels.split(' ')) {
+    for (const rel of rels.split(' ')) {
 
       const link = new Link({
         rel: rel,

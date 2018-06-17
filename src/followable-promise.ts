@@ -14,13 +14,10 @@ type Executor =
  * It's really just a thin wrapper around the promise. Note that we're not
  * extending the built-in Promise object, but proxy it as browsers don't allow
  * extending the Promise object.
- *
- * @param {Function} executor
- * @constructor
  */
 export default class FollowablePromise {
 
-  realPromise: Promise<Resource>
+  realPromise: Promise<Resource>;
 
   constructor(executor: Executor ) {
     this.realPromise = new Promise(executor);
@@ -53,12 +50,12 @@ export default class FollowablePromise {
    */
   follow(rel: string, variables?: object): FollowablePromise {
 
-    return new FollowablePromise((resolve: (value: FollowablePromise) => void, reject: Function) => {
+    return new FollowablePromise((resolve: (value: FollowablePromise) => void, reject: (reason: any) => void) => {
 
       this.realPromise.then((resource: Resource) => {
         resolve(resource.follow(rel, variables));
 
-      }).catch(function(err) {
+      }).catch(err => {
         reject(err);
       });
 

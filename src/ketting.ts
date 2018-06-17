@@ -1,13 +1,13 @@
-import Resource from './resource';
+import fetch from 'cross-fetch';
+import FollowablePromise from './followable-promise';
 import Representor from './representor/base';
 import HalRepresentor from './representor/hal';
 import HtmlRepresentor from './representor/html';
-import FollowablePromise from './followable-promise';
+import Resource from './resource';
 import * as base64 from './utils/base64';
-import { OAuth2Helper, OAuth2Init } from './utils/oauth';
-import fetch from 'cross-fetch';
-import { resolve } from './utils/url';
 import * as fetchHelper from './utils/fetch-helper';
+import { OAuth2Helper, OAuth2Init } from './utils/oauth';
+import { resolve } from './utils/url';
 
 type ContentType = {
   mime: string,
@@ -19,14 +19,14 @@ type AuthOptionsBasic = {
   type: 'basic'
   password: string
   userName: string
-}
+};
 type AuthOptionsBearer = {
   type: 'bearer'
   token: string
-}
+};
 type AuthOptionsOAuth2 = {
   type: 'oauth2',
-} & OAuth2Init
+} & OAuth2Init;
 
 type AuthOptions =
   AuthOptionsBasic |
@@ -43,6 +43,47 @@ type KettingOptions = {
  * The main Ketting client object.
  */
 export default class Ketting {
+
+  /**
+   * The url from which all discovery starts.
+   */
+  bookMark: string;
+
+  /**
+   * Here we store all the resources that were ever requested. This will
+   * ensure that if the same resource is requested twice, the same object is
+   * returned.
+   */
+  resourceCache: { [url: string]: Resource };
+
+  /**
+   * Autentication settings.
+   *
+   * If set, must have at least a `type` property.
+   * If type=basic, userName and password must be set.
+   */
+  auth: AuthOptions;
+
+  /**
+   * Content-Type settings and mappings.
+   *
+   * See the constructor for an example of the structure.
+   */
+  contentTypes: ContentType[];
+
+  /**
+   * A list of settings passed to the Fetch API.
+   *
+   * It's effectively a list of defaults that are passed as the 'init' argument.
+   * @see https://developer.mozilla.org/en-US/docs/Web/API/Request/Request
+   */
+  fetchInit: RequestInit;
+
+  /**
+   * If OAuth2 was configured, this property gives access to OAuth2-related
+   * operations.
+   */
+  oauth2Helper: OAuth2Helper;
 
   constructor(bookMark: string, options?: KettingOptions) {
 
@@ -87,46 +128,6 @@ export default class Ketting {
 
   }
 
-  /**
-   * The url from which all discovery starts.
-   */
-  bookMark: string;
-
-  /**
-   * Here we store all the resources that were ever requested. This will
-   * ensure that if the same resource is requested twice, the same object is
-   * returned.
-   */
-  resourceCache: { [url: string]: Resource }
-
-  /**
-   * Autentication settings.
-   *
-   * If set, must have at least a `type` property.
-   * If type=basic, userName and password must be set.
-   */
-  auth: AuthOptions
-
-  /**
-   * Content-Type settings and mappings.
-   *
-   * See the constructor for an example of the structure.
-   */
-  contentTypes: ContentType[]
-
-  /**
-   * A list of settings passed to the Fetch API.
-   *
-   * It's effectively a list of defaults that are passed as the 'init' argument.
-   * @see https://developer.mozilla.org/en-US/docs/Web/API/Request/Request
-   */
-  fetchInit : RequestInit
-
-  /**
-   * If OAuth2 was configured, this property gives access to OAuth2-related
-   * operations.
-   */
-  oauth2Helper: OAuth2Helper
 
   /**
    * This function is a shortcut for getResource().follow(x);
@@ -177,7 +178,7 @@ export default class Ketting {
       const accept = this.contentTypes
         .map( contentType => {
           let item = contentType.mime;
-          if (contentType.q) item+=';q=' + contentType.q;
+          if (contentType.q) { item += ';q=' + contentType.q; }
           return item;
         } )
         .join(', ');
@@ -187,7 +188,7 @@ export default class Ketting {
       request.headers.set('Content-Type', this.contentTypes[0].mime);
     }
     if (!request.headers.has('Authorization') && this.auth) {
-      switch(this.auth.type) {
+      switch (this.auth.type) {
 
       case 'basic' :
         request.headers.set('Authorization', 'Basic ' + base64.encode(this.auth.userName + ':' + this.auth.password));
@@ -217,7 +218,7 @@ export default class Ketting {
       contentType = contentType.split(';')[0];
     }
     contentType = contentType.trim();
-    const result = this.contentTypes.find(function(item) {
+    const result = this.contentTypes.find(item => {
       return item.mime === contentType;
     });
 
@@ -225,7 +226,7 @@ export default class Ketting {
       throw new Error('Could not find a representor for contentType: ' + contentType);
     }
 
-    switch(result.representor) {
+    switch (result.representor) {
     case 'html' :
       return HtmlRepresentor;
     case 'hal' :

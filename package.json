@@ -51,7 +51,7 @@
     "@types/sax": "^1.0.0",
     "awesome-typescript-loader": "^5.0.0",
     "chai": "^4.1.2",
-    "eslint": "^4.19.1",
+    "tslint": "^5.10.0",
     "koa": "^2.5.1",
     "koa-bodyparser": "^4.2.1",
     "koa-logger": "^3.2.0",

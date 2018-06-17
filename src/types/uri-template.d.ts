@@ -1,9 +1,9 @@
-declare module "uri-template" {
+declare module 'uri-template' {
 
   export interface Template {
-    expand(variables: object): string
+    expand(variables: object): string;
   }
 
-  export function parse(href: string): Template
+  export function parse(href: string): Template;
 
 }

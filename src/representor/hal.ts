@@ -1,6 +1,6 @@
-import Representation from './base';
 import Link from '../link';
 import { resolve } from '../utils/url';
+import Representation from './base';
 
 /**
  * The Representation class is basically a 'body' of a request
@@ -10,7 +10,7 @@ import { resolve } from '../utils/url';
  */
 export default class Hal extends Representation {
 
-  body: { [s: string]: any }
+  body: { [s: string]: any };
 
   constructor(uri: string, contentType: string, body: any) {
 
@@ -39,11 +39,11 @@ export default class Hal extends Representation {
 /**
  * Parse the Hal _links object and populate the 'links' property.
  */
-const parseHalLinks = function(representation: Hal): void {
+const parseHalLinks = (representation: Hal): void => {
 
-  for(const relType of Object.keys((<any>representation.body)._links)) {
+  for (const relType of Object.keys((<any> representation.body)._links)) {
 
-    let links = (<any>representation.body)._links[relType];
+    let links = (<any> representation.body)._links[relType];
     if (!Array.isArray(links)) {
       links = [links];
     }
@@ -63,9 +63,9 @@ type HalLink = {
 /**
  * Parses a single HAL link from a _links object, or a list of links.
  */
-const parseHalLink = function(representation: Hal, rel: string, links: HalLink[]): void {
+const parseHalLink = (representation: Hal, rel: string, links: HalLink[]): void => {
 
-  for(const link of links) {
+  for (const link of links) {
     representation.links.push(
       new Link({
         rel: rel,
@@ -84,15 +84,15 @@ const parseHalLink = function(representation: Hal, rel: string, links: HalLink[]
  * Parse the HAL _embedded object. Right now we're just grabbing the
  * information from _embedded and turn it into links.
  */
-const parseHalEmbedded = function(representation: Hal): void {
+const parseHalEmbedded = (representation: Hal): void => {
 
-  for(const relType of Object.keys((<any>representation).body._embedded)) {
+  for (const relType of Object.keys((<any> representation).body._embedded)) {
 
-    let embedded = (<any>representation).body._embedded[relType];
+    let embedded = (<any> representation).body._embedded[relType];
     if (!Array.isArray(embedded)) {
       embedded = [embedded];
     }
-    for(const embeddedItem of embedded) {
+    for (const embeddedItem of embedded) {
 
       const uri = resolve(
         representation.uri,

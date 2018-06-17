@@ -1,5 +1,6 @@
-import FollowablePromise from '../../src/followable-promise';
 import { expect } from 'chai';
+
+import FollowablePromise from '../../src/followable-promise';
 
 describe('FollowablePromise', () => {
 
@@ -17,7 +18,7 @@ describe('FollowablePromise', () => {
       expect(await p).to.equal('hi');
 
     });
-    
+
     it('should work when rejecting', async () => {
 
       const p = new FollowablePromise( (res, rej) => {
@@ -48,7 +49,7 @@ describe('FollowablePromise', () => {
 
         // @ts-ignore: I know what I'm doing
         res({
-          follow: function(rel: string, vars: object) {
+          follow: (rel: string, vars: object) => {
             // @ts-ignore: I know what I'm doing
             return 'follow:' + rel + ':' + vars.B;
           }
@@ -56,7 +57,7 @@ describe('FollowablePromise', () => {
 
       });
 
-      expect(await p.follow('A',{B: 'C'}), 'follow:A:C');
+      expect(await p.follow('A', {B: 'C'}), 'follow:A:C');
 
     });
 
@@ -66,8 +67,8 @@ describe('FollowablePromise', () => {
 
         // @ts-ignore: I know what I'm doing
         res({
-          follow: function() {
-            throw "Hi";
+          follow() {
+            throw new Error('Hi');
           }
         });
 
@@ -79,7 +80,7 @@ describe('FollowablePromise', () => {
       } catch (e) {
         result = e;
       }
-      expect(result).to.equal('Hi');
+      expect(result.message).to.equal('Hi');
 
     });
 

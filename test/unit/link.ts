@@ -1,18 +1,20 @@
-import Link from '../../src/link';
 import { expect } from 'chai';
+
+import Link from '../../src/link';
 
 describe('Link', () => {
 
   it('should construct and expose its properties', () => {
 
     const link = new Link({
-      rel: 'foo',
       baseHref: 'http://example.org/',
       href: '/foo/bar',
+      rel: 'foo',
+
+      name: 'foo-link',
       type: 'text/css',
       templated: false,
       title: 'Foo Link',
-      name: 'foo-link'
     });
 
     expect(link.rel).to.equal('foo');
@@ -40,9 +42,9 @@ describe('Link', () => {
   it('should be able to expand templated links', () => {
 
     const link = new Link({
-      rel: 'about',
       baseHref: 'http://example.org/',
       href: '/foo/{bar}',
+      rel: 'about',
       templated: true
     });
 
@@ -53,9 +55,9 @@ describe('Link', () => {
   it('should not error when expanding non-templated links', () => {
 
     const link = new Link({
-      rel: 'about',
       baseHref: 'http://example.org/',
-      href: '/foo/bar'
+      href: '/foo/bar',
+      rel: 'about',
     });
 
     expect(link.expand({ bar: 'zim' })).to.equal('http://example.org/foo/bar');
