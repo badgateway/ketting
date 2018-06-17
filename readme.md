@@ -324,6 +324,19 @@ const newResource = await parentResource.post({ foo: 'bar' });
 console.log(await newResource.links());
 ```
 
+#### `Resource.patch()`
+
+This function provides a really simply implementation of the `PATCH` method.
+All it does is encode the body to JSON and set the `Content-Type` to
+`application/json`. I'm curious to hear use-cases for this, so open a ticket
+if this doesn't cut it!
+
+```js
+await resource.patch({
+  foo: 'bar'
+});
+```
+
 #### `Resource.refresh()`
 
 The `refresh` function behaves the same as the `get()` function, but it ignores
