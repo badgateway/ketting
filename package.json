@@ -32,6 +32,7 @@
     "browser/ketting.min.js",
     "browser/ketting.min.js.map"
   ],
+  "types": "dist/index.d.ts",
   "dependencies": {
     "client-oauth2": "^4.2.1",
     "cross-fetch": "^2.2.1",
