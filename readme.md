@@ -47,7 +47,7 @@ interface and make it easier to follow REST best practices more strictly.
 
 It provides some useful abstractions that make it easier to work with true
 hypermedia / HATEAOS servers. It currently parses [HAL][2] and has a deep
-understanding of inks and embedded resources. There's also support for parsing
+understanding of links and embedded resources. There's also support for parsing
 and following links from HTML documents, and it understands the HTTP `Link:`
 header.
 
@@ -77,7 +77,7 @@ This is how that interaction might look like:
 const ketting = new Ketting('https://api.example.org/');
 const createArticle = await ketting.follow('articleCollection').follow('new'); // chained follow
 
-const newArticle = await createArticle.post({title: 'Hello world'});
+const newArticle = await createArticle.post({ title: 'Hello world' });
 const author = await newArticle.follow('author');
 
 // Output author information
@@ -95,7 +95,7 @@ the links in the collection and immediately send along the contents of those
 resources, thus avoiding the overhead.
 
 Ketting understands `_embedded` and completely abstracts them away. If you use
-ketting with a HAL server, you can therefore completely ignore them.
+Ketting with a HAL server, you can therefore completely ignore them.
 
 For example, given a collection resource with many resources that hal the
 relationshiptype `item`, you might use the following API:
@@ -129,7 +129,7 @@ Further reading:
 Automatically parsing problem+json
 ----------------------------------
 
-If your server emits application/problem+json documents ([rfc7807][4]) on HTTP
+If your server emits application/problem+json documents ([RFC7807][4]) on HTTP
 errors, the library will automatically extract the information from that
 object, and also provide a better exception message (if the title property is
 provided).
@@ -159,7 +159,7 @@ const options = {}; // options are optional
 const ketting = new Ketting('https://api.example.org/', options);
 ```
 
-2 keys or `options` are currently supported: `auth` and `fetchInit`.  
+2 keys or `options` are currently supported: `auth` and `fetchInit`.
 
 `auth` can be used to specify authentication information. Supported authentication methods are:
 - HTTP Basic auth
@@ -293,7 +293,7 @@ If the resource was fetched earlier, it will return a cached copy.
 Updates the resource with a new representation
 
 ```js
-await resource.put({ 'foo' : 'bar' });
+await resource.put({ foo: 'bar' });
 ```
 
 
@@ -391,13 +391,13 @@ templated links (templated URI), using the second argument.
 
 For example, a link specified as:
 
-    { href: "/foo{?a}", templated: true}
+    { href: "/foo{?a}", templated: true }
 
 May be followed using
 
 ```js
 resource
-  .follow('some-templated-link', { a: 'bar'})
+  .follow('some-templated-link', { a: 'bar' })
 ```
 
 This would result following a link to the `/foo?a=bar` uri.
@@ -458,7 +458,7 @@ following properties:
 Returns the absolute uri to the link. For example:
 
 ```js
-const link = new Link({href: '/foo', baseHref: "http://example.org/bar" });
+const link = new Link({ href: '/foo', baseHref: "http://example.org/bar" });
 
 console.log(link.resolve());
 // output is http://example.org/foo
@@ -469,9 +469,9 @@ console.log(link.resolve());
 Expands a templated link. Example:
 
 ```js
-const link = new Link({href: 'http://example.org/foo{?q}', templated: true});
+const link = new Link({ href: 'http://example.org/foo{?q}', templated: true });
 
-console.log(link.expand({q: 'bla bla'});
+console.log(link.expand({ q: 'bla bla' });
 // output is http://example.org/foo?q=bla+bla
 ```
 
