@@ -1,6 +1,13 @@
 ChangeLog
 =========
 
+2.0.2 (2018-08-23)
+------------------
+
+* Updated dependencies
+* Fixed a typescript definition problem.
+
+
 2.0.1 (2018-06-17)
 ------------------
 
