@@ -56,6 +56,7 @@ const parseHalLinks = (representation: Hal): void => {
 type HalLink = {
   href: string,
   name?: string,
+  title: string,
   templated?: boolean,
   type?: string
 };
@@ -71,6 +72,7 @@ const parseHalLink = (representation: Hal, rel: string, links: HalLink[]): void 
         rel: rel,
         baseHref: representation.uri,
         href: link.href,
+        title: link.title,
         type: link.type,
         templated: link.templated,
         name: link.name
