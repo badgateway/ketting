@@ -175,7 +175,7 @@ app.use(
 app.use(
   route('/oauth-token')
     .post((ctx: Context) => {
-      const requestBody = ctx.request.body;
+      const requestBody: any = ctx.request.body;
       const clientInfo = Buffer.from(ctx.request.headers.authorization.split(' ')[1], 'base64').toString('ascii');
 
       // Check that the client info is legitimate an then check if the user
