@@ -1,4 +1,4 @@
-import { default as nodeFetch, Request, Headers } from 'node-fetch';
+import { default as nodeFetch, Headers, Request } from 'node-fetch';
 
 // Registering Fetch as a glboal polyfill
 (<any> global).fetch = nodeFetch;

@@ -1,6 +1,15 @@
 ChangeLog
 =========
 
+2.1.0 (2018-09-14)
+------------------
+
+* No longer ships with `cross-fetch` and `whatwg-fetch`. To use this library
+  in a browser, you must run this in a browser that supports `fetch` or
+  provide your own polyfill.
+* Updated dependencies
+
+
 2.0.4 (2018-09-12)
 ------------------
 
