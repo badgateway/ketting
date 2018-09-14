@@ -1,4 +1,4 @@
-import * as crossFetch from 'cross-fetch';
+import './fetch-polyfill';
 
 /**
  * Creates a Fetch Request object, based on a number of settings.
@@ -22,12 +22,12 @@ export function createFetchRequest(input: any, init: any, defaultInit: any): Req
   trueInit.headers = mergeHeaders([
     defaultInit ? defaultInit.headers : null,
     // @ts-ignore cross-fetch definitions are broken. See https://github.com/lquixada/cross-fetch/pull/19
-    input instanceof crossFetch.Request ? input.headers : null,
+    input instanceof Request ? input.headers : null,
     init && init.headers ? init.headers : null
   ]);
 
     // @ts-ignore cross-fetch definitions are broken. See https://github.com/lquixada/cross-fetch/pull/19
-  return new crossFetch.Request(input, trueInit);
+  return new Request(input, trueInit);
 
 }
 
@@ -44,10 +44,10 @@ type HeaderSet = any;
  */
 export function mergeHeaders(headerSets: HeaderSet[]): Headers {
 
-  const result = new crossFetch.Headers();
+  const result = new Headers();
   for (const headerSet of headerSets) {
 
-    if (headerSet instanceof crossFetch.Headers) {
+    if (headerSet instanceof Headers) {
       for (const key of headerSet.keys()) {
         result.set(key, <string> headerSet.get(key));
       }

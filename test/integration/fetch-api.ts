@@ -1,7 +1,7 @@
 import { expect } from 'chai';
-import { Request } from 'cross-fetch';
 import Ketting from '../../src/ketting';
 import Resource from '../../src/resource';
+import '../../src/utils/fetch-polyfill';
 
 describe('Using the fetch api', () => {
 
