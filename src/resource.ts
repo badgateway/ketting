@@ -1,4 +1,3 @@
-import { Headers, Request } from 'cross-fetch';
 import LinkHeader from 'http-link-header';
 import FollowablePromise from './followable-promise';
 import problemFactory from './http-error';

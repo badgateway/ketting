@@ -33,9 +33,10 @@
   ],
   "types": "dist/index.d.ts",
   "dependencies": {
+    "@types/node-fetch": "^2.1.2",
     "client-oauth2": "^4.2.1",
-    "cross-fetch": "^2.2.2",
     "http-link-header": "^0.8.0",
+    "node-fetch": "^2.2.0",
     "querystring-browser": "^1.0.4",
     "sax": "^1.2.4",
     "uri-template": "^1.0.1"

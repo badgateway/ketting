@@ -1,6 +1,6 @@
 import ClientOAuth2 from 'client-oauth2';
 import { Token } from 'client-oauth2';
-import fetch from 'cross-fetch';
+import './fetch-polyfill';
 
 export type OAuth2Init = {
   client: {

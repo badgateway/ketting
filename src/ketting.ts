@@ -1,4 +1,3 @@
-import fetch from 'cross-fetch';
 import FollowablePromise from './followable-promise';
 import Representor from './representor/base';
 import HalRepresentor from './representor/hal';
@@ -6,6 +5,7 @@ import HtmlRepresentor from './representor/html';
 import Resource from './resource';
 import * as base64 from './utils/base64';
 import * as fetchHelper from './utils/fetch-helper';
+import './utils/fetch-polyfill';
 import { OAuth2Helper, OAuth2Init } from './utils/oauth';
 import { resolve } from './utils/url';
 
