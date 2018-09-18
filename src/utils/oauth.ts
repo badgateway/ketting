@@ -9,7 +9,7 @@ export type OAuth2Init = {
     accessTokenUri: string,
     scopes: string[]
   },
-  owner: {
+  owner?: {
     userName: string,
     password: string
   }
@@ -28,11 +28,6 @@ export class OAuth2Helper {
 
     this.client = new ClientOAuth2(options.client);
     this.token = null;
-
-    if (options.owner === undefined) {
-      throw new Error('Unsupported oauth2 flow. Only the "owner" flow is currently supported.');
-    }
-
     this.owner = options.owner;
 
   }
@@ -68,10 +63,14 @@ export class OAuth2Helper {
   async getToken(): Promise<Token> {
 
     if (!this.token) {
-      this.token = await this.client.owner.getToken(
-        this.owner.userName,
-        this.owner.password
-      );
+      if (this.owner !== undefined) {
+        this.token = await this.client.owner.getToken(
+          this.owner.userName,
+          this.owner.password
+        );
+      } else {
+        this.token = await this.client.credentials.getToken();
+      }
     }
     return this.token;
 

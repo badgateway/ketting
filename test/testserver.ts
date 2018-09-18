@@ -181,14 +181,25 @@ app.use(
       // Check that the client info is legitimate an then check if the user
       // information is correct if a password grant or the refresh token is
       // valid if doing a refresh grant
-      if (clientInfo === 'fooClient:barSecret'
-        && (
-          (requestBody.grant_type === 'password'
-          && requestBody.username === 'fooOwner'
-          && requestBody.password === 'barPassword')
-        ||
-          (requestBody.grant_type === 'refresh_token'
-          && requestBody.refresh_token === 'fooRefresh')
+      if (
+        (
+            clientInfo === 'fooClient:barSecret'
+          && (
+            (requestBody.grant_type === 'password'
+              && requestBody.username === 'fooOwner'
+              && requestBody.password === 'barPassword')
+            ||
+              (requestBody.grant_type === 'refresh_token'
+              && requestBody.refresh_token === 'fooRefresh')
+            )
+        ) || (
+          clientInfo === 'fooClientCredentials:barSecretCredentials'
+          && (
+            requestBody.grant_type === 'client_credentials'
+          ||
+            (requestBody.grant_type === 'refresh_token'
+            && requestBody.refresh_token === 'fooRefresh')
+          )
         )
       ) {
         ctx.response.body = {

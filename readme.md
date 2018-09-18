@@ -189,10 +189,8 @@ const options = {
 };
 ```
 
-##### OAuth2 Managed Client
-The only currently supported authorization flow is the [Resource Owner Password Credentials Grant](https://tools.ietf.org/html/rfc6749#section-4.3).
+OAuth2 [Resource Owner Password Credentials Grant](https://tools.ietf.org/html/rfc6749#section-4.3) example:
 
-Resource Owner Password Credentials Grant example:
 
 ```js
 const options = {
@@ -211,6 +209,24 @@ const options = {
   }
 };
 ```
+
+OAuth 2 [Client Credentials Grant](https://tools.ietf.org/html/rfc6749#section-4.4) example:
+
+
+```js
+const options = {
+  auth: {
+    type: 'oauth2',
+    client: {
+      clientId: 'fooClient',
+      clientSecret: 'barSecret',
+      accessTokenUri: 'https://api.example.org/oauth/token',
+      scopes: ['test']
+    }
+  }
+};
+```
+
 
 The `fetchInit` option is a default list of settings that's automatically
 passed to `fetch()`. This is especially useful in a browser, where there's a
