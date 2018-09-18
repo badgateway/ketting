@@ -190,14 +190,14 @@ export default class Ketting {
     if (!request.headers.has('Authorization') && this.auth) {
       switch (this.auth.type) {
 
-      case 'basic' :
-        request.headers.set('Authorization', 'Basic ' + base64.encode(this.auth.userName + ':' + this.auth.password));
-        break;
-      case 'bearer' :
-        request.headers.set('Authorization', 'Bearer ' + this.auth.token);
-        break;
-      case 'oauth2' :
-        return this.oauth2Helper.fetch(request);
+        case 'basic' :
+          request.headers.set('Authorization', 'Basic ' + base64.encode(this.auth.userName + ':' + this.auth.password));
+          break;
+        case 'bearer' :
+          request.headers.set('Authorization', 'Bearer ' + this.auth.token);
+          break;
+        case 'oauth2' :
+          return this.oauth2Helper.fetch(request);
       }
 
     }

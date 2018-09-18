@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+2.2.0 (2018-09-18)
+------------------
+
+* Support for OAuth2 `client_credentials` grant.
+
+
 2.1.0 (2018-09-14)
 ------------------
 
