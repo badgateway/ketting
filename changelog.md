@@ -1,6 +1,15 @@
 ChangeLog
 =========
 
+2.2.1 (2018-09-19)
+------------------
+
+* Refreshing OAuth2 tokens without having a refresh_token.
+  `client_credentials` in particular shouldn't return a `refresh_token`, so
+  for these cases, new access tokens are acquired using a new
+  `client_credentials` request.
+
+
 2.2.0 (2018-09-18)
 ------------------
 
