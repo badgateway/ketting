@@ -134,7 +134,7 @@ app.use(
     if (!ctx.request.headers.authorization || ctx.request.headers.authorization !== encoded) {
       ctx.response.status = 401;
       ctx.response.body = '';
-      ctx.response.set('Authorization', 'Basic');
+      ctx.response.set('WWW-Authenticate', 'Basic');
     } else {
       ctx.response.body = { ok: true };
       ctx.response.status = 200;
@@ -149,7 +149,7 @@ app.use(
     if (!ctx.request.headers.authorization || ctx.request.headers.authorization !== encoded) {
       ctx.response.status = 401;
       ctx.response.body = '';
-      ctx.response.set('Authorization', 'Bearer');
+      ctx.response.set('WWW-Authenticate', 'Bearer');
     } else {
       ctx.response.body = { ok: true };
       ctx.response.status = 200;
@@ -164,7 +164,7 @@ app.use(
     if (!ctx.request.headers.authorization || ctx.request.headers.authorization !== encoded) {
       ctx.response.status = 401;
       ctx.response.body = '';
-      ctx.response.set('Authorization', 'Bearer');
+      ctx.response.set('WWW-Authenticate', 'Bearer');
     } else {
       ctx.response.body = { ok: true };
       ctx.response.status = 200;
