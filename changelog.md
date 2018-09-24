@@ -1,9 +1,13 @@
 ChangeLog
 =========
 
-2.3.0 (2018-09-24)
+2.3.0 (2018-09-??)
 ------------------
 
+* Optimization: If multiple calls are made to ask for a Resource's current
+  representation, all these calls are coalesced into one. The big benefit is
+  that there are no longer multiple parallel `GET` requests.
+* Webpack browser build is set to 'production' mode.
 * Fixed: After refreshing an OAuth2 token, the new access token wasn't used.
 
 
