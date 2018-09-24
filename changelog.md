@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+2.3.0 (2018-09-24)
+------------------
+
+* Fixed: After refreshing an OAuth2 token, the new access token wasn't used.
+
+
 2.2.1 (2018-09-19)
 ------------------
 

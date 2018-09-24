@@ -76,7 +76,7 @@ export class OAuth2Helper {
 
     if (this.token && this.token.refreshToken) {
       // If we had a refresh token, use that
-      await this.token.refresh();
+      this.token = await this.token.refresh();
       return this.token;
     }
 
