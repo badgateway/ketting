@@ -39,7 +39,7 @@ module.exports = [
         querystring: 'querystring-browser'
       }
     },
-    mode: 'development',
+    mode: 'production',
 
     module: {
       rules: [
