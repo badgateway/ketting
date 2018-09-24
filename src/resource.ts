@@ -26,6 +26,8 @@ export default class Resource {
   repr: Representation | null;
   uri: string;
 
+  private inFlightRefresh: Promise<any> = null;
+
   constructor(client: Ketting, uri: string) {
 
     this.client = client;
@@ -140,8 +142,31 @@ export default class Resource {
    */
   async refresh() {
 
-    const response = await this.fetchAndThrow({method: 'GET'});
-    const body = await response.text();
+    let response: Response;
+    let body: string;
+
+    // If 2 systems request a 'refresh' at the exact same time, this mechanism
+    // will coalesc them into one.
+    if (!this.inFlightRefresh) {
+
+      this.inFlightRefresh = this.fetchAndThrow({ method: 'GET' })
+        .then( result1 => {
+          response = result1;
+          return response.text();
+        })
+        .then( result2 => {
+          body = result2;
+          return [response, body];
+        });
+
+      await this.inFlightRefresh;
+      this.inFlightRefresh = null;
+
+    } else {
+      // Something else asked for refresh, so we piggypack on it.
+      [response, body] = await this.inFlightRefresh;
+
+    }
 
     const contentType = response.headers.get('Content-Type');
     if (!contentType) {
