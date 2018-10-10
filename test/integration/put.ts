@@ -18,7 +18,10 @@ describe('Issuing a PUT request', async () => {
 
   it('should not fail', async () => {
 
+    debugger;
+    console.log('broken test start');
     await resource.put({newData: 'hi!'});
+    console.log('broken test end');
 
   });
   it('should have cleared the resource representation', async () => {
