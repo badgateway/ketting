@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-2.3.0 (2018-09-??)
+2.3.0 (2018-10-10)
 ------------------
 
 * Better handling of `Content-Types`. When following HAL links that have a
