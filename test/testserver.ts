@@ -235,29 +235,16 @@ app.use(
   })
   .put((ctx: Context) => {
 
-    return new Promise( (res, rej) => {
-      console.log('writing');
-      let body = '';
-      ctx.req.setEncoding('utf-8');
-      ctx.req.on('data', chunk => {
+    let body;
+    if (typeof ctx.request.body === 'string') {
+      body = ctx.request.body;
+    } else {
+      body = JSON.stringify(ctx.request.body);
+    }
+    resources[ctx.params.id] = body;
+    ctx.response.status = 204;
+    ctx.response.body = '';
 
-        console.log('data', chunk);
-        body += chunk;
-
-      });
-      ctx.req.on('end', () => {
-
-        console.log('end');
-        resources[ctx.params.id] = body;
-        ctx.response.status = 204;
-        ctx.response.body = '';
-        res();
-
-      });
-      ctx.req.on('error', (err) => {
-        rej(err);
-      });
-    });
   })
   .delete((ctx: Context) => {
 

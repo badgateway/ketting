@@ -15,6 +15,13 @@ describe('Following a link', async () => {
 
 
   });
+  it('should remember the type="" property for later usage', async () => {
+
+    const newResource = await ketting.follow('content-type-link');
+    expect(newResource).to.be.an.instanceof(Resource);
+    expect(newResource.contentType).to.eql('application/foo+json');
+
+  });
   it('should get the correct response to GET', async () => {
 
     const body = await hal2.get();
@@ -52,13 +59,23 @@ describe('Following a link', async () => {
 
   });
 
-  it('should work with embedded resources', async () => {
+  describe('followAll', () => {
+    it('should work with embedded resources', async () => {
 
-    const items = await ketting.follow('collection').followAll('item');
-    expect(items).to.have.length(2);
-    expect(items[0]).to.be.an.instanceof(Resource);
-    expect(items[1]).to.be.an.instanceof(Resource);
+      const items = await ketting.follow('collection').followAll('item');
+      expect(items).to.have.length(2);
+      expect(items[0]).to.be.an.instanceof(Resource);
+      expect(items[1]).to.be.an.instanceof(Resource);
+
+    });
+
+    it('should remember the type="" property for later usage', async () => {
+
+      const newResource = await ketting.follow('self').followAll('content-type-link');
+      expect(newResource[0]).to.be.an.instanceof(Resource);
+      expect(newResource[0].contentType).to.eql('application/foo+json');
+
+    });
 
   });
-
 });

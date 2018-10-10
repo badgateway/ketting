@@ -4,6 +4,15 @@ ChangeLog
 2.3.0 (2018-09-??)
 ------------------
 
+* Better handling of `Content-Types`. When following HAL links that have a
+  `type` parameter, the type is rememebered and used in `Accept` and
+  `Content-Type` headers, for `GET`, `PUT` and `POST` requests.
+* If no `type` was provided, it will use the last `Content-Type` header from
+  `GET` response.
+* If that `GET` request never happened, it uses the first 'default'
+  `Content-Type` from client.contentTypes, and enumerates all mime-types from
+  that list for `Accept` headers.
+* No longer incorrectly sends `text/plain` Content-Types.
 * Optimization: If multiple calls are made to ask for a Resource's current
   representation, all these calls are coalesced into one. The big benefit is
   that there are no longer multiple parallel `GET` requests.

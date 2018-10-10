@@ -86,9 +86,9 @@ export default class Resource {
       body: JSON.stringify(body),
       headers: {
         'Content-Type': contentType,
+        'Accept' : this.contentType ? this.contentType : this.client.getAcceptHeader()
       }
     };
-    console.log('params', params);
     await this.fetchAndThrow(params);
 
     // Wipe out the local cache

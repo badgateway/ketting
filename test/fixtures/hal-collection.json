@@ -13,9 +13,23 @@
               "headerTest": { "href" : "/headers" },
               "error400" : { "href" : "/error/400" },
               "redirect" : { "href" : "/redirect" },
+              "echo": { "href" : "/echo" },
               "auth-basic" : { "href" : "/auth/basic" },
               "auth-bearer" : { "href" : "/auth/bearer" },
-              "no-content-type": { "href": "/no-content-type" }
+              "auth-oauth" : { "href" : "/auth/oauth" },
+              "templated" : { "href" : "/templated.json{?foo}", "templated": true },
+              "linkHeader" : { "href" : "/link-header" },
+              "problem" : { "href" : "/problem" },
+              "no-content-type": { "href": "/no-content-type" },
+              "c:foo" : { "href": "/curietarget" },
+              "curies" : [
+                {
+                  "name": "c",
+                  "href": "http://example.org/curie/{rel}",
+                  "templated": true
+                }
+              ],
+              "content-type-link" : { "href" : "/hal2.json", "type": "application/foo+json" }
             },
             "title"  : "Hal 1",
             "foo" : "bar"
