@@ -22,17 +22,45 @@ import { resolve } from './utils/url';
  */
 export default class Resource {
 
+  /**
+   * Reference to the main Client
+   */
   client: Ketting;
+
+  /**
+   * The current representation, or body of the resource.
+   */
   repr: Representation | null;
+
+  /**
+   * The uri of the resource
+   */
   uri: string;
+
+  /**
+   * A default mimetype for the resource.
+   *
+   * This mimetype is used for PUT and POST requests by default.
+   * The mimetype is sniffed in a few different ways.
+   *
+   * If a GET request is done, and the GET request had a mimetype it will
+   * be used to set this value.
+   *
+   * It's also possible for resources to get a mimetype through a link.
+   *
+   * If the mimetype was "null" when doing the request, the chosen mimetype
+   * will come from the first item in Client.resourceTypes
+   */
+  contentType: string | null;
 
   private inFlightRefresh: Promise<any> = null;
 
-  constructor(client: Ketting, uri: string) {
+  constructor(client: Ketting, uri: string, contentType: string = null) {
 
     this.client = client;
     this.uri = uri;
     this.repr = null;
+    this.contentType = contentType;
 
   }
 
@@ -52,12 +80,16 @@ export default class Resource {
    */
   async put(body: object): Promise<void> {
 
-    await this.fetchAndThrow(
-      {
-        method: 'PUT',
-        body: JSON.stringify(body)
+    const contentType = this.contentType || this.client.contentTypes[0].mime;
+    const params = {
+      method: 'PUT',
+      body: JSON.stringify(body),
+      headers: {
+        'Content-Type': contentType,
+        'Accept' : this.contentType ? this.contentType : this.client.getAcceptHeader()
       }
-    );
+    };
+    await this.fetchAndThrow(params);
 
     // Wipe out the local cache
     this.repr = null;
@@ -91,10 +123,14 @@ export default class Resource {
    */
   async post(body: object): Promise<Resource|null> {
 
+    const contentType = this.contentType || this.client.contentTypes[0].mime;
     const response = await this.fetchAndThrow(
       {
         method: 'POST',
-        body: JSON.stringify(body)
+        body: JSON.stringify(body),
+        headers: {
+          'Content-Type': contentType,
+        }
       }
     );
 
@@ -149,15 +185,19 @@ export default class Resource {
     // will coalesc them into one.
     if (!this.inFlightRefresh) {
 
-      this.inFlightRefresh = this.fetchAndThrow({ method: 'GET' })
-        .then( result1 => {
-          response = result1;
-          return response.text();
-        })
-        .then( result2 => {
-          body = result2;
-          return [response, body];
-        });
+      this.inFlightRefresh = this.fetchAndThrow({
+        method: 'GET' ,
+        headers: {
+          Accept: this.contentType ? this.contentType : this.client.getAcceptHeader()
+        }
+      }).then( result1 => {
+        response = result1;
+        return response.text();
+      })
+      .then( result2 => {
+        body = result2;
+        return [response, body];
+      });
 
       await this.inFlightRefresh;
       this.inFlightRefresh = null;
@@ -177,6 +217,10 @@ export default class Resource {
        contentType,
        body
     );
+
+    if (!this.contentType) {
+      this.contentType = contentType;
+    }
 
     // Extracting HTTP Link header.
     const httpLinkHeader = response.headers.get('Link');
@@ -255,6 +299,9 @@ export default class Resource {
         const resource = this.client.getResource(
           href
         );
+        if (links[0].type) {
+          resource.contentType = links[0].type;
+        }
 
         res(resource);
 
@@ -277,9 +324,13 @@ export default class Resource {
     const links = await this.links(rel);
 
     return links.map((link: Link) => {
-      return this.client.getResource(
+      const resource = this.client.getResource(
         link.resolve()
       );
+      if (link.type) {
+        resource.contentType = link.type;
+      }
+      return resource;
     });
 
   }

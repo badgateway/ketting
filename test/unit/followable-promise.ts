@@ -49,9 +49,11 @@ describe('FollowablePromise', () => {
 
         // @ts-ignore: I know what I'm doing
         res({
+          // @ts-ignore: I know what I'm doing
           follow: (rel: string, vars: object) => {
             // @ts-ignore: I know what I'm doing
             return 'follow:' + rel + ':' + vars.B;
+          // @ts-ignore: I know what I'm doing
           }
         });
 

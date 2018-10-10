@@ -174,19 +174,6 @@ export default class Ketting {
     if (!request.headers.has('User-Agent')) {
       request.headers.set('User-Agent', 'Ketting/' + require('../package.json').version);
     }
-    if (!request.headers.has('Accept')) {
-      const accept = this.contentTypes
-        .map( contentType => {
-          let item = contentType.mime;
-          if (contentType.q) { item += ';q=' + contentType.q; }
-          return item;
-        } )
-        .join(', ');
-      request.headers.set('Accept', accept);
-    }
-    if (!request.headers.has('Content-Type')) {
-      request.headers.set('Content-Type', this.contentTypes[0].mime);
-    }
     if (!request.headers.has('Authorization') && this.auth) {
       switch (this.auth.type) {
 
@@ -235,6 +222,22 @@ export default class Ketting {
       throw new Error('Unknown representor: ' + result.representor);
 
     }
+
+  }
+
+
+  /**
+   * Generates an accept header string, based on registered Resource Types.
+   */
+  getAcceptHeader(): string {
+
+    return this.contentTypes
+      .map( contentType => {
+        let item = contentType.mime;
+        if (contentType.q) { item += ';q=' + contentType.q; }
+        return item;
+      } )
+      .join(', ');
 
   }
 

@@ -21,7 +21,8 @@
             "href": "http://example.org/curie/{rel}",
             "templated": true
           }
-        ]
+        ],
+        "content-type-link" : { "href" : "/hal2.json", "type": "application/foo+json" }
     },
     "title"  : "Hal 1",
     "foo" : "bar"
