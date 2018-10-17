@@ -294,6 +294,21 @@ The `Resource` class is the most important object, and represents a REST
 resource. Functions such `follow` and `getResource` always return `Resource`
 objects.
 
+#### `Recourse.uri`
+
+Returns the current uri of the resource. This is a property, not a function
+and is always available.
+
+#### `Resource.contentType`
+
+A property representing the `Content-Type` of the resource. This value will
+be used in `GET` requests (with the `Accept` header) and `PUT` requests (with
+the `Content-Type` header).
+
+The `contentType` might be available immediately if the current resource was
+followed from a link that had "type" information. If it's not available, it
+might be determined later, after the first `GET` request is done.
+
 #### `Resource.get()`
 
 Returns the result of a `GET` request. This function returns a `Promise`.
