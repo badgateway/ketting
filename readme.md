@@ -294,7 +294,7 @@ The `Resource` class is the most important object, and represents a REST
 resource. Functions such `follow` and `getResource` always return `Resource`
 objects.
 
-#### `Recourse.uri`
+#### `Resource.uri`
 
 Returns the current uri of the resource. This is a property, not a function
 and is always available.
