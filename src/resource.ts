@@ -20,7 +20,7 @@ import { resolve } from './utils/url';
  * @param {string} uri
  * @constructor
  */
-export default class Resource {
+export default class Resource<T = any> {
 
   /**
    * Reference to the main Client
@@ -68,7 +68,7 @@ export default class Resource {
    * Fetches the resource representation.
    * Returns a promise that resolves to a parsed json object.
    */
-  async get(): Promise<object | string> {
+  async get(): Promise<T> {
 
     const r = await this.representation();
     return r.body;
@@ -78,7 +78,7 @@ export default class Resource {
   /**
    * Updates the resource representation with a new JSON object.
    */
-  async put(body: object): Promise<void> {
+  async put(body: T): Promise<void> {
 
     const contentType = this.contentType || this.client.contentTypes[0].mime;
     const params = {
@@ -176,7 +176,7 @@ export default class Resource {
    *
    * @return {object}
    */
-  async refresh() {
+  async refresh(): Promise<T> {
 
     let response: Response;
     let body: string;
