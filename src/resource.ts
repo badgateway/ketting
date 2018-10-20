@@ -20,7 +20,7 @@ import { resolve } from './utils/url';
  * @param {string} uri
  * @constructor
  */
-export default class Resource<T> {
+export default class Resource<T = any> {
 
   /**
    * Reference to the main Client
