@@ -1,12 +1,13 @@
 ChangeLog
 =========
 
-2.4.0 (????-??-??)
+2.4.0 (2018-11-05)
 ------------------
 
 * The `Resource` class is now a generic typescript type. This allows a user
   of the library to define specific 'types of resources' and leverage static
  typing for `GET` and `PUT` requests.
+* A few documentation updates.
 
 
 2.3.0 (2018-10-10)
