@@ -1,6 +1,6 @@
 {
   "name": "ketting",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "description": "Opiniated HATEAOS / Rest client.",
   "main": "dist/index.js",
   "scripts": {
