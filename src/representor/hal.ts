@@ -101,13 +101,18 @@ const parseHalEmbedded = (representation: Hal): void => {
         embeddedItem._links.self.href
       );
 
-      representation.links.push(
-        new Link({
-          rel: relType,
-          baseHref: representation.uri,
-          href: embeddedItem._links.self.href
-        })
-      );
+      // Only adding a link to the representation if it didn't already exist.
+      if (!representation.links.find( item => {
+        return item.rel === relType && embeddedItem._links.self.href === item.href;
+      })) {
+        representation.links.push(
+          new Link({
+            rel: relType,
+            baseHref: representation.uri,
+            href: embeddedItem._links.self.href
+          })
+        );
+      }
 
       representation.embedded[uri] = embeddedItem;
 
