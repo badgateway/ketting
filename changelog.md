@@ -1,6 +1,16 @@
 ChangeLog
 =========
 
+2.4.1 (2018-11-07)
+------------------
+
+* If a link appears in both `_embedded` and `_links`, they will be
+  de-duplicated. HAL technically requires links to appear in both places, so
+  scanning `_embedded` should not be needed. However, most implementations will
+  not add links `_links` if they were already `_embedded`. This change caters
+  both usages.
+
+
 2.4.0 (2018-11-05)
 ------------------
 
