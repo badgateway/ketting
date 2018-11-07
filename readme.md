@@ -532,7 +532,7 @@ const oAuthClient = ketting.oauth2Helper.client;
 // Interact with the underlying OAuth2 client
 ```
 
-[1]: https://tools.ietf.org/html/rfc5988 "Web Linking"
+[1]: https://tools.ietf.org/html/rfc8288 "Web Linking"
 [2]: http://stateless.co/hal_specification.html "HAL - Hypertext Application Language"
 [3]: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API
 [4]: https://tools.ietf.org/html/rfc7807
