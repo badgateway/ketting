@@ -105,7 +105,9 @@ app.use(
      ctx.response.set('Link', [
        '</hal2.json>; rel="next"',
        '</TheBook/chapter2>; rel="previous"; title*=UTF-8\'de\'n%c3%a4chstes%20Kapitel',
-       '<http://example.org/>; rel="start http://example.net/relation/other"'
+       '<http://example.org/>; rel="start http://example.net/relation/other"',
+       '</users/jane-doe>; rel="author"; anchor="#article-1"',
+       '</users/john-doe>; rel="author"; anchor="http://third-party.org/"',
      ]);
      ctx.response.body = { ok: true };
 

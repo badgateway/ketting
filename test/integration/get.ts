@@ -74,6 +74,31 @@ describe('Issuing a GET request', async () => {
 
   });
 
+  it('should support the HTTP Link header anchors', async () => {
+
+    const resource2 = await ketting.follow('linkHeader');
+    const anchoredLinks = await resource2.links('author', '#article-1');
+
+    expect(anchoredLinks).to.eql([
+      new Link({
+        rel: 'author',
+        baseHref: 'http://localhost:3000/link-header#article-1',
+        href: '/users/jane-doe'
+      }),
+    ]);
+
+    const thirdPartyLinks = await resource2.links('author', 'http://third-party.org/');
+
+    expect(thirdPartyLinks).to.eql([
+      new Link({
+        rel: 'author',
+        baseHref: 'http://third-party.org/',
+        href: '/users/john-doe'
+      }),
+    ]);
+
+  });
+
   it('should throw an exception when no content-type was returned', async () => {
 
     const resource2 = await ketting.follow('no-content-type');
