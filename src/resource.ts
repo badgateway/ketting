@@ -230,10 +230,11 @@ export default class Resource<T = any> {
         // Looping through individual links
          for (const rel of httpLink.rel.split(' ')) {
            // Looping through space separated rel values.
+           const baseHref = httpLink.hasOwnProperty('anchor') ? resolve(this.uri, httpLink.anchor) : this.uri;
            this.repr.links.push(
               new Link({
                 rel: rel,
-                baseHref: this.uri,
+                baseHref: baseHref,
                 href: httpLink.uri
               })
            );
@@ -262,13 +263,16 @@ export default class Resource<T = any> {
    * The rel argument is optional. If it's given, we will only return links
    * from that relationship type.
    */
-  async links(rel?: string): Promise<Link[]> {
+  async links(rel?: string, anchor?: string): Promise<Link[]> {
 
     const r = await this.representation();
 
-    if (!rel) { return r.links; }
+    const baseHref = anchor ? resolve(this.uri, anchor) : this.uri;
+    const links = r.links.filter( item => item.baseHref === baseHref );
 
-    return r.links.filter( item => item.rel === rel );
+    if (!rel) { return links; }
+
+    return links.filter( item => item.rel === rel );
 
   }
 
@@ -279,12 +283,12 @@ export default class Resource<T = any> {
    * This function can also follow templated uris. You can specify uri
    * variables in the optional variables argument.
    */
-  follow(rel: string, variables?: object): FollowablePromise {
+  follow(rel: string, variables?: object, anchor?: string): FollowablePromise {
 
     return new FollowablePromise(async (res: any, rej: any) => {
 
       try {
-        const links = await this.links(rel);
+        const links = await this.links(rel, anchor);
 
         let href;
         if (links.length === 0) {
@@ -319,9 +323,9 @@ export default class Resource<T = any> {
    *
    * If no resources were found, the array will be empty.
    */
-  async followAll(rel: string): Promise<Resource[]> {
+  async followAll(rel: string, anchor?: string): Promise<Resource[]> {
 
-    const links = await this.links(rel);
+    const links = await this.links(rel, anchor);
 
     return links.map((link: Link) => {
       const resource = this.client.getResource(
