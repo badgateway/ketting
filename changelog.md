@@ -1,6 +1,13 @@
 ChangeLog
 =========
 
+2.5.0 (????-??-??)
+------------------
+
+* Basic JSON:API support. Currently only links appearing in the top-level
+  document are supported.
+
+
 2.4.1 (2018-11-07)
 ------------------
 
