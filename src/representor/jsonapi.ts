@@ -9,14 +9,34 @@ import Representation from './base';
 type JsonApiLink = string | { href: string };
 
 /**
+ * This type is a full 'links' object, which might appear on the top level
+ * or on resource objects.
+ */
+type JsonApiLinksObject = {
+  self?: JsonApiLink,
+  profile?: JsonApiLink
+  [rel: string]: JsonApiLink | JsonApiLink[]
+};
+
+/**
+ * This is a single JSON:API resource. Its type contains just the properties
+ * we care about.
+ */
+type JsonApiResource = {
+  type: string,
+  id: string,
+  links?: JsonApiLinksObject,
+};
+
+
+/**
  * This type represents a valid JSON:API response. We're only interested
  * in the links object at the moment, so everything else is (for now)
  * untyped.
  */
 type JsonApiObject = {
-  links?: {
-    [rel: string]: JsonApiLink | JsonApiLink[]
-  },
+  links?: JsonApiLinksObject,
+  data: JsonApiResource | JsonApiResource[] | null,
   [s: string]: any
 };
 
@@ -40,7 +60,10 @@ export default class JsonApi extends Representation {
       this.body = body;
     }
 
-    this.links = parseJsonApiLinks(uri, this.body);
+    this.links = [
+      ...parseJsonApiLinks(uri, this.body),
+      ...parseJsonApiCollection(uri, this.body)
+    ];
 
   }
 
@@ -65,6 +88,39 @@ function parseJsonApiLinks(baseHref: string, body: JsonApiObject): Link[] {
       result.push(parseJsonApiLink(baseHref, rel, linkValue));
     }
 
+  }
+
+  return result;
+
+}
+
+/**
+ * Find collection members in JSON:API objects.
+ *
+ * A JSON:API object might be a collection that has several members.
+ *
+ * Members of this collection should appear as an 'item' link to the parent.
+ */
+function parseJsonApiCollection(baseHref: string, body: JsonApiObject): Link[] {
+
+  if (!Array.isArray(body.data)) {
+    // Not a collection
+    return [];
+  }
+
+  const result: Link[] = [];
+  for (const member of body.data) {
+
+    if ('self' in member.links) {
+
+      const selfLink = parseJsonApiLink(baseHref, 'self', member.links.self);
+      result.push(new Link({
+        baseHref: baseHref,
+        href: selfLink.href,
+        rel: 'item'
+      }));
+
+    }
   }
 
   return result;
