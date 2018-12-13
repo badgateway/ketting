@@ -1,5 +1,14 @@
 {
   "links" : {
     "next": "https://example.org/next-jsonapi"
-  }
+  },
+  "data": [
+    {
+      "id": "foo",
+      "type": "bar",
+      "links": {
+        "self": { "href": "/json-api-member1.json" }
+      }
+    }
+  ]
 }
