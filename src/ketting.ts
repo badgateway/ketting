@@ -2,6 +2,7 @@ import FollowablePromise from './followable-promise';
 import Representor from './representor/base';
 import HalRepresentor from './representor/hal';
 import HtmlRepresentor from './representor/html';
+import JsonApiRepresentor from './representor/jsonapi';
 import Resource from './resource';
 import * as base64 from './utils/base64';
 import * as fetchHelper from './utils/fetch-helper';
@@ -99,14 +100,19 @@ export default class Ketting {
         q: '1.0',
       },
       {
+        mime: 'application/vnd.api+json',
+        representor: 'jsonapi',
+        q: '0.9',
+      },
+      {
         mime: 'application/json',
         representor: 'hal',
-        q: '0.9',
+        q: '0.8',
       },
       {
         mime: 'text/html',
         representor: 'html',
-        q: '0.8',
+        q: '0.7',
       }
     ];
 
@@ -215,9 +221,11 @@ export default class Ketting {
 
     switch (result.representor) {
     case 'html' :
-      return HtmlRepresentor;
+        return HtmlRepresentor;
     case 'hal' :
-      return HalRepresentor;
+        return HalRepresentor;
+    case 'jsonapi' :
+        return JsonApiRepresentor;
     default :
       throw new Error('Unknown representor: ' + result.representor);
 

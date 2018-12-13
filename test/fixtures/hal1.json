@@ -22,7 +22,8 @@
             "templated": true
           }
         ],
-        "content-type-link" : { "href" : "/hal2.json", "type": "application/foo+json" }
+        "content-type-link" : { "href" : "/hal2.json", "type": "application/foo+json" },
+        "json-api" : { "href" : "/json-api.json", "type": "application/vnd.api+json" }
     },
     "title"  : "Hal 1",
     "foo" : "bar"

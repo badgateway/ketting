@@ -1,0 +1,5 @@
+{
+  "links" : {
+    "next": "https://example.org/next-jsonapi"
+  }
+}

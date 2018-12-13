@@ -229,7 +229,12 @@ app.use(
       ctx.response.body = '';
       return;
     }
-    ctx.response.type = 'application/json';
+    // The test server needs cleanup :(
+    if (ctx.params.id.includes('json-api')) {
+      ctx.response.type = 'application/vnd.api+json';
+    } else {
+      ctx.response.type = 'application/json';
+    }
     ctx.response.body = resources[ctx.params.id];
 
   })
