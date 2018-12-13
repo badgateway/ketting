@@ -31,7 +31,7 @@ export default class Html extends Representation {
 
 }
 
-function linkFromTags(htmlDoc: Html, elements: NodeListOf<HTMLElement>) {
+function linkFromTags(htmlDoc: Html, elements: HTMLCollectionOf<HTMLElement>) {
 
   for (const node of elements) {
 
