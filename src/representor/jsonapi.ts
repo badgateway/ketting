@@ -34,7 +34,7 @@ type JsonApiResource = {
  * in the links object at the moment, so everything else is (for now)
  * untyped.
  */
-type JsonApiObject = {
+type JsonApiTopLevelObject = {
   links?: JsonApiLinksObject,
   data: JsonApiResource | JsonApiResource[] | null,
   [s: string]: any
@@ -48,7 +48,7 @@ type JsonApiObject = {
  */
 export default class JsonApi extends Representation {
 
-  body: JsonApiObject;
+  body: JsonApiTopLevelObject;
 
   constructor(uri: string, contentType: string, body: any) {
 
@@ -72,7 +72,7 @@ export default class JsonApi extends Representation {
 /**
  * This function takes a JSON:API object, and extracts the links property.
  */
-function parseJsonApiLinks(baseHref: string, body: JsonApiObject): Link[] {
+function parseJsonApiLinks(baseHref: string, body: JsonApiTopLevelObject): Link[] {
 
   const result: Link[] = [];
 
@@ -97,11 +97,12 @@ function parseJsonApiLinks(baseHref: string, body: JsonApiObject): Link[] {
 /**
  * Find collection members in JSON:API objects.
  *
- * A JSON:API object might be a collection that has several members.
+ * A JSON:API top-level object might represent a collection that has 0 or more
+ * members.
  *
  * Members of this collection should appear as an 'item' link to the parent.
  */
-function parseJsonApiCollection(baseHref: string, body: JsonApiObject): Link[] {
+function parseJsonApiCollection(baseHref: string, body: JsonApiTopLevelObject): Link[] {
 
   if (!Array.isArray(body.data)) {
     // Not a collection
