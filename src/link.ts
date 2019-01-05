@@ -1,4 +1,4 @@
-import uriTemplate from 'uri-template';
+import * as uriTemplate from 'uri-template';
 import { resolve } from './utils/url';
 
 type LinkInit = {

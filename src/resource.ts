@@ -1,4 +1,4 @@
-import LinkHeader from 'http-link-header';
+import * as LinkHeader from 'http-link-header';
 import FollowablePromise from './followable-promise';
 import problemFactory from './http-error';
 import Ketting from './ketting';
