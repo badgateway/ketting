@@ -1,4 +1,4 @@
-import url from 'url';
+import { resolve as r } from 'url';
 
 /**
  * Resolves a relative url using another url.
@@ -7,7 +7,7 @@ import url from 'url';
  */
 export function resolve(base: string, relative: string): string {
 
-  return url.resolve(base, relative);
+  return r(base, relative);
 
 }
 

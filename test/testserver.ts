@@ -1,11 +1,11 @@
-import fs from 'fs';
-import Koa from 'koa';
+import * as fs from 'fs';
+import * as Koa from 'koa';
 import { Context as KoaContext } from 'koa';
-import bodyParser from 'koa-bodyparser';
-import logger from 'koa-logger';
+import * as bodyParser from 'koa-bodyparser';
+import * as logger from 'koa-logger';
 // @ts-ignore don't have a definition for this.
-import Route from 'koa-path-match';
-import koaStatic from 'koa-static';
+import * as Route from 'koa-path-match';
+import * as koaStatic from 'koa-static';
 
 type Context = KoaContext & {
   params: { [s: string]: string }

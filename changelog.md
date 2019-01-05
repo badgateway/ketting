@@ -6,6 +6,8 @@ ChangeLog
 
 * Basic JSON:API support. Currently only links appearing in the top-level
   document are supported.
+* Support for Typescript environments that don't have `esModuleInterop`
+  set to true.
 
 
 2.4.1 (2018-11-07)

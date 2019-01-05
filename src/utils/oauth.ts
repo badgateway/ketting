@@ -1,4 +1,4 @@
-import ClientOAuth2 from 'client-oauth2';
+import * as ClientOAuth2 from 'client-oauth2';
 import { Token } from 'client-oauth2';
 import './fetch-polyfill';
 
