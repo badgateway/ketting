@@ -34,21 +34,21 @@
   "types": "dist/index.d.ts",
   "dependencies": {
     "client-oauth2": "^4.2.3",
-    "http-link-header": "^0.8.0",
+    "http-link-header": "^1.0.2",
     "node-fetch": "^2.3.0",
     "querystring-browser": "^1.0.4",
     "sax": "^1.2.4",
     "uri-template": "^1.0.1"
   },
   "devDependencies": {
-    "@types/node-fetch": "^2.1.4",
     "@types/chai": "^4.1.7",
     "@types/http-link-header": "^0.6.2",
-    "@types/koa-bodyparser": "^5.0.2",
+    "@types/koa-bodyparser": "^4.2.1",
     "@types/koa-logger": "^3.1.1",
     "@types/koa-static": "^4.0.0",
     "@types/mocha": "^5.2.5",
-    "@types/node": "^10.12.12",
+    "@types/node": "^10.12.18",
+    "@types/node-fetch": "^2.1.4",
     "@types/sax": "^1.0.1",
     "awesome-typescript-loader": "^5.2.1",
     "chai": "^4.2.0",
@@ -60,10 +60,10 @@
     "mocha": "^5.2.0",
     "nyc": "^13.1.0",
     "ts-node": "^7.0.1",
-    "tslint": "^5.11.0",
+    "tslint": "^5.12.0",
     "typescript": "^3.2.2",
-    "webpack": "^4.27.1",
-    "webpack-cli": "^3.1.2"
+    "webpack": "^4.28.3",
+    "webpack-cli": "^3.2.0"
   },
   "nyc": {
     "extension": [
