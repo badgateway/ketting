@@ -149,8 +149,11 @@ export default class Ketting {
    *
    * This function doesn't do any HTTP requests. The uri is optional. If it's
    * not specified, it will return the bookmark resource.
+   *
+   * If a relative uri is passed, it will be resolved based on the bookmark
+   * uri.
    */
-  getResource(uri?: string): Resource {
+  go(uri?: string): Resource {
 
     if (typeof uri === 'undefined') {
       uri = '';
@@ -162,6 +165,18 @@ export default class Ketting {
     }
 
     return this.resourceCache[uri];
+
+  }
+
+  /**
+   * Returns a resource by its uri.
+   *
+   * This function doesn't do any HTTP requests. The uri is optional. If it's
+   * not specified, it will return the bookmark resource.
+   */
+  getResource(uri?: string): Resource {
+
+    return this.go(uri);
 
   }
 
