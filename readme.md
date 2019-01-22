@@ -7,7 +7,7 @@ Introduction
 The Ketting library is an attempt at creating a 'generic' hypermedia client, it
 supports an opinionated set of modern features REST services might have.
 
-The library supports [HAL][2], [Web Linking (HTTP Link Header)][1] and HTML5
+The library supports [HAL][hal], [Web Linking (HTTP Link Header)][1] and HTML5
 links. It uses the Fetch API and works both in the browsers and in node.js.
 
 ### Example
@@ -46,13 +46,25 @@ Ketting is a library that sits on top of a [Fetch API][3] to provide a RESTful
 interface and make it easier to follow REST best practices more strictly.
 
 It provides some useful abstractions that make it easier to work with true
-hypermedia / HATEAOS servers. It currently parses [HAL][2] and has a deep
+hypermedia / HATEAOS servers. It currently parses [HAL][hal] and has a deep
 understanding of links and embedded resources. There's also support for parsing
 and following links from HTML documents, and it understands the HTTP `Link:`
 header.
 
 Using this library it becomes very easy to follow links from a single bookmark,
 and discover resources and features on the server.
+
+Supported formats:
+
+* [HAL][hal]
+* HTML - Can automatically follow `<link>` and `<a>` element with `rel=`
+  attributes.
+* [HTTP Link header][1] - automatically registers as links regardless of format.
+* [JSON:API][jsonapi] - Understands the `links` object and registers collection
+  members as `item` relationships.
+* [application/problem+json][problem] - Will extract useful information from
+  the standard problem object and embed them in exception objects.
+
 
 ### Following links
 
@@ -129,10 +141,10 @@ Further reading:
 Automatically parsing problem+json
 ----------------------------------
 
-If your server emits application/problem+json documents ([RFC7807][4]) on HTTP
-errors, the library will automatically extract the information from that
-object, and also provide a better exception message (if the title property is
-provided).
+If your server emits application/problem+json documents ([RFC7807][problem])
+on HTTP errors, the library will automatically extract the information from
+that object, and also provide a better exception message (if the title
+property is provided).
 
 
 Node and Browser
@@ -544,8 +556,11 @@ const oAuthClient = ketting.oauth2Helper.client;
 ```
 
 [1]: https://tools.ietf.org/html/rfc8288 "Web Linking"
-[2]: http://stateless.co/hal_specification.html "HAL - Hypertext Application Language"
 [3]: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API
-[4]: https://tools.ietf.org/html/rfc7807
+
 [5]: https://github.com/mulesoft/js-client-oauth2
 [6]: https://tools.ietf.org/html/rfc7240 "Prefer Header for HTTP"
+
+[hal]: http://stateless.co/hal_specification.html "HAL - Hypertext Application Language"
+[jsonapi]: https://jsonapi.org/
+[problem]: https://tools.ietf.org/html/rfc7807
