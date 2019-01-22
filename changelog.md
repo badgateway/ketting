@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-2.5.0 (2019-??-??)
+2.5.0 (2019-01-22)
 ------------------
 
 * Basic JSON:API support. Currently only links appearing in the top-level
