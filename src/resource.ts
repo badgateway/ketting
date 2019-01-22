@@ -135,12 +135,7 @@ export default class Resource<T = any> {
     );
 
     if (response.headers.has('location')) {
-      return this.client.getResource(
-        resolve(
-          this.uri,
-          <string> response.headers.get('location')
-        )
-      );
+      return this.go(<string> response.headers.get('location'));
     }
     return null;
 
@@ -244,7 +239,7 @@ export default class Resource<T = any> {
 
     // Parsing and storing embedded uris
     for (const uri of Object.keys(this.repr.embedded)) {
-      const subResource = this.client.getResource(uri);
+      const subResource = this.go(uri);
       subResource.repr = new (this.client.getRepresentor(contentType))(
         uri,
         contentType,
@@ -296,9 +291,7 @@ export default class Resource<T = any> {
           href = links[0].resolve();
         }
 
-        const resource = this.client.getResource(
-          href
-        );
+        const resource = this.go(href);
         if (links[0].type) {
           resource.contentType = links[0].type;
         }
@@ -324,14 +317,27 @@ export default class Resource<T = any> {
     const links = await this.links(rel);
 
     return links.map((link: Link) => {
-      const resource = this.client.getResource(
-        link.resolve()
-      );
+      const resource = this.go(link.resolve());
       if (link.type) {
         resource.contentType = link.type;
       }
       return resource;
     });
+
+  }
+
+  /**
+   * Resolves a new resource based on a relative uri.
+   *
+   * Use this function to manually get a Resource object via a uri. The uri
+   * will be resolved based on the uri of the current resource.
+   *
+   * This function doesn't do any HTTP requests.
+   */
+  go(uri: string): Resource {
+
+    uri = resolve(this.uri, uri);
+    return this.client.go(uri);
 
   }
 

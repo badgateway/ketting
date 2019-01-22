@@ -1,13 +1,14 @@
 ChangeLog
 =========
 
-2.5.0 (????-??-??)
+2.5.0 (2019-??-??)
 ------------------
 
 * Basic JSON:API support. Currently only links appearing in the top-level
   document are supported.
 * #113: Support for Typescript environments that don't have `esModuleInterop`
   set to true.
+* Added a 'go' function for easily getting resources based on relative uris.
 
 
 2.4.1 (2018-11-07)

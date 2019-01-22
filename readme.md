@@ -471,6 +471,17 @@ console.log(response.statusCode);
 This function is identical to `fetch`, except that it will throw a (async)
 exception if the server responded with a HTTP error.
 
+#### `resource.go(uri: string)`
+
+This function returns a new Resource object, based on a relative uri.
+This is useful in case no link is available on the resource to follow.
+
+```js
+const subResource = resource.go('?page=2');
+```
+
+It doesn't do any HTTP requests.
+
 ### Link
 
 The link class represents any Link of any type of document. It has the
