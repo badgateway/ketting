@@ -194,8 +194,11 @@ export default class Resource<T = any> {
         return [response, body];
       });
 
-      await this.inFlightRefresh;
-      this.inFlightRefresh = null;
+      try {
+        await this.inFlightRefresh;
+      } finally {
+        this.inFlightRefresh = null;
+      }
 
     } else {
       // Something else asked for refresh, so we piggypack on it.
