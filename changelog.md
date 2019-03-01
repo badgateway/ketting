@@ -1,6 +1,13 @@
 ChangeLog
 =========
 
+2.5.1 (2019-03-01)
+------------------
+
+* #120: The system that de-duplicates identical requests will cache failures
+  forever. This is now fixed. Highly recommended update.
+
+
 2.5.0 (2019-01-22)
 ------------------
 
