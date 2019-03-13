@@ -26,6 +26,9 @@ module.exports = [
         }
       ]
     },
+    node: {
+      Buffer: false
+    }
 
   },
   {
@@ -54,6 +57,9 @@ module.exports = [
         }
       ]
     },
+    node: {
+      Buffer: false
+    }
 
   },
 ];
