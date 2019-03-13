@@ -22,11 +22,11 @@ export type BCOAuth2Options = {
   }
 };
 
-export type OAuth2Init = BCOAuth2Options | OAuth2Options;
+export type OAuth2Init =  (BCOAuth2Options | OAuth2Options);
 
 export class OAuth2Helper {
 
-  oauth2Fetch: typeof fetch;
+  oauth2: OAuth2;
 
   constructor(options: OAuth2Init) {
 
@@ -55,7 +55,7 @@ export class OAuth2Helper {
       // New setting format
       oauth2Options = options;
     }
-    this.oauth2Fetch = (new OAuth2(oauth2Options)).fetch;
+    this.oauth2 = new OAuth2(oauth2Options);
 
   }
 
@@ -67,7 +67,7 @@ export class OAuth2Helper {
    */
   async fetch(request: Request): Promise<Response> {
 
-    return this.oauth2Fetch(request);
+    return this.oauth2.fetch(request);
 
   }
 
