@@ -1,7 +1,15 @@
-import { fetchMwOAuth2, OAuth2Options } from 'fetch-mw-oauth2';
+import { default as OAuth2, OAuth2Options } from 'fetch-mw-oauth2';
 import './fetch-polyfill';
 
-export type OAuth2Init = {
+/**
+ * This options format exists for backwards compatibility.
+ *
+ * The currect new format is 'OAuth2Options'.
+ *
+ * See the fetch-mw-oauth2 project for details:
+ * https://github.com/evert/fetch-mw-oauth2
+ */
+export type BCOAuth2Options = {
   client: {
     clientId: string,
     clientSecret: string,
@@ -14,6 +22,8 @@ export type OAuth2Init = {
   }
 };
 
+export type OAuth2Init = BCOAuth2Options | OAuth2Options;
+
 export class OAuth2Helper {
 
   oauth2Fetch: typeof fetch;
@@ -22,24 +32,30 @@ export class OAuth2Helper {
 
     let oauth2Options: OAuth2Options;
 
-    if (options.owner) {
-      oauth2Options = {
-        grantType: 'password',
-        tokenEndpoint: options.client.accessTokenUri,
-        clientId : options.client.clientId,
-        clientSecret: options.client.clientSecret,
-        userName: options.owner.userName,
-        password: options.owner.password,
-      };
+    if (isOldOptionsFormat(options)) {
+      // These are the 'old style' settings and exist for compatibility
+      if (options.owner) {
+        oauth2Options = {
+          grantType: 'password',
+          tokenEndpoint: options.client.accessTokenUri,
+          clientId : options.client.clientId,
+          clientSecret: options.client.clientSecret,
+          userName: options.owner.userName,
+          password: options.owner.password,
+        };
+      } else {
+        oauth2Options = {
+          grantType: 'client_credentials',
+          tokenEndpoint: options.client.accessTokenUri,
+          clientId : options.client.clientId,
+          clientSecret: options.client.clientSecret,
+        };
+      }
     } else {
-      oauth2Options = {
-        grantType: 'client_credentials',
-        tokenEndpoint: options.client.accessTokenUri,
-        clientId : options.client.clientId,
-        clientSecret: options.client.clientSecret,
-      };
+      // New setting format
+      oauth2Options = options;
     }
-    this.oauth2Fetch = fetchMwOAuth2(oauth2Options);
+    this.oauth2Fetch = (new OAuth2(oauth2Options)).fetch;
 
   }
 
@@ -54,5 +70,11 @@ export class OAuth2Helper {
     return this.oauth2Fetch(request);
 
   }
+
+}
+
+function isOldOptionsFormat(options: OAuth2Init): options is BCOAuth2Options {
+
+  return (<BCOAuth2Options> options).client !== undefined;
 
 }
