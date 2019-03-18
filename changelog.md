@@ -1,6 +1,18 @@
 ChangeLog
 =========
 
+3.0.0 (2019-03-18)
+------------------
+
+* Switched OAuth2 implementation from `client-oauth2` to `fetch-mw-oauth2`.
+  This adds support for `authorization_code` auth, removes 11 dependencies and
+  reduces the minified Ketting build from 69KB to 28KB.
+* OAuth2 options now have a new format. The old format is still supported, but
+  will be removed from a future version.
+* The `baseHref` propertyname was renamed to `Context` on the `Link` type. The
+  new name matches the name from RFC8288. This is a small BC break.
+
+
 2.5.1 (2019-03-01)
 ------------------
 
