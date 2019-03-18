@@ -2,7 +2,7 @@ import * as uriTemplate from 'uri-template';
 import { resolve } from './utils/url';
 
 type LinkInit = {
-  baseHref: string,
+  context: string,
   href: string,
   name?: string,
   rel: string,
@@ -19,7 +19,7 @@ export default class Link {
   /**
    * The base href of the parent document. Used for expanding relative links.
    */
-  baseHref: string;
+  context: string;
 
   /**
    * The URI of the link. Might be relative
@@ -59,7 +59,7 @@ export default class Link {
     this.templated = false;
     this.title = null;
     this.type = null;
-    for (const key of ['baseHref', 'href', 'name', 'rel', 'templated', 'title', 'type']) {
+    for (const key of ['context', 'href', 'name', 'rel', 'templated', 'title', 'type']) {
       if ((<any> properties)[key]) {
         (<any> this)[key] = (<any> properties)[key];
       }
@@ -73,7 +73,7 @@ export default class Link {
    */
   resolve(): string {
 
-    return resolve(this.baseHref, this.href);
+    return resolve(this.context, this.href);
 
   }
 
@@ -86,11 +86,11 @@ export default class Link {
   expand(variables: object): string {
 
     if (!this.templated) {
-      return resolve(this.baseHref, this.href);
+      return resolve(this.context, this.href);
     } else {
       const templ = uriTemplate.parse(this.href);
       const expanded = templ.expand(variables);
-      return resolve(this.baseHref, expanded);
+      return resolve(this.context, expanded);
     }
 
   }

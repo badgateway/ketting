@@ -70,7 +70,7 @@ const parseHalLink = (representation: Hal, rel: string, links: HalLink[]): void 
     representation.links.push(
       new Link({
         rel: rel,
-        baseHref: representation.uri,
+        context: representation.uri,
         href: link.href,
         title: link.title,
         type: link.type,
@@ -108,7 +108,7 @@ const parseHalEmbedded = (representation: Hal): void => {
         representation.links.push(
           new Link({
             rel: relType,
-            baseHref: representation.uri,
+            context: representation.uri,
             href: embeddedItem._links.self.href
           })
         );

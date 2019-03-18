@@ -47,7 +47,7 @@ function linkFromTags(htmlDoc: Html, elements: HTMLCollectionOf<HTMLElement>) {
 
       const link = new Link({
         rel: rel,
-        baseHref: htmlDoc.uri,
+        context: htmlDoc.uri,
         href: href,
         type: type
       });

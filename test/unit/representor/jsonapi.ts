@@ -24,7 +24,7 @@ describe('JsonApi representor', () => {
     expect(r.contentType).to.equal('application/vnd.api+json');
     expect(r.links).to.eql([
       new Link({
-        baseHref: '/foo.json',
+        context: '/foo.json',
         href: 'https://example.org',
         rel: 'example',
       })
@@ -46,12 +46,12 @@ describe('JsonApi representor', () => {
     expect(r.contentType).to.equal('application/vnd.api+json');
     expect(r.links).to.eql([
       new Link({
-        baseHref: '/foo.json',
+        context: '/foo.json',
         href: 'https://example.org',
         rel: 'example',
       }),
       new Link({
-        baseHref: '/foo.json',
+        context: '/foo.json',
         href: 'https://example.com',
         rel: 'example',
       })
@@ -72,7 +72,7 @@ describe('JsonApi representor', () => {
     expect(r.contentType).to.equal('application/vnd.api+json');
     expect(r.links).to.eql([
       new Link({
-        baseHref: '/foo.json',
+        context: '/foo.json',
         href: 'https://example.org',
         rel: 'example',
       })
@@ -94,12 +94,12 @@ describe('JsonApi representor', () => {
     expect(r.contentType).to.equal('application/vnd.api+json');
     expect(r.links).to.eql([
       new Link({
-        baseHref: '/foo.json',
+        context: '/foo.json',
         href: 'https://example.org',
         rel: 'example',
       }),
       new Link({
-        baseHref: '/foo.json',
+        context: '/foo.json',
         href: 'https://example.com',
         rel: 'example',
       })

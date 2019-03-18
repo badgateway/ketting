@@ -7,7 +7,7 @@ describe('Link', () => {
   it('should construct and expose its properties', () => {
 
     const link = new Link({
-      baseHref: 'http://example.org/',
+      context: 'http://example.org/',
       href: '/foo/bar',
       rel: 'foo',
 
@@ -18,7 +18,7 @@ describe('Link', () => {
     });
 
     expect(link.rel).to.equal('foo');
-    expect(link.baseHref).to.equal('http://example.org/');
+    expect(link.context).to.equal('http://example.org/');
     expect(link.href).to.equal('/foo/bar');
     expect(link.type).to.equal('text/css');
     expect(link.templated).to.equal(false);
@@ -31,7 +31,7 @@ describe('Link', () => {
 
     const link = new Link({
       rel: 'about',
-      baseHref: 'http://example.org/',
+      context: 'http://example.org/',
       href: '/foo/bar'
     });
 
@@ -42,7 +42,7 @@ describe('Link', () => {
   it('should be able to expand templated links', () => {
 
     const link = new Link({
-      baseHref: 'http://example.org/',
+      context: 'http://example.org/',
       href: '/foo/{bar}',
       rel: 'about',
       templated: true
@@ -55,7 +55,7 @@ describe('Link', () => {
   it('should not error when expanding non-templated links', () => {
 
     const link = new Link({
-      baseHref: 'http://example.org/',
+      context: 'http://example.org/',
       href: '/foo/bar',
       rel: 'about',
     });

@@ -116,7 +116,7 @@ function parseJsonApiCollection(baseHref: string, body: JsonApiTopLevelObject): 
 
       const selfLink = parseJsonApiLink(baseHref, 'self', member.links.self);
       result.push(new Link({
-        baseHref: baseHref,
+        context: baseHref,
         href: selfLink.href,
         rel: 'item'
       }));
@@ -135,7 +135,7 @@ function parseJsonApiCollection(baseHref: string, body: JsonApiTopLevelObject): 
 function parseJsonApiLink(baseHref: string, rel: string, link: JsonApiLink): Link {
 
   return new Link({
-    baseHref,
+    context: baseHref,
     rel,
     href: typeof link === 'string' ? link : link.href,
   });
