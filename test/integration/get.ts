@@ -50,22 +50,22 @@ describe('Issuing a GET request', async () => {
     const expected = [
       new Link({
         rel: 'next',
-        baseHref: 'http://localhost:3000/link-header',
+        context: 'http://localhost:3000/link-header',
         href: '/hal2.json'
       }),
       new Link({
         rel: 'previous',
-        baseHref: 'http://localhost:3000/link-header',
+        context: 'http://localhost:3000/link-header',
         href: '/TheBook/chapter2'
       }),
       new Link({
         rel: 'start',
-        baseHref: 'http://localhost:3000/link-header',
+        context: 'http://localhost:3000/link-header',
         href: 'http://example.org/'
       }),
       new Link({
         rel: 'http://example.net/relation/other',
-        baseHref: 'http://localhost:3000/link-header',
+        context: 'http://localhost:3000/link-header',
         href: 'http://example.org/'
       })
     ];
