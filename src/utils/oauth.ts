@@ -1,4 +1,4 @@
-import { fetchMwOAuth2, OAuth2Options } from 'fetch-mw-oauth2';
+import { OAuth2, OAuth2Options } from 'fetch-mw-oauth2';
 import './fetch-polyfill';
 
 export type OAuth2Init = {
@@ -16,7 +16,7 @@ export type OAuth2Init = {
 
 export class OAuth2Helper {
 
-  oauth2Fetch: typeof fetch;
+  oauth2: OAuth2;
 
   constructor(options: OAuth2Init) {
 
@@ -39,7 +39,7 @@ export class OAuth2Helper {
         clientSecret: options.client.clientSecret,
       };
     }
-    this.oauth2Fetch = fetchMwOAuth2(oauth2Options);
+    this.oauth2 = new OAuth2(oauth2Options);
 
   }
 
@@ -51,7 +51,7 @@ export class OAuth2Helper {
    */
   async fetch(request: Request): Promise<Response> {
 
-    return this.oauth2Fetch(request);
+    return this.oauth2.fetch(request);
 
   }
 
