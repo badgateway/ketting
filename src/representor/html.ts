@@ -32,7 +32,7 @@ export default class Html extends Representation {
 
         const link = new Link({
           rel: rel,
-          baseHref: this.uri,
+          context: this.uri,
           href: <string> node.attributes.HREF,
           type: <string> node.attributes.TYPE || undefined
         });

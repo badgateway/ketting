@@ -231,7 +231,7 @@ export default class Resource<T = any> {
            this.repr.links.push(
               new Link({
                 rel: rel,
-                baseHref: this.uri,
+                context: this.uri,
                 href: httpLink.uri
               })
            );

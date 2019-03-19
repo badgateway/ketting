@@ -1,4 +1,4 @@
-import { default as OAuth2, OAuth2Options } from 'fetch-mw-oauth2';
+import { OAuth2, OAuth2Options } from 'fetch-mw-oauth2';
 import './fetch-polyfill';
 
 /**
