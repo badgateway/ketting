@@ -33,7 +33,7 @@ watch:
 	tsc --watch
 
 .PHONY: browserbuild
-browserbuild:
+browserbuild: tsbuild
 	mkdir -p browser
 	webpack \
 		--optimize-minimize \

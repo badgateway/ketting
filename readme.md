@@ -173,10 +173,12 @@ const ketting = new Ketting('https://api.example.org/', options);
 
 2 keys or `options` are currently supported: `auth` and `fetchInit`.
 
-`auth` can be used to specify authentication information. Supported authentication methods are:
-- HTTP Basic auth
-- OAuth2 Bearer tokens
-- OAuth2 managed client
+`auth` can be used to specify authentication information. Supported
+authentication methods are:
+
+* HTTP Basic auth
+* OAuth2 Bearer tokens
+* OAuth2 Managed client
 
 Basic example:
 
@@ -190,17 +192,6 @@ const options = {
 };
 ```
 
-OAuth2 Bearer example:
-
-```js
-const options = {
-  auth: {
-    type: 'bearer',
-    token: 'bar'
-  }
-};
-```
-
 OAuth2 [Resource Owner Password Credentials Grant](https://tools.ietf.org/html/rfc6749#section-4.3) example:
 
 
@@ -208,16 +199,13 @@ OAuth2 [Resource Owner Password Credentials Grant](https://tools.ietf.org/html/r
 const options = {
   auth: {
     type: 'oauth2',
-    client: {
-      clientId: 'fooClient',
-      clientSecret: 'barSecret',
-      accessTokenUri: 'https://api.example.org/oauth/token',
-      scopes: ['test']
-    },
-    owner: {
-      userName: 'fooOwner',
-      password: 'barPassword'
-    }
+    grant_type: 'password',
+    clientId: 'fooClient',
+    clientSecret: 'barSecret',
+    tokenEndpointUri: 'https://api.example.org/oauth/token',
+    scopes: ['test']
+    userName: 'fooOwner',
+    password: 'barPassword'
   }
 };
 ```
@@ -229,16 +217,44 @@ OAuth 2 [Client Credentials Grant](https://tools.ietf.org/html/rfc6749#section-4
 const options = {
   auth: {
     type: 'oauth2',
-    client: {
-      clientId: 'fooClient',
-      clientSecret: 'barSecret',
-      accessTokenUri: 'https://api.example.org/oauth/token',
-      scopes: ['test']
-    }
+    grant_type: 'client_credentials',
+    clientId: 'fooClient',
+    clientSecret: 'barSecret',
+    tokenEndpointUri: 'https://api.example.org/oauth/token',
+    scopes: ['test']
   }
 };
 ```
 
+OAuth 2 [Authorization Code Grant](https://tools.ietf.org/html/rfc6749#section-4.1) example:
+
+```js
+const options = {
+  auth: {
+    type: 'oauth2',
+    grant_type: 'authorization_code',
+    clientId: 'fooClient',
+    code: '...',
+    tokenEndpointUri: 'https://api.example.org/oauth/token',
+  }
+};
+```
+
+It's also possible to just setup the client with just an OAuth2 access token
+(and optionally a refresh token):
+
+```js
+const options = {
+  auth: {
+    type: 'oauth2',
+    clientId: 'fooClient',
+    clientSecret: '...', // Sometimes optional
+    accessToken: '...',
+    refreshToken: '...', // Optional.
+    tokenEndpointUri: 'https://api.example.org/oauth/token',
+  }
+};
+```
 
 The `fetchInit` option is a default list of settings that's automatically
 passed to `fetch()`. This is especially useful in a browser, where there's a
