@@ -1,6 +1,14 @@
 ChangeLog
 =========
 
+3.0.2 (2019-03-19)
+------------------
+
+* A mistake was made when releasing version 3. A branched was not merged in
+  entirely, which caused some of the new OAuth2 features to be partially
+  missing. This has now been corrected.
+
+
 3.0.1 (2019-03-18)
 ------------------
 
