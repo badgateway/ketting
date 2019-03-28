@@ -1,6 +1,17 @@
 ChangeLog
 =========
 
+3.1.0 (2019-03-27)
+------------------
+
+* If Ketting anticipates that a user might want to fetch multiple resources
+  in sequence (a follow chain), it will now add `Prefer-Push` header and
+  a `Prefer: transclude` header. Both are experimental internet drafts to
+  suggest to a server to do a HTTP/2 push or embed a child resource
+  respecitvely. This feature is experimental and might change as these drafts
+  change.
+
+
 3.0.2 (2019-03-19)
 ------------------
 

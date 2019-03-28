@@ -55,12 +55,18 @@ export default class Resource<T = any> {
 
   private inFlightRefresh: Promise<any> = null;
 
+  /**
+   * A list of rels that should be added to a Prefer-Push header.
+   */
+  private preferPushRels: Set<string>;
+
   constructor(client: Ketting, uri: string, contentType: string = null) {
 
     this.client = client;
     this.uri = uri;
     this.repr = null;
     this.contentType = contentType;
+    this.preferPushRels = new Set();
 
   }
 
@@ -180,11 +186,18 @@ export default class Resource<T = any> {
     // will coalesc them into one.
     if (!this.inFlightRefresh) {
 
+      const headers: { [name: string]: string } = {
+        Accept: this.contentType ? this.contentType : this.client.getAcceptHeader()
+      };
+
+      if (this.preferPushRels.size > 0) {
+        headers['Prefer-Push'] = Array.from(this.preferPushRels).join(' ');
+        headers.Prefer = 'transclude="' + Array.from(this.preferPushRels).join(';') + '"';
+      }
+
       this.inFlightRefresh = this.fetchAndThrow({
         method: 'GET' ,
-        headers: {
-          Accept: this.contentType ? this.contentType : this.client.getAcceptHeader()
-        }
+        headers
       }).then( result1 => {
         response = result1;
         return response.text();
@@ -264,6 +277,10 @@ export default class Resource<T = any> {
 
     const r = await this.representation();
 
+    // After we got a representation, it no longer makes sense to remember
+    // the rels we want to add to Prefer-Push.
+    this.preferPushRels = new Set();
+
     if (!rel) { return r.links; }
 
     return r.links.filter( item => item.rel === rel );
@@ -278,6 +295,8 @@ export default class Resource<T = any> {
    * variables in the optional variables argument.
    */
   follow(rel: string, variables?: object): FollowablePromise {
+
+    this.preferPushRels.add(rel);
 
     return new FollowablePromise(async (res: any, rej: any) => {
 
@@ -317,6 +336,7 @@ export default class Resource<T = any> {
    */
   async followAll(rel: string): Promise<Resource[]> {
 
+    this.preferPushRels.add(rel);
     const links = await this.links(rel);
 
     return links.map((link: Link) => {

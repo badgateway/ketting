@@ -215,6 +215,17 @@ app.use(
     })
 );
 
+let counter = 0;
+// This endpoint returns a new number every time it gets called
+app.use(route('/counter').get( (ctx: Context) => {
+
+  counter++;
+  ctx.response.body = {
+    counter: counter,
+  };
+
+}));
+
 // Rest stuff!
 app.use(
   route('/:id')
