@@ -186,18 +186,15 @@ export default class Resource<T = any> {
     // will coalesc them into one.
     if (!this.inFlightRefresh) {
 
-      console.log('Want representation for %s', this.uri);
-
       const headers: { [name: string]: string } = {
         Accept: this.contentType ? this.contentType : this.client.getAcceptHeader()
       };
 
       if (this.preferPushRels.size > 0) {
         headers['Prefer-Push'] = Array.from(this.preferPushRels).join(' ');
-        headers['Prefer'] = 'transclude="' + Array.from(this.preferPushRels).join(';') + '"';
+        headers.Prefer = 'transclude="' + Array.from(this.preferPushRels).join(';') + '"';
       }
 
-      console.log(headers);
       this.inFlightRefresh = this.fetchAndThrow({
         method: 'GET' ,
         headers

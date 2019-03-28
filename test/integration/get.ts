@@ -86,4 +86,17 @@ describe('Issuing a GET request', async () => {
     expect(hadException).to.eql(true);
 
   });
+
+  it('should successfully de-duplicate multiple parallel refreshes', async() => {
+
+    const counterResource = await ketting.follow('counter');
+    const [result1, result2] = await Promise.all([
+      counterResource.refresh(),
+      counterResource.refresh()
+    ]);
+
+    expect(result1).to.be.eql(result2);
+
+  });
+
 });
