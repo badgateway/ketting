@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-3.1.0 (2019-03-27)
+3.1.0 (2019-03-28)
 ------------------
 
 * If Ketting anticipates that a user might want to fetch multiple resources
