@@ -5,6 +5,8 @@ ChangeLog
 ------------------
 
 * The old format for OAuth2 setup is now no longer supported.
+* It's a best practice to not include polyfills with libraries, so this
+  library no longer ships a `fetch` polyfill for Node.js.
 
 
 3.1.0 (2019-03-28)
