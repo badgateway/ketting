@@ -35,7 +35,6 @@
   "dependencies": {
     "fetch-mw-oauth2": "^0.3.4",
     "http-link-header": "^1.0.2",
-    "node-fetch": "^2.3.0",
     "querystring-browser": "^1.0.4",
     "sax": "^1.2.4",
     "uri-template": "^1.0.1"
@@ -58,6 +57,7 @@
     "koa-path-match": "^2.0.0",
     "koa-static": "^5.0.0",
     "mocha": "^5.2.0",
+    "node-fetch": "^2.3.0",
     "nyc": "^13.3.0",
     "ts-node": "^8.0.3",
     "tslint": "^5.14.0",
