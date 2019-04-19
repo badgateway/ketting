@@ -1,3 +1,4 @@
+import { OAuth2, OAuth2Options } from 'fetch-mw-oauth2';
 import FollowablePromise from './followable-promise';
 import Representor from './representor/base';
 import HalRepresentor from './representor/hal';
@@ -7,7 +8,6 @@ import Resource from './resource';
 import * as base64 from './utils/base64';
 import * as fetchHelper from './utils/fetch-helper';
 import './utils/fetch-polyfill';
-import { OAuth2, OAuth2Options } from 'fetch-mw-oauth2';
 import { resolve } from './utils/url';
 
 type ContentType = {
