@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+4.0.0 (????-??-??)
+------------------
+
+* The old format for OAuth2 setup is now no longer supported.
+
+
 3.1.0 (2019-03-28)
 ------------------
 
