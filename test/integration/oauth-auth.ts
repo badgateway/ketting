@@ -19,16 +19,13 @@ describe('OAuth2 Authentication', () => {
       const ketting = new Ketting('http://localhost:3000/hal1.json', {
         auth: {
           type: 'oauth2',
-          client: {
-            clientId: 'fooClient',
-            clientSecret: 'fooSecret',
-            accessTokenUri: 'http://localhost:3000/oauth-token',
-            scopes: ['test']
-          },
-          owner: {
-            userName: 'fooOwner',
-            password: 'barPassword'
-          }
+          grantType: 'password',
+          clientId: 'fooClient',
+          clientSecret: 'fooSecret',
+          tokenEndpoint: 'http://localhost:3000/oauth-token',
+          scope: ['test'],
+          userName: 'fooOwner',
+          password: 'barPassword'
         }
       });
       ketting.follow('auth-oauth')
@@ -44,20 +41,17 @@ describe('OAuth2 Authentication', () => {
       const ketting = new Ketting('http://localhost:3000/hal1.json', {
         auth: {
           type: 'oauth2',
-          client: {
-            clientId: 'fooClient',
-            clientSecret: 'barSecret',
-            accessTokenUri: 'http://localhost:3000/oauth-token',
-            scopes: ['test']
-          },
-          owner: {
-            userName: 'fooOwner',
-            password: 'fooPassword'
-          }
+          grantType: 'password',
+          clientId: 'fooClient',
+          clientSecret: 'barSecret',
+          tokenEndpoint: 'http://localhost:3000/oauth-token',
+          scope: ['test'],
+          userName: 'fooOwner',
+          password: 'fooPassword'
         }
       });
       ketting.follow('auth-oauth')
-        .catch((error) => {
+        .catch(error => {
           expect(error).to.be.an.instanceof(Error);
           done();
         });
@@ -69,16 +63,13 @@ describe('OAuth2 Authentication', () => {
       const ketting = new Ketting('http://localhost:3000/hal1.json', {
         auth: {
           type: 'oauth2',
-          client: {
-            clientId: 'fooClient',
-            clientSecret: 'barSecret',
-            accessTokenUri: 'http://localhost:3000/oauth-token',
-            scopes: ['test']
-          },
-          owner: {
-            userName: 'fooOwner',
-            password: 'barPassword'
-          }
+          grantType: 'password',
+          clientId: 'fooClient',
+          clientSecret: 'barSecret',
+          tokenEndpoint: 'http://localhost:3000/oauth-token',
+          scope: ['test'],
+          userName: 'fooOwner',
+          password: 'barPassword'
         }
       });
 
@@ -88,76 +79,6 @@ describe('OAuth2 Authentication', () => {
 
     });
 
-    it.skip('should refresh token if 401 is returned and retry request', async () => {
-
-      /*
-      const ketting = new Ketting('http://localhost:3000/hal1.json', {
-        auth: {
-          type: 'oauth2',
-          client: {
-            clientId: 'fooClient',
-            clientSecret: 'barSecret',
-            accessTokenUri: 'http://localhost:3000/oauth-token',
-            scopes: ['test']
-          },
-          owner: {
-            userName: 'fooOwner',
-            password: 'barPassword'
-          }
-        }
-      });
-
-      const token = ketting.oauth2Helper.client.createToken(
-        'barToken',
-        'fooRefresh',
-        // @ts-ignore. Something breaks here, but I think everything is correct.
-        'bearer'
-      );
-      ketting.oauth2Helper.token = token;
-
-      const resource = await ketting.follow('auth-oauth');
-      const response = await resource.fetch();
-      expect(response.status).to.eql(200);
-      */
-
-    });
-
-    it.skip('should refresh token if 401 is returned and throw error if refresh is invalid', async () => {
-
-      /*
-      const ketting = new Ketting('http://localhost:3000/hal1.json', {
-        auth: {
-          type: 'oauth2',
-          client: {
-            clientId: 'fooClient',
-            clientSecret: 'barSecret',
-            accessTokenUri: 'http://localhost:3000/oauth-token',
-            scopes: ['test']
-          },
-          owner: {
-            userName: 'fooOwner',
-            password: 'barPassword'
-          }
-        }
-      });
-
-      const token = ketting.oauth2Helper.client.createToken(
-        'barToken',
-        'barRefresh',
-        // @ts-ignore. Something breaks here, but I think everything is correct.
-        'bearer'
-      );
-      ketting.oauth2Helper.token = token;
-
-      try {
-        const resource = await ketting.follow('auth-oauth');
-        await resource.fetch();
-
-      } catch (error) {
-        expect(error).to.be.an('error');
-      }
-       */
-    });
   });
 
   describe('Client credentials flow', () => {
@@ -167,12 +88,11 @@ describe('OAuth2 Authentication', () => {
       const ketting = new Ketting('http://localhost:3000/hal1.json', {
         auth: {
           type: 'oauth2',
-          client: {
-            clientId: 'badlient',
-            clientSecret: 'badSecret',
-            accessTokenUri: 'http://localhost:3000/oauth-token',
-            scopes: ['test']
-          }
+          grantType: 'client_credentials',
+          clientId: 'badlient',
+          clientSecret: 'badSecret',
+          tokenEndpoint: 'http://localhost:3000/oauth-token',
+          scope: ['test']
         }
       });
       ketting.follow('auth-oauth')
@@ -188,12 +108,11 @@ describe('OAuth2 Authentication', () => {
       const ketting = new Ketting('http://localhost:3000/hal1.json', {
         auth: {
           type: 'oauth2',
-          client: {
-            clientId: 'fooClientCredentials',
-            clientSecret: 'barSecretCredentials',
-            accessTokenUri: 'http://localhost:3000/oauth-token',
-            scopes: ['test']
-          }
+          grantType: 'client_credentials',
+          clientId: 'fooClientCredentials',
+          clientSecret: 'barSecretCredentials',
+          tokenEndpoint: 'http://localhost:3000/oauth-token',
+          scope: ['test']
         }
       });
 
@@ -201,69 +120,6 @@ describe('OAuth2 Authentication', () => {
       const response = await resource.fetch();
       expect(response.status).to.eql(200);
 
-    });
-
-    it.skip('should refresh token if 401 is returned and retry request', async () => {
-
-      /*
-      const ketting = new Ketting('http://localhost:3000/hal1.json', {
-        auth: {
-          type: 'oauth2',
-          client: {
-            clientId: 'fooClientCredentials',
-            clientSecret: 'barSecretCredentials',
-            accessTokenUri: 'http://localhost:3000/oauth-token',
-            scopes: ['test']
-          }
-        }
-      });
-
-      const token = ketting.oauth2Helper.client.createToken(
-        'barToken',
-        'fooRefresh',
-        // @ts-ignore. Something breaks here, but I think everything is correct.
-        'bearer'
-      );
-      ketting.oauth2Helper.token = token;
-
-      const resource = await ketting.follow('auth-oauth');
-      const response = await resource.fetch();
-      expect(response.status).to.eql(200);
-      */
-
-    });
-
-    it.skip('should refresh token if 401 is returned and throw error if refresh is invalid', async () => {
-
-      /*
-      const ketting = new Ketting('http://localhost:3000/hal1.json', {
-        auth: {
-          type: 'oauth2',
-          client: {
-            clientId: 'fooClientCredentials',
-            clientSecret: 'barSecretCredentials',
-            accessTokenUri: 'http://localhost:3000/oauth-token',
-            scopes: ['test']
-          }
-        }
-      });
-
-      const token = ketting.oauth2Helper.client.createToken(
-        'barToken',
-        'barRefresh',
-        // @ts-ignore. Something breaks here, but I think everything is correct.
-        'bearer'
-      );
-      ketting.oauth2Helper.token = token;
-
-      try {
-        const resource = await ketting.follow('auth-oauth');
-        await resource.fetch();
-
-      } catch (error) {
-        expect(error).to.be.an('error');
-      }
-       */
     });
   });
 

@@ -1,3 +1,4 @@
+import { OAuth2, OAuth2Options } from 'fetch-mw-oauth2';
 import FollowablePromise from './followable-promise';
 import Representor from './representor/base';
 import HalRepresentor from './representor/hal';
@@ -7,7 +8,6 @@ import Resource from './resource';
 import * as base64 from './utils/base64';
 import * as fetchHelper from './utils/fetch-helper';
 import './utils/fetch-polyfill';
-import { OAuth2Helper, OAuth2Init } from './utils/oauth';
 import { resolve } from './utils/url';
 
 type ContentType = {
@@ -27,7 +27,7 @@ type AuthOptionsBearer = {
 };
 type AuthOptionsOAuth2 = {
   type: 'oauth2',
-} & OAuth2Init;
+} & OAuth2Options;
 
 type AuthOptions =
   AuthOptionsBasic |
@@ -84,7 +84,7 @@ export default class Ketting {
    * If OAuth2 was configured, this property gives access to OAuth2-related
    * operations.
    */
-  oauth2Helper: OAuth2Helper;
+  oAuth2: OAuth2;
 
   constructor(bookMark: string, options?: KettingOptions) {
 
@@ -120,7 +120,7 @@ export default class Ketting {
       this.auth = options.auth;
 
       if (options.auth.type === 'oauth2') {
-        this.oauth2Helper = new OAuth2Helper(
+        this.oAuth2 = new OAuth2(
           options.auth
         );
       }
@@ -205,7 +205,7 @@ export default class Ketting {
           request.headers.set('Authorization', 'Bearer ' + this.auth.token);
           break;
         case 'oauth2' :
-          return this.oauth2Helper.fetch(request);
+          return this.oAuth2.fetch(request);
       }
 
     }
