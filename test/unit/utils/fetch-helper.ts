@@ -18,6 +18,7 @@ describe('fetch-helper', () => {
             token: 'keyB',
           }
         },
+        "bar.example.org": {},
         "*.example.com": {
           auth: {
             type: 'bearer',
@@ -42,6 +43,9 @@ describe('fetch-helper', () => {
 
     await fh.fetch('http://foo.example.org', {});
     expect(lastRequest.headers.get('Authorization')).to.equal('Bearer keyB');
+
+    await fh.fetch('http://bar.example.org', {});
+    expect(lastRequest.headers.get('Authorization')).to.equal('Bearer keyA');
 
     await fh.fetch('http://foo.example.com', {});
     expect(lastRequest.headers.get('Authorization')).to.equal('Bearer keyC');
