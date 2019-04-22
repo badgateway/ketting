@@ -1,44 +1,13 @@
-import { OAuth2, OAuth2Options } from 'fetch-mw-oauth2';
 import FollowablePromise from './followable-promise';
 import Representor from './representor/base';
 import HalRepresentor from './representor/hal';
 import HtmlRepresentor from './representor/html';
 import JsonApiRepresentor from './representor/jsonapi';
 import Resource from './resource';
-import * as base64 from './utils/base64';
-import * as fetchHelper from './utils/fetch-helper';
+import { ContentType, KettingInit } from './types';
+import FetchHelper from './utils/fetch-helper';
 import './utils/fetch-polyfill';
 import { resolve } from './utils/url';
-
-type ContentType = {
-  mime: string,
-  representor: string,
-  q?: string
-};
-
-type AuthOptionsBasic = {
-  type: 'basic'
-  password: string
-  userName: string
-};
-type AuthOptionsBearer = {
-  type: 'bearer'
-  token: string
-};
-type AuthOptionsOAuth2 = {
-  type: 'oauth2',
-} & OAuth2Options;
-
-type AuthOptions =
-  AuthOptionsBasic |
-  AuthOptionsBearer |
-  AuthOptionsOAuth2;
-
-type KettingOptions = {
-  auth?: AuthOptions
-  fetchInit?: RequestInit
-};
-
 
 /**
  * The main Ketting client object.
@@ -58,14 +27,6 @@ export default class Ketting {
   resourceCache: { [url: string]: Resource };
 
   /**
-   * Autentication settings.
-   *
-   * If set, must have at least a `type` property.
-   * If type=basic, userName and password must be set.
-   */
-  auth: AuthOptions;
-
-  /**
    * Content-Type settings and mappings.
    *
    * See the constructor for an example of the structure.
@@ -73,24 +34,18 @@ export default class Ketting {
   contentTypes: ContentType[];
 
   /**
-   * A list of settings passed to the Fetch API.
-   *
-   * It's effectively a list of defaults that are passed as the 'init' argument.
-   * @see https://developer.mozilla.org/en-US/docs/Web/API/Request/Request
+   * The helper class that calls fetch() for us
    */
-  fetchInit: RequestInit;
+  private fetchHelper: FetchHelper;
 
-  /**
-   * If OAuth2 was configured, this property gives access to OAuth2-related
-   * operations.
-   */
-  oAuth2: OAuth2;
-
-  constructor(bookMark: string, options?: KettingOptions) {
+  constructor(bookMark: string, options?: KettingInit) {
 
     if (typeof options === 'undefined') {
       options = {};
     }
+
+    this.fetchHelper = new FetchHelper(options);
+
     this.resourceCache = {};
 
     this.contentTypes = [
@@ -116,24 +71,10 @@ export default class Ketting {
       }
     ];
 
-    if (options.auth) {
-      this.auth = options.auth;
-
-      if (options.auth.type === 'oauth2') {
-        this.oAuth2 = new OAuth2(
-          options.auth
-        );
-      }
-    }
-
-    if (options.fetchInit) {
-      this.fetchInit = options.fetchInit;
-    }
-
     this.bookMark = bookMark;
+    this.fetchHelper = new FetchHelper(options);
 
   }
-
 
   /**
    * This function is a shortcut for getResource().follow(x);
@@ -190,27 +131,10 @@ export default class Ketting {
    */
   fetch(input: string|Request, init?: RequestInit): Promise<Response> {
 
-    const request = fetchHelper.createFetchRequest(input, init, this.fetchInit);
-
-    if (!request.headers.has('User-Agent')) {
-      request.headers.set('User-Agent', 'Ketting/' + require('../package.json').version);
-    }
-    if (!request.headers.has('Authorization') && this.auth) {
-      switch (this.auth.type) {
-
-        case 'basic' :
-          request.headers.set('Authorization', 'Basic ' + base64.encode(this.auth.userName + ':' + this.auth.password));
-          break;
-        case 'bearer' :
-          request.headers.set('Authorization', 'Bearer ' + this.auth.token);
-          break;
-        case 'oauth2' :
-          return this.oAuth2.fetch(request);
-      }
-
-    }
-
-    return fetch(request);
+    return this.fetchHelper.fetch(
+      input,
+      init
+    );
 
   }
 

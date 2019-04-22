@@ -1,37 +1,156 @@
+import OAuth2 from 'fetch-mw-oauth2';
+import { AuthOptions, KettingInit } from '../types';
+import * as base64 from './base64';
 import './fetch-polyfill';
+import { parse } from './url';
+
+type DomainOptions = {
+  fetchInit: RequestInit,
+  auth: AuthOptions,
+  authBucket: string,
+};
 
 /**
- * Creates a Fetch Request object, based on a number of settings.
+ * This class is primarily responsible for calling fetch().
  *
- * @param {string|Request} input - Url or input request object.
- * @param {object} init - A list of Fetch settings
- * @param {object} defaultInit - A list of default settings to use if they
- *                              weren't overridden by init.
- * @return {Response}
+ * It's main purpose besides that is to add authentication headers, and
+ * any defaults that might have been set.
  */
-export function createFetchRequest(input: any, init: any, defaultInit: any): Request {
+export default class FetchHelper {
 
-  const trueInit: any = {};
+  private options: KettingInit;
+  private oAuth2Buckets: Map<string, OAuth2>;
+  private innerFetch: typeof fetch;
 
-  if (init) {
-    Object.assign(trueInit, defaultInit, init);
-  } else {
-    Object.assign(trueInit, defaultInit);
+  constructor(options: KettingInit) {
+    this.options = options;
+    this.oAuth2Buckets = new Map();
+    this.innerFetch = fetch.bind(global);
   }
 
-  trueInit.headers = mergeHeaders([
-    defaultInit ? defaultInit.headers : null,
-    // @ts-ignore cross-fetch definitions are broken. See https://github.com/lquixada/cross-fetch/pull/19
-    input instanceof Request ? input.headers : null,
-    init && init.headers ? init.headers : null
-  ]);
+  fetch(requestInfo: RequestInfo, requestInit: RequestInit): Promise<Response> {
 
-    // @ts-ignore cross-fetch definitions are broken. See https://github.com/lquixada/cross-fetch/pull/19
-  return new Request(input, trueInit);
+    const domainOptions = this.getDomainOptions(
+      typeof requestInfo === 'string' ?
+      requestInfo :
+      requestInfo.url
+    );
+
+    const init = mergeInit([
+      this.options.fetchInit,
+      domainOptions.fetchInit,
+      requestInit,
+      {
+        headers: requestInfo instanceof Request ? requestInfo.headers : {},
+      },
+    ]);
+
+    const request = new Request(
+      requestInfo,
+      init
+    );
+
+    if (!request.headers.has('User-Agent')) {
+      request.headers.set('User-Agent', 'Ketting/' + require('../../package.json').version);
+    }
+
+    return this.fetchAuth(request);
+
+  }
+
+  getDomainOptions(uri: string): DomainOptions {
+
+    if (!this.options.match) {
+      return {
+        fetchInit: this.options.fetchInit,
+        auth: this.options.auth,
+        authBucket: '*',
+      };
+    }
+
+    const { host } = parse(uri);
+    for (const [matchStr, options] of Object.entries(this.options.match)) {
+
+      const matchSplit = matchStr.split('*');
+      const matchRegex = matchSplit.map(
+        part =>
+        part.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+      ).join('(.*)');
+
+      if (new RegExp('^' + matchRegex + '$').test(host)) {
+
+        return {
+          fetchInit: options.fetchInit,
+          auth: options.auth || this.options.auth,
+          authBucket: matchStr
+        };
+      }
+
+    }
+    return {
+      fetchInit: this.options.fetchInit,
+      auth: this.options.auth,
+      authBucket: '*',
+    };
+
+  }
+
+  /**
+   * This method executes the actual fetch() function, but not before adding
+   * authentication headers.
+   */
+  private fetchAuth(request: Request): Promise<Response> {
+
+    const options = this.getDomainOptions(request.url);
+    const authOptions = options.auth;
+    const authBucket = options.authBucket;
+
+    if (!authOptions) {
+      return this.innerFetch(request);
+    }
+
+    switch (authOptions.type) {
+      case 'basic' :
+        request.headers.set('Authorization', 'Basic ' + base64.encode(authOptions.userName + ':' + authOptions.password));
+        return this.innerFetch(request);
+      case 'bearer' :
+        request.headers.set('Authorization', 'Bearer ' + authOptions.token);
+        return this.innerFetch(request);
+      case 'oauth2' :
+        if (!this.oAuth2Buckets.has(authBucket)) {
+          this.oAuth2Buckets.set(
+            authBucket,
+            new OAuth2(authOptions)
+          );
+        }
+        return this.oAuth2Buckets.get(authBucket).fetch(request);
+    }
+
+  }
 
 }
 
 type HeaderSet = any;
+
+
+/**
+ * 'init' refers to the init argument as passed to Request and Fetch objects.
+ *
+ * This function takes one or more of those init objects, and merges them.
+ * Later properties override earlier ones.
+ */
+function mergeInit(inits: RequestInit[]) {
+
+  const newHeaders = mergeHeaders(
+    inits.map( init => init ? init.headers : null )
+  );
+
+  const newInit = Object.assign({}, ...inits);
+  newInit.headers = newHeaders;
+
+  return newInit;
+
+}
 
 /**
  * Merges sets of HTTP headers.
@@ -62,3 +181,4 @@ export function mergeHeaders(headerSets: HeaderSet[]): Headers {
   return result;
 
 }
+
