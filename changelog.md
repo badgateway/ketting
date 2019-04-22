@@ -1,10 +1,14 @@
 ChangeLog
 =========
 
-4.0.0 (????-??-??)
-------------------
+4.0.0.beta.0 (????-??-??)
+--------------------------
 
 * The old format for OAuth2 setup is now no longer supported.
+* It's now possible to specify per-domain authentication using wildcards.
+  This allows you to set up specific authentication credentials for specific
+  domains. This might be useful in case you talk to multiple API's with a
+  single client.
 
 
 3.1.0 (2019-03-28)
