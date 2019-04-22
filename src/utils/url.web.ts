@@ -1,6 +1,6 @@
 type UrlParts = {
   host?: string,
-}
+};
 
 /**
  * Resolves a relative url using another url.
@@ -47,6 +47,6 @@ export function parse(url: string): UrlParts {
   const urlObj = new URL(url);
   return {
     host: urlObj.host,
-  }
+  };
 
 }

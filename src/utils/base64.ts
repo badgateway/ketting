@@ -3,6 +3,6 @@
  */
 export function encode(input: string): string {
 
-  return new Buffer(input).toString('base64');
+  return Buffer.from(input).toString('base64');
 
 }

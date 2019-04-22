@@ -4,11 +4,10 @@ import HalRepresentor from './representor/hal';
 import HtmlRepresentor from './representor/html';
 import JsonApiRepresentor from './representor/jsonapi';
 import Resource from './resource';
-import * as base64 from './utils/base64';
-import * as fetchHelper from './utils/fetch-helper';
+import { ContentType, KettingInit } from './types';
+import FetchHelper from './utils/fetch-helper';
 import './utils/fetch-polyfill';
 import { resolve } from './utils/url';
-import { ContentType } from './types';
 
 /**
  * The main Ketting client object.
@@ -35,15 +34,18 @@ export default class Ketting {
   contentTypes: ContentType[];
 
   /**
-   * Ketting options
+   * The helper class that calls fetch() for us
    */
-  options: KettingOptions;
+  private fetchHelper: FetchHelper;
 
-  constructor(bookMark: string, options?: KettingOptions) {
+  constructor(bookMark: string, options?: KettingInit) {
 
     if (typeof options === 'undefined') {
       options = {};
     }
+
+    this.fetchHelper = new FetchHelper(options);
+
     this.resourceCache = {};
 
     this.contentTypes = [
@@ -70,6 +72,7 @@ export default class Ketting {
     ];
 
     this.bookMark = bookMark;
+    this.fetchHelper = new FetchHelper(options);
 
   }
 
@@ -128,27 +131,10 @@ export default class Ketting {
    */
   fetch(input: string|Request, init?: RequestInit): Promise<Response> {
 
-    const request = fetchHelper.createFetchRequest(input, init, this.fetchInit);
-
-    if (!request.headers.has('User-Agent')) {
-      request.headers.set('User-Agent', 'Ketting/' + require('../package.json').version);
-    }
-    if (!request.headers.has('Authorization') && this.auth) {
-      switch (this.auth.type) {
-
-        case 'basic' :
-          request.headers.set('Authorization', 'Basic ' + base64.encode(this.auth.userName + ':' + this.auth.password));
-          break;
-        case 'bearer' :
-          request.headers.set('Authorization', 'Bearer ' + this.auth.token);
-          break;
-        case 'oauth2' :
-          return this.oAuth2.fetch(request);
-      }
-
-    }
-
-    return fetch(request);
+    return this.fetchHelper.fetch(
+      input,
+      init
+    );
 
   }
 
@@ -199,27 +185,6 @@ export default class Ketting {
         return item;
       } )
       .join(', ');
-
-  }
-
-  /**
-   * Return a KettingOptions object.
-   *
-   * This function uses the base options, and overwrites them with domain-
-   * specific options.
-   */
-  getOptions(domain: string): NormalizedOptions {
-
-    const result = {
-      fetchInit: this.options.fetchInit,
-      auth: this.options.auth
-    };
-
-    for(const [key, options] of Object.entries(this.options.match)) {
-
-    }
-
-    return result;
 
   }
 

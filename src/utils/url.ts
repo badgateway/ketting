@@ -1,8 +1,8 @@
-import { resolve as r, parse as p } from 'url';
+import { parse as p, resolve as r } from 'url';
 
 type UrlParts = {
   host?: string,
-}
+};
 
 /**
  * Resolves a relative url using another url.
