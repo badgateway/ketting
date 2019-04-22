@@ -1,8 +1,14 @@
 import OAuth2 from 'fetch-mw-oauth2';
-import { KettingInit, NormalizedOptions } from '../types';
+import { AuthOptions, KettingInit } from '../types';
 import * as base64 from './base64';
 import './fetch-polyfill';
 import { parse } from './url';
+
+type DomainOptions = {
+  fetchInit: RequestInit,
+  auth: AuthOptions,
+  authBucket: string,
+};
 
 /**
  * This class is primarily responsible for calling fetch().
@@ -12,13 +18,14 @@ import { parse } from './url';
  */
 export default class FetchHelper {
 
-  options: KettingInit;
-
+  private options: KettingInit;
   private oAuth2Buckets: Map<string, OAuth2>;
+  private innerFetch: typeof fetch;
 
   constructor(options: KettingInit) {
     this.options = options;
     this.oAuth2Buckets = new Map();
+    this.innerFetch = fetch;
   }
 
   fetch(requestInfo: RequestInfo, requestInit: RequestInit): Promise<Response> {
@@ -51,19 +58,40 @@ export default class FetchHelper {
 
   }
 
-  getDomainOptions(uri: string): NormalizedOptions {
+  getDomainOptions(uri: string): DomainOptions {
 
     if (!this.options.match) {
-      return {};
+      return {
+        fetchInit: this.options.fetchInit,
+        auth: this.options.auth,
+        authBucket: '*',
+      };
     }
 
     const { host } = parse(uri);
+    for (const [matchStr, options] of Object.entries(this.options.match)) {
 
-    if (this.options.match[host] !== undefined) {
-      return this.options.match[host];
+      const matchSplit = matchStr.split('*');
+      const matchRegex = matchSplit.map(
+        part =>
+        part.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+      ).join('(.*)');
+
+      if (new RegExp('^' + matchRegex + '$').test(host)) {
+
+        return {
+          fetchInit: options.fetchInit,
+          auth: options.auth || this.options.auth,
+          authBucket: matchStr
+        };
+      }
+
     }
-
-    return {};
+    return {
+      fetchInit: this.options.fetchInit,
+      auth: this.options.auth,
+      authBucket: '*',
+    };
 
   }
 
@@ -73,28 +101,21 @@ export default class FetchHelper {
    */
   private fetchAuth(request: Request): Promise<Response> {
 
-    const { host } = parse(request.url);
-    let authOptions = this.options.auth;
-    let authBucket = '*';
-
-    if (this.options.match && host in this.options.match) {
-      authBucket = host;
-      if (this.options.match[host].auth) {
-        authOptions = this.options.match[host].auth;
-      }
-    }
+    const options = this.getDomainOptions(request.url);
+    const authOptions = options.auth;
+    const authBucket = options.authBucket;
 
     if (!authOptions) {
-      return fetch(request);
+      return this.innerFetch(request);
     }
 
     switch (authOptions.type) {
       case 'basic' :
         request.headers.set('Authorization', 'Basic ' + base64.encode(authOptions.userName + ':' + authOptions.password));
-        return fetch(request);
+        return this.innerFetch(request);
       case 'bearer' :
         request.headers.set('Authorization', 'Bearer ' + authOptions.token);
-        return fetch(request);
+        return this.innerFetch(request);
       case 'oauth2' :
         if (!this.oAuth2Buckets.has(authBucket)) {
           this.oAuth2Buckets.set(

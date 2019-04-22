@@ -52,21 +52,3 @@ export type KettingInit = {
     }
   }
 };
-
-export type NormalizedOptions = {
-
-  /**
-   * Authentication options.
-   */
-  auth?: AuthOptions
-
-  /**
-   * A list of settings passed to the Fetch API.
-   *
-   * It's effectively a list of defaults that are passed as the 'init' argument.
-   * @see https://developer.mozilla.org/en-US/docs/Web/API/Request/Request
-   */
-  fetchInit?: RequestInit,
-
-
-};
