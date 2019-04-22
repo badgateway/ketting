@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-4.0.0.beta.0 (????-??-??)
+4.0.0.alpha.0 (2019-04-22)
 --------------------------
 
 * The old format for OAuth2 setup is now no longer supported.
