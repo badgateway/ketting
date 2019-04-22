@@ -25,7 +25,7 @@ export default class FetchHelper {
   constructor(options: KettingInit) {
     this.options = options;
     this.oAuth2Buckets = new Map();
-    this.innerFetch = fetch;
+    this.innerFetch = fetch.bind(global);
   }
 
   fetch(requestInfo: RequestInfo, requestInit: RequestInit): Promise<Response> {
