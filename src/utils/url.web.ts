@@ -1,3 +1,7 @@
+type UrlParts = {
+  host?: string,
+}
+
 /**
  * Resolves a relative url using another url.
  *
@@ -30,5 +34,19 @@ export function resolve(base: string, relative: string): string {
     docHead.removeChild(ourBase);
   }
   return resolvedUrl;
+
+}
+
+/**
+ * Parses a url in multiple components.
+ *
+ * This is the browser-based version.
+ */
+export function parse(url: string): UrlParts {
+
+  const urlObj = new URL(url);
+  return {
+    host: urlObj.host,
+  }
 
 }

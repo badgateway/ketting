@@ -1,4 +1,3 @@
-import { OAuth2, OAuth2Options } from 'fetch-mw-oauth2';
 import FollowablePromise from './followable-promise';
 import Representor from './representor/base';
 import HalRepresentor from './representor/hal';
@@ -9,36 +8,7 @@ import * as base64 from './utils/base64';
 import * as fetchHelper from './utils/fetch-helper';
 import './utils/fetch-polyfill';
 import { resolve } from './utils/url';
-
-type ContentType = {
-  mime: string,
-  representor: string,
-  q?: string
-};
-
-type AuthOptionsBasic = {
-  type: 'basic'
-  password: string
-  userName: string
-};
-type AuthOptionsBearer = {
-  type: 'bearer'
-  token: string
-};
-type AuthOptionsOAuth2 = {
-  type: 'oauth2',
-} & OAuth2Options;
-
-type AuthOptions =
-  AuthOptionsBasic |
-  AuthOptionsBearer |
-  AuthOptionsOAuth2;
-
-type KettingOptions = {
-  auth?: AuthOptions
-  fetchInit?: RequestInit
-};
-
+import { ContentType } from './types';
 
 /**
  * The main Ketting client object.
@@ -58,14 +28,6 @@ export default class Ketting {
   resourceCache: { [url: string]: Resource };
 
   /**
-   * Autentication settings.
-   *
-   * If set, must have at least a `type` property.
-   * If type=basic, userName and password must be set.
-   */
-  auth: AuthOptions;
-
-  /**
    * Content-Type settings and mappings.
    *
    * See the constructor for an example of the structure.
@@ -73,18 +35,9 @@ export default class Ketting {
   contentTypes: ContentType[];
 
   /**
-   * A list of settings passed to the Fetch API.
-   *
-   * It's effectively a list of defaults that are passed as the 'init' argument.
-   * @see https://developer.mozilla.org/en-US/docs/Web/API/Request/Request
+   * Ketting options
    */
-  fetchInit: RequestInit;
-
-  /**
-   * If OAuth2 was configured, this property gives access to OAuth2-related
-   * operations.
-   */
-  oAuth2: OAuth2;
+  options: KettingOptions;
 
   constructor(bookMark: string, options?: KettingOptions) {
 
@@ -116,24 +69,9 @@ export default class Ketting {
       }
     ];
 
-    if (options.auth) {
-      this.auth = options.auth;
-
-      if (options.auth.type === 'oauth2') {
-        this.oAuth2 = new OAuth2(
-          options.auth
-        );
-      }
-    }
-
-    if (options.fetchInit) {
-      this.fetchInit = options.fetchInit;
-    }
-
     this.bookMark = bookMark;
 
   }
-
 
   /**
    * This function is a shortcut for getResource().follow(x);
@@ -261,6 +199,27 @@ export default class Ketting {
         return item;
       } )
       .join(', ');
+
+  }
+
+  /**
+   * Return a KettingOptions object.
+   *
+   * This function uses the base options, and overwrites them with domain-
+   * specific options.
+   */
+  getOptions(domain: string): NormalizedOptions {
+
+    const result = {
+      fetchInit: this.options.fetchInit,
+      auth: this.options.auth
+    };
+
+    for(const [key, options] of Object.entries(this.options.match)) {
+
+    }
+
+    return result;
 
   }
 

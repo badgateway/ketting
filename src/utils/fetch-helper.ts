@@ -1,4 +1,41 @@
 import './fetch-polyfill';
+import { KettingInit } from '../types';
+import [ parse } from './url';
+
+export default class FetchHelper {
+
+  options: KettingInit;
+
+  constructor(options: KettingInit) {
+    this.options = options;
+  }
+
+  fetch(requestInfo: RequestInfo, requestInit: RequestInit): Promise<Response> {
+
+    const domain = parse(
+      typeof "requestInfo" === 'string' ?
+      requestInfo :
+      requestInfo.uri
+    );
+
+    const domainOptions = this.getDomainOptions(domain);
+
+    const init = Object.assign(
+      {},
+      this.options.fetchInit || {},
+      domainOptions.fetchInit || {},
+      requestInit || {}
+    );
+
+    const request = new Request(
+      requestInfo,
+      init
+    );
+    return fetch(request);
+
+  }
+
+}
 
 /**
  * Creates a Fetch Request object, based on a number of settings.
