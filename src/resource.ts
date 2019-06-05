@@ -93,7 +93,7 @@ export default class Resource<T = any> {
       headers: {
         'Content-Type': contentType,
         'Accept' : this.contentType ? this.contentType : this.client.getAcceptHeader()
-      }
+      },
     };
     await this.fetchAndThrow(params);
 
@@ -462,7 +462,7 @@ export default class Resource<T = any> {
    *
    * @see https://developer.mozilla.org/en-US/docs/Web/API/Request/Request
    */
-  async fetchAndThrow(input: Request|string|object, init?: object): Promise<Response> {
+  async fetchAndThrow(input: Request|string|RequestInit, init?: RequestInit): Promise<Response> {
 
     const response = await this.fetch(input, init);
 
