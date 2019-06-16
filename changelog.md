@@ -1,6 +1,15 @@
 ChangeLog
 =========
 
+4.0.0.alpha.1 (????-??-??)
+--------------------------
+
+* #129: Using the package in non-typescript node.js now wortks with a simple
+  `const Ketting = require('ketting')`.
+* #129: Fixed the browser distribution. the `Ketting` constructor is
+  registered globally again.
+
+
 4.0.0.alpha.0 (2019-04-22)
 --------------------------
 
