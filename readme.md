@@ -1,6 +1,8 @@
 Ketting - A hypermedia client for javascript
 ============================================
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/evert/ketting.svg)](https://greenkeeper.io/)
+
 Introduction
 ------------
 
