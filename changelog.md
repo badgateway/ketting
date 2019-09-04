@@ -1,8 +1,8 @@
 ChangeLog
 =========
 
-4.0.0.alpha.1 (????-??-??)
---------------------------
+4.0.0 (2019-09-04)
+------------------
 
 * #129: Using the package in non-typescript node.js now wortks with a simple
   `const Ketting = require('ketting')`.
