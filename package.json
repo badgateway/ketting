@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/evert/ketting#readme",
   "files": [
+    "src/",
     "dist/",
     "browser/ketting.min.js",
     "browser/ketting.min.js.map"
