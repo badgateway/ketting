@@ -1,11 +1,3 @@
-import BaseKetting from './ketting';
-import Resource from './resource';
+export { default as Ketting, default } from './ketting';
+export { default as Resource } from './resource';
 
-class Ketting extends BaseKetting {
-
-  static Resource = Resource;
-  static Ketting = BaseKetting;
-
-}
-
-export = Ketting;
