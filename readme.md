@@ -173,90 +173,23 @@ const options = {}; // options are optional
 const ketting = new Ketting('https://api.example.org/', options);
 ```
 
-2 keys or `options` are currently supported: `auth` and `fetchInit`.
+3 keys or `options` are currently supported:
+
+* `auth`
+* `fetchInit`.
+* `match`
 
 `auth` can be used to specify authentication information. Supported
 authentication methods are:
 
-* HTTP Basic auth
-* OAuth2 Bearer tokens
-* OAuth2 Managed client
+* HTTP Basic auth.
+* OAuth2 flows:
+  * `password` grant.
+  * `client_credentials` grant.
+  * `authorization_code` grant.
 
-Basic example:
-
-```js
-const options = {
-  auth: {
-    type: 'basic',
-    userName: 'foo',
-    password: 'bar'
-  }
-};
-```
-
-OAuth2 [Resource Owner Password Credentials Grant](https://tools.ietf.org/html/rfc6749#section-4.3) example:
-
-
-```js
-const options = {
-  auth: {
-    type: 'oauth2',
-    grant_type: 'password',
-    clientId: 'fooClient',
-    clientSecret: 'barSecret',
-    tokenEndpointUri: 'https://api.example.org/oauth/token',
-    scopes: ['test']
-    userName: 'fooOwner',
-    password: 'barPassword'
-  }
-};
-```
-
-OAuth 2 [Client Credentials Grant](https://tools.ietf.org/html/rfc6749#section-4.4) example:
-
-
-```js
-const options = {
-  auth: {
-    type: 'oauth2',
-    grant_type: 'client_credentials',
-    clientId: 'fooClient',
-    clientSecret: 'barSecret',
-    tokenEndpointUri: 'https://api.example.org/oauth/token',
-    scopes: ['test']
-  }
-};
-```
-
-OAuth 2 [Authorization Code Grant](https://tools.ietf.org/html/rfc6749#section-4.1) example:
-
-```js
-const options = {
-  auth: {
-    type: 'oauth2',
-    grant_type: 'authorization_code',
-    clientId: 'fooClient',
-    code: '...',
-    tokenEndpointUri: 'https://api.example.org/oauth/token',
-  }
-};
-```
-
-It's also possible to just setup the client with just an OAuth2 access token
-(and optionally a refresh token):
-
-```js
-const options = {
-  auth: {
-    type: 'oauth2',
-    clientId: 'fooClient',
-    clientSecret: '...', // Sometimes optional
-    accessToken: '...',
-    refreshToken: '...', // Optional.
-    tokenEndpointUri: 'https://api.example.org/oauth/token',
-  }
-};
-```
+For details about setting up authentication, check out the [Authentication][2]
+page on the wiki.
 
 The `fetchInit` option is a default list of settings that's automatically
 passed to `fetch()`. This is especially useful in a browser, where there's a
@@ -273,9 +206,31 @@ const options = {
 };
 ```
 
-Other options that you may want to set might be `mode` or `cache`. See the
-documentation for the [Request constructor](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request)
+See the documentation for the [Request constructor](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request)
 for the full list.
+
+Lastly, the `match` property can be used to specify `fetchInit` and `auth`
+again, but only have the settings apply to specific domains.
+
+For example, the following sets basic authentication, but only for domains
+matching `*.example.org`:
+
+```js
+const options = {
+  match: {
+    '*.example.org': {
+      auth: {
+        type: 'basic',
+        userName: 'foo',
+        password: 'bar'
+      }
+    }
+  }
+}
+```
+
+This is very important if your API is designed to refer to external resources,
+and you're using Ketting to fetch their representations.
 
 
 #### `Ketting.getResource()`
@@ -574,6 +529,7 @@ const oAuthClient = ketting.oauth2Helper.client;
 ```
 
 [1]: https://tools.ietf.org/html/rfc8288 "Web Linking"
+[2]: https://github.com/evert/ketting/wiki/Authentication
 [3]: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API
 
 [5]: https://github.com/mulesoft/js-client-oauth2
