@@ -4,7 +4,8 @@ import Resource from './resource';
 class Ketting extends BaseKetting {
 
   static Resource = Resource;
+  static Ketting = BaseKetting;
 
 }
 
-module.exports = Ketting;
+export = Ketting;

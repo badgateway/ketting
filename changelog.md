@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+4.0.1 (2019-09-05)
+------------------
+
+* Fix Typescript defintion files so Ketting may be imported correctly.
+
+
 4.0.0 (2019-09-04)
 ------------------
 
