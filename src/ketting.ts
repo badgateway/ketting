@@ -44,8 +44,6 @@ export default class Ketting {
       options = {};
     }
 
-    this.fetchHelper = new FetchHelper(options);
-
     this.resourceCache = {};
 
     this.contentTypes = [
@@ -72,7 +70,7 @@ export default class Ketting {
     ];
 
     this.bookMark = bookMark;
-    this.fetchHelper = new FetchHelper(options);
+    this.fetchHelper = new FetchHelper(options, this.beforeRequest.bind(this));
 
   }
 
@@ -123,9 +121,6 @@ export default class Ketting {
 
   /**
    * This function does an arbitrary request using the fetch API.
-   *
-   * Every request in ketting is routed through here so it can be initialized
-   * with some useful defaults.
    *
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/GlobalFetch}
    */
@@ -186,6 +181,19 @@ export default class Ketting {
       } )
       .join(', ');
 
+  }
+
+  beforeRequest(request: Request): void {
+
+    const safeMethods = ['GET', 'HEAD', 'OPTIONS', 'PRI', 'PROPFIND', 'REPORT', 'SEARCH', 'TRACE'];
+    if (safeMethods.includes(request.method)) {
+      return;
+    }
+
+    if (request.url in this.resourceCache) {
+      // Clear cache
+      this.resourceCache[request.url].clearCache();
+    }
   }
 
 }

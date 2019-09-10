@@ -10,6 +10,8 @@ type DomainOptions = {
   authBucket: string,
 };
 
+type beforeRequestCallback = (request: Request) => void;
+
 /**
  * This class is primarily responsible for calling fetch().
  *
@@ -21,11 +23,13 @@ export default class FetchHelper {
   private options: KettingInit;
   private oAuth2Buckets: Map<string, OAuth2>;
   private innerFetch: typeof fetch;
+  private onBeforeRequest: beforeRequestCallback | null;
 
-  constructor(options: KettingInit) {
+  constructor(options: KettingInit, onBeforeRequest: beforeRequestCallback | null = null) {
     this.options = options;
     this.oAuth2Buckets = new Map();
     this.innerFetch = fetch.bind(global);
+    this.onBeforeRequest = onBeforeRequest;
   }
 
   fetch(requestInfo: RequestInfo, requestInit: RequestInit): Promise<Response> {
@@ -106,16 +110,16 @@ export default class FetchHelper {
     const authBucket = options.authBucket;
 
     if (!authOptions) {
-      return this.innerFetch(request);
+      return this.doFetch(request);
     }
 
     switch (authOptions.type) {
       case 'basic' :
         request.headers.set('Authorization', 'Basic ' + base64.encode(authOptions.userName + ':' + authOptions.password));
-        return this.innerFetch(request);
+        return this.doFetch(request);
       case 'bearer' :
         request.headers.set('Authorization', 'Bearer ' + authOptions.token);
-        return this.innerFetch(request);
+        return this.doFetch(request);
       case 'oauth2' :
         if (!this.oAuth2Buckets.has(authBucket)) {
           this.oAuth2Buckets.set(
@@ -123,10 +127,26 @@ export default class FetchHelper {
             new OAuth2(authOptions)
           );
         }
+        if (this.onBeforeRequest) this.onBeforeRequest(request);
         return this.oAuth2Buckets.get(authBucket).fetch(request);
     }
 
+
   }
+
+  /**
+   * This function is the last mile before the actual fetch request is ran
+   */
+  private doFetch(request: Request): Promise<Response> {
+
+    console.log('doFetch', this.onBeforeRequest);
+    if (this.onBeforeRequest) {
+      this.onBeforeRequest(request);
+    }
+    return this.innerFetch(request);
+
+  }
+
 
 }
 

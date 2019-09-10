@@ -97,9 +97,6 @@ export default class Resource<T = any> {
     };
     await this.fetchAndThrow(params);
 
-    // Wipe out the local cache
-    this.repr = null;
-
   }
 
   /**
@@ -108,9 +105,6 @@ export default class Resource<T = any> {
   async delete(): Promise<void> {
 
     await this.fetchAndThrow({ method: 'DELETE' });
-
-    // Wipe out the local cache
-    this.repr = null;
 
   }
 
@@ -163,9 +157,6 @@ export default class Resource<T = any> {
         }
       }
     );
-
-    // Wipe out the local cache
-    this.repr = null;
 
   }
 
@@ -378,6 +369,12 @@ export default class Resource<T = any> {
     }
 
     return <Representation> this.repr;
+
+  }
+
+  clearCache(): void {
+
+    this.repr = null;
 
   }
 
