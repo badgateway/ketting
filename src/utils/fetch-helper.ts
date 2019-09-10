@@ -127,7 +127,7 @@ export default class FetchHelper {
             new OAuth2(authOptions)
           );
         }
-        if (this.onBeforeRequest) this.onBeforeRequest(request);
+        if (this.onBeforeRequest) { this.onBeforeRequest(request); }
         return this.oAuth2Buckets.get(authBucket).fetch(request);
     }
 
@@ -139,7 +139,6 @@ export default class FetchHelper {
    */
   private doFetch(request: Request): Promise<Response> {
 
-    console.log('doFetch', this.onBeforeRequest);
     if (this.onBeforeRequest) {
       this.onBeforeRequest(request);
     }
