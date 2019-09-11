@@ -1,10 +1,18 @@
 ChangeLog
 =========
 
+4.0.3 (2019-09-11)
+------------------
+
+* The internal resource cache will now evict items for any non-safe HTTP
+  method.
+
+
 4.0.2 (2019-09-05)
 ------------------
 
 * Broke Typescript exports again
+
 
 4.0.1 (2019-09-05)
 ------------------
