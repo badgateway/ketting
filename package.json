@@ -3,6 +3,7 @@
   "version": "4.0.3",
   "description": "Opiniated HATEAOS / Rest client.",
   "main": "dist/index.js",
+  "browser": "browser/ketting.min.js",
   "scripts": {
     "test": "make test",
     "prepublishOnly": "make build",
