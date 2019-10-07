@@ -39,16 +39,16 @@ describe('fetch-helper', () => {
     };
 
     await fh.fetch('http://example.net', {});
-    expect(lastRequest.headers.get('Authorization')).to.equal('Bearer keyA');
+    expect(lastRequest!.headers.get('Authorization')).to.equal('Bearer keyA');
 
     await fh.fetch('http://foo.example.org', {});
-    expect(lastRequest.headers.get('Authorization')).to.equal('Bearer keyB');
+    expect(lastRequest!.headers.get('Authorization')).to.equal('Bearer keyB');
 
     await fh.fetch('http://bar.example.org', {});
-    expect(lastRequest.headers.get('Authorization')).to.equal('Bearer keyA');
+    expect(lastRequest!.headers.get('Authorization')).to.equal('Bearer keyA');
 
     await fh.fetch('http://foo.example.com', {});
-    expect(lastRequest.headers.get('Authorization')).to.equal('Bearer keyC');
+    expect(lastRequest!.headers.get('Authorization')).to.equal('Bearer keyC');
   });
 
 });

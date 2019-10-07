@@ -49,7 +49,7 @@
     "@types/koa-logger": "^3.1.1",
     "@types/koa-static": "^4.0.1",
     "@types/mocha": "^5.2.7",
-    "@types/node": "^12.7.8",
+    "@types/node": "^10.14.20",
     "@types/node-fetch": "^2.5.2",
     "@types/sax": "^1.2.0",
     "awesome-typescript-loader": "^5.2.1",

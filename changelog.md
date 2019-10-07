@@ -1,6 +1,25 @@
 ChangeLog
 =========
 
+5.0.0 (????-??-??)
+------------------
+
+* Rewrite of the 'representation' system, which is responsible for supporting
+  all the different media types. This results in a few small BC breaks.
+* NEW: `follow()` and `followAll()` now throw `LinkNotFound` instead of the
+  generic `Error` when a link could not be found.
+* NEW: Resources now have a `link(rel: string)` function, which returns a
+  a single `Link` object.
+* BC BREAK: `Ketting.getRepresentor()` is now `Ketting.createRepresentation()`
+  and is responsible for constructing the object instead of just returning a
+  constructor.
+* BC Break: `body`, `links` and `embedded` on `Representor` objects are all
+  gone and replaced with `getBody()`, `getLinks()` and `getEmbedded()`.
+* BUG: Hal is now more lenient with broken responses.
+* NEW: Compatible with Typescript's `strictNullChecks` setting.
+* NEW: Hal responses from the HAL representor are now properly typed.
+
+
 4.0.3 (2019-09-11)
 ------------------
 

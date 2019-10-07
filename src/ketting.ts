@@ -1,4 +1,5 @@
 import FollowablePromise from './followable-promise';
+import { LinkSet } from './link';
 import Representor from './representor/base';
 import HalRepresentor from './representor/hal';
 import HtmlRepresentor from './representor/html';
@@ -39,7 +40,7 @@ export default class Ketting {
    */
   private fetchHelper: FetchHelper;
 
-  constructor(bookMark: string, options?: KettingInit) {
+  constructor(bookMark: string, options?: Partial<KettingInit>) {
 
     if (typeof options === 'undefined') {
       options = {};
@@ -139,13 +140,7 @@ export default class Ketting {
 
   }
 
-  /**
-   * This function returns a representor constructor for a mime type.
-   *
-   * For example, given text/html, this function might return the constructor
-   * stored in representor/html.
-   */
-  getRepresentor(contentType: string): typeof Representor {
+  createRepresentation(uri: string, contentType: string, body: string | null, headerLinks: LinkSet): Representor<any> {
 
     if (contentType.indexOf(';') !== -1) {
       contentType = contentType.split(';')[0];
@@ -160,21 +155,20 @@ export default class Ketting {
     }
 
     switch (result.representor) {
-    case 'html' :
-        return HtmlRepresentor;
+      case 'html' :
+        return new HtmlRepresentor(uri, contentType, body, headerLinks);
     case 'hal' :
-        return HalRepresentor;
+        return new HalRepresentor(uri, contentType, body, headerLinks);
     case 'jsonapi' :
-        return JsonApiRepresentor;
+        return new JsonApiRepresentor(uri, contentType, body, headerLinks);
     case 'siren' :
-        return SirenRepresentor;
+        return new SirenRepresentor(uri, contentType, body, headerLinks);
     default :
       throw new Error('Unknown representor: ' + result.representor);
 
     }
 
   }
-
 
   /**
    * Generates an accept header string, based on registered Resource Types.

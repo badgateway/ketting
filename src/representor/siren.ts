@@ -17,7 +17,7 @@ type SirenEntity = {
 
 };
 
-type SirenSubEntity = SirenEntity & { rel: string };
+type SirenSubEntity = SirenEntity & { rel: string[] };
 
 type SirenLink = {
 
@@ -55,81 +55,117 @@ type SirenField = {
  *
  * https://github.com/kevinswiber/siren
  */
-export default class Siren extends Representation {
+export default class Siren extends Representation<SirenEntity> {
 
-  body: SirenEntity;
+  parse(body: string): SirenEntity {
 
-  constructor(uri: string, contentType: string, body: string | SirenEntity) {
-
-    super(uri, contentType, body);
-
-    if (typeof body === 'string') {
-      this.body = JSON.parse(body);
-    } else {
-      this.body = body;
-    }
-
-    parseSirenLinks(this);
-
-    if (this.body.entities !== undefined) {
-      parseSirenSubentitites(this);
-    }
+    return JSON.parse(body);
 
   }
+
+  parseLinks(body: SirenEntity): Link[] {
+
+    const result: Link[] = [];
+
+    if (body.links !== undefined) {
+      for (const link of body.links) {
+        result.push(...parseSirenLink(this.uri, link));
+      }
+    }
+
+    if (body.entities !== undefined) {
+      for (const subEntity of body.entities) {
+        if ((subEntity as SirenLink).href !== undefined) {
+          result.push(...parseSirenLink(this.uri, subEntity as SirenLink));
+        } else {
+          result.push(...parseSirenSubEntityAsLink(this.uri, subEntity as SirenSubEntity));
+        }
+      }
+    }
+
+    return result;
+
+  }
+
+  getEmbedded(): { [uri: string]: SirenEntity } {
+
+    if (this.body.entities === undefined) {
+      return {};
+    }
+
+    const result: { [uri: string]: SirenEntity} = {};
+
+    for (const entity of this.body.entities) {
+      if ((entity as SirenLink).href === undefined) {
+        const embedded = parseSirenSubEntityAsEmbedded(this.uri, entity);
+        if (embedded !== null) {
+          result[embedded[0]] = embedded[1];
+        }
+      }
+    }
+
+    return result;
+
+  }
+
 
 }
 
-function parseSirenLinks(representation: Siren): void {
+function parseSirenLink(contextUri: string, link: SirenLink): Link[] {
 
-  if (representation.body.links === undefined) {
-    return;
-  }
-  for (const link of representation.body.links) {
-    parseSirenLink(representation, link);
-  }
-
-}
-
-function parseSirenLink(representation: Siren, link: SirenLink): void {
+  const result: Link[] = [];
 
   for (const rel of link.rel) {
 
-    representation.links.push(
+    result.push(
       new Link({
         href: link.href,
         rel,
         title: link.title,
         type: link.type,
-        context: representation.uri,
+        context: contextUri,
       })
     );
 
   }
 
-}
-
-function parseSirenSubentitites(representation: Siren) {
-
-  if (representation.body.entities === undefined) {
-    return;
-  }
-
-  for (const embeddedItem of representation.body.entities) {
-
-    if ((embeddedItem as SirenLink).href !== undefined) {
-      parseSirenLink(representation, embeddedItem as SirenLink);
-    } else {
-      parseSirenSubEntity(representation, embeddedItem as SirenSubEntity);
-    }
-  }
+  return result;
 
 }
 
-function parseSirenSubEntity(representation: Siren, subEntity: SirenSubEntity) {
+function parseSirenSubEntityAsLink(contextUri: string, subEntity: SirenSubEntity): Link[] {
 
   if (subEntity.links === undefined) {
     // We don't yet support subentities that don't have a URI.
-    return;
+    return [];
+  }
+  let selfHref: string | null = null;
+  for (const link of subEntity.links) {
+    if (link.rel.includes('self')) {
+      selfHref = link.href;
+    }
+  }
+  if (selfHref === null) {
+    // We don't yet support subentities that don't have a URI.
+    return [];
+  }
+
+  return subEntity.rel.map(rel => {
+    return new Link({
+      href: selfHref!,
+      rel,
+      title: subEntity.title,
+      context: contextUri,
+    });
+  });
+
+}
+
+function parseSirenSubEntityAsEmbedded(contextUri: string, subEntity: SirenSubEntity): [string, SirenSubEntity] | null {
+
+  if (subEntity.links === undefined) {
+    // We don't yet support subentities that don't have a URI.
+    return null;
   }
   let selfHref = null;
   for (const link of subEntity.links) {
@@ -139,19 +175,9 @@ function parseSirenSubEntity(representation: Siren, subEntity: SirenSubEntity) {
   }
   if (!selfHref) {
     // We don't yet support subentities that don't have a URI.
-    return;
+    return null;
   }
 
-  for (const rel of subEntity.rel) {
-    representation.links.push(new Link({
-      href: selfHref,
-      rel,
-      title: subEntity.title,
-      context: representation.uri,
-    }));
-
-  }
-
-  representation.embedded[resolve(representation.uri, selfHref)] = subEntity;
+  return [resolve(contextUri, selfHref), subEntity];
 
 }

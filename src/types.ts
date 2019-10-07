@@ -37,7 +37,7 @@ export type KettingInit = {
    * It's effectively a list of defaults that are passed as the 'init' argument.
    * @see https://developer.mozilla.org/en-US/docs/Web/API/Request/Request
    */
-  fetchInit?: RequestInit,
+  fetchInit: RequestInit,
 
   /**
    * Per-domain options.
@@ -45,7 +45,7 @@ export type KettingInit = {
    * This setting allows you to override specific options on a per-domain
    * basis. It's possible to specify wildcards here.
    */
-  match?: {
+  match: {
     [domain: string]: {
       auth?: AuthOptions
       fetchInit?: RequestInit,
