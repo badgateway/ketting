@@ -14,7 +14,7 @@ type LinkInit = {
 /**
  * The Link object represents a hyperlink.
  */
-export default class Link {
+export class Link {
 
   /**
    * The base href of the parent document. Used for expanding relative links.
@@ -96,3 +96,9 @@ export default class Link {
   }
 
 }
+
+export default Link;
+
+export type LinkSet = Map<string, Link[]>;
+
+export class LinkNotFound extends Error {};

@@ -46,24 +46,33 @@ type JsonApiTopLevelObject = {
  * The Representor is responsible from extracting any links from the body,
  * so they can be followed.
  */
-export default class JsonApi extends Representation {
+export default class JsonApi extends Representation<JsonApiTopLevelObject> {
 
-  body: JsonApiTopLevelObject;
+  /**
+   * Parse links.
+   *
+   * This function gets called once by this object to parse any in-document
+   * links.
+   */
+  protected parseLinks(body: any): Link[] {
 
-  constructor(uri: string, contentType: string, body: any) {
+    return [].concat(
+      parseJsonApiLinks(this.uri, this.body),
+      parseJsonApiCollection(this.uri, body)
+    );
 
-    super(uri, contentType, body);
+  }
 
-    if (typeof body === 'string') {
-      this.body = JSON.parse(body);
-    } else {
-      this.body = body;
-    }
+  /**
+   * parse is called to convert a HTTP response body string into the most
+   * suitable internal body type.
+   *
+   * For JSON responses, usually this means calling JSON.parse() and returning
+   * the result.
+   */
+  protected parse(body: string): JsonApiTopLevelObject {
 
-    this.links = [
-      ...parseJsonApiLinks(uri, this.body),
-      ...parseJsonApiCollection(uri, this.body)
-    ];
+    return JSON.parse(body);
 
   }
 

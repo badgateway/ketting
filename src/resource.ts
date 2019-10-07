@@ -2,7 +2,7 @@ import * as LinkHeader from 'http-link-header';
 import FollowablePromise from './followable-promise';
 import problemFactory from './http-error';
 import Ketting from './ketting';
-import Link from './link';
+import { Link, LinkSet } from './link';
 import Representation from './representor/base';
 import { mergeHeaders } from './utils/fetch-helper';
 import { resolve } from './utils/url';
@@ -30,7 +30,7 @@ export default class Resource<T = any> {
   /**
    * The current representation, or body of the resource.
    */
-  repr: Representation | null;
+  repr: Representation<T> | null;
 
   /**
    * The uri of the resource
@@ -77,7 +77,7 @@ export default class Resource<T = any> {
   async get(): Promise<T> {
 
     const r = await this.representation();
-    return r.body;
+    return r.getBody();
 
   }
 
@@ -214,47 +214,56 @@ export default class Resource<T = any> {
     if (!contentType) {
       throw new Error('Server did not respond with a Content-Type header');
     }
-    this.repr = new (this.client.getRepresentor(contentType))(
-       this.uri,
-       contentType,
-       body
-    );
+
+    // Extracting HTTP Link header.
+    const httpLinkHeader = response.headers.get('Link');
+    
+    const headerLinks: LinkSet = new Map();
+
+    if (httpLinkHeader) {
+
+      for (const httpLink of LinkHeader.parse(httpLinkHeader).refs) {
+        // Looping through individual links
+        for (const rel of httpLink.rel.split(' ')) {
+          // Looping through space separated rel values.
+          if (headerLinks.has(rel)) {
+            const newLink = new Link({
+              rel: rel,
+              context: this.uri,
+              href: httpLink.uri
+            });
+            if (headerLinks.has(rel)) {
+              headerLinks.get(rel).push(newLink);
+            } else {
+              headerLinks.set(rel, [newLink]);
+            }
+          }
+        }
+      }
+    }
+    this.repr = this.client.createRepresentation(
+      this.uri,
+      contentType,
+      body,
+      headerLinks
+    ) as any as Representation<T>;
 
     if (!this.contentType) {
       this.contentType = contentType;
     }
 
-    // Extracting HTTP Link header.
-    const httpLinkHeader = response.headers.get('Link');
-    if (httpLinkHeader) {
-
-      for (const httpLink of LinkHeader.parse(httpLinkHeader).refs) {
-        // Looping through individual links
-         for (const rel of httpLink.rel.split(' ')) {
-           // Looping through space separated rel values.
-           this.repr.links.push(
-              new Link({
-                rel: rel,
-                context: this.uri,
-                href: httpLink.uri
-              })
-           );
-         }
-      }
-
-    }
-
-    // Parsing and storing embedded uris
-    for (const uri of Object.keys(this.repr.embedded)) {
-      const subResource = this.go(uri);
-      subResource.repr = new (this.client.getRepresentor(contentType))(
-        uri,
+    for(const [subUri, subBody] of Object.entries(this.repr.getEmbedded())) {
+      const subResource = this.go(subUri);
+      subResource.repr = this.client.createRepresentation(
+        subUri,
         contentType,
-        this.repr.embedded[uri]
+        null,
+        new Map(),
       );
+      subResource.repr.setBody(subBody)
     }
 
-    return this.repr.body;
+    return this.repr.getBody();
 
   }
 
@@ -272,9 +281,7 @@ export default class Resource<T = any> {
     // the rels we want to add to Prefer-Push.
     this.preferPushRels = new Set();
 
-    if (!rel) { return r.links; }
-
-    return r.links.filter( item => item.rel === rel );
+    return r.getLinks(rel);
 
   }
 
@@ -292,21 +299,19 @@ export default class Resource<T = any> {
     return new FollowablePromise(async (res: any, rej: any) => {
 
       try {
-        const links = await this.links(rel);
+        const link = await this.repr.getLink(rel);
 
         let href;
-        if (links.length === 0) {
-          throw new Error('Relation with type ' + rel + ' not found on resource ' + this.uri);
-        }
-        if (links[0].templated && variables) {
-          href = links[0].expand(variables);
+
+        if (link.templated && variables) {
+          href = link.expand(variables);
         } else {
-          href = links[0].resolve();
+          href = link.resolve();
         }
 
         const resource = this.go(href);
-        if (links[0].type) {
-          resource.contentType = links[0].type;
+        if (link.type) {
+          resource.contentType = link.type;
         }
 
         res(resource);
@@ -362,13 +367,13 @@ export default class Resource<T = any> {
    * Usually you will want to use the `get()` method instead, unless you need
    * the full object.
    */
-  async representation(): Promise<Representation> {
+  async representation(): Promise<Representation<T>> {
 
     if (!this.repr) {
       await this.refresh();
     }
 
-    return <Representation> this.repr;
+    return this.repr;
 
   }
 
