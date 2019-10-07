@@ -4,6 +4,7 @@ import Representor from './representor/base';
 import HalRepresentor from './representor/hal';
 import HtmlRepresentor from './representor/html';
 import JsonApiRepresentor from './representor/jsonapi';
+import SirenRepresentor from './representor/siren';
 import Resource from './resource';
 import { ContentType, KettingInit } from './types';
 import FetchHelper from './utils/fetch-helper';
@@ -56,6 +57,11 @@ export default class Ketting {
       {
         mime: 'application/vnd.api+json',
         representor: 'jsonapi',
+        q: '0.9',
+      },
+      {
+        mime: 'application/vnd.siren+json',
+        representor: 'siren',
         q: '0.9',
       },
       {
@@ -155,6 +161,8 @@ export default class Ketting {
         return new HalRepresentor(uri, contentType, body, headerLinks);
     case 'jsonapi' :
         return new JsonApiRepresentor(uri, contentType, body, headerLinks);
+    case 'siren' :
+        return new SirenRepresentor(uri, contentType, body, headerLinks);
     default :
       throw new Error('Unknown representor: ' + result.representor);
 

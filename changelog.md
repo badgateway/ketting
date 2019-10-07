@@ -4,6 +4,7 @@ ChangeLog
 5.0.0 (????-??-??)
 ------------------
 
+* Support for the [Siren][1] format.
 * Rewrite of the 'representation' system, which is responsible for supporting
   all the different media types. This results in a few small BC breaks.
 * NEW: `follow()` and `followAll()` now throw `LinkNotFound` instead of the
@@ -455,3 +456,5 @@ ChangeLog
 * Follows links.
 * `GET` requests.
 * `refresh()` function.
+
+[1]: https://github.com/kevinswiber/siren
