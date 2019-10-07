@@ -99,6 +99,13 @@ export class Link {
 
 export default Link;
 
+/**
+ * A LinkSet is just a map of links, indexes by their rel
+ */
 export type LinkSet = Map<string, Link[]>;
 
+/**
+ * The LinkNotFound error gets thrown whenever something tries to follow a
+ * link by its rel, that doesn't exist
+ */
 export class LinkNotFound extends Error {}
