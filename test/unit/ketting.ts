@@ -9,7 +9,7 @@ describe('Ketting', () => {
   it('should return a HTML representor when requested', () => {
 
     const ketting = new Ketting('https://example.org/');
-    const representor = ketting.getRepresentor('text/html');
+    const representor = ketting.createRepresentation('/foo', 'text/html', '', new Map());
     expect(representor).to.eql(Html);
 
   });
@@ -17,7 +17,7 @@ describe('Ketting', () => {
   it('should return a Hal representor when requested', () => {
 
     const ketting = new Ketting('https://example.org');
-    const representor = ketting.getRepresentor('application/hal+json');
+    const representor = ketting.createRepresentation('/foo', 'application/hal+json', '', new Map());
     expect(representor).to.eql(Hal);
 
   });
@@ -25,7 +25,7 @@ describe('Ketting', () => {
   it('should throw an error when an unknown representor was requested ', () => {
 
     const ketting = new Ketting('https://example.org');
-    expect( () => ketting.getRepresentor('text/plain') ).to.throw(Error);
+    expect( () => ketting.createRepresentation('/foo', 'text/plain', '', new Map())).to.throw(Error);
 
   });
 
@@ -36,7 +36,7 @@ describe('Ketting', () => {
       mime: 'text/plain',
       representor: 'bla-bla'
     });
-    expect( () => ketting.getRepresentor('text/plain') ).to.throw(Error);
+    expect( () => ketting.createRepresentation('/foo', 'text/plain', '', new Map()) ).to.throw(Error);
 
   });
 

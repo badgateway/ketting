@@ -14,8 +14,8 @@ type JsonApiLink = string | { href: string };
  */
 type JsonApiLinksObject = {
   self?: JsonApiLink,
-  profile?: JsonApiLink
-  [rel: string]: JsonApiLink | JsonApiLink[]
+  profile?: JsonApiLink,
+  [rel: string]: JsonApiLink | JsonApiLink[] | undefined
 };
 
 /**
@@ -56,7 +56,7 @@ export default class JsonApi extends Representation<JsonApiTopLevelObject> {
    */
   protected parseLinks(body: any): Link[] {
 
-    return [].concat(
+    return ([] as Link[]).concat(
       parseJsonApiLinks(this.uri, this.body),
       parseJsonApiCollection(this.uri, body)
     );
@@ -94,7 +94,7 @@ function parseJsonApiLinks(baseHref: string, body: JsonApiTopLevelObject): Link[
     if (Array.isArray(linkValue)) {
       result.push(...linkValue.map( link => parseJsonApiLink(baseHref, rel, link)));
     } else {
-      result.push(parseJsonApiLink(baseHref, rel, linkValue));
+      result.push(parseJsonApiLink(baseHref, rel, linkValue!));
     }
 
   }
@@ -121,9 +121,9 @@ function parseJsonApiCollection(baseHref: string, body: JsonApiTopLevelObject): 
   const result: Link[] = [];
   for (const member of body.data) {
 
-    if ('self' in member.links) {
+    if ('links' in member && 'self' in member.links!) {
 
-      const selfLink = parseJsonApiLink(baseHref, 'self', member.links.self);
+      const selfLink = parseJsonApiLink(baseHref, 'self', member.links!.self!);
       result.push(new Link({
         context: baseHref,
         href: selfLink.href,

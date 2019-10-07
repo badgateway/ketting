@@ -53,14 +53,14 @@ export default class Resource<T = any> {
    */
   contentType: string | null;
 
-  private inFlightRefresh: Promise<any> = null;
+  private inFlightRefresh: Promise<any> | null = null;
 
   /**
    * A list of rels that should be added to a Prefer-Push header.
    */
   private preferPushRels: Set<string>;
 
-  constructor(client: Ketting, uri: string, contentType: string = null) {
+  constructor(client: Ketting, uri: string, contentType: string | null = null) {
 
     this.client = client;
     this.uri = uri;
@@ -210,13 +210,13 @@ export default class Resource<T = any> {
 
     }
 
-    const contentType = response.headers.get('Content-Type');
+    const contentType = response!.headers.get('Content-Type');
     if (!contentType) {
       throw new Error('Server did not respond with a Content-Type header');
     }
 
     // Extracting HTTP Link header.
-    const httpLinkHeader = response.headers.get('Link');
+    const httpLinkHeader = response!.headers.get('Link');
 
     const headerLinks: LinkSet = new Map();
 
@@ -233,7 +233,7 @@ export default class Resource<T = any> {
               href: httpLink.uri
             });
             if (headerLinks.has(rel)) {
-              headerLinks.get(rel).push(newLink);
+              headerLinks.get(rel)!.push(newLink);
             } else {
               headerLinks.set(rel, [newLink]);
             }
@@ -244,7 +244,7 @@ export default class Resource<T = any> {
     this.repr = this.client.createRepresentation(
       this.uri,
       contentType,
-      body,
+      body!,
       headerLinks
     ) as any as Representation<T>;
 
@@ -286,6 +286,28 @@ export default class Resource<T = any> {
   }
 
   /**
+   * Returns a specific link based on it's rel.
+   *
+   * If multiple links with the same rel existed, we're only returning the
+   * first. If no link with the specified link existed, a LinkNotFound
+   * exception will be thrown.
+   *
+   * The rel argument is optional. If it's given, we will only return links
+   * from that relationship type.
+   */
+  async link(rel: string): Promise<Link> {
+
+    const r = await this.representation();
+
+    // After we got a representation, it no longer makes sense to remember
+    // the rels we want to add to Prefer-Push.
+    this.preferPushRels = new Set();
+
+    return r.getLink(rel);
+
+  }
+
+  /**
    * Follows a relationship, based on its reltype. For example, this might be
    * 'alternate', 'item', 'edit' or a custom url-based one.
    *
@@ -299,7 +321,7 @@ export default class Resource<T = any> {
     return new FollowablePromise(async (res: any, rej: any) => {
 
       try {
-        const link = await this.repr.getLink(rel);
+        const link = await this.link(rel);
 
         let href;
 
@@ -373,7 +395,7 @@ export default class Resource<T = any> {
       await this.refresh();
     }
 
-    return this.repr;
+    return this.repr!;
 
   }
 

@@ -5,8 +5,8 @@ import './fetch-polyfill';
 import { parse } from './url';
 
 type DomainOptions = {
-  fetchInit: RequestInit,
-  auth: AuthOptions,
+  fetchInit?: RequestInit,
+  auth?: AuthOptions,
   authBucket: string,
 };
 
@@ -25,14 +25,18 @@ export default class FetchHelper {
   private innerFetch: typeof fetch;
   private onBeforeRequest: beforeRequestCallback | null;
 
-  constructor(options: KettingInit, onBeforeRequest: beforeRequestCallback | null = null) {
-    this.options = options;
+  constructor(options: Partial<KettingInit>, onBeforeRequest: beforeRequestCallback | null = null) {
+    this.options = {
+      fetchInit: options.fetchInit || {},
+      auth: options.auth,
+      match: options.match || {},
+    }
     this.oAuth2Buckets = new Map();
     this.innerFetch = fetch.bind(global);
     this.onBeforeRequest = onBeforeRequest;
   }
 
-  fetch(requestInfo: RequestInfo, requestInit: RequestInit): Promise<Response> {
+  fetch(requestInfo: RequestInfo, requestInit?: RequestInit): Promise<Response> {
 
     const domainOptions = this.getDomainOptions(
       typeof requestInfo === 'string' ?
@@ -73,6 +77,9 @@ export default class FetchHelper {
     }
 
     const { host } = parse(uri);
+    if (!host) {
+      throw new Error('getDomainOptions requires an absolute url');
+    }
     for (const [matchStr, options] of Object.entries(this.options.match)) {
 
       const matchSplit = matchStr.split('*');
@@ -128,7 +135,7 @@ export default class FetchHelper {
           );
         }
         if (this.onBeforeRequest) { this.onBeforeRequest(request); }
-        return this.oAuth2Buckets.get(authBucket).fetch(request);
+        return this.oAuth2Buckets.get(authBucket)!.fetch(request);
     }
 
 
@@ -158,7 +165,7 @@ type HeaderSet = any;
  * This function takes one or more of those init objects, and merges them.
  * Later properties override earlier ones.
  */
-function mergeInit(inits: RequestInit[]) {
+function mergeInit(inits: Array<RequestInit | undefined>) {
 
   const newHeaders = mergeHeaders(
     inits.map( init => init ? init.headers : null )

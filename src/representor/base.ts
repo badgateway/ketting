@@ -28,11 +28,12 @@ export default abstract class Representation<T = string> {
 
   getLink(rel: string): Link {
 
-    if (!this.links.has(rel)) {
+    const links = this.links.get(rel);
+
+    if (!links) {
       throw new LinkNotFound('Link with rel: ' + rel + ' not found');
     }
 
-    const links = this.links.get(rel);
     return links[0];
 
   }
@@ -40,7 +41,7 @@ export default abstract class Representation<T = string> {
   getLinks(rel?: string): Link[] {
 
     if (!rel) {
-      return [].concat(...this.links.values());
+      return ([] as Link[]).concat(...this.links.values());
     }
 
     const links = this.links.get(rel);
@@ -70,7 +71,7 @@ export default abstract class Representation<T = string> {
   setBody(body: T) {
     for (const link of this.parseLinks(body)) {
       if (this.links.has(link.rel)) {
-        this.links.get(link.rel).push(link);
+        this.links.get(link.rel)!.push(link);
       } else {
         this.links.set(link.rel, [link]);
       }

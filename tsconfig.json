@@ -5,6 +5,7 @@
         "noImplicitAny": true,
 
         "strictFunctionTypes": true,
+        "strictNullChecks": true,
         "noImplicitThis": true,
         "alwaysStrict": true,
         "noUnusedLocals": true,

@@ -39,7 +39,7 @@ export default class Ketting {
    */
   private fetchHelper: FetchHelper;
 
-  constructor(bookMark: string, options?: KettingInit) {
+  constructor(bookMark: string, options?: Partial<KettingInit>) {
 
     if (typeof options === 'undefined') {
       options = {};
