@@ -25,7 +25,16 @@ describe('Issuing a GET request', async () => {
 
     expect(result).to.have.property('user-agent');
     expect(result['user-agent']).to.match(/^Ketting\//);
-    expect(result.accept).to.eql('application/hal+json;q=1.0, application/vnd.api+json;q=0.9, application/json;q=0.8, text/html;q=0.7');
+
+    const mediaTypes = [
+      'application/hal+json;q=1.0',
+      'application/vnd.api+json;q=0.9',
+      'application/vnd.siren+json;q=0.9',
+      'application/json;q=0.8',
+      'text/html;q=0.7',
+    ];
+
+    expect(result.accept).to.eql(mediaTypes.join(', '));
 
   });
 
