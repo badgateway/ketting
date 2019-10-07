@@ -9,8 +9,9 @@ Introduction
 The Ketting library is an attempt at creating a 'generic' hypermedia client, it
 supports an opinionated set of modern features REST services might have.
 
-The library supports [HAL][hal], [Web Linking (HTTP Link Header)][1] and HTML5
-links. It uses the Fetch API and works both in the browsers and in node.js.
+The library supports [HAL][hal], [JSON:API][jsonapi], [Siren][siren],
+[Web Linking (HTTP Link Header)][1] and HTML5 links. It uses the Fetch API and
+works both in the browsers and in node.js.
 
 ### Example
 
@@ -538,3 +539,4 @@ const oAuthClient = ketting.oauth2Helper.client;
 [hal]: http://stateless.co/hal_specification.html "HAL - Hypertext Application Language"
 [jsonapi]: https://jsonapi.org/
 [problem]: https://tools.ietf.org/html/rfc7807
+[siren]: https://github.com/kevinswiber/siren "Structured Interface for Representing Entities"
