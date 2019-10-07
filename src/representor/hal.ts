@@ -70,6 +70,7 @@ export default class Hal extends Representation<HalBody> {
 
     const newBody = Object.assign({}, this.body);
     delete newBody._embedded;
+    delete newBody._links;
 
     return newBody;
 

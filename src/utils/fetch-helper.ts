@@ -30,7 +30,7 @@ export default class FetchHelper {
       fetchInit: options.fetchInit || {},
       auth: options.auth,
       match: options.match || {},
-    }
+    };
     this.oAuth2Buckets = new Map();
     this.innerFetch = fetch.bind(global);
     this.onBeforeRequest = onBeforeRequest;

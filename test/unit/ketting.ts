@@ -9,16 +9,16 @@ describe('Ketting', () => {
   it('should return a HTML representor when requested', () => {
 
     const ketting = new Ketting('https://example.org/');
-    const representor = ketting.createRepresentation('/foo', 'text/html', '', new Map());
-    expect(representor).to.eql(Html);
+    const representor = ketting.createRepresentation('/foo', 'text/html', null, new Map());
+    expect(representor).to.be.instanceof(Html);
 
   });
 
   it('should return a Hal representor when requested', () => {
 
     const ketting = new Ketting('https://example.org');
-    const representor = ketting.createRepresentation('/foo', 'application/hal+json', '', new Map());
-    expect(representor).to.eql(Hal);
+    const representor = ketting.createRepresentation('/foo', 'application/hal+json', null, new Map());
+    expect(representor).to.be.instanceof(Hal);
 
   });
 

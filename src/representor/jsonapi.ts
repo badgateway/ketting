@@ -57,7 +57,7 @@ export default class JsonApi extends Representation<JsonApiTopLevelObject> {
   protected parseLinks(body: any): Link[] {
 
     return ([] as Link[]).concat(
-      parseJsonApiLinks(this.uri, this.body),
+      parseJsonApiLinks(this.uri, body),
       parseJsonApiCollection(this.uri, body)
     );
 

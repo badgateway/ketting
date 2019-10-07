@@ -226,17 +226,15 @@ export default class Resource<T = any> {
         // Looping through individual links
         for (const rel of httpLink.rel.split(' ')) {
           // Looping through space separated rel values.
+          const newLink = new Link({
+            rel: rel,
+            context: this.uri,
+            href: httpLink.uri
+          });
           if (headerLinks.has(rel)) {
-            const newLink = new Link({
-              rel: rel,
-              context: this.uri,
-              href: httpLink.uri
-            });
-            if (headerLinks.has(rel)) {
-              headerLinks.get(rel)!.push(newLink);
-            } else {
-              headerLinks.set(rel, [newLink]);
-            }
+            headerLinks.get(rel)!.push(newLink);
+          } else {
+            headerLinks.set(rel, [newLink]);
           }
         }
       }

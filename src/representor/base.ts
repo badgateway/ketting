@@ -21,7 +21,7 @@ export default abstract class Representation<T = string> {
     this.contentType = contentType;
     this.links = headerLinks;
     if (body !== null) {
-      this.body = this.parse(body);
+      this.setBody(this.parse(body));
     }
 
   }
@@ -31,7 +31,7 @@ export default abstract class Representation<T = string> {
     const links = this.links.get(rel);
 
     if (!links) {
-      throw new LinkNotFound('Link with rel: ' + rel + ' not found');
+      throw new LinkNotFound('Link with rel: ' + rel + ' not found on resource: ' + this.uri);
     }
 
     return links[0];
@@ -76,6 +76,7 @@ export default abstract class Representation<T = string> {
         this.links.set(link.rel, [link]);
       }
     }
+    this.body = body;
   }
 
   /**
