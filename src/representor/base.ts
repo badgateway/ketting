@@ -1,4 +1,4 @@
-import { Link, LinkSet, LinkNotFound } from '../link';
+import { Link, LinkNotFound, LinkSet } from '../link';
 
 
 /**
@@ -68,7 +68,7 @@ export default abstract class Representation<T = string> {
   }
 
   setBody(body: T) {
-    for(const link of this.parseLinks(body)) {
+    for (const link of this.parseLinks(body)) {
       if (this.links.has(link.rel)) {
         this.links.get(link.rel).push(link);
       } else {
@@ -84,7 +84,7 @@ export default abstract class Representation<T = string> {
    * For JSON responses, usually this means calling JSON.parse() and returning
    * the result.
    */
-  protected abstract parse(body: string): T; 
+  protected abstract parse(body: string): T;
 
   /**
    * Parse links.

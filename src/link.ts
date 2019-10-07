@@ -101,4 +101,4 @@ export default Link;
 
 export type LinkSet = Map<string, Link[]>;
 
-export class LinkNotFound extends Error {};
+export class LinkNotFound extends Error {}

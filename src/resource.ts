@@ -217,7 +217,7 @@ export default class Resource<T = any> {
 
     // Extracting HTTP Link header.
     const httpLinkHeader = response.headers.get('Link');
-    
+
     const headerLinks: LinkSet = new Map();
 
     if (httpLinkHeader) {
@@ -252,7 +252,7 @@ export default class Resource<T = any> {
       this.contentType = contentType;
     }
 
-    for(const [subUri, subBody] of Object.entries(this.repr.getEmbedded())) {
+    for (const [subUri, subBody] of Object.entries(this.repr.getEmbedded())) {
       const subResource = this.go(subUri);
       subResource.repr = this.client.createRepresentation(
         subUri,
@@ -260,7 +260,7 @@ export default class Resource<T = any> {
         null,
         new Map(),
       );
-      subResource.repr.setBody(subBody)
+      subResource.repr.setBody(subBody);
     }
 
     return this.repr.getBody();

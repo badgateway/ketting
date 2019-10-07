@@ -18,7 +18,7 @@ type HalBody = {
   _embedded?: {
     [rel: string]: HalBody | HalBody[],
   }
-}
+};
 
 /**
  * Internal representation for embedded resources
@@ -77,8 +77,8 @@ export default class Hal extends Representation<HalBody> {
 
   getEmbedded(): { [uri: string]: HalBody } {
 
-    const result: { [uri:string]: HalBody } = {};
-    for(const embedded of parseHalEmbedded(this.uri, this.body)) {
+    const result: { [uri: string]: HalBody } = {};
+    for (const embedded of parseHalEmbedded(this.uri, this.body)) {
       result[resolve(this.uri, embedded.href)] = embedded.body;
     }
     return result;
@@ -100,16 +100,16 @@ function parseHalLinks(contextUri: string, body: HalBody): Link[] {
   for (const [relType, links] of Object.entries(body._links)) {
 
     const linkList = Array.isArray(links) ? links : [links];
-    
+
     result.push(
       ...parseHalLink(contextUri, relType, linkList)
     );
 
   }
-  
+
   const embedded = parseHalEmbedded(contextUri, body);
 
-  for(const embeddedItem of embedded) {
+  for (const embeddedItem of embedded) {
 
     result.push(new Link({
       rel: embeddedItem.rel,
@@ -121,7 +121,7 @@ function parseHalLinks(contextUri: string, body: HalBody): Link[] {
 
   return result;
 
-};
+}
 
 
 /**
@@ -161,7 +161,7 @@ function parseHalEmbedded(contextUri: string, body: HalBody): Embedded[] {
 
   const result: Embedded[] = [];
 
-  for(const [rel, embedded] of Object.entries(body._embedded)) {
+  for (const [rel, embedded] of Object.entries(body._embedded)) {
 
     let embeddedList: HalBody[] = [];
 

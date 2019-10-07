@@ -52,7 +52,7 @@ export default class Html extends Representation<string> {
 
 function linkFromTags(contextUri: string, elements: HTMLCollectionOf<HTMLElement>): Link[] {
 
-  const result:Link[] = [];
+  const result: Link[] = [];
 
   for (const node of elements) {
 

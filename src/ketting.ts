@@ -1,4 +1,5 @@
 import FollowablePromise from './followable-promise';
+import { LinkSet } from './link';
 import Representor from './representor/base';
 import HalRepresentor from './representor/hal';
 import HtmlRepresentor from './representor/html';
@@ -8,7 +9,6 @@ import { ContentType, KettingInit } from './types';
 import FetchHelper from './utils/fetch-helper';
 import './utils/fetch-polyfill';
 import { resolve } from './utils/url';
-import { LinkSet } from './link';
 
 /**
  * The main Ketting client object.
