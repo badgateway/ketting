@@ -14,8 +14,8 @@ type JsonApiLink = string | { href: string };
  */
 type JsonApiLinksObject = {
   self?: JsonApiLink,
-  profile?: JsonApiLink
-  [rel: string]: JsonApiLink | JsonApiLink[]
+  profile?: JsonApiLink,
+  [rel: string]: JsonApiLink | JsonApiLink[] | undefined
 };
 
 /**
@@ -46,24 +46,33 @@ type JsonApiTopLevelObject = {
  * The Representor is responsible from extracting any links from the body,
  * so they can be followed.
  */
-export default class JsonApi extends Representation {
+export default class JsonApi extends Representation<JsonApiTopLevelObject> {
 
-  body: JsonApiTopLevelObject;
+  /**
+   * Parse links.
+   *
+   * This function gets called once by this object to parse any in-document
+   * links.
+   */
+  protected parseLinks(body: any): Link[] {
 
-  constructor(uri: string, contentType: string, body: any) {
+    return ([] as Link[]).concat(
+      parseJsonApiLinks(this.uri, body),
+      parseJsonApiCollection(this.uri, body)
+    );
 
-    super(uri, contentType, body);
+  }
 
-    if (typeof body === 'string') {
-      this.body = JSON.parse(body);
-    } else {
-      this.body = body;
-    }
+  /**
+   * parse is called to convert a HTTP response body string into the most
+   * suitable internal body type.
+   *
+   * For JSON responses, usually this means calling JSON.parse() and returning
+   * the result.
+   */
+  protected parse(body: string): JsonApiTopLevelObject {
 
-    this.links = [
-      ...parseJsonApiLinks(uri, this.body),
-      ...parseJsonApiCollection(uri, this.body)
-    ];
+    return JSON.parse(body);
 
   }
 
@@ -85,7 +94,7 @@ function parseJsonApiLinks(baseHref: string, body: JsonApiTopLevelObject): Link[
     if (Array.isArray(linkValue)) {
       result.push(...linkValue.map( link => parseJsonApiLink(baseHref, rel, link)));
     } else {
-      result.push(parseJsonApiLink(baseHref, rel, linkValue));
+      result.push(parseJsonApiLink(baseHref, rel, linkValue!));
     }
 
   }
@@ -112,9 +121,9 @@ function parseJsonApiCollection(baseHref: string, body: JsonApiTopLevelObject): 
   const result: Link[] = [];
   for (const member of body.data) {
 
-    if ('self' in member.links) {
+    if ('links' in member && 'self' in member.links!) {
 
-      const selfLink = parseJsonApiLink(baseHref, 'self', member.links.self);
+      const selfLink = parseJsonApiLink(baseHref, 'self', member.links!.self!);
       result.push(new Link({
         context: baseHref,
         href: selfLink.href,

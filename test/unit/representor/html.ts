@@ -71,13 +71,13 @@ describe('HTML representor', () => {
 
     it('should parse ' + value[0], () => {
 
-      const html = new Html('/index.html', 'text/html', value[0]);
+      const html = new Html('/index.html', 'text/html', value[0], new Map());
 
       const links = value.slice(1);
 
       expect(html.uri).to.equal('/index.html');
       expect(html.contentType).to.equal('text/html');
-      expect(html.links).to.eql(links);
+      expect(html.getLinks()).to.eql(links);
 
     });
 

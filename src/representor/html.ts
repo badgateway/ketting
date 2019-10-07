@@ -9,13 +9,18 @@ import Representation from './base';
  * This class is for HTML responses. The html.web.js version is the version
  * intended for browsers. The regular html.js is intended for node.js.
  */
-export default class Html extends Representation {
+export default class Html extends Representation<string> {
 
-  constructor(uri: string, contentType: string, body: string) {
-
-    super(uri, contentType, body);
+  /**
+   * Parse links.
+   *
+   * This function gets called once by this object to parse any in-document
+   * links.
+   */
+  protected parseLinks(body: string): Link[] {
 
     const parser = sax.parser(false, {});
+    const links: Link[] = [];
 
     parser.onopentag = node => {
 
@@ -36,7 +41,7 @@ export default class Html extends Representation {
           href: <string> node.attributes.HREF,
           type: <string> node.attributes.TYPE || undefined
         });
-        this.links.push(link);
+        links.push(link);
 
       }
 
@@ -44,6 +49,20 @@ export default class Html extends Representation {
 
     parser.write(body).close();
 
+    return links;
+
   }
 
+  /**
+   * parse is called to convert a HTTP response body string into the most
+   * suitable internal body type.
+   *
+   * For HTML, we are keeping the response as a string instead of returning
+   * for example a DOM.
+   */
+  protected parse(body: string): string {
+
+    return body;
+
+  }
 }
