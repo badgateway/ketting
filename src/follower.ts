@@ -73,7 +73,8 @@ export default class Follower implements PromiseLike<Resource> {
   }
 
   /**
-   * This function does the actual fetching of the linked resource.
+   * This function does the actual fetching, to obtained the url
+   * of the linked resource. It returns the Resource object.
    */
   private async fetchLinkedResource(): Promise<Resource> {
 
