@@ -68,9 +68,11 @@ export default class Hal extends Representation<HalBody> {
    */
   getBody(): HalBody {
 
-    const newBody = Object.assign({}, this.body);
-    delete newBody._embedded;
-    delete newBody._links;
+    const {
+      _embedded,
+      _links,
+      ...newBody
+    } = this.body;
 
     return newBody;
 
