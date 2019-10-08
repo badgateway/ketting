@@ -30,7 +30,7 @@ export default abstract class Representation<T = string> {
 
     const links = this.links.get(rel);
 
-    if (!links) {
+    if (!links || links.length === 0) {
       throw new LinkNotFound('Link with rel: ' + rel + ' not found on resource: ' + this.uri);
     }
 
