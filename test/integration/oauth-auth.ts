@@ -14,7 +14,7 @@ describe('OAuth2 Authentication', () => {
 
     });
 
-    it('should throw rror if incorrect client credentials were passed.', (done) => {
+    it('should throw error if incorrect client credentials were passed.', (done) => {
 
       const ketting = new Ketting('http://localhost:3000/hal1.json', {
         auth: {
