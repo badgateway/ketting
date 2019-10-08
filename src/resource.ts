@@ -1,9 +1,10 @@
 import * as LinkHeader from 'http-link-header';
-import FollowablePromise from './followable-promise';
+import Follower from './follower';
 import problemFactory from './http-error';
 import Ketting from './ketting';
 import { Link, LinkSet } from './link';
 import Representation from './representor/base';
+import { LinkVariables } from './types';
 import { mergeHeaders } from './utils/fetch-helper';
 import { resolve } from './utils/url';
 
@@ -312,35 +313,9 @@ export default class Resource<T = any> {
    * This function can also follow templated uris. You can specify uri
    * variables in the optional variables argument.
    */
-  follow(rel: string, variables?: object): FollowablePromise {
+  follow(rel: string, variables?: LinkVariables): Follower {
 
-    this.preferPushRels.add(rel);
-
-    return new FollowablePromise(async (res: any, rej: any) => {
-
-      try {
-        const link = await this.link(rel);
-
-        let href;
-
-        if (link.templated && variables) {
-          href = link.expand(variables);
-        } else {
-          href = link.resolve();
-        }
-
-        const resource = this.go(href);
-        if (link.type) {
-          resource.contentType = link.type;
-        }
-
-        res(resource);
-
-      } catch (reason) {
-        rej(reason);
-      }
-
-    });
+    return new Follower(this, rel, variables);
 
   }
 
