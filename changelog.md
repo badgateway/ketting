@@ -17,8 +17,11 @@ ChangeLog
 * BC Break: `body`, `links` and `embedded` on `Representor` objects are all
   gone and replaced with `getBody()`, `getLinks()` and `getEmbedded()`.
 * BUG: Hal is now more lenient with broken responses.
-* NEW: Compatible with Typescript's `strictNullChecks` setting.
+* NEW: Compatible with Typescript's `strictNullChecks` setting. Overall
+  stronger typing all around.
 * NEW: Hal responses from the HAL representor are now properly typed.
+* CHANGE: Link chaining system has been rewritten, opening the door to new
+  features that weren't possible before.
 
 
 4.0.3 (2019-09-11)
