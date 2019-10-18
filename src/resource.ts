@@ -348,7 +348,7 @@ export default class Resource<TResource = any, TPatch = Partial<TResource>> {
    *
    * This function doesn't do any HTTP requests.
    */
-  go(uri: string): Resource {
+  go<TGoResource = any>(uri: string): Resource<TGoResource> {
 
     uri = resolve(this.uri, uri);
     return this.client.go(uri);
