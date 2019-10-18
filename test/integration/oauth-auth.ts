@@ -9,7 +9,7 @@ describe('OAuth2 Authentication', () => {
 
       const ketting = new Ketting('http://localhost:3000/hal1.json');
       const resource = await ketting.follow('auth-oauth');
-      const response = await resource.fetch();
+      const response = await resource.fetch({method: 'GET'});
       expect(response.status).to.eql(401);
 
     });
@@ -29,7 +29,7 @@ describe('OAuth2 Authentication', () => {
         }
       });
       ketting.follow('auth-oauth')
-        .catch((error) => {
+        .catch((error:any) => {
           expect(error).to.be.an.instanceof(Error);
           done();
         });
@@ -51,7 +51,7 @@ describe('OAuth2 Authentication', () => {
         }
       });
       ketting.follow('auth-oauth')
-        .catch(error => {
+        .catch((error:any) => {
           expect(error).to.be.an.instanceof(Error);
           done();
         });
@@ -74,7 +74,7 @@ describe('OAuth2 Authentication', () => {
       });
 
       const resource = await ketting.follow('auth-oauth');
-      const response = await resource.fetch();
+      const response = await resource.fetch({method: 'GET'});
       expect(response.status).to.eql(200);
 
     });
@@ -96,7 +96,7 @@ describe('OAuth2 Authentication', () => {
         }
       });
       ketting.follow('auth-oauth')
-        .catch((error) => {
+        .catch((error:any) => {
           expect(error).to.be.an.instanceof(Error);
           done();
         });
@@ -117,7 +117,7 @@ describe('OAuth2 Authentication', () => {
       });
 
       const resource = await ketting.follow('auth-oauth');
-      const response = await resource.fetch();
+      const response = await resource.fetch({method: 'GET'});
       expect(response.status).to.eql(200);
 
     });

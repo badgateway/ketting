@@ -1,4 +1,4 @@
-import FollowablePromise from './followable-promise';
+import Follower from './follower';
 import { LinkSet } from './link';
 import Representor from './representor/base';
 import HalRepresentor from './representor/hal';
@@ -6,7 +6,7 @@ import HtmlRepresentor from './representor/html';
 import JsonApiRepresentor from './representor/jsonapi';
 import SirenRepresentor from './representor/siren';
 import Resource from './resource';
-import { ContentType, KettingInit } from './types';
+import { ContentType, KettingInit, LinkVariables } from './types';
 import FetchHelper from './utils/fetch-helper';
 import './utils/fetch-polyfill';
 import { resolve } from './utils/url';
@@ -84,7 +84,7 @@ export default class Ketting {
   /**
    * This function is a shortcut for getResource().follow(x);
    */
-  follow(rel: string, variables?: object): FollowablePromise {
+  follow(rel: string, variables?: LinkVariables): Follower {
 
     return this.getResource().follow(rel, variables);
 

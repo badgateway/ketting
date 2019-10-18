@@ -7,7 +7,7 @@ describe('Bearer Authentication', () => {
 
     const ketting = new Ketting('http://localhost:3000/hal1.json');
     const resource = await ketting.follow('auth-bearer');
-    const response = await resource.fetch();
+    const response = await resource.fetch({method: 'GET'});
     expect(response.status).to.eql(401);
 
   });
@@ -21,7 +21,7 @@ describe('Bearer Authentication', () => {
       }
     });
     const resource = await ketting.follow('auth-bearer');
-    const response = await resource.fetch();
+    const response = await resource.fetch({method: 'GET'});
     expect(response.status).to.eql(401);
 
   });
@@ -35,7 +35,7 @@ describe('Bearer Authentication', () => {
       }
     });
     const resource = await ketting.follow('auth-bearer');
-    const response = await resource.fetch();
+    const response = await resource.fetch({method: 'GET'});
     expect(response.status).to.eql(200);
 
   });
