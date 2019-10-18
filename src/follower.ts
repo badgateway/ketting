@@ -16,7 +16,7 @@ import { LinkVariables } from './types';
  * * `followAll()`, allowing a user to call `followAll()` at the end of a
  *   chain.
  */
-export default class Follower implements PromiseLike<Resource> {
+export default class Follower<T = any> implements PromiseLike<Resource<T>> {
 
   private resource: Resource | Promise<Resource>;
   private rel: string;

@@ -21,7 +21,7 @@ import { resolve } from './utils/url';
  * @param {string} uri
  * @constructor
  */
-export default class Resource<T = any> {
+export default class Resource<TResource = any, TPatch = Partial<TResource>> {
 
   /**
    * Reference to the main Client
@@ -31,7 +31,7 @@ export default class Resource<T = any> {
   /**
    * The current representation, or body of the resource.
    */
-  repr: Representation<T> | null;
+  repr: Representation<TResource> | null;
 
   /**
    * The uri of the resource
@@ -75,7 +75,7 @@ export default class Resource<T = any> {
    * Fetches the resource representation.
    * Returns a promise that resolves to a parsed json object.
    */
-  async get(): Promise<T> {
+  async get(): Promise<TResource> {
 
     const r = await this.representation();
     return r.getBody();
@@ -85,7 +85,7 @@ export default class Resource<T = any> {
   /**
    * Updates the resource representation with a new JSON object.
    */
-  async put(body: T): Promise<void> {
+  async put(body: TResource): Promise<void> {
 
     const contentType = this.contentType || this.client.contentTypes[0].mime;
     const params = {
@@ -122,7 +122,7 @@ export default class Resource<T = any> {
    * If no Location header was given, it will resolve still, but with an empty
    * value.
    */
-  async post(body: object): Promise<Resource|null> {
+  async post<TPostResource = any>(body: TResource): Promise<Resource<TPostResource>|null> {
 
     const contentType = this.contentType || this.client.contentTypes[0].mime;
     const response = await this.fetchAndThrow(
@@ -147,7 +147,7 @@ export default class Resource<T = any> {
    *
    * This function defaults to a application/json content-type header.
    */
-  async patch(body: object): Promise<void> {
+  async patch(body: TPatch): Promise<void> {
 
     await this.fetchAndThrow(
       {
@@ -169,7 +169,7 @@ export default class Resource<T = any> {
    *
    * @return {object}
    */
-  async refresh(): Promise<T> {
+  async refresh(): Promise<TResource> {
 
     let response: Response;
     let body: string;
@@ -245,7 +245,7 @@ export default class Resource<T = any> {
       contentType,
       body!,
       headerLinks
-    ) as any as Representation<T>;
+    ) as any as Representation<TResource>;
 
     if (!this.contentType) {
       this.contentType = contentType;
@@ -313,7 +313,7 @@ export default class Resource<T = any> {
    * This function can also follow templated uris. You can specify uri
    * variables in the optional variables argument.
    */
-  follow(rel: string, variables?: LinkVariables): Follower {
+  follow<TFollowedResource = any>(rel: string, variables?: LinkVariables): Follower<TFollowedResource> {
 
     return new Follower(this, rel, variables);
 
@@ -325,7 +325,7 @@ export default class Resource<T = any> {
    *
    * If no resources were found, the array will be empty.
    */
-  async followAll(rel: string): Promise<Resource[]> {
+  async followAll<TFollowedResource = any>(rel: string): Promise<Array<Resource<TFollowedResource>>> {
 
     this.preferPushRels.add(rel);
     const links = await this.links(rel);
@@ -362,7 +362,7 @@ export default class Resource<T = any> {
    * Usually you will want to use the `get()` method instead, unless you need
    * the full object.
    */
-  async representation(): Promise<Representation<T>> {
+  async representation(): Promise<Representation<TResource>> {
 
     if (!this.repr) {
       await this.refresh();
