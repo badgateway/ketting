@@ -122,7 +122,7 @@ export default class Resource<TResource = any, TPatch = Partial<TResource>> {
    * If no Location header was given, it will resolve still, but with an empty
    * value.
    */
-  async post<TPostResource = any>(body: TResource): Promise<Resource<TPostResource>|null> {
+  async post<TPostResource = any>(body: TPostResource): Promise<Resource<TPostResource>|null> {
 
     const contentType = this.contentType || this.client.contentTypes[0].mime;
     const response = await this.fetchAndThrow(
