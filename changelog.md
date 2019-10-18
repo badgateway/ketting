@@ -1,8 +1,8 @@
 ChangeLog
 =========
 
-5.0.0 (????-??-??)
-------------------
+5.0.0-alpha.0 (2019-10-18)
+--------------------------
 
 * Support for the [Siren][1] format.
 * Rewrite of the 'representation' system, which is responsible for supporting
@@ -52,7 +52,7 @@ ChangeLog
   registered globally again.
 
 
-4.0.0.alpha.0 (2019-04-22)
+4.0.0-alpha.0 (2019-04-22)
 --------------------------
 
 * The old format for OAuth2 setup is now no longer supported.
