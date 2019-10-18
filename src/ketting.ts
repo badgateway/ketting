@@ -84,7 +84,7 @@ export default class Ketting {
   /**
    * This function is a shortcut for getResource().follow(x);
    */
-  follow(rel: string, variables?: LinkVariables): Follower {
+  follow<TResource = any>(rel: string, variables?: LinkVariables): Follower<TResource> {
 
     return this.getResource().follow(rel, variables);
 
@@ -99,7 +99,7 @@ export default class Ketting {
    * If a relative uri is passed, it will be resolved based on the bookmark
    * uri.
    */
-  go(uri?: string): Resource {
+  go<TResource = any>(uri?: string): Resource<TResource> {
 
     if (typeof uri === 'undefined') {
       uri = '';
