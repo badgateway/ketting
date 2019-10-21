@@ -1,3 +1,4 @@
+import * as LinkHeader from 'http-link-header';
 import Follower from './follower';
 import { LinkSet } from './link';
 import Representor from './representor/base';
@@ -9,6 +10,7 @@ import Resource from './resource';
 import { ContentType, KettingInit, LinkVariables } from './types';
 import FetchHelper from './utils/fetch-helper';
 import './utils/fetch-polyfill';
+import { isSafeMethod } from './utils/http';
 import { resolve } from './utils/url';
 
 /**
@@ -77,7 +79,7 @@ export default class Ketting {
     ];
 
     this.bookMark = bookMark;
-    this.fetchHelper = new FetchHelper(options, this.beforeRequest.bind(this));
+    this.fetchHelper = new FetchHelper(options, this.beforeRequest.bind(this), this.afterRequest.bind(this));
 
   }
 
@@ -187,15 +189,26 @@ export default class Ketting {
 
   beforeRequest(request: Request): void {
 
-    const safeMethods = ['GET', 'HEAD', 'OPTIONS', 'PRI', 'PROPFIND', 'REPORT', 'SEARCH', 'TRACE'];
-    if (safeMethods.includes(request.method)) {
-      return;
-    }
+    if (isSafeMethod(request.method)) { return; }
 
     if (request.url in this.resourceCache) {
       // Clear cache
       this.resourceCache[request.url].clearCache();
     }
+  }
+
+  afterRequest(request: Request, response: Response): void {
+
+    if (isSafeMethod(request.method)) { return; }
+    if (response.headers.has('Link')) {
+      for (const httpLink of LinkHeader.parse(response.headers.get('Link')!).rel('invalidates')) {
+        const uri = resolve(request.url, httpLink.uri);
+        if (uri in this.resourceCache) {
+          this.resourceCache[uri].clearCache();
+        }
+      }
+    }
+
   }
 
 }

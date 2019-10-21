@@ -11,6 +11,7 @@ type DomainOptions = {
 };
 
 type beforeRequestCallback = (request: Request) => void;
+type afterRequestCallback = (request: Request, response: Response) => void;
 
 /**
  * This class is primarily responsible for calling fetch().
@@ -24,8 +25,9 @@ export default class FetchHelper {
   private oAuth2Buckets: Map<string, OAuth2>;
   private innerFetch: typeof fetch;
   private onBeforeRequest: beforeRequestCallback | null;
+  private onAfterRequest: afterRequestCallback | null;
 
-  constructor(options: Partial<KettingInit>, onBeforeRequest: beforeRequestCallback | null = null) {
+  constructor(options: Partial<KettingInit>, onBeforeRequest: beforeRequestCallback | null = null, onAfterRequest: afterRequestCallback | null = null) {
     this.options = {
       fetchInit: options.fetchInit || {},
       auth: options.auth,
@@ -34,6 +36,7 @@ export default class FetchHelper {
     this.oAuth2Buckets = new Map();
     this.innerFetch = fetch.bind(global);
     this.onBeforeRequest = onBeforeRequest;
+    this.onAfterRequest = onAfterRequest;
   }
 
   fetch(requestInfo: RequestInfo, requestInit?: RequestInit): Promise<Response> {
@@ -110,7 +113,7 @@ export default class FetchHelper {
    * This method executes the actual fetch() function, but not before adding
    * authentication headers.
    */
-  private fetchAuth(request: Request): Promise<Response> {
+  private async fetchAuth(request: Request): Promise<Response> {
 
     const options = this.getDomainOptions(request.url);
     const authOptions = options.auth;
@@ -135,7 +138,9 @@ export default class FetchHelper {
           );
         }
         if (this.onBeforeRequest) { this.onBeforeRequest(request); }
-        return this.oAuth2Buckets.get(authBucket)!.fetch(request);
+        const response = await this.oAuth2Buckets.get(authBucket)!.fetch(request);
+        if (this.onAfterRequest) { this.onAfterRequest(request, response); }
+        return response;
     }
 
 
@@ -144,12 +149,14 @@ export default class FetchHelper {
   /**
    * This function is the last mile before the actual fetch request is ran
    */
-  private doFetch(request: Request): Promise<Response> {
+  private async doFetch(request: Request): Promise<Response> {
 
     if (this.onBeforeRequest) {
       this.onBeforeRequest(request);
     }
-    return this.innerFetch(request);
+    const response = await this.innerFetch(request);
+    if (this.onAfterRequest) { this.onAfterRequest(request, response); }
+    return response;
 
   }
 
