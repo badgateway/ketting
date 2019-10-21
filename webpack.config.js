@@ -4,7 +4,8 @@ module.exports = [
     output: {
       path: __dirname + '/browser',
       filename: 'ketting.min.js',
-      library: 'Ketting'
+      library: 'Ketting',
+      libraryTarget: 'umd'
     },
 
     resolve: {
