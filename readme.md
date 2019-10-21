@@ -77,12 +77,12 @@ emphasis in this library is _not_ on URIs (like most libraries) but on
 relation-types (the `rel`) and links.
 
 Generally when interacting with a REST service, you'll want to only hardcode
-a single URI (a bookmark) and discover all the other APIs from there on on.
+a single URI (a bookmark) and discover all the other APIs from there on.
 
 For example, consider that there is a some API at `https://api.example.org/`.
 This API has a link to an API for news articles (`rel="articleCollection"`),
 which has a link for creating a new article (`rel="new"`). When `POST`ing on
-that uri, the api returns `201 Created` along with a `Location` header pointing
+that URI, the API returns `201 Created` along with a `Location` header pointing
 to the new article. On this location, a new `rel="author"` appears
 automatically, pointing to the person that created the article.
 
@@ -236,14 +236,14 @@ and you're using Ketting to fetch their representations.
 
 #### `Ketting.getResource()`
 
-Return a 'resource' object, based on it's url. If the url is not supplied,
+Return a 'resource' object, based on its URL. If the URL is not supplied,
 a resource will be returned pointing to the bookmark.
 
-If a relative url is given, it will be resolved based on the bookmark uri.
+If a relative URL is given, it will be resolved based on the bookmark URI.
 
 ```js
-const resource = client.getResource('http://example.org'); // absolute uri
-const resource = client.getResource('/foo'); // relative uri
+const resource = client.getResource('http://example.org'); // absolute URI
+const resource = client.getResource('/foo'); // relative URI
 const resource = client.getResource(); // bookmark
 ```
 
@@ -251,7 +251,7 @@ The resource is returned immediately, and not as a promise.
 
 #### `Ketting.follow()`
 
-The `follow` function on the `Ketting` follows a link based on it's relation
+The `follow` function on the `Ketting` follows a link based on its relation
 type from the bookmark resource.
 
 ```js
@@ -277,12 +277,12 @@ const response = await ketting.fetch('https://example.org');
 ### Resource
 
 The `Resource` class is the most important object, and represents a REST
-resource. Functions such `follow` and `getResource` always return `Resource`
-objects.
+resource. Functions such as `follow` and `getResource` always return
+`Resource` objects.
 
 #### `Resource.uri`
 
-Returns the current uri of the resource. This is a property, not a function
+Returns the current URI of the resource. This is a property, not a function
 and is always available.
 
 #### `Resource.contentType`
@@ -328,8 +328,8 @@ This function returns a Promise that resolves to `null`.
 
 This function is meant to be an easy way to create new resources. It's not
 necessarily for any type of `POST` request, but it is really meant as a
-convenience method APIs that follow the typical pattern of using `POST` for
-creation.
+convenience method for APIs that follow the typical pattern of using `POST`
+for creation.
 
 If the HTTP response from the server was successful and contained a `Location`
 header, this method will resolve into a new Resource. For example, this might
@@ -417,7 +417,7 @@ resource
   .follow('some-templated-link', { a: 'bar' })
 ```
 
-This would result following a link to the `/foo?a=bar` uri.
+This would result following a link to the `/foo?a=bar` URI.
 
 
 #### `Resource.followAll()`
@@ -436,10 +436,10 @@ console.log(items);
 The `fetch` function is a wrapper for the `Fetch API`. It takes very similar
 arguments to the regular fetch, but it does a few things special:
 
-1. The uri can be omitted completely. If it's omitted, the uri of the
+1. The URI can be omitted completely. If it's omitted, the URI of the
    resource is used.
-2. If a uri is supplied and it's relative, it will be resolved with the
-   uri of the resource.
+2. If a URI is supplied and it's relative, it will be resolved with the
+   URI of the resource.
 
 For example, this is how you might do a HTTP `PATCH` request:
 
@@ -454,12 +454,12 @@ console.log(response.statusCode);
 
 #### `resource.fetchAndThrow()`
 
-This function is identical to `fetch`, except that it will throw a (async)
+This function is identical to `fetch`, except that it will throw an (async)
 exception if the server responded with a HTTP error.
 
 #### `resource.go(uri: string)`
 
-This function returns a new Resource object, based on a relative uri.
+This function returns a new Resource object, based on a relative URI.
 This is useful in case no link is available on the resource to follow.
 
 ```js
@@ -474,16 +474,16 @@ The link class represents any Link of any type of document. It has the
 following properties:
 
 * rel - relation type
-* href - The uri
-* baseHref - the uri of the parent document. Used for resolving relative uris.
+* href - The URI
+* baseHref - the URI of the parent document. Used for resolving relative URIs.
 * type - A mimetype, if specified
 * templated - If it's a URI Template. Most of the time this is false.
-* title - Human readable label for the uri
+* title - Human readable label for the URI
 * name - Unique identifier for the link within the document (rarely used).
 
 #### `Link.resolve()`
 
-Returns the absolute uri to the link. For example:
+Returns the absolute URI to the link. For example:
 
 ```js
 const link = new Link({ href: '/foo', baseHref: "http://example.org/bar" });
