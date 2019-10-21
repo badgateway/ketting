@@ -54,7 +54,7 @@ ChangeLog
 4.0.0 (2019-09-04)
 ------------------
 
-* #129: Using the package in non-typescript node.js now wortks with a simple
+* #129: Using the package in non-typescript node.js now works with a simple
   `const Ketting = require('ketting')`.
 * #129: Fixed the browser distribution. the `Ketting` constructor is
   registered globally again.
