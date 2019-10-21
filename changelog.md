@@ -1,6 +1,14 @@
 ChangeLog
 =========
 
+5.0.0-alpha.1 (2019-10-21)
+--------------------------
+
+* Now supports the 'invalidates' link rel. When specified in a HTTP response,
+  Ketting will automatically clear the cache of any related resources.
+  See [draft-nottingham-linked-cache-inv-04][2].
+
+
 5.0.0-alpha.0 (2019-10-18)
 --------------------------
 
@@ -461,3 +469,4 @@ ChangeLog
 * `refresh()` function.
 
 [1]: https://github.com/kevinswiber/siren
+[2]: https://tools.ietf.org/html/draft-nottingham-linked-cache-inv-04
