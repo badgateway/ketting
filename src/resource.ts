@@ -135,8 +135,8 @@ export default class Resource<TResource = any, TPatch = Partial<TResource>> {
       }
     );
 
-    if (response.headers.has('location')) {
-      return this.go(<string> response.headers.get('location'));
+    if (response.headers.has('Location')) {
+      return this.go(<string> response.headers.get('Location'));
     }
     return null;
 
