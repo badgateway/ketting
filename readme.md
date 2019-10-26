@@ -76,12 +76,12 @@ emphasis in this library is _not_ on URIs (like most libraries) but on
 relation-types (the `rel`) and links.
 
 Generally when interacting with a REST service, you'll want to only hardcode
-a single URI (a bookmark) and discover all the other APIs from there on on.
+a single URI (a bookmark) and discover all the other APIs from there on.
 
 For example, consider that there is a some API at `https://api.example.org/`.
 This API has a link to an API for news articles (`rel="articleCollection"`),
 which has a link for creating a new article (`rel="new"`). When `POST`ing on
-that uri, the api returns `201 Created` along with a `Location` header pointing
+that URI, the API returns `201 Created` along with a `Location` header pointing
 to the new article. On this location, a new `rel="author"` appears
 automatically, pointing to the person that created the article.
 
