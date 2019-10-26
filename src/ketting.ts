@@ -15,6 +15,8 @@ import { resolve } from './utils/url';
 
 /**
  * The main Ketting client object.
+ *
+ * This is the starting point for working with Ketting.
  */
 export default class Ketting {
 
@@ -100,6 +102,13 @@ export default class Ketting {
    *
    * If a relative uri is passed, it will be resolved based on the bookmark
    * uri.
+   *
+   * @example
+   * const res = ketting.go('https://example.org/);
+   * @example
+   * const res = ketting.go<Author>('/users/1');
+   * @example
+   * const res = ketting.go(); // bookmark
    */
   go<TResource = any>(uri?: string): Resource<TResource> {
 
@@ -121,6 +130,8 @@ export default class Ketting {
    *
    * This function doesn't do any HTTP requests. The uri is optional. If it's
    * not specified, it will return the bookmark resource.
+   *
+   * @deprecated use go() instead.
    */
   getResource(uri?: string): Resource {
 

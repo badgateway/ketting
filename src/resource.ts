@@ -3,7 +3,7 @@ import Follower from './follower';
 import problemFactory from './http-error';
 import Ketting from './ketting';
 import { Link, LinkSet } from './link';
-import Representation from './representor/base';
+import Representator from './representor/base';
 import { LinkVariables } from './types';
 import { mergeHeaders } from './utils/fetch-helper';
 import { resolve } from './utils/url';
@@ -16,10 +16,6 @@ import { resolve } from './utils/url';
  *
  * A resource may also have a list of links on them, pointing to other
  * resources.
- *
- * @param {Client} client
- * @param {string} uri
- * @constructor
  */
 export default class Resource<TResource = any, TPatch = Partial<TResource>> {
 
@@ -31,7 +27,7 @@ export default class Resource<TResource = any, TPatch = Partial<TResource>> {
   /**
    * The current representation, or body of the resource.
    */
-  repr: Representation<TResource> | null;
+  repr: Representator<TResource> | null;
 
   /**
    * The uri of the resource
@@ -166,8 +162,6 @@ export default class Resource<TResource = any, TPatch = Partial<TResource>> {
    *
    * This function will return the a parsed JSON object, like the get
    * function does.
-   *
-   * @return {object}
    */
   async refresh(): Promise<TResource> {
 
@@ -245,7 +239,7 @@ export default class Resource<TResource = any, TPatch = Partial<TResource>> {
       contentType,
       body!,
       headerLinks
-    ) as any as Representation<TResource>;
+    ) as any as Representator<TResource>;
 
     if (!this.contentType) {
       this.contentType = contentType;
@@ -362,7 +356,7 @@ export default class Resource<TResource = any, TPatch = Partial<TResource>> {
    * Usually you will want to use the `get()` method instead, unless you need
    * the full object.
    */
-  async representation(): Promise<Representation<TResource>> {
+  async representation(): Promise<Representator<TResource>> {
 
     if (!this.repr) {
       await this.refresh();
@@ -372,6 +366,9 @@ export default class Resource<TResource = any, TPatch = Partial<TResource>> {
 
   }
 
+  /**
+   * Clears the internal representation cache.
+   */
   clearCache(): void {
 
     this.repr = null;

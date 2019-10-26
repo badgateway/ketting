@@ -79,9 +79,6 @@ export class Link {
 
   /**
    * Expands a link template (RFC6570) and resolves the uri
-   *
-   * @param {object} variables - A list of variables to expand the link with.
-   * @returns {string}
    */
   expand(variables: object): string {
 

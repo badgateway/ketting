@@ -47,13 +47,13 @@ export default class Hal extends Representation<HalBody> {
    * For JSON responses, usually this means calling JSON.parse() and returning
    * the result.
    */
-  parse(body: string): HalBody {
+  protected parse(body: string): HalBody {
 
     return JSON.parse(body);
 
   }
 
-  parseLinks(body: HalBody): Link[] {
+  protected parseLinks(body: HalBody): Link[] {
 
     return parseHalLinks(this.uri, body);
 

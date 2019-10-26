@@ -32,6 +32,9 @@ export default class Follower<T = any> implements PromiseLike<Resource<T>> {
 
   /**
    * This 'then' function behaves like a Promise then() function.
+   *
+   * This method signature is pretty crazy, but trust that it's pretty much
+   * like any then() method on a promise.
    */
   then<TResult1 = Resource<T>, TResult2 = never>(
     onfulfilled?: ((value: Resource<T>) => TResult1 | PromiseLike<TResult1>) | null | undefined,

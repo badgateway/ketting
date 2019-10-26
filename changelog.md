@@ -1,6 +1,13 @@
 ChangeLog
 =========
 
+5.0.0-alpha.2 (2019-10-21)
+--------------------------
+
+* Slight tweak to the webpack build, so that other typescript + webpack
+  projects can use the webpack build and use the minified files.
+
+
 5.0.0-alpha.1 (2019-10-21)
 --------------------------
 
