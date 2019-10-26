@@ -102,6 +102,13 @@ export default class Ketting {
    *
    * If a relative uri is passed, it will be resolved based on the bookmark
    * uri.
+   *
+   * @example
+   * const res = ketting.go('https://example.org/);
+   * @example
+   * const res = ketting.go<Author>('/users/1');
+   * @example
+   * const res = ketting.go(); // bookmark
    */
   go<TResource = any>(uri?: string): Resource<TResource> {
 
