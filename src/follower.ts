@@ -2,6 +2,17 @@ import Resource from './resource';
 import { LinkVariables } from './types';
 
 /**
+ * Base interface for both FollowOne and FollowAll
+ */
+interface Follower<T> extends PromiseLike<T> {
+
+  preFetch(): this;
+  preferPush(): this;
+  preferTransclude(): this;
+
+}
+
+/**
  * The Follower class is what's being returned from follow() functions.
  *
  * It's 'PromiseLike', which means you can treat it like a Promise, and it
@@ -16,7 +27,7 @@ import { LinkVariables } from './types';
  * * `followAll()`, allowing a user to call `followAll()` at the end of a
  *   chain.
  */
-export default class Follower<T = any> implements PromiseLike<Resource<T>> {
+export class FollowerOne<T = any> implements Follower<Resource<T>> {
 
   private resource: Resource | Promise<Resource>;
   private rel: string;
@@ -58,9 +69,9 @@ export default class Follower<T = any> implements PromiseLike<Resource<T>> {
    *
    * For example: resource.follow('foo').follow('bar');
    */
-  follow<TNested = any>(rel: string, variables?: LinkVariables): Follower<TNested> {
+  follow<TNested = any>(rel: string, variables?: LinkVariables): FollowerOne<TNested> {
 
-    return new Follower(this.fetchLinkedResource(), rel, variables);
+    return new FollowerOne(this.fetchLinkedResource(), rel, variables);
 
   }
 
@@ -71,7 +82,7 @@ export default class Follower<T = any> implements PromiseLike<Resource<T>> {
    */
   async followAll<TNested = any>(rel: string): Promise<Array<Resource<TNested>>> {
 
-    return (await this.fetchLinkedResource()).followAll(rel);
+    return new FollowerMany(this.fetchLinkedResource(), rel);
 
   }
 
@@ -97,6 +108,69 @@ export default class Follower<T = any> implements PromiseLike<Resource<T>> {
     }
 
     return newResource;
+
+  }
+
+}
+
+/**
+ */
+export class FollowerMany<T = any> implements Follower<Array<Resource<T>>> {
+
+  private resource: Resource | Promise<Resource>;
+  private rel: string;
+
+  constructor(resource: Resource | Promise<Resource>, rel: string) {
+
+    this.resource = resource;
+    this.rel = rel;
+
+  }
+
+  /**
+   * This 'then' function behaves like a Promise then() function.
+   */
+  then<TResult1 = Array<Resource<T>>, TResult2 = never>(
+    onfulfilled?: ((value: Array<Resource<T>>) => TResult1 | PromiseLike<TResult1>) | null | undefined,
+    onrejected?: ((reason: Error) => TResult2 | PromiseLike<TResult2>) | null | undefined
+  ): Promise<TResult1 | TResult2> {
+
+    return this.fetchLinkedResources().then(onfulfilled, onrejected);
+
+  }
+
+  /**
+   * This 'then' function behaves like a Promise then() function.
+   */
+  catch<TResult1 = any, TResult2 = never>(onrejected?: ((reason: Error) => TResult2 | PromiseLike<TResult2>) | null | undefined): Promise<TResult1 | TResult2> {
+
+    return this.fetchLinkedResources().then(undefined, onrejected);
+
+  }
+
+  /**
+   * This function does the actual fetching, to obtained the url
+   * of the linked resource. It returns the Resource object.
+   */
+  private async fetchLinkedResources(): Promise<Array<Resource<T>>> {
+
+    const resource = await this.resource;
+    const links = await resource.links(this.rel);
+    let href;
+
+    const result: Array<Resource<T>> = [];
+
+    for (const link of links) {
+      href = link.resolve();
+
+      const newResource = resource.go(href);
+      if (link.type) {
+        newResource.contentType = link.type;
+      }
+      result.push(newResource);
+    }
+
+    return result;
 
   }
 
