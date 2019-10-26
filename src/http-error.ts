@@ -4,9 +4,6 @@
  *
  * It has a response property, allowing users to find out more about the
  * nature of the error.
- *
- * @constructor
- * @param {Response} response
  */
 export class HttpError extends Error {
 
@@ -27,10 +24,6 @@ export class HttpError extends Error {
  *
  * application/problem+json is defined in RFC7807 and provides a standardized
  * way to describe error conditions by a HTTP server.
- *
- * @constructor
- * @param {Response} response
- * @param {object} problemBody
  */
 export class Problem extends HttpError {
 

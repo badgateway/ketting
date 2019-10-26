@@ -32,14 +32,15 @@ authorState.firstName = 'Evert';
 await author.put(authorState);
 ```
 
+[Full documentation][9]
+
+
 Installation
 ------------
 
     npm install ketting
 
-or:
-
-    yarn add ketting
+More details and installation methods can be found [found on the wiki][7].
 
 
 Features overview
@@ -60,6 +61,7 @@ and discover resources and features on the server.
 Supported formats:
 
 * [HAL][hal]
+* [Siren][siren]
 * HTML - Can automatically follow `<link>` and `<a>` element with `rel=`
   attributes.
 * [HTTP Link header][1] - automatically registers as links regardless of format.
@@ -98,6 +100,8 @@ const author = await newArticle.follow('author');
 // Output author information
 console.log(await author.get());
 ```
+
+More details can be found in the [Getting started docs][8].
 
 ### Embedded resources
 
@@ -148,16 +152,6 @@ If your server emits application/problem+json documents ([RFC7807][problem])
 on HTTP errors, the library will automatically extract the information from
 that object, and also provide a better exception message (if the title
 property is provided).
-
-
-Node and Browser
-----------------
-
-Ketting works on any stable node.js version and modern browsers. To run Ketting
-in a browser, the following must be supported by a browser:
-
-* The [Fetch API][3].
-* Promises (async/await is not required)
 
 
 API
@@ -535,6 +529,10 @@ const oAuthClient = ketting.oauth2Helper.client;
 
 [5]: https://github.com/mulesoft/js-client-oauth2
 [6]: https://tools.ietf.org/html/rfc7240 "Prefer Header for HTTP"
+
+[7]: https://github.com/evert/ketting/wiki/Installation
+[8]: https://github.com/evert/ketting/wiki/Getting-Started
+[9]: https://github.com/evert/ketting/wiki/
 
 [hal]: http://stateless.co/hal_specification.html "HAL - Hypertext Application Language"
 [jsonapi]: https://jsonapi.org/
