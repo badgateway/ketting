@@ -1,5 +1,5 @@
 import * as LinkHeader from 'http-link-header';
-import Follower from './follower';
+import { FollowerOne } from './follower';
 import { LinkSet } from './link';
 import Representor from './representor/base';
 import HalRepresentor from './representor/hal';
@@ -88,7 +88,7 @@ export default class Ketting {
   /**
    * This function is a shortcut for getResource().follow(x);
    */
-  follow<TResource = any>(rel: string, variables?: LinkVariables): Follower<TResource> {
+  follow<TResource = any>(rel: string, variables?: LinkVariables): FollowerOne<TResource> {
 
     return this.getResource().follow(rel, variables);
 

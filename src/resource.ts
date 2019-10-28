@@ -1,5 +1,5 @@
 import * as LinkHeader from 'http-link-header';
-import Follower from './follower';
+import { FollowerMany, FollowerOne } from './follower';
 import problemFactory from './http-error';
 import Ketting from './ketting';
 import { Link, LinkSet } from './link';
@@ -307,9 +307,9 @@ export default class Resource<TResource = any, TPatch = Partial<TResource>> {
    * This function can also follow templated uris. You can specify uri
    * variables in the optional variables argument.
    */
-  follow<TFollowedResource = any>(rel: string, variables?: LinkVariables): Follower<TFollowedResource> {
+  follow<TFollowedResource = any>(rel: string, variables?: LinkVariables): FollowerOne<TFollowedResource> {
 
-    return new Follower(this, rel, variables);
+    return new FollowerOne(this, rel, variables);
 
   }
 
@@ -319,18 +319,9 @@ export default class Resource<TResource = any, TPatch = Partial<TResource>> {
    *
    * If no resources were found, the array will be empty.
    */
-  async followAll<TFollowedResource = any>(rel: string): Promise<Array<Resource<TFollowedResource>>> {
+  followAll<TFollowedResource = any>(rel: string): FollowerMany<TFollowedResource> {
 
-    this.preferPushRels.add(rel);
-    const links = await this.links(rel);
-
-    return links.map((link: Link) => {
-      const resource = this.go(link.resolve());
-      if (link.type) {
-        resource.contentType = link.type;
-      }
-      return resource;
-    });
+    return new FollowerMany(this, rel);
 
   }
 
