@@ -4,11 +4,17 @@ import { LinkVariables } from './types';
 /**
  * Base interface for both FollowOne and FollowAll
  */
-interface Follower<T> extends PromiseLike<T> {
+abstract class Follower<T> implements PromiseLike<T> {
 
-  preFetch(): this;
-  preferPush(): this;
-  preferTransclude(): this;
+  protected prefetchEnabled: boolean;
+
+  preFetch(): this {
+    this.prefetchEnabled = true;
+    return this;
+  }
+
+  abstract then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): PromiseLike<TResult1 | TResult2>;
+  abstract catch<TResult1 = T, TResult2 = never>(onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): PromiseLike<TResult1 | TResult2>;
 
 }
 
@@ -27,7 +33,7 @@ interface Follower<T> extends PromiseLike<T> {
  * * `followAll()`, allowing a user to call `followAll()` at the end of a
  *   chain.
  */
-export class FollowerOne<T = any> implements Follower<Resource<T>> {
+export class FollowerOne<T = any> extends Follower<Resource<T>> {
 
   private resource: Resource | Promise<Resource>;
   private rel: string;
@@ -35,6 +41,7 @@ export class FollowerOne<T = any> implements Follower<Resource<T>> {
 
   constructor(resource: Resource | Promise<Resource>, rel: string, variables?: LinkVariables) {
 
+    super();
     this.resource = resource;
     this.rel = rel;
     this.variables = variables;
@@ -106,6 +113,11 @@ export class FollowerOne<T = any> implements Follower<Resource<T>> {
     if (link.type) {
       newResource.contentType = link.type;
     }
+    if (this.prefetchEnabled) {
+      newResource.get().catch( err => {
+        console.warn('Error while prefetching linked resource', err);
+      });
+    }
 
     return newResource;
 
@@ -115,13 +127,14 @@ export class FollowerOne<T = any> implements Follower<Resource<T>> {
 
 /**
  */
-export class FollowerMany<T = any> implements Follower<Array<Resource<T>>> {
+export class FollowerMany<T = any> extends Follower<Array<Resource<T>>> {
 
   private resource: Resource | Promise<Resource>;
   private rel: string;
 
   constructor(resource: Resource | Promise<Resource>, rel: string) {
 
+    super();
     this.resource = resource;
     this.rel = rel;
 
@@ -168,6 +181,11 @@ export class FollowerMany<T = any> implements Follower<Array<Resource<T>>> {
         newResource.contentType = link.type;
       }
       result.push(newResource);
+      if (this.prefetchEnabled) {
+        newResource.get().catch( err => {
+          console.warn('Error while prefetching linked resource', err);
+        });
+      }
     }
 
     return result;
