@@ -115,6 +115,7 @@ export class FollowerOne<T = any> extends Follower<Resource<T>> {
     }
     if (this.prefetchEnabled) {
       newResource.get().catch( err => {
+        // tslint:disable-next-line no-console
         console.warn('Error while prefetching linked resource', err);
       });
     }
@@ -183,6 +184,7 @@ export class FollowerMany<T = any> extends Follower<Array<Resource<T>>> {
       result.push(newResource);
       if (this.prefetchEnabled) {
         newResource.get().catch( err => {
+          // tslint:disable-next-line no-console
           console.warn('Error while prefetching linked resource', err);
         });
       }
