@@ -47,6 +47,12 @@ ChangeLog
 * CHANGE: Link chaining system has been rewritten, opening the door to new
   features that weren't possible before.
 
+4.0.4 (2019-10-31)
+------------------
+
+* This version is identical to the last, but fixes an issue on npmjs.com.
+  Updating is not needed.
+
 
 4.0.3 (2019-09-11)
 ------------------
