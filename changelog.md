@@ -1,6 +1,15 @@
 ChangeLog
 =========
 
+5.0.0-alpha.3 (2019-10-31)
+--------------------------
+
+* It's now possible to tell Ketting to prefetch every resource when following
+  links via `Resource.follow('foo').preFetch()`.
+* `Link` and `LinkNotFound` are now both exported.
+* Documentation overhaul.
+
+
 5.0.0-alpha.2 (2019-10-21)
 --------------------------
 
