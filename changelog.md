@@ -1,6 +1,13 @@
 ChangeLog
 =========
 
+4.0.3 (2019-10-31)
+------------------
+
+* This version is identical to the last, but fixes an issue on npmjs.com.
+  Updating is not needed.
+
+
 4.0.2 (2019-09-05)
 ------------------
 
