@@ -1,6 +1,13 @@
 ChangeLog
 =========
 
+5.0.0-alpha.4 (2019-10-31)
+--------------------------
+
+* This version is identical to the last, but fixes an issue on npmjs.com.
+  Updating is not needed.
+
+
 5.0.0-alpha.3 (2019-10-31)
 --------------------------
 
