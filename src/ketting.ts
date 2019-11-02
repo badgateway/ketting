@@ -34,7 +34,7 @@ export default class Ketting {
    */
   private fetchHelper: FetchHelper;
 
-  constructor(bookMark: string, options?: Partial<KettingInit>) {
+  constructor(bookMark: string, options?: KettingInit) {
 
     if (typeof options === 'undefined') {
       options = {};
@@ -42,35 +42,11 @@ export default class Ketting {
 
     this.resourceCache = {};
 
-    this.representorHelper = new RepresentorHelper([
-      {
-        mime: 'application/hal+json',
-        representor: 'hal',
-        q: '1.0',
-      },
-      {
-        mime: 'application/vnd.api+json',
-        representor: 'jsonapi',
-        q: '0.9',
-      },
-      {
-        mime: 'application/vnd.siren+json',
-        representor: 'siren',
-        q: '0.9',
-      },
-      {
-        mime: 'application/json',
-        representor: 'hal',
-        q: '0.8',
-      },
-      {
-        mime: 'text/html',
-        representor: 'html',
-        q: '0.7',
-      }
-    ]);
-
     this.bookMark = bookMark;
+
+    this.representorHelper = new RepresentorHelper(
+      options.contentTypes || [],
+    );
     this.fetchHelper = new FetchHelper(options, this.beforeRequest.bind(this), this.afterRequest.bind(this));
 
   }

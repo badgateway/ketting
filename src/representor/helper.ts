@@ -13,7 +13,35 @@ export default class RepresentorHelper {
 
   constructor(contentTypes: ContentType[]) {
 
-    this.contentTypes = contentTypes;
+    const defaultTypes: ContentType[] = [
+      {
+        mime: 'application/hal+json',
+        representor: 'hal',
+        q: '1.0',
+      },
+      {
+        mime: 'application/vnd.api+json',
+        representor: 'jsonapi',
+        q: '0.9',
+      },
+      {
+        mime: 'application/vnd.siren+json',
+        representor: 'siren',
+        q: '0.9',
+      },
+      {
+        mime: 'application/json',
+        representor: 'hal',
+        q: '0.8',
+      },
+      {
+        mime: 'text/html',
+        representor: 'html',
+        q: '0.7',
+      }
+
+    ];
+    this.contentTypes = defaultTypes.concat(contentTypes);
 
   }
 

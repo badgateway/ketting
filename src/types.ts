@@ -1,5 +1,41 @@
 import { OAuth2Options } from 'fetch-mw-oauth2';
 
+export type KettingInit = {
+
+  /**
+   * Authentication options.
+   */
+  auth?: AuthOptions
+
+  /**
+   * A list of settings passed to the Fetch API.
+   *
+   * It's effectively a list of defaults that are passed as the 'init' argument.
+   * @see https://developer.mozilla.org/en-US/docs/Web/API/Request/Request
+   */
+  fetchInit?: RequestInit,
+
+  /**
+   * Per-domain options.
+   *
+   * This setting allows you to override specific options on a per-domain
+   * basis. It's possible to specify wildcards here.
+   */
+  match?: {
+    [domain: string]: {
+      auth?: AuthOptions
+      fetchInit?: RequestInit,
+    }
+  },
+
+  /**
+   * A list of content type mappings.
+   *
+   * This list will be merged with the default list.
+   */
+  contentTypes?: ContentType[]
+};
+
 export type ContentType = {
   mime: string,
   representor: string,
@@ -23,35 +59,6 @@ export type AuthOptions =
   AuthOptionsBasic |
   AuthOptionsBearer |
   AuthOptionsOAuth2;
-
-export type KettingInit = {
-
-  /**
-   * Authentication options.
-   */
-  auth?: AuthOptions
-
-  /**
-   * A list of settings passed to the Fetch API.
-   *
-   * It's effectively a list of defaults that are passed as the 'init' argument.
-   * @see https://developer.mozilla.org/en-US/docs/Web/API/Request/Request
-   */
-  fetchInit: RequestInit,
-
-  /**
-   * Per-domain options.
-   *
-   * This setting allows you to override specific options on a per-domain
-   * basis. It's possible to specify wildcards here.
-   */
-  match: {
-    [domain: string]: {
-      auth?: AuthOptions
-      fetchInit?: RequestInit,
-    }
-  }
-};
 
 /**
  * A key->value map of variables to place in a templated link
