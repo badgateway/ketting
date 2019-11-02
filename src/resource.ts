@@ -1,8 +1,7 @@
-import * as LinkHeader from 'http-link-header';
 import { FollowerMany, FollowerOne } from './follower';
 import problemFactory from './http-error';
 import Ketting from './ketting';
-import { Link, LinkSet } from './link';
+import { Link } from './link';
 import Representator from './representor/base';
 import { LinkVariables } from './types';
 import { mergeHeaders } from './utils/fetch-helper';
@@ -83,13 +82,13 @@ export default class Resource<TResource = any, TPatch = Partial<TResource>> {
    */
   async put(body: TResource): Promise<void> {
 
-    const contentType = this.contentType || this.client.contentTypes[0].mime;
+    const contentType = this.contentType || this.client.representorHelper.getMimeTypes()[0];
     const params = {
       method: 'PUT',
       body: JSON.stringify(body),
       headers: {
         'Content-Type': contentType,
-        'Accept' : this.contentType ? this.contentType : this.client.getAcceptHeader()
+        'Accept' : this.contentType ? this.contentType : this.client.representorHelper.getAcceptHeader()
       },
     };
     await this.fetchAndThrow(params);
@@ -122,7 +121,7 @@ export default class Resource<TResource = any, TPatch = Partial<TResource>> {
   post<TPostResource>(body: any): Promise<Resource<TPostResource>>;
   async post(body: any): Promise<Resource | null> {
 
-    const contentType = this.contentType || this.client.contentTypes[0].mime;
+    const contentType = this.contentType || this.client.representorHelper.getMimeTypes()[0];
     const response = await this.fetchAndThrow(
       {
         method: 'POST',
@@ -182,7 +181,7 @@ export default class Resource<TResource = any, TPatch = Partial<TResource>> {
     if (!this.inFlightRefresh) {
 
       const headers: { [name: string]: string } = {
-        Accept: this.contentType ? this.contentType : this.client.getAcceptHeader()
+        Accept: this.contentType ? this.contentType : this.client.representorHelper.getAcceptHeader()
       };
 
       if (this.preferPushRels.size > 0) {
@@ -214,51 +213,21 @@ export default class Resource<TResource = any, TPatch = Partial<TResource>> {
 
     }
 
-    const contentType = response!.headers.get('Content-Type');
-    if (!contentType) {
-      throw new Error('Server did not respond with a Content-Type header');
-    }
-
-    // Extracting HTTP Link header.
-    const httpLinkHeader = response!.headers.get('Link');
-
-    const headerLinks: LinkSet = new Map();
-
-    if (httpLinkHeader) {
-
-      for (const httpLink of LinkHeader.parse(httpLinkHeader).refs) {
-        // Looping through individual links
-        for (const rel of httpLink.rel.split(' ')) {
-          // Looping through space separated rel values.
-          const newLink = new Link({
-            rel: rel,
-            context: this.uri,
-            href: httpLink.uri
-          });
-          if (headerLinks.has(rel)) {
-            headerLinks.get(rel)!.push(newLink);
-          } else {
-            headerLinks.set(rel, [newLink]);
-          }
-        }
-      }
-    }
-    this.repr = this.client.createRepresentation(
+    this.repr = this.client.representorHelper.createFromResponse(
       this.uri,
-      contentType,
+      response!,
       body!,
-      headerLinks
     ) as any as Representator<TResource>;
 
     if (!this.contentType) {
-      this.contentType = contentType;
+      this.contentType = this.repr.contentType;
     }
 
     for (const [subUri, subBody] of Object.entries(this.repr.getEmbedded())) {
       const subResource = this.go(subUri);
-      subResource.repr = this.client.createRepresentation(
+      subResource.repr = this.client.representorHelper.create(
         subUri,
-        contentType,
+        this.repr.contentType,
         null,
         new Map(),
       );

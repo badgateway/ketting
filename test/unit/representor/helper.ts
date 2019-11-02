@@ -1,8 +1,59 @@
 import { expect } from 'chai';
 
-import Ketting from '../../src/ketting';
+import Ketting from '../../../src/ketting';
+import Hal from '../../../src/representor/hal';
+import Html from '../../../src/representor/html';
+import Siren from '../../../src/representor/siren';
+import Helper from '../../../src/representor/helper';
 
-describe('Ketting', () => {
+describe('Representor Helper', () => {
+
+  describe('createRepresentation', () => {
+
+    it('should return a HTML representor when requested', () => {
+
+      const helper = new Helper([]);
+      const representor = helper.create('/foo', 'text/html', null, new Map());
+      expect(representor).to.be.instanceof(Html);
+
+    });
+
+    it('should return a Hal representor when requested', () => {
+
+      const helper = new Helper([]);
+      const representor = helper.create('/foo', 'application/hal+json', null, new Map());
+      expect(representor).to.be.instanceof(Hal);
+
+    });
+
+    it('should return a Siren representor when requested', () => {
+
+      const helper = new Helper([]);
+      const representor = helper.create('/foo', 'application/vnd.siren+json', null, new Map());
+      expect(representor).to.be.instanceof(Siren);
+
+    });
+
+    it('should throw an error when an unknown representor was requested ', () => {
+
+      const helper = new Helper([]);
+      expect( () => helper.create('/foo', 'text/plain', '', new Map())).to.throw(Error);
+
+    });
+
+    it('should throw an error an a representor was incorrecly configured ', () => {
+
+      const helper = new Helper([
+        {
+          mime: 'text/plain',
+          representor: 'bla-bla'
+        }
+      ]);
+      expect( () => helper.create('/foo', 'text/plain', '', new Map()) ).to.throw(Error);
+
+    });
+
+  });
 
   describe('Resource caching', () => {
 

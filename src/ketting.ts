@@ -1,13 +1,8 @@
 import * as LinkHeader from 'http-link-header';
 import { FollowerOne } from './follower';
-import { LinkSet } from './link';
-import Representor from './representor/base';
-import HalRepresentor from './representor/hal';
-import HtmlRepresentor from './representor/html';
-import JsonApiRepresentor from './representor/jsonapi';
-import SirenRepresentor from './representor/siren';
+import RepresentorHelper from './representor/helper';
 import Resource from './resource';
-import { ContentType, KettingInit, LinkVariables } from './types';
+import { KettingInit, LinkVariables } from './types';
 import FetchHelper from './utils/fetch-helper';
 import './utils/fetch-polyfill';
 import { isSafeMethod } from './utils/http';
@@ -32,19 +27,14 @@ export default class Ketting {
    */
   resourceCache: { [url: string]: Resource };
 
-  /**
-   * Content-Type settings and mappings.
-   *
-   * See the constructor for an example of the structure.
-   */
-  contentTypes: ContentType[];
+  representorHelper: RepresentorHelper;
 
   /**
    * The helper class that calls fetch() for us
    */
   private fetchHelper: FetchHelper;
 
-  constructor(bookMark: string, options?: Partial<KettingInit>) {
+  constructor(bookMark: string, options?: KettingInit) {
 
     if (typeof options === 'undefined') {
       options = {};
@@ -52,35 +42,11 @@ export default class Ketting {
 
     this.resourceCache = {};
 
-    this.contentTypes = [
-      {
-        mime: 'application/hal+json',
-        representor: 'hal',
-        q: '1.0',
-      },
-      {
-        mime: 'application/vnd.api+json',
-        representor: 'jsonapi',
-        q: '0.9',
-      },
-      {
-        mime: 'application/vnd.siren+json',
-        representor: 'siren',
-        q: '0.9',
-      },
-      {
-        mime: 'application/json',
-        representor: 'hal',
-        q: '0.8',
-      },
-      {
-        mime: 'text/html',
-        representor: 'html',
-        q: '0.7',
-      }
-    ];
-
     this.bookMark = bookMark;
+
+    this.representorHelper = new RepresentorHelper(
+      options.contentTypes || [],
+    );
     this.fetchHelper = new FetchHelper(options, this.beforeRequest.bind(this), this.afterRequest.bind(this));
 
   }
@@ -153,50 +119,6 @@ export default class Ketting {
 
   }
 
-  createRepresentation(uri: string, contentType: string, body: string | null, headerLinks: LinkSet): Representor<any> {
-
-    if (contentType.indexOf(';') !== -1) {
-      contentType = contentType.split(';')[0];
-    }
-    contentType = contentType.trim();
-    const result = this.contentTypes.find(item => {
-      return item.mime === contentType;
-    });
-
-    if (!result) {
-      throw new Error('Could not find a representor for contentType: ' + contentType);
-    }
-
-    switch (result.representor) {
-      case 'html' :
-        return new HtmlRepresentor(uri, contentType, body, headerLinks);
-    case 'hal' :
-        return new HalRepresentor(uri, contentType, body, headerLinks);
-    case 'jsonapi' :
-        return new JsonApiRepresentor(uri, contentType, body, headerLinks);
-    case 'siren' :
-        return new SirenRepresentor(uri, contentType, body, headerLinks);
-    default :
-      throw new Error('Unknown representor: ' + result.representor);
-
-    }
-
-  }
-
-  /**
-   * Generates an accept header string, based on registered Resource Types.
-   */
-  getAcceptHeader(): string {
-
-    return this.contentTypes
-      .map( contentType => {
-        let item = contentType.mime;
-        if (contentType.q) { item += ';q=' + contentType.q; }
-        return item;
-      } )
-      .join(', ');
-
-  }
 
   beforeRequest(request: Request): void {
 
