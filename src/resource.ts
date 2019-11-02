@@ -117,7 +117,9 @@ export default class Resource<TResource = any, TPatch = Partial<TResource>> {
    * If no Location header was given, it will resolve still, but with an empty
    * value.
    */
-  async post<TPostResource = any>(body: TPostResource): Promise<Resource<TPostResource>|null> {
+  post(body: any): Promise<Resource | null>;
+  post<TPostResource>(body: any): Promise<Resource<TPostResource>>;
+  async post(body: any): Promise<Resource | null> {
 
     const contentType = this.contentType || this.client.representorHelper.getMimeTypes()[0];
     const response = await this.fetchAndThrow(
@@ -130,10 +132,17 @@ export default class Resource<TResource = any, TPatch = Partial<TResource>> {
       }
     );
 
-    if (response.headers.has('location')) {
-      return this.go(<string> response.headers.get('location'));
+    switch (response.status) {
+      case 205 :
+        return this;
+      case 201:
+        if (response.headers.has('location')) {
+          return this.go(<string> response.headers.get('location'));
+        }
+        return null;
+      default:
+        return null;
     }
-    return null;
 
   }
 
