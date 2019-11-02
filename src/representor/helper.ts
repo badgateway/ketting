@@ -1,11 +1,11 @@
+import * as LinkHeader from 'http-link-header';
+import { Link, LinkSet } from '../link';
+import { ContentType } from '../types';
+import Representor from './base';
 import HalRepresentor from './hal';
 import HtmlRepresentor from './html';
 import JsonApiRepresentor from './jsonapi';
 import SirenRepresentor from './siren';
-import Representor from './base';
-import { LinkSet, Link } from '../link';
-import { ContentType } from '../types';
-import * as LinkHeader from 'http-link-header';
 
 export default class RepresentorHelper {
 
@@ -87,10 +87,10 @@ export default class RepresentorHelper {
       }
     }
 
-    return this.create(uri, contentType, body, headerLinks);  
+    return this.create(uri, contentType, body, headerLinks);
 
   }
-  
+
   private getRepresentorType(contentType: string) {
 
     if (contentType.indexOf(';') !== -1) {
@@ -107,7 +107,6 @@ export default class RepresentorHelper {
 
     return result.representor;
   }
-
 
 
 }
