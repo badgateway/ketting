@@ -163,7 +163,7 @@ export default class Resource<TResource = any, TPatch = Partial<TResource>> {
    * This function will return the a parsed JSON object, like the get
    * function does.
    */
-  async refresh(): Promise<TResource> {
+  refresh(): Promise<TResource> {
 
     if (this.inFlightRefresh) {
       return this.inFlightRefresh;
