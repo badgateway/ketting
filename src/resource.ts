@@ -43,18 +43,11 @@ export default class Resource<TResource = any, TPatch = Partial<TResource>> {
    * be used to set this value.
    *
    * It's also possible for resources to get a mimetype through a link.
-   *
-   * If the mimetype was "null" when doing the request, the chosen mimetype
-   * will come from the first item in Client.resourceTypes
    */
   contentType: string | null;
 
   private inFlightRefresh: Promise<any> | null = null;
 
-  /**
-   * A list of rels that should be added to a Prefer-Push header.
-   */
-  private preferPushRels: Set<string>;
 
   constructor(client: Ketting, uri: string, contentType: string | null = null) {
 
@@ -62,7 +55,7 @@ export default class Resource<TResource = any, TPatch = Partial<TResource>> {
     this.uri = uri;
     this.repr = null;
     this.contentType = contentType;
-    this.preferPushRels = new Set();
+    this.nextRefreshHeaders = {};
 
   }
 
@@ -181,13 +174,9 @@ export default class Resource<TResource = any, TPatch = Partial<TResource>> {
     if (!this.inFlightRefresh) {
 
       const headers: { [name: string]: string } = {
-        Accept: this.contentType ? this.contentType : this.client.representorHelper.getAcceptHeader()
+        Accept: this.contentType ? this.contentType : this.client.representorHelper.getAcceptHeader(),
+        ...this.nextRefreshHeaders,
       };
-
-      if (this.preferPushRels.size > 0) {
-        headers['Prefer-Push'] = Array.from(this.preferPushRels).join(' ');
-        headers.Prefer = 'transclude="' + Array.from(this.preferPushRels).join(';') + '"';
-      }
 
       this.inFlightRefresh = this.fetchAndThrow({
         method: 'GET' ,
@@ -205,6 +194,7 @@ export default class Resource<TResource = any, TPatch = Partial<TResource>> {
         await this.inFlightRefresh;
       } finally {
         this.inFlightRefresh = null;
+        this.nextRefreshHeaders = {};
       }
 
     } else {
@@ -247,11 +237,6 @@ export default class Resource<TResource = any, TPatch = Partial<TResource>> {
   async links(rel?: string): Promise<Link[]> {
 
     const r = await this.representation();
-
-    // After we got a representation, it no longer makes sense to remember
-    // the rels we want to add to Prefer-Push.
-    this.preferPushRels = new Set();
-
     return r.getLinks(rel);
 
   }
@@ -269,11 +254,6 @@ export default class Resource<TResource = any, TPatch = Partial<TResource>> {
   async link(rel: string): Promise<Link> {
 
     const r = await this.representation();
-
-    // After we got a representation, it no longer makes sense to remember
-    // the rels we want to add to Prefer-Push.
-    this.preferPushRels = new Set();
-
     return r.getLink(rel);
 
   }
@@ -434,6 +414,25 @@ export default class Resource<TResource = any, TPatch = Partial<TResource>> {
     } else {
       throw await problemFactory(response);
     }
+
+  }
+
+
+  /**
+   * A set of HTTP headers that will be sent along with the next call to Refresh()
+   */
+  private nextRefreshHeaders: { [name: string]: string };
+
+  /**
+   * When a HTTP header gets added here, it will automatically get sent along
+   * to the next call to refresh().
+   *
+   * This means that the next time a GET request is done, these headers will be
+   * added. This list gets cleared after the GET request.
+   */
+  addNextRefreshHeader(name: string, value: string): void {
+
+    this.nextRefreshHeaders[name] = value;
 
   }
 
