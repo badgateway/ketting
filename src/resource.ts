@@ -46,8 +46,7 @@ export default class Resource<TResource = any, TPatch = Partial<TResource>> {
    */
   contentType: string | null;
 
-  private inFlightRefresh: Promise<any> | null = null;
-
+  private inFlightRefresh: Promise<TResource> | null = null;
 
   constructor(client: Ketting, uri: string, contentType: string | null = null) {
 
@@ -166,65 +165,56 @@ export default class Resource<TResource = any, TPatch = Partial<TResource>> {
    */
   async refresh(): Promise<TResource> {
 
-    let response: Response;
-    let body: string;
+    if (this.inFlightRefresh) {
+      return this.inFlightRefresh;
+    }
 
-    // If 2 systems request a 'refresh' at the exact same time, this mechanism
-    // will coalesc them into one.
-    if (!this.inFlightRefresh) {
+    const refreshFunc = async (): Promise<TResource> => {
 
       const headers: { [name: string]: string } = {
         Accept: this.contentType ? this.contentType : this.client.representorHelper.getAcceptHeader(),
         ...this.nextRefreshHeaders,
       };
 
-      this.inFlightRefresh = this.fetchAndThrow({
+      const response = await this.fetchAndThrow({
         method: 'GET' ,
         headers
-      }).then( result1 => {
-        response = result1;
-        return response.text();
-      })
-      .then( result2 => {
-        body = result2;
-        return [response, body];
       });
 
-      try {
-        await this.inFlightRefresh;
-      } finally {
-        this.inFlightRefresh = null;
-        this.nextRefreshHeaders = {};
+      this.nextRefreshHeaders = {};
+      this.inFlightRefresh = null;
+
+      const body = await response.text();
+
+      this.repr = this.client.representorHelper.createFromResponse(
+        this.uri,
+        response!,
+        body!,
+      ) as any as Representator<TResource>;
+
+      if (!this.contentType) {
+        this.contentType = this.repr.contentType;
       }
 
-    } else {
-      // Something else asked for refresh, so we piggypack on it.
-      [response, body] = await this.inFlightRefresh;
+      for (const [subUri, subBody] of Object.entries(this.repr.getEmbedded())) {
+        const subResource = this.go(subUri);
+        subResource.repr = this.client.representorHelper.create(
+          subUri,
+          this.repr.contentType,
+          null,
+          new Map(),
+        );
+        subResource.repr.setBody(subBody);
+      }
 
-    }
+      return this.repr.getBody();
 
-    this.repr = this.client.representorHelper.createFromResponse(
-      this.uri,
-      response!,
-      body!,
-    ) as any as Representator<TResource>;
+    };
 
-    if (!this.contentType) {
-      this.contentType = this.repr.contentType;
-    }
+    const refreshResult = refreshFunc();
+    this.inFlightRefresh = refreshResult;
 
-    for (const [subUri, subBody] of Object.entries(this.repr.getEmbedded())) {
-      const subResource = this.go(subUri);
-      subResource.repr = this.client.representorHelper.create(
-        subUri,
-        this.repr.contentType,
-        null,
-        new Map(),
-      );
-      subResource.repr.setBody(subBody);
-    }
-
-    return this.repr.getBody();
+    return refreshResult;
 
   }
 
