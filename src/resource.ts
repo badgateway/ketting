@@ -43,18 +43,10 @@ export default class Resource<TResource = any, TPatch = Partial<TResource>> {
    * be used to set this value.
    *
    * It's also possible for resources to get a mimetype through a link.
-   *
-   * If the mimetype was "null" when doing the request, the chosen mimetype
-   * will come from the first item in Client.resourceTypes
    */
   contentType: string | null;
 
-  private inFlightRefresh: Promise<any> | null = null;
-
-  /**
-   * A list of rels that should be added to a Prefer-Push header.
-   */
-  private preferPushRels: Set<string>;
+  private inFlightRefresh: Promise<TResource> | null = null;
 
   constructor(client: Ketting, uri: string, contentType: string | null = null) {
 
@@ -62,7 +54,7 @@ export default class Resource<TResource = any, TPatch = Partial<TResource>> {
     this.uri = uri;
     this.repr = null;
     this.contentType = contentType;
-    this.preferPushRels = new Set();
+    this.nextRefreshHeaders = {};
 
   }
 
@@ -171,70 +163,58 @@ export default class Resource<TResource = any, TPatch = Partial<TResource>> {
    * This function will return the a parsed JSON object, like the get
    * function does.
    */
-  async refresh(): Promise<TResource> {
+  refresh(): Promise<TResource> {
 
-    let response: Response;
-    let body: string;
+    if (this.inFlightRefresh) {
+      return this.inFlightRefresh;
+    }
 
-    // If 2 systems request a 'refresh' at the exact same time, this mechanism
-    // will coalesc them into one.
-    if (!this.inFlightRefresh) {
+    const refreshFunc = async (): Promise<TResource> => {
 
       const headers: { [name: string]: string } = {
-        Accept: this.contentType ? this.contentType : this.client.representorHelper.getAcceptHeader()
+        Accept: this.contentType ? this.contentType : this.client.representorHelper.getAcceptHeader(),
+        ...this.nextRefreshHeaders,
       };
 
-      if (this.preferPushRels.size > 0) {
-        headers['Prefer-Push'] = Array.from(this.preferPushRels).join(' ');
-        headers.Prefer = 'transclude="' + Array.from(this.preferPushRels).join(';') + '"';
-      }
-
-      this.inFlightRefresh = this.fetchAndThrow({
+      const response = await this.fetchAndThrow({
         method: 'GET' ,
         headers
-      }).then( result1 => {
-        response = result1;
-        return response.text();
-      })
-      .then( result2 => {
-        body = result2;
-        return [response, body];
       });
 
-      try {
-        await this.inFlightRefresh;
-      } finally {
-        this.inFlightRefresh = null;
+      this.nextRefreshHeaders = {};
+      this.inFlightRefresh = null;
+
+      const body = await response.text();
+
+      this.repr = this.client.representorHelper.createFromResponse(
+        this.uri,
+        response,
+        body,
+      ) as any as Representator<TResource>;
+
+      if (!this.contentType) {
+        this.contentType = this.repr.contentType;
       }
 
-    } else {
-      // Something else asked for refresh, so we piggypack on it.
-      [response, body] = await this.inFlightRefresh;
+      for (const [subUri, subBody] of Object.entries(this.repr.getEmbedded())) {
+        const subResource = this.go(subUri);
+        subResource.repr = this.client.representorHelper.create(
+          subUri,
+          this.repr.contentType,
+          null,
+          new Map(),
+        );
+        subResource.repr.setBody(subBody);
+      }
 
-    }
+      return this.repr.getBody();
 
-    this.repr = this.client.representorHelper.createFromResponse(
-      this.uri,
-      response!,
-      body!,
-    ) as any as Representator<TResource>;
+    };
 
-    if (!this.contentType) {
-      this.contentType = this.repr.contentType;
-    }
+    const refreshResult = refreshFunc();
+    this.inFlightRefresh = refreshResult;
 
-    for (const [subUri, subBody] of Object.entries(this.repr.getEmbedded())) {
-      const subResource = this.go(subUri);
-      subResource.repr = this.client.representorHelper.create(
-        subUri,
-        this.repr.contentType,
-        null,
-        new Map(),
-      );
-      subResource.repr.setBody(subBody);
-    }
-
-    return this.repr.getBody();
+    return refreshResult;
 
   }
 
@@ -247,11 +227,6 @@ export default class Resource<TResource = any, TPatch = Partial<TResource>> {
   async links(rel?: string): Promise<Link[]> {
 
     const r = await this.representation();
-
-    // After we got a representation, it no longer makes sense to remember
-    // the rels we want to add to Prefer-Push.
-    this.preferPushRels = new Set();
-
     return r.getLinks(rel);
 
   }
@@ -269,11 +244,6 @@ export default class Resource<TResource = any, TPatch = Partial<TResource>> {
   async link(rel: string): Promise<Link> {
 
     const r = await this.representation();
-
-    // After we got a representation, it no longer makes sense to remember
-    // the rels we want to add to Prefer-Push.
-    this.preferPushRels = new Set();
-
     return r.getLink(rel);
 
   }
@@ -434,6 +404,25 @@ export default class Resource<TResource = any, TPatch = Partial<TResource>> {
     } else {
       throw await problemFactory(response);
     }
+
+  }
+
+
+  /**
+   * A set of HTTP headers that will be sent along with the next call to Refresh()
+   */
+  private nextRefreshHeaders: { [name: string]: string };
+
+  /**
+   * When a HTTP header gets added here, it will automatically get sent along
+   * to the next call to refresh().
+   *
+   * This means that the next time a GET request is done, these headers will be
+   * added. This list gets cleared after the GET request.
+   */
+  addNextRefreshHeader(name: string, value: string): void {
+
+    this.nextRefreshHeaders[name] = value;
 
   }
 

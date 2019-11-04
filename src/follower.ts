@@ -7,9 +7,15 @@ import { LinkVariables } from './types';
 abstract class Follower<T> implements PromiseLike<T> {
 
   protected prefetchEnabled: boolean;
+  protected preferPushEnabled: boolean;
 
   preFetch(): this {
     this.prefetchEnabled = true;
+    return this;
+  }
+
+  preferPush(): this {
+    this.preferPushEnabled = true;
     return this;
   }
 
@@ -103,6 +109,9 @@ export class FollowerOne<T = any> extends Follower<Resource<T>> {
   private async fetchLinkedResource(): Promise<Resource<T>> {
 
     const resource = await this.resource;
+    if (this.preferPushEnabled) {
+      resource.addNextRefreshHeader('Prefer-Push', this.rel);
+    }
     const link = await resource.link(this.rel);
     let href;
 
@@ -172,6 +181,10 @@ export class FollowerMany<T = any> extends Follower<Array<Resource<T>>> {
   private async fetchLinkedResources(): Promise<Array<Resource<T>>> {
 
     const resource = await this.resource;
+    if (this.preferPushEnabled) {
+      resource.addNextRefreshHeader('Prefer-Push', this.rel);
+    }
+
     const links = await resource.links(this.rel);
     let href;
 
