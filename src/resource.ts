@@ -188,8 +188,8 @@ export default class Resource<TResource = any, TPatch = Partial<TResource>> {
 
       this.repr = this.client.representorHelper.createFromResponse(
         this.uri,
-        response!,
-        body!,
+        response,
+        body,
       ) as any as Representator<TResource>;
 
       if (!this.contentType) {
