@@ -1,6 +1,28 @@
 ChangeLog
 =========
 
+5.0.0-alpha.5 (2019-11-06)
+--------------------------
+
+* Added a `preferPush()` method to 'Follower' objects, allowing you to
+  automatically send [`Prefer-Push`][3] headers when following links.
+* Moved all functionality related to the 'Repreprentor' in a utility class,
+  making both the `Ketting` and `Resource` classes simpler.
+* Simplified `Resource.refresh()`, making it easier to read and do less work.
+* When calling `.post()`, the function will only return a new resource if the
+  HTTP response code was `201`.
+* If the HTTP response code to a `post()` call was `205`, it will now return
+  the current resource.
+* Removed the logic for automatically adding `Prefer-Push` headers. This was
+  unreliable, and usually did the wrong thing. The new system is 100% opt-in
+  and developer-driven.
+* Added `Ketting.getOptions()` to return a list of options that were passed to
+  Ketting. The options will be enhanced with OAuth2 refresh and access tokens
+  as they become available, meaning that it can be used to place in
+  LocalStorage to remember sessions. This feature is experimental and
+  incomplete. It might change even in minor versions.
+
+
 5.0.0-alpha.4 (2019-10-31)
 --------------------------
 
@@ -499,3 +521,4 @@ ChangeLog
 
 [1]: https://github.com/kevinswiber/siren
 [2]: https://tools.ietf.org/html/draft-nottingham-linked-cache-inv-04
+[3]: https://tools.ietf.org/html/draft-pot-prefer-push
