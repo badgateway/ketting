@@ -27,7 +27,7 @@ export default class FetchHelper {
   private onBeforeRequest: beforeRequestCallback | null;
   private onAfterRequest: afterRequestCallback | null;
 
-  constructor(options: Partial<KettingInit>, onBeforeRequest: beforeRequestCallback | null = null, onAfterRequest: afterRequestCallback | null = null) {
+  constructor(options: KettingInit, onBeforeRequest: beforeRequestCallback | null = null, onAfterRequest: afterRequestCallback | null = null) {
     this.options = {
       fetchInit: options.fetchInit || {},
       auth: options.auth,
@@ -66,6 +66,40 @@ export default class FetchHelper {
     }
 
     return this.fetchAuth(request);
+
+  }
+
+  /**
+   * Returns a list of all Ketting options.
+   *
+   * The primary purpose of this is for hydrating all options in for example LocalStorage.
+   *
+   * The options will not be an exact copy of what was passed, but instead will
+   * contain properties like refreshToken and accessToken, allowing authentication information
+   * to be cached.
+   *
+   * NOTE that this function is experimental and only handles top-level settings, and not for
+   * specific domains.
+   */
+  async getOptions(): Promise<KettingInit> {
+
+    const options = this.getDomainOptions('*');
+    let auth;
+
+    if (options.auth && options.auth.type === 'oauth2') {
+      const oauth2 = this.getOAuth2Bucket(options);
+      auth = {
+        type: 'oauth2' as 'oauth2',
+        ...await oauth2.getOptions(),
+      };
+    } else {
+      auth = options.auth;
+    }
+
+    return {
+      fetchInit: options.fetchInit,
+      auth,
+    };
 
   }
 
@@ -117,7 +151,6 @@ export default class FetchHelper {
 
     const options = this.getDomainOptions(request.url);
     const authOptions = options.auth;
-    const authBucket = options.authBucket;
 
     if (!authOptions) {
       return this.doFetch(request);
@@ -131,18 +164,29 @@ export default class FetchHelper {
         request.headers.set('Authorization', 'Bearer ' + authOptions.token);
         return this.doFetch(request);
       case 'oauth2' :
-        if (!this.oAuth2Buckets.has(authBucket)) {
-          this.oAuth2Buckets.set(
-            authBucket,
-            new OAuth2(authOptions)
-          );
-        }
         if (this.onBeforeRequest) { this.onBeforeRequest(request); }
-        const response = await this.oAuth2Buckets.get(authBucket)!.fetch(request);
+        const response = await this.getOAuth2Bucket(options).fetch(request);
         if (this.onAfterRequest) { this.onAfterRequest(request, response); }
         return response;
     }
 
+
+  }
+
+  private getOAuth2Bucket(options: DomainOptions): OAuth2 {
+
+    const authOptions = options.auth;
+    if (!authOptions || authOptions.type !== 'oauth2') {
+      throw new Error('getOAuth2Bucket can only be called for oauth2 credentials');
+    }
+
+    if (!this.oAuth2Buckets.has(options.authBucket)) {
+      this.oAuth2Buckets.set(
+        options.authBucket,
+        new OAuth2(authOptions)
+      );
+    }
+    return this.oAuth2Buckets.get(options.authBucket)!;
 
   }
 

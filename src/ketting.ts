@@ -106,6 +106,24 @@ export default class Ketting {
   }
 
   /**
+   * Returns a list of all Ketting options.
+   *
+   * The primary purpose of this is for hydrating all options in for example LocalStorage.
+   *
+   * The options will not be an exact copy of what was passed, but instead will
+   * contain properties like refreshToken and accessToken, allowing authentication information
+   * to be cached.
+   *
+   * NOTE that this function is experimental and only handles top-level settings, and not for
+   * specific domains.
+   */
+  getOptions(): Promise<KettingInit> {
+
+    return this.fetchHelper.getOptions();
+
+  }
+
+  /**
    * This function does an arbitrary request using the fetch API.
    *
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/GlobalFetch}
