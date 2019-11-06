@@ -105,7 +105,7 @@ export default class FetchHelper {
 
   getDomainOptions(uri: string): DomainOptions {
 
-    if (!this.options.match) {
+    if (!this.options.match || uri === '*') {
       return {
         fetchInit: this.options.fetchInit,
         auth: this.options.auth,
