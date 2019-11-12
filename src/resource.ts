@@ -249,6 +249,16 @@ export default class Resource<TResource = any, TPatch = Partial<TResource>> {
   }
 
   /**
+   * Checks if the current resource has the specified link relationship.
+   */
+  async hasLink(rel: string): Promise<boolean> {
+
+    const r = await this.representation();
+    return r.hasLink(rel);
+
+  }
+
+  /**
    * Follows a relationship, based on its reltype. For example, this might be
    * 'alternate', 'item', 'edit' or a custom url-based one.
    *

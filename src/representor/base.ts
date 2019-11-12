@@ -49,6 +49,15 @@ export default abstract class Representation<T = string> {
 
   }
 
+  /**
+   * Checks if the specified link exists on this representation.
+   */
+  hasLink(rel: string): boolean {
+
+    return this.links.has(rel) && this.links.get(rel)!.length > 0;
+
+  }
+
   getEmbedded(): { [uri: string]: T } {
 
     return {};
