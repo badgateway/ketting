@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+5.0.0-alpha.7 (2019-11-12)
+--------------------------
+
+* Added `hasLink` on Resources and Representations.
+
+
 5.0.0-alpha.6 (2019-11-06)
 --------------------------
 
