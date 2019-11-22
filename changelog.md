@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+5.0.0 (2019-11-22)
+------------------
+
+* This version is the exact same as the previous alpha.
+
+
 5.0.0-alpha.7 (2019-11-12)
 --------------------------
 
