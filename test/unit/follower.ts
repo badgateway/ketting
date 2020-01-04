@@ -69,6 +69,19 @@ describe('FollowerOne', () => {
 
   });
 
+  it('should add a Prefer: transclude= header to the next refresh if requested', async() => {
+
+    const fakeResource = getFakeResource();
+    const follower = new FollowerOne(fakeResource, 'rel1');
+    await follower.preferTransclude();
+    expect(
+      (fakeResource as any).nextRefreshHeaders
+    ).to.eql({
+      'Prefer': 'transclude=rel1'
+    });
+
+  });
+
   it('should not prefetch if not requested', async () => {
 
     const fakeResource = getFakeResource();
@@ -136,6 +149,19 @@ describe('FollowerMany', () => {
       (fakeResource as any).nextRefreshHeaders
     ).to.eql({
       'Prefer-Push': 'rel1'
+    });
+
+  });
+
+  it('should add a Prefer: transclude= header to the next refresh if requested', async() => {
+
+    const fakeResource = getFakeResource();
+    const follower = new FollowerMany(fakeResource, 'rel1');
+    await follower.preferTransclude();
+    expect(
+      (fakeResource as any).nextRefreshHeaders
+    ).to.eql({
+      'Prefer': 'transclude=rel1'
     });
 
   });
