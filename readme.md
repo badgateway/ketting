@@ -65,6 +65,11 @@ Supported formats:
 * [application/problem+json][problem] - Will extract useful information from
   the standard problem object and embed them in exception objects.
 
+Other features:
+
+* [Prefer-Push][prefer-push]
+* [Prefer-Transclude][prefer-transclude]
+
 
 ### Following links
 
@@ -160,3 +165,6 @@ property is provided).
 [jsonapi]: https://jsonapi.org/
 [problem]: https://tools.ietf.org/html/rfc7807
 [siren]: https://github.com/kevinswiber/siren "Structured Interface for Representing Entities"
+
+[prefer-push]: https://tools.ietf.org/html/draft-pot-prefer-push
+[prefer-transclude]: https://github.com/inadarei/draft-prefer-transclude/blob/master/draft.md
