@@ -1,6 +1,13 @@
 ChangeLog
 =========
 
+5.1.0 (2020-??-??)
+------------------
+
+* Added a `preferTransclude()` method on the Follower objects. This
+  automatically adds a `Prefer: tranclude="rel"` header.
+
+
 5.0.1 (2019-12-09)
 ------------------
 
