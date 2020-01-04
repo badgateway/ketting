@@ -57,6 +57,7 @@ describe('Link', () => {
     const tests:any = [
       ['/foo/{bar}', { bar: 'zim' }, 'http://example.org/foo/zim'],
       ['/foo{?q}{?order}{?age}', { q: '', order: 'createdAt DESC', age: 'P-1D'}, 'http://example.org/foo?q=&order=createdAt%20DESC&age=P-1D'],
+      ['/foo{?q,order,age}', { q: '', order: 'createdAt DESC', age: 'P-1D'}, 'http://example.org/foo?q=&order=createdAt%20DESC&age=P-1D'],
     ];
 
     for(const test of tests) {
