@@ -30,6 +30,7 @@ describe('Issuing a GET request', async () => {
       'application/hal+json;q=1.0',
       'application/vnd.api+json;q=0.9',
       'application/vnd.siren+json;q=0.9',
+      'application/vnd.collection+json;q=0.9',
       'application/json;q=0.8',
       'text/html;q=0.7',
     ];
