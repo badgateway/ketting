@@ -101,7 +101,8 @@ const author = await newArticle.follow('author');
 console.log(await author.get());
 ```
 
-More details can be found in the [Getting started docs][8].
+More details can be found in the [Getting started docs][8] and
+[Following Links][10].
 
 ### Embedded resources
 
@@ -160,6 +161,7 @@ property is provided).
 [7]: https://github.com/evert/ketting/wiki/Installation
 [8]: https://github.com/evert/ketting/wiki/Getting-Started
 [9]: https://github.com/evert/ketting/wiki/
+[10]: https://github.com/evert/ketting/wiki/Following-Links
 
 [hal]: http://stateless.co/hal_specification.html "HAL - Hypertext Application Language"
 [jsonapi]: https://jsonapi.org/
