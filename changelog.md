@@ -1,9 +1,10 @@
 ChangeLog
 =========
 
-5.1.0 (2020-??-??)
+5.1.0 (2020-01-05)
 ------------------
 
+* Support for the [Collection+json][4] format.
 * Added a `preferTransclude()` method on the Follower objects. This
   automatically adds a `Prefer: tranclude="rel"` header.
 
@@ -553,3 +554,4 @@ ChangeLog
 [1]: https://github.com/kevinswiber/siren
 [2]: https://tools.ietf.org/html/draft-nottingham-linked-cache-inv-04
 [3]: https://tools.ietf.org/html/draft-pot-prefer-push
+[4]: http://amundsen.com/media-types/collection/format/

@@ -5,13 +5,13 @@ import CollectionJson from '../../../src/representor/collection-json';
 describe('collection+json representor', () => {
 
   it('should parse the "Minimal Representation" example', () => {
-    
-    const exampleObj = { "collection" : 
+
+    const exampleObj = { "collection" :
       {
         "version" : "1.0",
 
         "href" : "http://example.org/friends/"
-      } 
+      }
     };
 
     const cj = new CollectionJson(
@@ -30,11 +30,11 @@ describe('collection+json representor', () => {
       {
         "version" : "1.0",
         "href" : "http://example.org/friends/",
-        
+
         "links" : [
           {"rel" : "feed", "href" : "http://example.org/friends/rss"}
         ],
-        
+
         "items" : [
           {
             "href" : "http://example.org/friends/jdoe",
@@ -47,7 +47,7 @@ describe('collection+json representor', () => {
               {"rel" : "avatar", "href" : "http://examples.org/images/jdoe", "prompt" : "Avatar", "render" : "image"}
             ]
           },
-          
+
           {
             "href" : "http://example.org/friends/msmith",
             "data" : [
@@ -59,7 +59,7 @@ describe('collection+json representor', () => {
               {"rel" : "avatar", "href" : "http://examples.org/images/msmith", "prompt" : "Avatar", "render" : "image"}
             ]
           },
-          
+
           {
             "href" : "http://example.org/friends/rwilliams",
             "data" : [
@@ -70,9 +70,9 @@ describe('collection+json representor', () => {
               {"rel" : "blog", "href" : "http://examples.org/blogs/rwilliams", "prompt" : "Blog"},
               {"rel" : "avatar", "href" : "http://examples.org/images/rwilliams", "prompt" : "Avatar", "render" : "image"}
             ]
-          }      
+          }
         ],
-        
+
         "queries" : [
           {"rel" : "search", "href" : "http://example.org/friends/search", "prompt" : "Search",
             "data" : [
@@ -81,17 +81,17 @@ describe('collection+json representor', () => {
           },
           {"rel" : "get-new", "href" : "http://example.org/friends/new", "prompt" : "New friends" },
         ],
-        
+
         "template" : {
           "data" : [
             {"name" : "full-name", "value" : "", "prompt" : "Full Name"},
             {"name" : "email", "value" : "", "prompt" : "Email"},
             {"name" : "blog", "value" : "", "prompt" : "Blog"},
             {"name" : "avatar", "value" : "", "prompt" : "Avatar"}
-            
+
           ]
         }
-      } 
+      }
     };
 
     const cj = new CollectionJson(
@@ -154,7 +154,7 @@ describe('collection+json representor', () => {
             ]
           },
         ],
-      } 
+      }
     };
 
     const cj = new CollectionJson(

@@ -4,24 +4,24 @@ import Siren from '../../../src/representor/siren';
 describe('Siren representor', () => {
 
   it('should parse the example Siren object', () => {
-    
+
     const exampleObj = {
       "class": [ "order" ],
-      "properties": { 
-          "orderNumber": 42, 
+      "properties": {
+          "orderNumber": 42,
           "itemCount": 3,
           "status": "pending"
       },
       "entities": [
-        { 
-          "class": [ "items", "collection" ], 
-          "rel": [ "http://x.io/rels/order-items" ], 
+        {
+          "class": [ "items", "collection" ],
+          "rel": [ "http://x.io/rels/order-items" ],
           "href": "http://api.x.io/orders/42/items"
         },
         {
           "class": [ "info", "customer" ],
-          "rel": [ "http://x.io/rels/customer" ], 
-          "properties": { 
+          "rel": [ "http://x.io/rels/customer" ],
+          "properties": {
             "customerId": "pj123",
             "name": "Peter Joseph"
           },
@@ -81,11 +81,11 @@ describe('Siren representor', () => {
     ]);
 
     expect(siren.getEmbedded()).to.eql({
-      'http://api.x.io/customers/pj123': 
+      'http://api.x.io/customers/pj123':
         {
           "class": [ "info", "customer" ],
-          "rel": [ "http://x.io/rels/customer" ], 
-          "properties": { 
+          "rel": [ "http://x.io/rels/customer" ],
+          "properties": {
             "customerId": "pj123",
             "name": "Peter Joseph"
           },
@@ -101,8 +101,8 @@ describe('Siren representor', () => {
 
     const input = {
       "class": [ "order" ],
-      "properties": { 
-          "orderNumber": 42, 
+      "properties": {
+          "orderNumber": 42,
           "itemCount": 3,
           "status": "pending"
       },
@@ -120,16 +120,16 @@ describe('Siren representor', () => {
 
     const input:any = {
       "class": [ "order" ],
-      "properties": { 
-          "orderNumber": 42, 
+      "properties": {
+          "orderNumber": 42,
           "itemCount": 3,
           "status": "pending"
       },
       "entities": [
         {
           "class": [ "info", "customer" ],
-          "rel": [ "http://x.io/rels/customer" ], 
-          "properties": { 
+          "rel": [ "http://x.io/rels/customer" ],
+          "properties": {
             "customerId": "pj123",
             "name": "Peter Joseph"
           },
@@ -139,8 +139,8 @@ describe('Siren representor', () => {
         },
         {
           "class": [ "info", "customer" ],
-          "rel": [ "http://x.io/rels/customer" ], 
-          "properties": { 
+          "rel": [ "http://x.io/rels/customer" ],
+          "properties": {
             "customerId": "pj123",
             "name": "Peter Joseph"
           },
