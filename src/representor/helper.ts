@@ -2,6 +2,7 @@ import * as LinkHeader from 'http-link-header';
 import { Link, LinkSet } from '../link';
 import { ContentType } from '../types';
 import Representor from './base';
+import CollectionJsonRepresentor from './collection-json';
 import HalRepresentor from './hal';
 import HtmlRepresentor from './html';
 import JsonApiRepresentor from './jsonapi';
@@ -27,6 +28,11 @@ export default class RepresentorHelper {
       {
         mime: 'application/vnd.siren+json',
         representor: 'siren',
+        q: '0.9',
+      },
+      {
+        mime: 'application/vnd.collection+json',
+        representor: 'collection-json',
         q: '0.9',
       },
       {
@@ -79,6 +85,8 @@ export default class RepresentorHelper {
         return new JsonApiRepresentor(uri, contentType, body, headerLinks);
       case 'siren' :
         return new SirenRepresentor(uri, contentType, body, headerLinks);
+      case 'collection-json' :
+        return new CollectionJsonRepresentor(uri, contentType, body, headerLinks);
       default :
         throw new Error('Unknown representor: ' + type);
     }
