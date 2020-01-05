@@ -65,6 +65,11 @@ Supported formats:
 * [application/problem+json][problem] - Will extract useful information from
   the standard problem object and embed them in exception objects.
 
+Other features:
+
+* [Prefer-Push][prefer-push]
+* [Prefer-Transclude][prefer-transclude]
+
 
 ### Following links
 
@@ -96,7 +101,8 @@ const author = await newArticle.follow('author');
 console.log(await author.get());
 ```
 
-More details can be found in the [Getting started docs][8].
+More details can be found in the [Getting started docs][8] and
+[Following Links][10].
 
 ### Embedded resources
 
@@ -155,9 +161,12 @@ property is provided).
 [7]: https://github.com/evert/ketting/wiki/Installation
 [8]: https://github.com/evert/ketting/wiki/Getting-Started
 [9]: https://github.com/evert/ketting/wiki/
+[10]: https://github.com/evert/ketting/wiki/Following-Links
 
 [hal]: http://stateless.co/hal_specification.html "HAL - Hypertext Application Language"
 [jsonapi]: https://jsonapi.org/
 [problem]: https://tools.ietf.org/html/rfc7807
 [siren]: https://github.com/kevinswiber/siren "Structured Interface for Representing Entities"
 [coljson]: http://amundsen.com/media-types/collection/format/
+[prefer-push]: https://tools.ietf.org/html/draft-pot-prefer-push
+[prefer-transclude]: https://github.com/inadarei/draft-prefer-transclude/blob/master/draft.md
