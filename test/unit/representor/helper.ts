@@ -4,6 +4,7 @@ import Ketting from '../../../src/ketting';
 import Hal from '../../../src/representor/hal';
 import Html from '../../../src/representor/html';
 import Siren from '../../../src/representor/siren';
+import CollectionJson from '../../../src/representor/collection-json';
 import Helper from '../../../src/representor/helper';
 
 describe('Representor Helper', () => {
@@ -31,6 +32,14 @@ describe('Representor Helper', () => {
       const helper = new Helper([]);
       const representor = helper.create('/foo', 'application/vnd.siren+json', null, new Map());
       expect(representor).to.be.instanceof(Siren);
+
+    });
+
+    it('should return a collection+json representor when requested', () => {
+
+      const helper = new Helper([]);
+      const representor = helper.create('/foo', 'application/vnd.collection+json', null, new Map());
+      expect(representor).to.be.instanceof(CollectionJson);
 
     });
 
