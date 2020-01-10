@@ -100,13 +100,27 @@ function parseHalLinks(contextUri: string, body: HalBody): Link[] {
 
   const result: Link[] = [];
 
+  /**
+   * We're capturing all rel-link pairs so we don't duplicate them if they
+   * re-appear in _embedded.
+   *
+   * Links that are embedded _should_ appear in both lists, but not everyone
+   * does this.
+   */
+  const foundLinks = new Set();
+
   for (const [relType, links] of Object.entries(body._links)) {
 
     const linkList = Array.isArray(links) ? links : [links];
 
+    for (const link of linkList) {
+      foundLinks.add(relType + ';' + link.href);
+    }
+
     result.push(
       ...parseHalLink(contextUri, relType, linkList)
     );
+
 
   }
 
@@ -114,6 +128,9 @@ function parseHalLinks(contextUri: string, body: HalBody): Link[] {
 
   for (const embeddedItem of embedded) {
 
+    if (foundLinks.has(embeddedItem.rel + ';' + embeddedItem.href)) {
+      continue;
+    }
     result.push(new Link({
       rel: embeddedItem.rel,
       href: embeddedItem.href,
