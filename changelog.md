@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+5.1.1 (2020-01-10)
+------------------
+
+* #173: De-duplicate HAL links if they appear in _embedded and _links.
+
+
 5.1.0 (2020-01-05)
 ------------------
 
