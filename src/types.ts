@@ -29,12 +29,6 @@ export type KettingInit = {
   },
 
   /**
-   * Use this content-type for all the requests.
-   */
-
-  forceContentType?: string
-
-  /**
    * A list of content type mappings.
    *
    * This list will be merged with the default list.

@@ -20,8 +20,6 @@ export default class Ketting {
    */
   bookMark: string;
 
-  forceContentType?: string;
-
   /**
    * Here we store all the resources that were ever requested. This will
    * ensure that if the same resource is requested twice, the same object is
@@ -49,9 +47,6 @@ export default class Ketting {
     this.representorHelper = new RepresentorHelper(
       options.contentTypes || [],
     );
-
-    this.forceContentType = options.forceContentType;
-
     this.fetchHelper = new FetchHelper(options, this.beforeRequest.bind(this), this.afterRequest.bind(this));
 
   }
@@ -89,7 +84,7 @@ export default class Ketting {
     uri = resolve(this.bookMark, uri);
 
     if (!this.resourceCache[uri]) {
-      this.resourceCache[uri] = new Resource(this, uri, this.forceContentType);
+      this.resourceCache[uri] = new Resource(this, uri);
     }
 
     return this.resourceCache[uri];
