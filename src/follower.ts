@@ -133,7 +133,10 @@ export class FollowerOne<T = any> extends Follower<Resource<T>> {
     const newResource = resource.go(href);
     if (link.type) {
       newResource.contentType = link.type;
+    } else {
+      newResource.contentType = resource.contentType;
     }
+
     if (this.prefetchEnabled) {
       newResource.get().catch( err => {
         // tslint:disable-next-line no-console
@@ -142,7 +145,6 @@ export class FollowerOne<T = any> extends Follower<Resource<T>> {
     }
 
     return newResource;
-
   }
 
 }
