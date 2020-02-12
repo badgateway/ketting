@@ -102,7 +102,7 @@ export class FollowerOne<T = any> extends Follower<Resource<T>> {
    *
    * For example: resource.follow('foo').followAll('item');
    */
-  async followAll<TNested = any>(rel: string): Promise<Array<Resource<TNested>>> {
+  followAll<TNested = any>(rel: string): FollowerMany<TNested> {
 
     return new FollowerMany(this.fetchLinkedResource(), rel);
 
