@@ -1,6 +1,13 @@
 ChangeLog
 =========
 
+5.1.2 (2020-02-12)
+------------------
+
+* Correct return type on followAll, so it may be chained with preFetch.
+  This was only an issue when doing 'multiple hops'.
+
+
 5.1.1 (2020-01-10)
 ------------------
 
