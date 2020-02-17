@@ -48,9 +48,7 @@ export default class Hal extends Representation<HalBody> {
    * the result.
    */
   protected parse(body: string): HalBody {
-
     return JSON.parse(body);
-
   }
 
   protected parseLinks(body: HalBody): Link[] {
