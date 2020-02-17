@@ -76,11 +76,23 @@ export class FollowerOne<T = any> extends Follower<Resource<T>> {
   }
 
   /**
-   * This 'then' function behaves like a Promise then() function.
+   * This 'catch' function behaves like a Promise catch() function.
    */
   catch<TResult1 = any, TResult2 = never>(onrejected?: ((reason: Error) => TResult2 | PromiseLike<TResult2>) | null | undefined): Promise<TResult1 | TResult2> {
 
     return this.fetchLinkedResource().then(undefined, onrejected);
+
+  }
+
+  /**
+   * Implementation of a Promise.finally function
+   */
+  finally<TResult1 = any>(onfinally: () => TResult1 | PromiseLike<TResult1>): Promise<TResult1> {
+
+    return this.then(
+      () => onfinally(),
+      () => onfinally()
+    );
 
   }
 
@@ -175,11 +187,23 @@ export class FollowerMany<T = any> extends Follower<Array<Resource<T>>> {
   }
 
   /**
-   * This 'then' function behaves like a Promise then() function.
+   * This 'catch' function behaves like a Promise catch() function.
    */
   catch<TResult1 = any, TResult2 = never>(onrejected?: ((reason: Error) => TResult2 | PromiseLike<TResult2>) | null | undefined): Promise<TResult1 | TResult2> {
 
     return this.fetchLinkedResources().then(undefined, onrejected);
+
+  }
+
+  /**
+   * Implementation of a Promise.finally function
+   */
+  finally<TResult1 = any>(onfinally: () => TResult1 | PromiseLike<TResult1>): Promise<TResult1> {
+
+    return this.then(
+      () => onfinally(),
+      () => onfinally()
+    );
 
   }
 
