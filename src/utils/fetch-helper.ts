@@ -216,7 +216,7 @@ type HeaderSet = any;
  * This function takes one or more of those init objects, and merges them.
  * Later properties override earlier ones.
  */
-function mergeInit(inits: Array<RequestInit | undefined>) {
+function mergeInit(inits: (RequestInit | undefined)[]) {
 
   const newHeaders = mergeHeaders(
     inits.map( init => init ? init.headers : null )

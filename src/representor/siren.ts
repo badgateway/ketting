@@ -9,7 +9,7 @@ type SirenEntity = {
   properties?: {
     [key: string]: any
   },
-  entities?: Array<SirenLink | SirenSubEntity>,
+  entities?: (SirenLink | SirenSubEntity)[],
 
   links?: SirenLink[],
   actions?: SirenAction[],

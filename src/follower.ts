@@ -161,7 +161,7 @@ export class FollowerOne<T = any> extends Follower<Resource<T>> {
 
 /**
  */
-export class FollowerMany<T = any> extends Follower<Array<Resource<T>>> {
+export class FollowerMany<T = any> extends Follower<Resource<T>[]> {
 
   private resource: Resource | Promise<Resource>;
   private rel: string;
@@ -177,8 +177,8 @@ export class FollowerMany<T = any> extends Follower<Array<Resource<T>>> {
   /**
    * This 'then' function behaves like a Promise then() function.
    */
-  then<TResult1 = Array<Resource<T>>, TResult2 = never>(
-    onfulfilled?: ((value: Array<Resource<T>>) => TResult1 | PromiseLike<TResult1>) | null | undefined,
+  then<TResult1 = Resource<T>[], TResult2 = never>(
+    onfulfilled?: ((value: Resource<T>[]) => TResult1 | PromiseLike<TResult1>) | null | undefined,
     onrejected?: ((reason: Error) => TResult2 | PromiseLike<TResult2>) | null | undefined
   ): Promise<TResult1 | TResult2> {
 
@@ -211,7 +211,7 @@ export class FollowerMany<T = any> extends Follower<Array<Resource<T>>> {
    * This function does the actual fetching, to obtained the url
    * of the linked resource. It returns the Resource object.
    */
-  private async fetchLinkedResources(): Promise<Array<Resource<T>>> {
+  private async fetchLinkedResources(): Promise<Resource<T>[]> {
 
     const resource = await this.resource;
     if (this.preferPushEnabled) {
@@ -224,7 +224,7 @@ export class FollowerMany<T = any> extends Follower<Array<Resource<T>>> {
     const links = await resource.links(this.rel);
     let href;
 
-    const result: Array<Resource<T>> = [];
+    const result: Resource<T>[] = [];
 
     for (const link of links) {
       href = link.resolve();
