@@ -1,6 +1,13 @@
 ChangeLog
 =========
 
+5.2.0 (2020-02-17)
+------------------
+
+* Added 'finally()' to custom follower promises.
+* All representors are now exported in the `representor` namespace.
+
+
 5.1.2 (2020-02-12)
 ------------------
 
