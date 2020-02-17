@@ -63,7 +63,6 @@ export default class Resource<TResource = any, TPatch = Partial<TResource>> {
    * Returns a promise that resolves to a parsed json object.
    */
   async get(): Promise<TResource> {
-
     const r = await this.representation();
     return r.getBody();
 
