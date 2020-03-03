@@ -1,6 +1,11 @@
 ChangeLog
 =========
 
+5.2.1 (2020-03-03)
+------------------
+
+* Use the `title=` attribute from the HTTP Link header, if it exists.
+
 5.2.0 (2020-02-17)
 ------------------
 
