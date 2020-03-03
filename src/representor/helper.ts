@@ -112,7 +112,8 @@ export default class RepresentorHelper {
           const newLink = new Link({
             rel: rel,
             context: uri,
-            href: httpLink.uri
+            href: httpLink.uri,
+            title: httpLink.title,
           });
           if (headerLinks.has(rel)) {
             headerLinks.get(rel)!.push(newLink);
