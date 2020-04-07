@@ -64,5 +64,5 @@ export type AuthOptions =
  * A key->value map of variables to place in a templated link
  */
 export type LinkVariables = {
-  [key: string]: string
+  [key: string]: string | number
 };
