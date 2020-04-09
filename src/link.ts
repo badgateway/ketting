@@ -19,12 +19,12 @@ export class Link {
   /**
    * The base href of the parent document. Used for expanding relative links.
    */
-  context: string;
+  context!: string;
 
   /**
    * The URI of the link. Might be relative
    */
-  href: string;
+  href!: string;
 
   /**
    * The name for a link. This might be used to disambiguate the link.
@@ -32,12 +32,12 @@ export class Link {
    * If you're looking at this, chances are that you might want 'title'
    * instead.
    */
-  name?: string;
+  name!: string;
 
   /**
    * The relationship type
    */
-  rel: string;
+  rel!: string;
 
   /**
    * Is it a URI template or not?
@@ -59,6 +59,7 @@ export class Link {
     this.templated = false;
     this.title = null;
     this.type = null;
+
     for (const key of ['context', 'href', 'name', 'rel', 'templated', 'title', 'type']) {
       if ((<any> properties)[key]) {
         (<any> this)[key] = (<any> properties)[key];

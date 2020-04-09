@@ -2,15 +2,10 @@
     "compilerOptions": {
         "module": "commonjs",
         "target": "es2017",
-        "noImplicitAny": true,
 
-        "strictFunctionTypes": true,
-        "strictNullChecks": true,
-        "noImplicitThis": true,
-        "alwaysStrict": true,
-        "noUnusedLocals": true,
-        "noImplicitReturns": true,
+        "strict": true,
         "noFallthroughCasesInSwitch": true,
+        "experimentalDecorators": true,
 
         "moduleResolution": "node",
         "sourceMap": true,
@@ -23,13 +18,13 @@
         },
         "lib": [
           "DOM",
+          "DOM.Iterable",
           "ES5",
           "ES2015",
           "ES2016",
           "ES2017",
-          "DOM.Iterable"
+          "ESNext.bigint"
         ],
-
         "declaration": true
     },
     "include": [

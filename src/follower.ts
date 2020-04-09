@@ -10,6 +10,12 @@ abstract class Follower<T> implements PromiseLike<T> {
   protected preferPushEnabled: boolean;
   protected preferTranscludeEnabled: boolean;
 
+  constructor() {
+    this.prefetchEnabled = false;
+    this.preferPushEnabled = false;
+    this.preferTranscludeEnabled = false;
+  }
+
   preFetch(): this {
     this.prefetchEnabled = true;
     return this;

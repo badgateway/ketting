@@ -12,7 +12,7 @@ export default abstract class Representation<T = string> {
   contentType: string;
   uri: string;
 
-  protected body: T;
+  protected body!: T;
   protected links: LinkSet;
 
   constructor(uri: string, contentType: string, body: string | null, headerLinks: LinkSet) {
