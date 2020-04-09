@@ -38,7 +38,7 @@ type Embedded = {
  */
 export default class Hal extends Representation<HalBody> {
 
-  embedded: Embedded[];
+  private embedded?: Embedded[];
 
   /**
    * parse is called to convert a HTTP response body string into the most
