@@ -1,3 +1,5 @@
+import { Links } from './link';
+
 export interface State<T = any> {
 
   /**
@@ -6,7 +8,12 @@ export interface State<T = any> {
    * In the case of a JSON response, this will be deserialized
    */
   body: T
-    
+
+  /**
+   * All links associated with the resource.
+   */
+  links: Links,
+
   /**
    * The full list of HTTP headers that were sent with the response.
    */
@@ -48,10 +55,16 @@ export abstract class BaseState<T> implements State<T> {
    */
   headers: Headers;
 
-  constructor(body: T, headers: Headers) {
+  /**
+   * All links associated with the resource.
+   */
+  links: Links;
+
+  constructor(body: T, headers: Headers, links: Links) {
 
     this.body = body;
     this.headers = headers;
+    this.links = links;
 
   }
 

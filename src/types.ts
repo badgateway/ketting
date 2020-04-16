@@ -71,14 +71,14 @@ interface Client {
   // This is the old 'main' object. I think this should become a
   // global/singleton. This has tradeoffs but also causes a LOT less objects
   // to be passed around everywhere.
-  
+
   // All the auth config
   auth: any;
 
   // Baseurl can be inferred from document.location in browsers, but this is
   // the old 'bookmark'
   baseUrl: string;
-  
+
   follow(rel: string): FollowPromise<Resource>
   followAll(rel: string): FollowPromise<Resource[]>
   go(relativeUri: string): Resource;

@@ -1,18 +1,10 @@
 import { BaseState, StateFactory } from '../state';
+import { parseLink } from '../http/util';
 
 /**
- * This factory creates a State object for text responses, such as
+ * Represents a resource state for text responses, such as text/plain, text/csv.
  * text/html, text/csv.
  */
-export const factory: StateFactory<string> = async (response: Response): Promise<TextState> => {
-
-  return new TextState(
-    await response.text(),
-    response.headers
-  );
-
-}
-
 export class TextState extends BaseState<string> {
 
   serializeBody(): string {
@@ -20,5 +12,18 @@ export class TextState extends BaseState<string> {
     return this.body;
 
   }
+
+}
+
+/**
+ * Turns a HTTP response into a TextState
+ */
+export const factory: StateFactory<string> = async (response: Response): Promise<TextState> => {
+
+  return new TextState(
+    await response.text(),
+    response.headers,
+    parseLink(response.headers.get('Link')),
+  );
 
 }
