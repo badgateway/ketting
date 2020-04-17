@@ -1,11 +1,7 @@
-import { FollowerMany, FollowerOne } from './follower';
-import problemFactory from './http-error';
 import Ketting from './ketting';
-import { Link } from './link';
 import Representator from './representor/base';
 import { LinkVariables } from './types';
 import { mergeHeaders } from './utils/fetch-helper';
-import { resolve } from './utils/url';
 
 /**
  * A 'resource' represents an endpoint on the server.
@@ -214,103 +210,6 @@ export default class Resource<TResource = any, TPatch = Partial<TResource>> {
     this.inFlightRefresh = refreshResult;
 
     return refreshResult;
-
-  }
-
-  /**
-   * Returns the links for this resource, as a promise.
-   *
-   * The rel argument is optional. If it's given, we will only return links
-   * from that relationship type.
-   */
-  async links(rel?: string): Promise<Link[]> {
-
-    const r = await this.representation();
-    return r.getLinks(rel);
-
-  }
-
-  /**
-   * Returns a specific link based on it's rel.
-   *
-   * If multiple links with the same rel existed, we're only returning the
-   * first. If no link with the specified link existed, a LinkNotFound
-   * exception will be thrown.
-   *
-   * The rel argument is optional. If it's given, we will only return links
-   * from that relationship type.
-   */
-  async link(rel: string): Promise<Link> {
-
-    const r = await this.representation();
-    return r.getLink(rel);
-
-  }
-
-  /**
-   * Checks if the current resource has the specified link relationship.
-   */
-  async hasLink(rel: string): Promise<boolean> {
-
-    const r = await this.representation();
-    return r.hasLink(rel);
-
-  }
-
-  /**
-   * Follows a relationship, based on its reltype. For example, this might be
-   * 'alternate', 'item', 'edit' or a custom url-based one.
-   *
-   * This function can also follow templated uris. You can specify uri
-   * variables in the optional variables argument.
-   */
-  follow<TFollowedResource = any>(rel: string, variables?: LinkVariables): FollowerOne<TFollowedResource> {
-
-    return new FollowerOne(this, rel, variables);
-
-  }
-
-  /**
-   * Follows a relationship based on its reltype. This function returns a
-   * Promise that resolves to an array of Resource objects.
-   *
-   * If no resources were found, the array will be empty.
-   */
-  followAll<TFollowedResource = any>(rel: string): FollowerMany<TFollowedResource> {
-
-    return new FollowerMany(this, rel);
-
-  }
-
-  /**
-   * Resolves a new resource based on a relative uri.
-   *
-   * Use this function to manually get a Resource object via a uri. The uri
-   * will be resolved based on the uri of the current resource.
-   *
-   * This function doesn't do any HTTP requests.
-   */
-  go<TGoResource = any>(uri: string): Resource<TGoResource> {
-
-    uri = resolve(this.uri, uri);
-    return this.client.go(uri);
-
-  }
-
-  /**
-   * Returns the representation for the object.
-   * If it wasn't fetched yet, this function does the fetch as well.
-   *
-   * Usually you will want to use the `get()` method instead, unless you need
-   * the full object.
-   */
-  async representation(): Promise<Representator<TResource>> {
-
-    if (!this.repr) {
-      await this.refresh();
-    }
-
-    return this.repr!;
 
   }
 
