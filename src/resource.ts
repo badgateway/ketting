@@ -1,6 +1,8 @@
 import client from './client';
 import { State } from './state';
 import { resolve } from './util/url';
+import { FollowPromiseOne, FollowPromiseMany } from './follow-promise';
+import { LinkVariables } from './link';
 
 /**
  * A 'resource' represents an endpoint on the server.
@@ -54,6 +56,31 @@ export default class Resource<T = any> {
       this.uri,
       { method: 'DELETE' }
     );
+
+  }
+
+  /**
+   * Follows a relationship, based on its reltype. For example, this might be
+   * 'alternate', 'item', 'edit' or a custom url-based one.
+   *
+   * This function can also follow templated uris. You can specify uri
+   * variables in the optional variables argument.
+   */
+  follow<TFollowedResource = any>(rel: string, variables?: LinkVariables): FollowPromiseOne<TFollowedResource> {
+
+    return new FollowPromiseOne(this, rel, variables);
+
+  }
+
+  /**
+   * Follows a relationship based on its reltype. This function returns a
+   * Promise that resolves to an array of Resource objects.
+   *
+   * If no resources were found, the array will be empty.
+   */
+  followAll<TFollowedResource = any>(rel: string): FollowPromiseMany<TFollowedResource> {
+
+    return new FollowPromiseMany(this, rel);
 
   }
 
