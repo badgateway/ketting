@@ -34,8 +34,6 @@ export const factory: StateFactory = async (uri: string, response: Response): Pr
     ...newBody
   } = body;
 
-    return newBody;
-
   return new HalState(
     uri,
     newBody,

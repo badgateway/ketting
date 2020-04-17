@@ -5,6 +5,7 @@ import { factory as halState } from './state/hal';
 import { factory as binaryState } from './state/binary';
 import { factory as textState }from './state/text';
 import { parseContentType } from './http/util';
+import './utils/fetch-polyfill';
 
 class Client {
 
@@ -14,6 +15,7 @@ class Client {
     [mimeType: string]: StateFactory<any>
   } = {
     'application/hal+json': halState,
+    'application/json': halState,
   }
 
   constructor() {
