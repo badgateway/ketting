@@ -1,12 +1,54 @@
 export type Link = {
+  /**
+   * Target URI
+   */
   href: string,
+
+  /**
+   * Context URI.
+   *
+   * Used to resolve relative URIs
+   */
+  context: string;
+
+  /**
+   * Relation type
+   */
   rel: string,
+
+  /**
+   * Link title
+   */
   title?: string,
-  anchor?: string,
-  hreflang?: string,
-  media?: string,
+
+  /**
+   * Content type hint of the target resource
+   */
   type?: string,
+
+  /**
+   * Anchor.
+   *
+   * This describes where the link is linked from, from for example
+   * a fragment in the current document
+   */
+  anchor?: string,
+
+  /**
+   * Language of the target resource
+   */
+  hreflang?: string,
+
+  /**
+   * HTML5 media attribute
+   */
+  media?: string,
+
+  /**
+   * If templated is set to true, the href is a templated URI.
+   */
   templated?: true,
+
 }
 
 export class Links {
@@ -24,12 +66,14 @@ export class Links {
 
   }
 
-  add(link: Link): void {
+  add(...links: Link[]): void {
 
-    if (this.store.has(link.rel)) {
-      this.store.get(link.rel)!.push(link);
-    } else {
-      this.store.set(link.rel, [link]);
+    for(const link of links) {
+      if (this.store.has(link.rel)) {
+        this.store.get(link.rel)!.push(link);
+      } else {
+        this.store.set(link.rel, [link]);
+      }
     }
 
   }

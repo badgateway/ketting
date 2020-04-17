@@ -18,12 +18,13 @@ export class TextState extends BaseState<string> {
 /**
  * Turns a HTTP response into a TextState
  */
-export const factory: StateFactory<string> = async (response: Response): Promise<TextState> => {
+export const factory: StateFactory<string> = async (uri: string, response: Response): Promise<TextState> => {
 
   return new TextState(
+    uri,
     await response.text(),
     response.headers,
-    parseLink(response.headers.get('Link')),
+    parseLink(uri, response.headers.get('Link')),
   );
 
 }

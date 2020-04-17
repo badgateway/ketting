@@ -14,7 +14,7 @@ export function parseContentType(contentType: string): string {
 }
 
 
-export function parseLink(header: string|null): Links {
+export function parseLink(context: string, header: string|null): Links {
 
   const result = new Links();
   if (!header) {
@@ -28,11 +28,13 @@ export function parseLink(header: string|null): Links {
       const link = {
         rel: rel,
         href: httpLink.uri,
+        context,
         title: httpLink.title,
+        hreflang: httpLink.hreflang,
+        type: httpLink.type,
       };
       result.add(link);
     }
   }
   return result;
 }
-

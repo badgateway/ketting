@@ -29,7 +29,7 @@ export default class Resource<T> {
   async get(): Promise<State<T>> {
 
     const response = await client.fetcher.fetch(this.uri);
-    return client.getStateForResponse(response);
+    return client.getStateForResponse(this.uri, response);
 
   }
 

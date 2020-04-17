@@ -3,6 +3,11 @@ import { Links } from './link';
 export interface State<T = any> {
 
   /**
+   * The URI associated with this state
+   */
+  uri: string;
+
+  /**
    * Represents the body of the HTTP response.
    *
    * In the case of a JSON response, this will be deserialized
@@ -38,10 +43,25 @@ export interface State<T = any> {
    */
   contentHeaders(): Headers;
 
+  /**
+   * Certain formats can embed other resources, identified by their
+   * own URI.
+   *
+   * When a format has embedded resources, we will use these to warm
+   * the cache.
+   *
+   * This method returns every embedded resource.
+   */
+  getEmbedded(): State[];
 
 }
 
 export abstract class BaseState<T> implements State<T> {
+
+  /**
+   * The URI associated with this state
+   */
+  uri: string;
 
   /**
    * Represents the body of the HTTP response.
@@ -60,11 +80,18 @@ export abstract class BaseState<T> implements State<T> {
    */
   links: Links;
 
-  constructor(body: T, headers: Headers, links: Links) {
+  /**
+   * Embedded resoureces
+   */
+  protected embedded: State[];
 
+  constructor(uri: string, body: T, headers: Headers, links: Links, embedded?: State[]) {
+
+    this.uri = uri;
     this.body = body;
     this.headers = headers;
     this.links = links;
+    this.embedded = embedded || [];
 
   }
 
@@ -103,10 +130,25 @@ export abstract class BaseState<T> implements State<T> {
    */
   abstract serializeBody(): Buffer|Blob|string;
 
+  /**
+   * Certain formats can embed other resources, identified by their
+   * own URI.
+   *
+   * When a format has embedded resources, we will use these to warm
+   * the cache.
+   *
+   * This method returns every embedded resource.
+   */
+  getEmbedded(): State[] {
+
+    return this.embedded;
+
+  }
+
 }
 
 /**
  * A 'StateFactory' is responsible for taking a Fetch Response, and returning
  * an object that impements the State interface
  */
-export type StateFactory<T = any> = (request: Response) => Promise<State<T>>;
+export type StateFactory<T = any> = (uri: string, request: Response) => Promise<State<T>>;

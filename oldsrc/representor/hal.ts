@@ -145,21 +145,20 @@ function parseHalLinks(contextUri: string, body: HalBody): Link[] {
 /**
  * Parses a single HAL link from a _links object, or a list of links.
  */
-function parseHalLink(contextUri: string, rel: string, links: HalLink[]): Link[] {
+function parseHalLink(rel: string, links: HalLink[]): Link[] {
 
   const result: Link[] = [];
 
   for (const link of links) {
     result.push(
-      new Link({
+      {
         rel: rel,
-        context: contextUri,
         href: link.href,
         title: link.title,
         type: link.type,
         templated: link.templated,
         name: link.name
-      })
+      }
     );
   }
 
@@ -171,13 +170,13 @@ function parseHalLink(contextUri: string, rel: string, links: HalLink[]): Link[]
  * Parse the HAL _embedded object. Right now we're just grabbing the
  * information from _embedded and turn it into links.
  */
-function parseHalEmbedded(contextUri: string, body: HalBody): Embedded[] {
+function parseHalEmbedded(contextUri: string, body: HalBody): HalState[] {
 
   if (body._embedded === undefined) {
     return [];
   }
 
-  const result: Embedded[] = [];
+  const result: HalState[] = [];
 
   for (const [rel, embedded] of Object.entries(body._embedded)) {
 

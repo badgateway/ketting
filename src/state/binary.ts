@@ -19,12 +19,13 @@ export class BinaryState extends BaseState<Blob> {
 /**
  * Turns a HTTP response into a BinaryState
  */
-export const factory: StateFactory<Blob> = async (response: Response): Promise<BinaryState> => {
+export const factory: StateFactory<Blob> = async (uri: string, response: Response): Promise<BinaryState> => {
 
   return new BinaryState(
+    uri,
     await response.blob(),
     response.headers,
-    parseLink(response.headers.get('Link')),
+    parseLink(uri, response.headers.get('Link')),
   );
 
 }

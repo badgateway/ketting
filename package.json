@@ -36,7 +36,7 @@
   "types": "dist/index.d.ts",
   "dependencies": {
     "fetch-mw-oauth2": "^0.4.2",
-    "hal-types": "^0.1.2",
+    "hal-types": "^1.0.0",
     "http-link-header": "^1.0.2",
     "node-fetch": "^2.6.0",
     "querystring-browser": "^1.0.4",

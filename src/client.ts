@@ -29,17 +29,17 @@ class Client {
   /**
    * Transforms a fetch Response to a State object.
    */
-  getStateForResponse(response: Response): Promise<State> {
+  getStateForResponse(uri: string, response: Response): Promise<State> {
 
     const contentType = parseContentType(response.headers.get('Content-Type')!);
     if (contentType in this.contentTypeMap) {
-      return this.contentTypeMap[contentType](response);
+      return this.contentTypeMap[contentType](uri, response);
     }
 
     if (contentType.startsWith('text/')) {
-      return textState(response);
+      return textState(uri, response);
     } else{
-      return binaryState(response);
+      return binaryState(uri, response);
     }
 
   }
