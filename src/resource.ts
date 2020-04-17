@@ -36,6 +36,9 @@ export default class Resource<T = any> {
 
   }
 
+  /**
+   * Updates the server state with a PUT request
+   */
   async put(state: State<T>): Promise<void> {
 
     const params = {
