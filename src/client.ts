@@ -5,7 +5,7 @@ import { factory as halState } from './state/hal';
 import { factory as binaryState } from './state/binary';
 import { factory as textState }from './state/text';
 import { parseContentType } from './http/util';
-import './utils/fetch-polyfill';
+import './util/fetch-polyfill';
 
 class Client {
 
