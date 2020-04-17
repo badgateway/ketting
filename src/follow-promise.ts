@@ -1,10 +1,12 @@
 import Resource from './resource';
-import { LinkVariables } from './types';
+import { LinkVariables, LinkNotFound } from './link';
+import { resolve } from './util/url';
+import { expand } from './util/url-template';
 
 /**
  * Base interface for both FollowOne and FollowAll
  */
-abstract class Follower<T> implements PromiseLike<T> {
+abstract class FollowPromise<T> implements PromiseLike<T> {
 
   protected prefetchEnabled: boolean;
   protected preferPushEnabled: boolean;
@@ -37,7 +39,7 @@ abstract class Follower<T> implements PromiseLike<T> {
 }
 
 /**
- * The Follower class is what's being returned from follow() functions.
+ * The FollowPromise class is what's being returned from follow() functions.
  *
  * It's 'PromiseLike', which means you can treat it like a Promise, and it
  * can be awaited. When used as a Promise, it resolves to the Resource object
@@ -51,7 +53,7 @@ abstract class Follower<T> implements PromiseLike<T> {
  * * `followAll()`, allowing a user to call `followAll()` at the end of a
  *   chain.
  */
-export class FollowerOne<T = any> extends Follower<Resource<T>> {
+export class FollowPromiseOne<T = any> extends FollowPromise<Resource<T>> {
 
   private resource: Resource | Promise<Resource>;
   private rel: string;
@@ -109,9 +111,9 @@ export class FollowerOne<T = any> extends Follower<Resource<T>> {
    *
    * For example: resource.follow('foo').follow('bar');
    */
-  follow<TNested = any>(rel: string, variables?: LinkVariables): FollowerOne<TNested> {
+  follow<TNested = any>(rel: string, variables?: LinkVariables): FollowPromiseOne<TNested> {
 
-    return new FollowerOne(this.fetchLinkedResource(), rel, variables);
+    return new FollowPromiseOne(this.fetchLinkedResource(), rel, variables);
 
   }
 
@@ -120,38 +122,45 @@ export class FollowerOne<T = any> extends Follower<Resource<T>> {
    *
    * For example: resource.follow('foo').followAll('item');
    */
-  followAll<TNested = any>(rel: string): FollowerMany<TNested> {
+  followAll<TNested = any>(rel: string): FollowPromiseMany<TNested> {
 
-    return new FollowerMany(this.fetchLinkedResource(), rel);
+    return new FollowPromiseMany(this.fetchLinkedResource(), rel);
 
   }
 
   /**
-   * This function does the actual fetching, to obtained the url
-   * of the linked resource. It returns the Resource object.
+   * This function does the actual fetching of the linked
+   * resource.
    */
   private async fetchLinkedResource(): Promise<Resource<T>> {
 
     const resource = await this.resource;
+
+    const headers: { [name: string]: string } = {};
     if (this.preferPushEnabled) {
-      resource.addNextRefreshHeader('Prefer-Push', this.rel);
+      headers['Prefer-Push'] = this.rel;
     }
     if (this.preferTranscludeEnabled) {
-      resource.addNextRefreshHeader('Prefer', 'transclude=' + this.rel);
+      headers.Prefer = 'transclude=' + this.rel;
     }
-    const link = await resource.link(this.rel);
+
+    const state = await resource.get({
+      headers
+    });
+
+    const link = state.links.get(this.rel);
+
+    if (!link) throw new LinkNotFound(`Link with rel ${this.rel} on ${state.uri} not found`);
     let href;
 
     if (link.templated && this.variables) {
-      href = link.expand(this.variables);
+      href = expand(link, this.variables);
     } else {
-      href = link.resolve();
+      href = resolve(link);
     }
 
     const newResource = resource.go(href);
-    if (link.type) {
-      newResource.contentType = link.type;
-    }
+
     if (this.prefetchEnabled) {
       newResource.get().catch( err => {
         // tslint:disable-next-line no-console
@@ -167,7 +176,7 @@ export class FollowerOne<T = any> extends Follower<Resource<T>> {
 
 /**
  */
-export class FollowerMany<T = any> extends Follower<Resource<T>[]> {
+export class FollowPromiseMany<T = any> extends FollowPromise<Resource<T>[]> {
 
   private resource: Resource | Promise<Resource>;
   private rel: string;
@@ -220,25 +229,28 @@ export class FollowerMany<T = any> extends Follower<Resource<T>[]> {
   private async fetchLinkedResources(): Promise<Resource<T>[]> {
 
     const resource = await this.resource;
+    const headers: { [name: string]: string } = {};
     if (this.preferPushEnabled) {
-      resource.addNextRefreshHeader('Prefer-Push', this.rel);
+      headers['Prefer-Push'] = this.rel;
     }
     if (this.preferTranscludeEnabled) {
-      resource.addNextRefreshHeader('Prefer', 'transclude=' + this.rel);
+      headers.Prefer = 'transclude=' + this.rel;
     }
 
-    const links = await resource.links(this.rel);
+    const state = await resource.get({
+      headers
+    });
+
+    const links = state.links.getMany(this.rel);
+
     let href;
 
     const result: Resource<T>[] = [];
 
     for (const link of links) {
-      href = link.resolve();
+      href = resolve(link);
 
       const newResource = resource.go(href);
-      if (link.type) {
-        newResource.contentType = link.type;
-      }
       result.push(newResource);
       if (this.prefetchEnabled) {
         newResource.get().catch( err => {

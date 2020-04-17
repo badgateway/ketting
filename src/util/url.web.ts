@@ -1,3 +1,5 @@
+import { Link } from '../link';
+
 type UrlParts = {
   host?: string,
 };
@@ -7,11 +9,18 @@ type UrlParts = {
  *
  * This is the browser-based version.
  */
-export function resolve(base: string, relative: string): string {
+export function resolve(base: string, relative: string): string;
+export function resolve(link: Link): string;
+export function resolve(base: string|Link, relative?: string): string {
+
+  if (typeof base !== 'string') {
+    relative = base.href;
+    base = base.context;
+  }
 
   // If the URL object is supported, we prefer that.
   if (typeof URL !== 'undefined') {
-    return (new URL(relative, base).toString());
+    return (new URL(relative!, base).toString());
   }
 
   // Code taken from this gist:;
@@ -25,7 +34,7 @@ export function resolve(base: string, relative: string): string {
   const resolver = doc.createElement('a');
 
   ourBase.href = base;
-  resolver.href = relative;
+  resolver.href = relative!;
   const resolvedUrl  = resolver.href; // browser magic at work here
 
   if (oldBase) {

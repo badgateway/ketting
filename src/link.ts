@@ -125,3 +125,10 @@ export class Links {
  * link by its rel, that doesn't exist
  */
 export class LinkNotFound extends Error {}
+
+/**
+ * A key->value map of variables to place in a templated link
+ */
+export type LinkVariables = {
+  [key: string]: string | number
+};

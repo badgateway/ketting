@@ -1,4 +1,5 @@
 import { parse as p, resolve as r } from 'url';
+import { Link } from '../link';
 
 type UrlParts = {
   host?: string,
@@ -9,9 +10,15 @@ type UrlParts = {
  *
  * This is the node.js version.
  */
-export function resolve(base: string, relative: string): string {
+export function resolve(base: string, relative: string): string;
+export function resolve(link: Link): string;
+export function resolve(base: string|Link, relative?: string): string {
 
-  return r(base, relative);
+  if (typeof base === 'string') {
+    return r(base, relative!);
+  } else {
+    return r(base.context, base.href);
+  }
 
 }
 
