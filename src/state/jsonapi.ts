@@ -1,7 +1,50 @@
-import Link from '../link';
-// import { resolve } from '../utils/url';
-import Representation from './base';
+import { BaseState, StateFactory } from '../state';
+import { HalResource, HalLink } from 'hal-types';
+import { parseLink } from '../http/util';
+import { Link, Links } from '../link';
+import { resolve } from '../util/url';
 
+/**
+ * Represents a resource state in the HAL format
+ */
+export class JsonApiState<T> extends BaseState<T> {
+
+  serializeBody(): string {
+
+    return JSON.stringify(this.body);
+
+  }
+
+}
+
+/**
+ * Turns a HTTP response into a HalState
+ */
+export const factory: StateFactory = async (uri: string, response: Response): Promise<JsonApiState<JsonApiTopLevelObject>> => {
+
+  const body = await response.json();
+
+  const links = parseLink(uri, response.headers.get('Link'));
+  links.add(
+    ...parseJsonApiLinks(uri, body),
+    ...parseJsonApiCollection(uri, body),
+  );
+
+  // Remove _links and _embedded from body
+  const {
+    _embedded,
+    _links,
+    ...newBody
+  } = body;
+
+  return new JsonApiState(
+    uri,
+    newBody,
+    response.headers,
+    links,
+  );
+
+}
 /**
  * A JSON:API link can either be a string, or an object with at least a href
  * property.
@@ -41,47 +84,9 @@ type JsonApiTopLevelObject = {
 };
 
 /**
- * This class represents JSON:API responses.
- *
- * The Representor is responsible from extracting any links from the body,
- * so they can be followed.
- */
-export default class JsonApi extends Representation<JsonApiTopLevelObject> {
-
-  /**
-   * Parse links.
-   *
-   * This function gets called once by this object to parse any in-document
-   * links.
-   */
-  protected parseLinks(body: any): Link[] {
-
-    return ([] as Link[]).concat(
-      parseJsonApiLinks(this.uri, body),
-      parseJsonApiCollection(this.uri, body)
-    );
-
-  }
-
-  /**
-   * parse is called to convert a HTTP response body string into the most
-   * suitable internal body type.
-   *
-   * For JSON responses, usually this means calling JSON.parse() and returning
-   * the result.
-   */
-  protected parse(body: string): JsonApiTopLevelObject {
-
-    return JSON.parse(body);
-
-  }
-
-}
-
-/**
  * This function takes a JSON:API object, and extracts the links property.
  */
-function parseJsonApiLinks(baseHref: string, body: JsonApiTopLevelObject): Link[] {
+function parseJsonApiLinks(contextUri: string, body: JsonApiTopLevelObject): Link[] {
 
   const result: Link[] = [];
 
@@ -92,9 +97,9 @@ function parseJsonApiLinks(baseHref: string, body: JsonApiTopLevelObject): Link[
   for (const [rel, linkValue] of Object.entries(body.links)) {
 
     if (Array.isArray(linkValue)) {
-      result.push(...linkValue.map( link => parseJsonApiLink(baseHref, rel, link)));
+      result.push(...linkValue.map( link => parseJsonApiLink(contextUri, rel, link)));
     } else {
-      result.push(parseJsonApiLink(baseHref, rel, linkValue!));
+      result.push(parseJsonApiLink(contextUri, rel, linkValue!));
     }
 
   }
@@ -111,7 +116,7 @@ function parseJsonApiLinks(baseHref: string, body: JsonApiTopLevelObject): Link[
  *
  * Members of this collection should appear as an 'item' link to the parent.
  */
-function parseJsonApiCollection(baseHref: string, body: JsonApiTopLevelObject): Link[] {
+function parseJsonApiCollection(contextUri: string, body: JsonApiTopLevelObject): Link[] {
 
   if (!Array.isArray(body.data)) {
     // Not a collection
@@ -123,12 +128,12 @@ function parseJsonApiCollection(baseHref: string, body: JsonApiTopLevelObject): 
 
     if ('links' in member && 'self' in member.links!) {
 
-      const selfLink = parseJsonApiLink(baseHref, 'self', member.links!.self!);
-      result.push(new Link({
-        context: baseHref,
+      const selfLink = parseJsonApiLink(contextUri, 'self', member.links!.self!);
+      result.push({
+        context: contextUri,
         href: selfLink.href,
         rel: 'item'
-      }));
+      });
 
     }
   }
@@ -141,10 +146,10 @@ function parseJsonApiCollection(baseHref: string, body: JsonApiTopLevelObject): 
  * This function takes a single link value from a JSON:API link object, and
  * returns a object of type Link
  */
-function parseJsonApiLink(baseHref: string, rel: string, link: JsonApiLink): Link {
+function parseJsonApiLink(contextUri: string, rel: string, link: JsonApiLink): Link {
 
-  return new Link({
-    context: baseHref,
+  return ({
+    context: contextUri,
     rel,
     href: typeof link === 'string' ? link : link.href,
   });

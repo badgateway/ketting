@@ -3,6 +3,7 @@ import Resource from './resource';
 import { State, StateFactory } from './state';
 import { factory as halState } from './state/hal';
 import { factory as binaryState } from './state/binary';
+import { factory as jsonApiState } from './state/jsonapi';
 import { factory as textState }from './state/text';
 import { parseContentType } from './http/util';
 import { resolve } from './util/url';
@@ -19,6 +20,7 @@ export default class Client {
   } = {
     'application/hal+json': halState,
     'application/json': halState,
+    'application/vnd.api+json': jsonApiState,
   }
 
   constructor(bookmarkUri: string) {

@@ -1,8 +1,6 @@
 import OAuth2 from 'fetch-mw-oauth2';
 import { AuthOptions, KettingInit } from '../types';
-import * as base64 from './base64';
 import './fetch-polyfill';
-import { parse } from './url';
 
 type DomainOptions = {
   fetchInit?: RequestInit,
@@ -103,46 +101,6 @@ export default class FetchHelper {
 
   }
 
-  getDomainOptions(uri: string): DomainOptions {
-
-    if (!this.options.match || uri === '*') {
-      return {
-        fetchInit: this.options.fetchInit,
-        auth: this.options.auth,
-        authBucket: '*',
-      };
-    }
-
-    const { host } = parse(uri);
-    if (!host) {
-      throw new Error('getDomainOptions requires an absolute url');
-    }
-    for (const [matchStr, options] of Object.entries(this.options.match)) {
-
-      const matchSplit = matchStr.split('*');
-      const matchRegex = matchSplit.map(
-        part =>
-        part.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-      ).join('(.*)');
-
-      if (new RegExp('^' + matchRegex + '$').test(host)) {
-
-        return {
-          fetchInit: options.fetchInit,
-          auth: options.auth || this.options.auth,
-          authBucket: matchStr
-        };
-      }
-
-    }
-    return {
-      fetchInit: this.options.fetchInit,
-      auth: this.options.auth,
-      authBucket: '*',
-    };
-
-  }
-
   /**
    * This method executes the actual fetch() function, but not before adding
    * authentication headers.
@@ -157,12 +115,6 @@ export default class FetchHelper {
     }
 
     switch (authOptions.type) {
-      case 'basic' :
-        request.headers.set('Authorization', 'Basic ' + base64.encode(authOptions.userName + ':' + authOptions.password));
-        return this.doFetch(request);
-      case 'bearer' :
-        request.headers.set('Authorization', 'Bearer ' + authOptions.token);
-        return this.doFetch(request);
       case 'oauth2' :
         if (this.onBeforeRequest) { this.onBeforeRequest(request); }
         const response = await this.getOAuth2Bucket(options).fetch(request);
@@ -209,53 +161,4 @@ export default class FetchHelper {
 
 type HeaderSet = any;
 
-
-/**
- * 'init' refers to the init argument as passed to Request and Fetch objects.
- *
- * This function takes one or more of those init objects, and merges them.
- * Later properties override earlier ones.
- */
-function mergeInit(inits: (RequestInit | undefined)[]) {
-
-  const newHeaders = mergeHeaders(
-    inits.map( init => init ? init.headers : null )
-  );
-
-  const newInit = Object.assign({}, ...inits);
-  newInit.headers = newHeaders;
-
-  return newInit;
-
-}
-
-/**
- * Merges sets of HTTP headers.
- *
- * Each item in the array is a key->value object, a Fetch Headers object
- * or falsey.
- *
- * Any headers that appear more than once get replaced. The last occurence
- * wins.
- */
-export function mergeHeaders(headerSets: HeaderSet[]): Headers {
-
-  const result = new Headers();
-  for (const headerSet of headerSets) {
-
-    if (headerSet instanceof Headers) {
-      for (const key of headerSet.keys()) {
-        result.set(key, <string> headerSet.get(key));
-      }
-    } else if (headerSet) {
-      // not falsey, must be a key->value object.
-      for (const index of Object.keys(headerSet)) {
-        result.set(index, headerSet[index]);
-      }
-    }
-  }
-
-  return result;
-
-}
 

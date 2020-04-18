@@ -1,7 +1,6 @@
 import Ketting from './ketting';
 import Representator from './representor/base';
 import { LinkVariables } from './types';
-import { mergeHeaders } from './utils/fetch-helper';
 
 /**
  * A 'resource' represents an endpoint on the server.
@@ -50,44 +49,6 @@ export default class Resource<TResource = any, TPatch = Partial<TResource>> {
     this.uri = uri;
     this.repr = null;
     this.contentType = contentType;
-    this.nextRefreshHeaders = {};
-
-  }
-
-  /**
-   * Fetches the resource representation.
-   * Returns a promise that resolves to a parsed json object.
-   */
-  async get(): Promise<TResource> {
-    const r = await this.representation();
-    return r.getBody();
-
-  }
-
-  /**
-   * Updates the resource representation with a new JSON object.
-   */
-  async put(body: TResource): Promise<void> {
-
-    const contentType = this.contentType || this.client.representorHelper.getMimeTypes()[0];
-    const params = {
-      method: 'PUT',
-      body: JSON.stringify(body),
-      headers: {
-        'Content-Type': contentType,
-        'Accept' : this.contentType ? this.contentType : this.client.representorHelper.getAcceptHeader()
-      },
-    };
-    await this.fetchAndThrow(params);
-
-  }
-
-  /**
-   * Updates the resource representation with a new JSON object.
-   */
-  async delete(): Promise<void> {
-
-    await this.fetchAndThrow({ method: 'DELETE' });
 
   }
 
@@ -219,118 +180,6 @@ export default class Resource<TResource = any, TPatch = Partial<TResource>> {
   clearCache(): void {
 
     this.repr = null;
-
-  }
-
-  /**
-   * Does an arbitrary HTTP request on the resource using the Fetch API.
-   *
-   * The method signature is the same as the MDN fetch object. However, it's
-   * possible in this case to not specify a URI or specify a relative URI.
-   *
-   * When doing the actual request, any relative uri will be resolved to the
-   * uri of the current resource.
-   *
-   * @see https://developer.mozilla.org/en-US/docs/Web/API/Request/Request
-   */
-  fetch(input: Request|string|RequestInit, init?: RequestInit): Promise<Response> {
-
-    let uri = null;
-    let newInit: RequestInit = {};
-
-    if (input === undefined) {
-      // Nothing was provided, we're operating on the resource uri.
-      uri = this.uri;
-    } else if (typeof input === 'string') {
-      // If it's a string, it might be relative uri so we're resolving it
-      // first.
-      uri = resolve(this.uri, input);
-
-    } else if (input instanceof Request) {
-      // We were passed a request object. We need to extract all its
-      // information into the init object.
-      uri = resolve(this.uri, (<Request> input).url);
-
-      newInit.method = input.method;
-      newInit.headers = new Headers(input.headers);
-      // @ts-ignore: Possibly an error due to https://github.com/Microsoft/TypeScript/issues/15199
-      newInit.body = input.body;
-      newInit.mode = input.mode;
-      newInit.credentials = input.credentials;
-      newInit.cache = input.cache;
-      newInit.redirect = input.redirect;
-      newInit.referrer = input.referrer;
-      newInit.integrity = input.integrity;
-
-    } else if (input instanceof Object) {
-      // if it was a regular 'object', but not a Request, we're assuming the
-      // method was called with the init object as it's first parameter. This
-      // is not allowed in the default Fetch API, but we do allow it because
-      // in the resource, specifying the uri is optional.
-      uri = this.uri;
-      newInit = <RequestInit> input;
-    } else {
-      throw new TypeError('When specified, input must be a string, Request object or a key-value object');
-    }
-
-    // if the 'init' argument is specified, we're using it to override things
-    // in newInit.
-    if (init) {
-
-      for (const key of Object.keys(init)) {
-        if (key === 'headers') {
-          // special case.
-          continue;
-        }
-        (<any> newInit)[key] = (<any> init)[key];
-      }
-      newInit.headers = mergeHeaders([
-        newInit.headers,
-        init.headers
-      ]);
-    }
-
-    // @ts-ignore cross-fetch definitions are broken. See https://github.com/lquixada/cross-fetch/pull/19
-    const request = new Request(uri, newInit);
-
-    return this.client.fetch(request);
-
-  }
-
-  /**
-   * Does a HTTP request and throws an exception if the server emitted
-   * a HTTP error.
-   *
-   * @see https://developer.mozilla.org/en-US/docs/Web/API/Request/Request
-   */
-  async fetchAndThrow(input: Request|string|RequestInit, init?: RequestInit): Promise<Response> {
-
-    const response = await this.fetch(input, init);
-
-    if (response.ok) {
-      return response;
-    } else {
-      throw await problemFactory(response);
-    }
-
-  }
-
-
-  /**
-   * A set of HTTP headers that will be sent along with the next call to Refresh()
-   */
-  private nextRefreshHeaders: { [name: string]: string };
-
-  /**
-   * When a HTTP header gets added here, it will automatically get sent along
-   * to the next call to refresh().
-   *
-   * This means that the next time a GET request is done, these headers will be
-   * added. This list gets cleared after the GET request.
-   */
-  addNextRefreshHeader(name: string, value: string): void {
-
-    this.nextRefreshHeaders[name] = value;
 
   }
 
