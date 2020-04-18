@@ -1,4 +1,4 @@
-import client from './client';
+import Client from './client';
 import { State } from './state';
 import { resolve } from './util/url';
 import { FollowPromiseOne, FollowPromiseMany } from './follow-promise';
@@ -16,11 +16,13 @@ import { LinkVariables } from './link';
 export default class Resource<T = any> {
 
   uri: string;
+  client: Client;
 
   /**
    * uri must be absolute
    */
-  constructor(uri: string) {
+  constructor(client: Client, uri: string) {
+    this.client = client;
     this.uri = uri;
   }
 
@@ -31,8 +33,8 @@ export default class Resource<T = any> {
    */
   async get(getOptions?: GetOptions): Promise<State<T>> {
 
-    const response = await client.fetcher.fetch(this.uri);
-    return client.getStateForResponse(this.uri, response);
+    const response = await this.fetch();
+    return this.client.getStateForResponse(this.uri, response);
 
   }
 
@@ -46,7 +48,7 @@ export default class Resource<T = any> {
       body: state.serializeBody(),
       headers: state.contentHeaders(),
     };
-    await client.fetcher.fetchAndThrow(this.uri, params);
+    await this.fetch(params);
 
   }
 
@@ -55,8 +57,7 @@ export default class Resource<T = any> {
    */
   async delete(): Promise<void> {
 
-    await client.fetcher.fetchAndThrow(
-      this.uri,
+    await this.fetch(
       { method: 'DELETE' }
     );
 
@@ -98,7 +99,16 @@ export default class Resource<T = any> {
   go<TGoResource = any>(uri: string): Resource<TGoResource> {
 
     uri = resolve(this.uri, uri);
-    return client.go(uri);
+    return this.client.go(uri);
+
+  }
+
+  /**
+   * Does a HTTP request on the current resource URI
+   */
+  fetch(init?: RequestInit): Promise<Response> {
+
+    return this.client.fetcher.fetch(this.uri, init);
 
   }
 
