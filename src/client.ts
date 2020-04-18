@@ -1,4 +1,4 @@
-import Fetcher from './http/fetcher';
+import { Fetcher, FetchMiddleware } from './http/fetcher';
 import Resource from './resource';
 import { State, StateFactory } from './state';
 import { factory as halState } from './state/hal';
@@ -48,6 +48,12 @@ export default class Client {
       absoluteUri = this.bookmarkUri;
     }
     return new Resource(this, absoluteUri);
+
+  }
+
+  use(middleware: FetchMiddleware, origin: string = '*') {
+
+    this.fetcher.use(middleware, origin);
 
   }
 

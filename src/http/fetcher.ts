@@ -11,7 +11,7 @@ export type FetchMiddleware =
  * 'fetch middlewares'. These middlewares are similar to server-side
  * middlewares and can intercept requests and alter requests/responses.
  */
-export default class Fetcher {
+export class Fetcher {
 
   middlewares: [RegExp, FetchMiddleware][] = [];
 
@@ -27,8 +27,8 @@ export default class Fetcher {
 
     const origin = new URL(request.url).origin;
     const mws = this.getMiddlewaresByOrigin(origin);
-    mws.push((request: Request) => {
-      return fetch(request);
+    mws.push((innerRequest: Request) => {
+      return fetch(innerRequest);
     }
     );
 
@@ -43,7 +43,7 @@ export default class Fetcher {
   getMiddlewaresByOrigin(origin: string): FetchMiddleware[] {
 
     return this.middlewares.filter( ([regex, middleware]) => {
-      return regex.test(origin); 
+      return regex.test(origin);
 
     }).map( ([regex, middleware]) => {
       return middleware;
@@ -86,13 +86,14 @@ export default class Fetcher {
   }
 
 }
+export default Fetcher;
 
 function invokeMiddlewares(mws: FetchMiddleware[], request: Request): Promise<Response> {
 
   return mws[0](
     request,
     (nextRequest: Request) => {
-      return invokeMiddlewares(mws.slice(1), nextRequest) 
+      return invokeMiddlewares(mws.slice(1), nextRequest)
     }
   );
 

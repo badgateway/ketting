@@ -7,7 +7,7 @@ export default (userName: string, password: string): FetchMiddleware => {
 
   return (request, next) => {
 
-    request.headers.set('Authorization', basicAuthHeader); 
+    request.headers.set('Authorization', basicAuthHeader);
     return next(request);
 
   };
