@@ -1,6 +1,5 @@
 import { expect } from 'chai';
-import Ketting from '../../src/ketting';
-import Resource from '../../src/resource';
+import { Ketting, Resource } from '../../src';
 
 describe('Following a templated link', async () => {
 
