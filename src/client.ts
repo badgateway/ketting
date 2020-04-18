@@ -58,6 +58,15 @@ export default class Client {
   }
 
   /**
+   * Clears the entire resource cache
+   */
+  clearCache() {
+
+    // TODO: Implement cache
+
+  }
+
+  /**
    * Transforms a fetch Response to a State object.
    */
   getStateForResponse(uri: string, response: Response): Promise<State> {

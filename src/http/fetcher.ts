@@ -73,7 +73,7 @@ export class Fetcher {
    *
    * @see https://developer.mozilla.org/en-US/docs/Web/API/Request/Request
    */
-  async fetchAndThrow(resource: string|Request, init?: RequestInit): Promise<Response> {
+  async fetchOrThrow(resource: string|Request, init?: RequestInit): Promise<Response> {
 
     const response = await this.fetch(resource, init);
 

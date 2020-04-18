@@ -33,7 +33,7 @@ export default class Resource<T = any> {
    */
   async get(getOptions?: GetOptions): Promise<State<T>> {
 
-    const response = await this.fetch();
+    const response = await this.fetchOrThrow();
     return this.client.getStateForResponse(this.uri, response);
 
   }
@@ -48,7 +48,7 @@ export default class Resource<T = any> {
       body: state.serializeBody(),
       headers: state.contentHeaders(),
     };
-    await this.fetch(params);
+    await this.fetchOrThrow(params);
 
   }
 
@@ -57,7 +57,7 @@ export default class Resource<T = any> {
    */
   async delete(): Promise<void> {
 
-    await this.fetch(
+    await this.fetchOrThrow(
       { method: 'DELETE' }
     );
 
@@ -112,6 +112,17 @@ export default class Resource<T = any> {
 
   }
 
+  /**
+   * Does a HTTP request on the current resource URI.
+   *
+   * If the response was a 4XX or 5XX, this function will throw
+   * an exception.
+   */
+  fetchOrThrow(init?: RequestInit): Promise<Response> {
+
+    return this.client.fetcher.fetchOrThrow(this.uri, init);
+
+  }
 }
 
 type GetOptions = {
