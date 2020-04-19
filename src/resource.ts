@@ -18,12 +18,16 @@ export default class Resource<T = any> {
   uri: string;
   client: Client;
 
+  activeRefresh: Promise<State<T>> | null;
+
   /**
    * uri must be absolute
    */
   constructor(client: Client, uri: string) {
     this.client = client;
     this.uri = uri;
+    this.activeRefresh = null;
+
   }
 
   /**
@@ -31,10 +35,9 @@ export default class Resource<T = any> {
    *
    * This function will return a State object.
    */
-  async get(getOptions?: GetOptions): Promise<State<T>> {
+  get(getOptions?: GetOptions): Promise<State<T>> {
 
-    const response = await this.fetchOrThrow();
-    return this.client.getStateForResponse(this.uri, response);
+    return this.refresh(getOptions);
 
   }
 
@@ -46,7 +49,14 @@ export default class Resource<T = any> {
    */
   refresh(getOptions?: GetOptions): Promise<State<T>> {
 
-    return this.get(getOptions);
+    if (!this.activeRefresh) {
+      this.activeRefresh = (async() : Promise<State<T>> => {
+        const response = await this.fetchOrThrow();
+        return this.client.getStateForResponse(this.uri, response);
+      })();
+    }
+
+    return this.activeRefresh;
 
   }
 
