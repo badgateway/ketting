@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import Ketting from '../../src/ketting';
+import { Ketting, oauth2 } from '../../src';
 
 describe('OAuth2 Authentication', () => {
 
@@ -16,9 +16,9 @@ describe('OAuth2 Authentication', () => {
 
     it('should throw error if incorrect client credentials were passed.', (done) => {
 
-      const ketting = new Ketting('http://localhost:3000/hal1.json', {
-        auth: {
-          type: 'oauth2',
+      const ketting = new Ketting('http://localhost:3000/hal1.json');
+      ketting.use(
+        oauth2({
           grantType: 'password',
           clientId: 'fooClient',
           clientSecret: 'fooSecret',
@@ -26,8 +26,8 @@ describe('OAuth2 Authentication', () => {
           scope: ['test'],
           userName: 'fooOwner',
           password: 'barPassword'
-        }
-      });
+        })
+      );
       ketting.follow('auth-oauth')
         .catch((error:any) => {
           expect(error).to.be.an.instanceof(Error);
@@ -38,9 +38,10 @@ describe('OAuth2 Authentication', () => {
 
     it('should return 401 if incorrect owner credentials were passed.', (done) => {
 
-      const ketting = new Ketting('http://localhost:3000/hal1.json', {
-        auth: {
-          type: 'oauth2',
+      const ketting = new Ketting('http://localhost:3000/hal1.json');
+
+      ketting.use(
+        oauth2({
           grantType: 'password',
           clientId: 'fooClient',
           clientSecret: 'barSecret',
@@ -48,8 +49,8 @@ describe('OAuth2 Authentication', () => {
           scope: ['test'],
           userName: 'fooOwner',
           password: 'fooPassword'
-        }
-      });
+        })
+      );
       ketting.follow('auth-oauth')
         .catch((error:any) => {
           expect(error).to.be.an.instanceof(Error);
@@ -60,9 +61,9 @@ describe('OAuth2 Authentication', () => {
 
     it('should return 200 OK if correct credentials were passed.', async () => {
 
-      const ketting = new Ketting('http://localhost:3000/hal1.json', {
-        auth: {
-          type: 'oauth2',
+      const ketting = new Ketting('http://localhost:3000/hal1.json');
+      ketting.use(
+        oauth2({
           grantType: 'password',
           clientId: 'fooClient',
           clientSecret: 'barSecret',
@@ -70,8 +71,8 @@ describe('OAuth2 Authentication', () => {
           scope: ['test'],
           userName: 'fooOwner',
           password: 'barPassword'
-        }
-      });
+        })
+      );
 
       const resource = await ketting.follow('auth-oauth');
       const response = await resource.fetch({method: 'GET'});
@@ -85,16 +86,16 @@ describe('OAuth2 Authentication', () => {
 
     it('should throw error if incorrect client credentials were passed.', (done) => {
 
-      const ketting = new Ketting('http://localhost:3000/hal1.json', {
-        auth: {
-          type: 'oauth2',
+      const ketting = new Ketting('http://localhost:3000/hal1.json');
+      ketting.use(
+        oauth2({
           grantType: 'client_credentials',
           clientId: 'badlient',
           clientSecret: 'badSecret',
           tokenEndpoint: 'http://localhost:3000/oauth-token',
           scope: ['test']
-        }
-      });
+        })
+      );
       ketting.follow('auth-oauth')
         .catch((error:any) => {
           expect(error).to.be.an.instanceof(Error);
@@ -105,16 +106,16 @@ describe('OAuth2 Authentication', () => {
 
     it('should return 200 OK if correct credentials were passed.', async () => {
 
-      const ketting = new Ketting('http://localhost:3000/hal1.json', {
-        auth: {
-          type: 'oauth2',
+      const ketting = new Ketting('http://localhost:3000/hal1.json');
+      ketting.use(
+        oauth2({
           grantType: 'client_credentials',
           clientId: 'fooClientCredentials',
           clientSecret: 'barSecretCredentials',
           tokenEndpoint: 'http://localhost:3000/oauth-token',
           scope: ['test']
-        }
-      });
+        })
+      );
 
       const resource = await ketting.follow('auth-oauth');
       const response = await resource.fetch({method: 'GET'});
