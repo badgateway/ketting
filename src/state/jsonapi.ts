@@ -30,16 +30,9 @@ export const factory: StateFactory = async (uri: string, response: Response): Pr
     ...parseJsonApiCollection(uri, body),
   );
 
-  // Remove _links and _embedded from body
-  const {
-    _embedded,
-    _links,
-    ...newBody
-  } = body;
-
   return new JsonApiState(
     uri,
-    newBody,
+    body,
     response.headers,
     links,
   );

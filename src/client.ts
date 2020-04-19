@@ -4,7 +4,9 @@ import { State, StateFactory } from './state';
 import { factory as halState } from './state/hal';
 import { factory as binaryState } from './state/binary';
 import { factory as jsonApiState } from './state/jsonapi';
+import { factory as sirenState } from './state/siren';
 import { factory as textState }from './state/text';
+import { factory as cjState }from './state/collection-json';
 import { parseContentType } from './http/util';
 import { resolve } from './util/url';
 import { LinkVariables } from './link';
@@ -20,6 +22,8 @@ export default class Client {
   } = {
     'application/hal+json': [halState, '1.0'],
     'application/vnd.api+json': [jsonApiState, '0.9'],
+    'application/vnd.siren+json': [jsonApiState, '0.9'],
+    'application/vnd.collection+json': [cjState, '0.9'],
     'application/json': [halState, '0.8'],
   }
 
@@ -92,7 +96,7 @@ export default class Client {
     if (!request.headers.has('Accept')) {
       const acceptHeader = Object.entries(this.contentTypeMap).map(
         ([contentType, [stateFactory, q]]) => contentType + ';q=' + q
-      ).join(',');
+      ).join(', ');
       request.headers.set('Accept', acceptHeader);
     }
     return next(request);
