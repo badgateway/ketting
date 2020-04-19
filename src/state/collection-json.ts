@@ -18,7 +18,7 @@ export class CjState<T> extends BaseState<T> {
 }
 
 /**
- * Turns a HTTP response into a HalState
+ * Turns a HTTP response into a CjState
  */
 export const factory: StateFactory = async (uri: string, response: Response): Promise<CjState<CjCollection>> => {
 
@@ -166,4 +166,3 @@ function parseCjLinks(contextUri: string, body: CjDocument) {
   return result;
 
 }
-

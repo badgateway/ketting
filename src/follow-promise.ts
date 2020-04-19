@@ -1,7 +1,7 @@
 import Resource from './resource';
 import { LinkVariables, LinkNotFound } from './link';
 import { resolve } from './util/url';
-import { expand } from './util/url-template';
+import { expand } from './util/uri-template';
 
 /**
  * Base interface for both FollowOne and FollowAll

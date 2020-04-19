@@ -1,4 +1,3 @@
-// @ts-ignore
 import * as uriTemplate from 'uri-template';
 import { resolve } from './url';
 import { LinkVariables, Link } from '../link';

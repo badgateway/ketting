@@ -18,7 +18,7 @@ export class JsonApiState<T> extends BaseState<T> {
 }
 
 /**
- * Turns a HTTP response into a HalState
+ * Turns a HTTP response into a JsonApiState
  */
 export const factory: StateFactory = async (uri: string, response: Response): Promise<JsonApiState<JsonApiTopLevelObject>> => {
 

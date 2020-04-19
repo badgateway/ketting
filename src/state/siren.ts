@@ -18,7 +18,7 @@ export class SirenState<T> extends BaseState<T> {
 }
 
 /**
- * Turns a HTTP response into a HalState
+ * Turns a HTTP response into a SirenState
  */
 export const factory: StateFactory = async (uri: string, response: Response): Promise<SirenState<SirenEntity>> => {
 
