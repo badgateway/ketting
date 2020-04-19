@@ -55,43 +55,42 @@ describe('Issuing a GET request', async () => {
     const resource2 = await ketting.follow('linkHeader');
     const links = await resource2.links();
 
-    const expected = [
+    const expected:Link[] = [
       {
         rel: 'next',
         context: 'http://localhost:3000/link-header',
-        href: '/hal2.json'
+        href: '/hal2.json',
+        hreflang: undefined,
+        title: undefined,
+        type: undefined,
       },
       {
         rel: 'previous',
         context: 'http://localhost:3000/link-header',
-        href: '/TheBook/chapter2'
+        href: '/TheBook/chapter2',
+        hreflang: undefined,
+        title: undefined,
+        type: undefined,
       },
       {
         rel: 'start',
         context: 'http://localhost:3000/link-header',
-        href: 'http://example.org/'
+        href: 'http://example.org/',
+        hreflang: undefined,
+        title: undefined,
+        type: undefined,
       },
       {
         rel: 'http://example.net/relation/other',
         context: 'http://localhost:3000/link-header',
-        href: 'http://example.org/'
+        href: 'http://example.org/',
+        hreflang: undefined,
+        title: undefined,
+        type: undefined,
       }
     ];
 
     expect(links).to.eql(expected);
-
-  });
-
-  it('should throw an exception when no content-type was returned', async () => {
-
-    const resource2 = await ketting.follow('no-content-type');
-    let hadException = false;
-    try {
-      await resource2.get();
-    } catch (ex) {
-      hadException = true;
-    }
-    expect(hadException).to.eql(true);
 
   });
 
