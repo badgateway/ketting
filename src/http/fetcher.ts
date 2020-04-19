@@ -28,6 +28,11 @@ export class Fetcher {
     const origin = new URL(request.url).origin;
     const mws = this.getMiddlewaresByOrigin(origin);
     mws.push((innerRequest: Request) => {
+
+      if (!innerRequest.headers.has('User-Agent')) {
+        innerRequest.headers.set('User-Agent', 'Ketting/' + require('../../package.json').version);
+      }
+
       return fetch(innerRequest);
     }
     );

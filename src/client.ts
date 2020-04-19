@@ -16,16 +16,17 @@ export default class Client {
   bookmarkUri: string;
 
   contentTypeMap: {
-    [mimeType: string]: StateFactory<any>
+    [mimeType: string]: [StateFactory<any>, string],
   } = {
-    'application/hal+json': halState,
-    'application/json': halState,
-    'application/vnd.api+json': jsonApiState,
+    'application/hal+json': [halState, '1.0'],
+    'application/vnd.api+json': [jsonApiState, '0.9'],
+    'application/json': [halState, '0.8'],
   }
 
   constructor(bookmarkUri: string) {
     this.bookmarkUri = bookmarkUri;
     this.fetcher = new Fetcher();
+    this.fetcher.use( this.acceptHeader );
   }
 
   /**
@@ -75,7 +76,7 @@ export default class Client {
 
     const contentType = parseContentType(response.headers.get('Content-Type')!);
     if (contentType in this.contentTypeMap) {
-      return this.contentTypeMap[contentType](uri, response);
+      return this.contentTypeMap[contentType][0](uri, response);
     }
 
     if (contentType.startsWith('text/')) {
@@ -85,5 +86,17 @@ export default class Client {
     }
 
   }
+
+  private acceptHeader: FetchMiddleware = (request, next) => {
+
+    if (!request.headers.has('Accept')) {
+      const acceptHeader = Object.entries(this.contentTypeMap).map(
+        ([contentType, [stateFactory, q]]) => contentType + ';q=' + q
+      ).join(',');
+      request.headers.set('Accept', acceptHeader);
+    }
+    return next(request);
+
+  };
 
 }

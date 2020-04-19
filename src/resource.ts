@@ -2,7 +2,7 @@ import Client from './client';
 import { State } from './state';
 import { resolve } from './util/url';
 import { FollowPromiseOne, FollowPromiseMany } from './follow-promise';
-import { LinkVariables } from './link';
+import { Link, LinkNotFound, LinkVariables } from './link';
 
 /**
  * A 'resource' represents an endpoint on the server.
@@ -35,6 +35,18 @@ export default class Resource<T = any> {
 
     const response = await this.fetchOrThrow();
     return this.client.getStateForResponse(this.uri, response);
+
+  }
+
+  /**
+   * Gets the current state of the resource, skipping
+   * the cache.
+   *
+   * This function will return a State object.
+   */
+  refresh(getOptions?: GetOptions): Promise<State<T>> {
+
+    return this.get(getOptions);
 
   }
 
@@ -123,6 +135,40 @@ export default class Resource<T = any> {
     return this.client.fetcher.fetchOrThrow(this.uri, init);
 
   }
+
+  /**
+   * Returns a Link object, by its REL.
+   *
+   * If the link does not exist, a LinkNotFound error will be thrown.
+   *
+   * @deprecated
+   */
+  async link(rel: string): Promise<Link> {
+
+    const state = await this.get();
+    const link = state.links.get(rel);
+
+    if (!link) {
+      throw new LinkNotFound(`Link with rel: ${rel} not found on ${this.uri}`);
+    }
+    return link;
+
+  }
+
+  /**
+   * Returns all links defined on this object.
+   *
+   * @deprecated
+   */
+  async links(): Promise<Link[]> {
+
+    const state = await this.get();
+    const links = state.links.getAll();
+
+    return links;
+
+  }
+
 }
 
 type GetOptions = {

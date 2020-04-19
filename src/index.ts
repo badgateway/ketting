@@ -1,6 +1,8 @@
 export { default as Client, default as Ketting } from './client';
 export { default as Resource } from './resource';
 
+export { Link, LinkNotFound } from './link';
+
 export { JsonApiState } from './state/jsonapi';
 export { HalState } from './state/hal';
 export { SirenState } from './state/siren';
