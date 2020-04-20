@@ -54,6 +54,11 @@ export interface State<T = any> {
    */
   getEmbedded(): State[];
 
+  /**
+   * Timestamp of when the State was first generated
+   */
+  timestamp: number;
+
 }
 
 

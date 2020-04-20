@@ -37,6 +37,7 @@ export abstract class BaseState<T> implements State<T> {
     this.headers = headers;
     this.links = links;
     this.embedded = embedded || [];
+    this.timestamp = Date.now();
 
   }
 
@@ -89,5 +90,10 @@ export abstract class BaseState<T> implements State<T> {
     return this.embedded;
 
   }
+
+  /**
+   * Timestamp of when the State was first generated
+   */
+  timestamp: number;
 
 }
