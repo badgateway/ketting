@@ -1,6 +1,5 @@
 import { expect } from 'chai';
-
-import { Client } from '../../src';
+import { Client, TextState, Links } from '../../src';
 
 describe('Client', () => {
 
@@ -8,63 +7,60 @@ describe('Client', () => {
 
     it('should invalidate a resource\'s cache if an unsafe method was used', () => {
 
-      let cleared = false;
-
-      const ketting = new Client('https://example.org');
-      // @ts-ignore
-      ketting.resourceCache['https://example.org/foo'] = {
-        clearCache: () => {
-          cleared = true;
-        }
-      };
+      const client = new Client('https://example.org');
+      client.cache.store(new TextState(
+        'https://example.org/foo',
+        'hello',
+        new Headers(),
+        new Links(),
+      ));
 
       const request = new Request('https://example.org/foo', {
         method: 'POST'
       });
 
-      ketting.beforeRequest(request);
+      const response = new Response('', {status: 200});
+      client.cache.processRequest(request, response);
 
-      expect(cleared).to.equal(true);
+      expect(client.cache.has('https://example.org/foo')).to.equal(false);
 
     });
 
     it('should not invalidate a resource\'s cache if a safe method was used', () => {
 
-      let cleared = false;
-
-      const ketting = new Client('https://example.org');
-      // @ts-ignore
-      ketting.resourceCache['https://example.org/foo'] = {
-        clearCache: () => {
-          cleared = true;
-        }
-      };
+      const client = new Client('https://example.org');
+      client.cache.store(new TextState(
+        'https://example.org/foo',
+        'hello',
+        new Headers(),
+        new Links(),
+      ));
 
       const request = new Request('https://example.org/foo', {
         method: 'SEARCH'
       });
 
-      ketting.beforeRequest(request);
+      const response = new Response('', {status: 200});
+      client.cache.processRequest(request, response);
 
-      expect(cleared).to.equal(false);
+      expect(client.cache.has('https://example.org/foo')).to.equal(true);
 
     });
 
     it('should invalidate resources if they were mentioned in a Link header with rel="invalidates"', () => {
 
-      let cleared = false;
-
-      const ketting = new Client('https://example.org');
-      // @ts-ignore
-      ketting.resourceCache['https://example.org/bar'] = {
-        clearCache: () => {
-          cleared = true;
-        }
-      };
+      const client = new Client('https://example.org');
+      client.cache.store(new TextState(
+        'https://example.org/foo',
+        'hello',
+        new Headers(),
+        new Links(),
+      ));
 
       const request = new Request('https://example.org/foo', {
-        method: 'DELETE'
+        method: 'DELETE',
       });
+
       const headers = new Headers();
       headers.append('Link', '</bar>; rel="invalidates"');
       headers.append('Link', '</zim>; rel="invalidates"');
@@ -73,10 +69,8 @@ describe('Client', () => {
         headers
       });
 
-      ketting.afterRequest(request, response);
-
-      expect(cleared).to.equal(true);
-
+      client.cache.processRequest(request, response);
+      expect(client.cache.has('https://example.org/foo')).to.equal(false);
 
     });
 

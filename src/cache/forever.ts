@@ -22,6 +22,12 @@ export class ForeverCache implements StateCache {
 
   }
 
+  has(uri: string): boolean {
+
+    return this.cache.has(uri);
+
+  }
+
   delete(uri: string) {
     this.cache.delete(uri);
   }
