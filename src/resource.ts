@@ -300,12 +300,14 @@ export default class Resource<T = any> {
    *
    * @deprecated
    */
-  async links(): Promise<Link[]> {
+  async links(rel?: string): Promise<Link[]> {
 
     const state = await this.get();
-    const links = state.links.getAll();
-
-    return links;
+    if (!rel) {
+      return state.links.getAll();
+    } else {
+      return state.links.getMany(rel);
+    }
 
   }
 

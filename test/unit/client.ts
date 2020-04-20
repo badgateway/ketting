@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 
-import Ketting from '../../src/ketting';
+import { Client } from '../../src';
 
-describe('Ketting', () => {
+describe('Client', () => {
 
   describe('Resource caching', () => {
 
@@ -10,7 +10,7 @@ describe('Ketting', () => {
 
       let cleared = false;
 
-      const ketting = new Ketting('https://example.org');
+      const ketting = new Client('https://example.org');
       // @ts-ignore
       ketting.resourceCache['https://example.org/foo'] = {
         clearCache: () => {
@@ -32,7 +32,7 @@ describe('Ketting', () => {
 
       let cleared = false;
 
-      const ketting = new Ketting('https://example.org');
+      const ketting = new Client('https://example.org');
       // @ts-ignore
       ketting.resourceCache['https://example.org/foo'] = {
         clearCache: () => {
@@ -54,7 +54,7 @@ describe('Ketting', () => {
 
       let cleared = false;
 
-      const ketting = new Ketting('https://example.org');
+      const ketting = new Client('https://example.org');
       // @ts-ignore
       ketting.resourceCache['https://example.org/bar'] = {
         clearCache: () => {

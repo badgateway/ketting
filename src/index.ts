@@ -12,3 +12,5 @@ export { default as bearerAuth } from './http/bearer-auth';
 export { default as oauth2 } from './http/oauth2';
 
 export { Problem } from './http/error';
+
+export { FollowPromiseOne, FollowPromiseMany } from './follow-promise';
