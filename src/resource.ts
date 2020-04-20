@@ -38,7 +38,11 @@ export default class Resource<T = any> {
    */
   get(getOptions?: GetRequestOptions): Promise<State<T>> {
 
-    return this.refresh(getOptions);
+    const state = this.client.cache.get(this.uri);
+    if (!state) {
+      return this.refresh(getOptions);
+    }
+    return Promise.resolve(state);
 
   }
 
@@ -57,7 +61,10 @@ export default class Resource<T = any> {
     if (!this.activeRefresh) {
       this.activeRefresh = (async() : Promise<State<T>> => {
         const response = await this.fetchOrThrow(params);
-        return this.client.getStateForResponse(this.uri, response);
+        const state = await this.client.getStateForResponse(this.uri, response);
+        this.client.cache.store(state);
+        this.activeRefresh = null;
+        return state;
       })();
     }
 

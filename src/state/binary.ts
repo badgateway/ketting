@@ -1,4 +1,5 @@
-import { BaseState, StateFactory } from '../state';
+import { BaseState } from './base-state';
+import { StateFactory } from './interface';
 import { parseLink } from '../http/util';
 
 /**
