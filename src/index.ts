@@ -1,4 +1,4 @@
-export { default as Client, default as Ketting } from './client';
+export { default as Client, default as Ketting, default } from './client';
 export { default as Resource } from './resource';
 
 export { Link, LinkNotFound, Links } from './link';

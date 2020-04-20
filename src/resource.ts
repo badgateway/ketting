@@ -284,6 +284,15 @@ export default class Resource<T = any> {
   }
 
   /**
+   * Clears the state cache for this resource.
+   */
+  clearCache(): void {
+
+    this.client.cache.delete(this.uri);
+
+  }
+
+  /**
    * Returns a Link object, by its REL.
    *
    * If the link does not exist, a LinkNotFound error will be thrown.
