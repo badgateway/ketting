@@ -3,6 +3,7 @@ import { State } from './state';
 import { resolve } from './util/url';
 import { FollowPromiseOne, FollowPromiseMany } from './follow-promise';
 import { Link, LinkNotFound, LinkVariables } from './link';
+import { GetRequestOptions, PostRequestOptions, PatchRequestOptions, PutRequestOptions } from './types';
 
 /**
  * A 'resource' represents an endpoint on the server.
@@ -35,7 +36,7 @@ export default class Resource<T = any> {
    *
    * This function will return a State object.
    */
-  get(getOptions?: GetOptions): Promise<State<T>> {
+  get(getOptions?: GetRequestOptions): Promise<State<T>> {
 
     return this.refresh(getOptions);
 
@@ -47,11 +48,15 @@ export default class Resource<T = any> {
    *
    * This function will return a State object.
    */
-  refresh(getOptions?: GetOptions): Promise<State<T>> {
+  refresh(getOptions?: GetRequestOptions): Promise<State<T>> {
 
+    const params: RequestInit = {};
+    if (getOptions?.getContentHeaders) {
+      params.headers = getOptions.getContentHeaders();
+    }
     if (!this.activeRefresh) {
       this.activeRefresh = (async() : Promise<State<T>> => {
-        const response = await this.fetchOrThrow();
+        const response = await this.fetchOrThrow(params);
         return this.client.getStateForResponse(this.uri, response);
       })();
     }
@@ -63,12 +68,35 @@ export default class Resource<T = any> {
   /**
    * Updates the server state with a PUT request
    */
-  async put(state: State<T>): Promise<void> {
+  async put(options: PutRequestOptions<T>): Promise<void> {
+
+    let headers;
+    if (options.getContentHeaders) {
+      headers = new Headers(options.getContentHeaders());
+    } else if (options.headers) {
+      headers = new Headers(options.headers);
+    } else {
+      headers = new Headers();
+    }
+    if (!headers.has('Content-Type')) {
+      headers.set('Content-Type', 'application/json');
+    }
+    let body;
+    if (options.serializeBody) {
+      body = options.serializeBody();
+    } else if (options.body) {
+      body = options.body;
+      if (!(body instanceof Buffer) && typeof body !== 'string') {
+        body = JSON.stringify(body);
+      }
+    } else {
+      body = null;
+    }
 
     const params = {
       method: 'PUT',
-      body: state.serializeBody(),
-      headers: state.contentHeaders(),
+      body,
+      headers,
     };
     await this.fetchOrThrow(params);
 
@@ -81,6 +109,108 @@ export default class Resource<T = any> {
 
     await this.fetchOrThrow(
       { method: 'DELETE' }
+    );
+
+  }
+
+  /**
+   * Sends a POST request to the resource.
+   *
+   * See the documentation for PostRequestOptions for more details.
+   *
+   * This function assumes that POST is used to create new resources, and
+   * that the response will be a 201 Created along with a Location header that
+   * identifies the new resource location.
+   *
+   * This function returns a Promise that resolves into the newly created
+   * Resource.
+   *
+   * If no Location header was given, it will resolve still, but with an empty
+   * value.
+   */
+  post(options: PostRequestOptions): Promise<Resource | null>;
+  post<TPostResource>(options: PostRequestOptions): Promise<Resource<TPostResource>>;
+  async post(options: PostRequestOptions): Promise<Resource | null> {
+
+    let headers;
+    if (options.getContentHeaders) {
+      headers = new Headers(options.getContentHeaders());
+    } else if (options.headers) {
+      headers = new Headers(options.headers);
+    } else {
+      headers = new Headers();
+    }
+    if (!headers.has('Content-Type')) {
+      headers.set('Content-Type', 'application/json');
+    }
+    let body;
+    if (options.serializeBody) {
+      body = options.serializeBody();
+    } else if (options.body) {
+      body = options.body;
+      if (!(body instanceof Buffer) && typeof body !== 'string') {
+        body = JSON.stringify(body);
+      }
+    } else {
+      body = null;
+    }
+    const response = await this.fetchOrThrow(
+      {
+        method: 'POST',
+        body,
+        headers,
+      }
+    );
+
+    switch (response.status) {
+      case 205 :
+        return this;
+      case 201:
+        if (response.headers.has('location')) {
+          return this.go(<string> response.headers.get('location'));
+        }
+        return null;
+      default:
+        return null;
+    }
+
+  }
+
+  /**
+   * Sends a PATCH request to the resource.
+   *
+   * This function defaults to a application/json content-type header.
+   */
+  async patch(options: PatchRequestOptions): Promise<void> {
+
+    let headers;
+    if (options.getContentHeaders) {
+      headers = new Headers(options.getContentHeaders());
+    } else if (options.headers) {
+      headers = new Headers(options.headers);
+    } else {
+      headers = new Headers();
+    }
+    if (!headers.has('Content-Type')) {
+      headers.set('Content-Type', 'application/json');
+    }
+    let body;
+    if (options.serializeBody) {
+      body = options.serializeBody();
+    } else if (options.body) {
+      body = options.body;
+      if (!(body instanceof Buffer) && typeof body !== 'string') {
+        body = JSON.stringify(body);
+      }
+    } else {
+      body = null;
+    }
+    await this.fetchOrThrow(
+      {
+        method: 'PATCH',
+        body,
+        headers
+      }
     );
 
   }
@@ -179,10 +309,4 @@ export default class Resource<T = any> {
 
   }
 
-}
-
-type GetOptions = {
-  headers: Headers | {
-    [name: string]: string,
-  }
 }

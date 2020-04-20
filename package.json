@@ -78,6 +78,7 @@
       "ts-node/register",
       "test/testserver.ts"
     ],
+    "ignore": "test/test-entrypoint.ts",
     "recursive": true,
     "extension": [
       "ts",

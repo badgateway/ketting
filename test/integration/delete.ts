@@ -81,7 +81,7 @@ describe('Issuing a DELETE request', async () => {
 
   after( async () => {
 
-    await ketting.go('/reset').fetch({method: 'POST'});
+    await ketting.go('/reset').post({});
 
   });
 
