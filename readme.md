@@ -45,7 +45,7 @@ Ketting is a library that sits on top of a [Fetch API][3] to provide a RESTful
 interface and make it easier to follow REST best practices more strictly.
 
 It provides some useful abstractions that make it easier to work with true
-hypermedia / HATEAOS servers. It currently parses [HAL][hal] and has a deep
+hypermedia / HATEOAS servers. It currently parses [HAL][hal] and has a deep
 understanding of links and embedded resources. There's also support for parsing
 and following links from HTML documents, and it understands the HTTP `Link:`
 header.
@@ -117,8 +117,8 @@ resources, thus avoiding the overhead.
 Ketting understands `_embedded` and completely abstracts them away. If you use
 Ketting with a HAL server, you can therefore completely ignore them.
 
-For example, given a collection resource with many resources that hal the
-relationshiptype `item`, you might use the following API:
+For example, given a collection resource with many resources that have the
+relationship type `item`, you might use the following API:
 
 ```js
 const ketting = new Ketting('https://api.example.org/');
