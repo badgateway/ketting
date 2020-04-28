@@ -8,7 +8,7 @@ import { resolve } from '../util/uri';
 /**
  * Represents a resource state in the Siren format
  */
-export class SirenState<T> extends BaseState<T> {
+export class SirenState<T = any> extends BaseState<T> {
 
   serializeBody(): string {
 
@@ -21,23 +21,16 @@ export class SirenState<T> extends BaseState<T> {
 /**
  * Turns a HTTP response into a SirenState
  */
-export const factory: StateFactory = async (uri: string, response: Response): Promise<SirenState<SirenEntity>> => {
+export const factory = async (uri: string, response: Response): Promise<SirenState<SirenEntity>> => {
 
   const body = await response.json();
 
   const links = parseLink(uri, response.headers.get('Link'));
   links.add(...parseSirenLinks(uri, body));
 
-  // Remove _links and _embedded from body
-  const {
-    _embedded,
-    _links,
-    ...newBody
-  } = body;
-
   return new SirenState(
     uri,
-    newBody,
+    body,
     response.headers,
     links,
     parseSirenEmbedded(uri, body, response.headers),
@@ -119,15 +112,18 @@ function parseSirenLink(contextUri: string, link: SirenLink): Link[] {
 
   const result: Link[] = [];
 
-  for (const rel of link.rel) {
+  const {
+    rel: rels,
+    ...attributes
+  } = link;
+  for (const rel of rels) {
 
-    result.push({
-      href: link.href,
+    const newLink: Link = {
       rel,
-      title: link.title,
-      type: link.type,
       context: contextUri,
-    });
+      ...attributes,
+    };
+    result.push(newLink);
 
   }
 
@@ -174,12 +170,16 @@ function parseSirenSubEntityAsLink(contextUri: string, subEntity: SirenSubEntity
   }
 
   return subEntity.rel.map(rel => {
-    return {
+    const title = subEntity.title;
+    const link: Link = {
       href: selfHref!,
       rel,
-      title: subEntity.title,
       context: contextUri,
     };
+    if (title) {
+      link.title = title;
+    }
+    return link;
   });
 
 }

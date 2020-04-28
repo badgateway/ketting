@@ -330,4 +330,17 @@ export default class Resource<T = any> {
 
   }
 
+  /**
+   *
+   * Returns true or false depending on if a link with the specified relation
+   * type exists.
+   *
+   * @deprecated
+   */
+  async hasLink(rel: string): Promise<boolean> {
+
+    const state = await this.get();
+    return state.links.has(rel);
+
+  }
 }

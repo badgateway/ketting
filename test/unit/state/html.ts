@@ -1,7 +1,6 @@
 import { expect } from 'chai';
-
-import Link from '../../../src/link';
-import Html from '../../../src/representor/html';
+import { factory } from '../../../src/state/html';
+import { Link } from '../../../src';
 
 describe('HTML representor', () => {
 
@@ -10,52 +9,52 @@ describe('HTML representor', () => {
   const tests: TestTuple[] = [
     [
       '<link rel="me" href="https://evertpot.com/" />',
-      new Link({rel: 'me', context: '/index.html', href: 'https://evertpot.com/'})
+      {rel: 'me', context: '/index.html', href: 'https://evertpot.com/'}
     ],
     [
       '<link rel="me" href="https://evertpot.com/">',
-      new Link({rel: 'me', context: '/index.html', href: 'https://evertpot.com/'})
+      {rel: 'me', context: '/index.html', href: 'https://evertpot.com/'}
     ],
     [
       '<LINK rel="me" href="https://evertpot.com/">',
-      new Link({rel: 'me', context: '/index.html', href: 'https://evertpot.com/'})
+      {rel: 'me', context: '/index.html', href: 'https://evertpot.com/'}
     ],
     [
       '<link REL="me" href="https://evertpot.com/">',
-      new Link({rel: 'me', context: '/index.html', href: 'https://evertpot.com/'})
+      {rel: 'me', context: '/index.html', href: 'https://evertpot.com/'}
     ],
     [
       '<link href="https://evertpot.com/" rel="me" />',
-      new Link({rel: 'me', context: '/index.html', href: 'https://evertpot.com/'})
+      {rel: 'me', context: '/index.html', href: 'https://evertpot.com/'}
     ],
     [
       '<link href="https://evertpot.com/" rel="me" title="my website!"/>',
-      new Link({rel: 'me', context: '/index.html', href: 'https://evertpot.com/'})
+      {rel: 'me', context: '/index.html', href: 'https://evertpot.com/'}
     ],
     [
       '<link href="foo.css" rel="stylesheet" type="text/css" />',
-      new Link({rel: 'stylesheet', context: '/index.html', href: 'foo.css', type: 'text/css'})
+      {rel: 'stylesheet', context: '/index.html', href: 'foo.css', type: 'text/css'}
     ],
     [
       '<a href="https://evertpot.com/" rel="me">',
-      new Link({rel: 'me', context: '/index.html', href: 'https://evertpot.com/'})
+      {rel: 'me', context: '/index.html', href: 'https://evertpot.com/'}
     ],
     [
       '<A href="https://evertpot.com/" rel="me">',
-      new Link({rel: 'me', context: '/index.html', href: 'https://evertpot.com/'})
+      {rel: 'me', context: '/index.html', href: 'https://evertpot.com/'}
     ],
     [
       '<a HREF="https://evertpot.com/" rel="me">',
-      new Link({rel: 'me', context: '/index.html', href: 'https://evertpot.com/'})
+      {rel: 'me', context: '/index.html', href: 'https://evertpot.com/'}
     ],
     [
       '<a rel="me" href="https://evertpot.com/">',
-      new Link({rel: 'me', context: '/index.html', href: 'https://evertpot.com/'})
+      {rel: 'me', context: '/index.html', href: 'https://evertpot.com/'}
     ],
     [
       '<a rel="icon favicon" href="favicon.ico">',
-      new Link({rel: 'icon', context: '/index.html', href: 'favicon.ico'}),
-      new Link({rel: 'favicon', context: '/index.html', href: 'favicon.ico'}),
+      {rel: 'icon', context: '/index.html', href: 'favicon.ico'},
+      {rel: 'favicon', context: '/index.html', href: 'favicon.ico'},
     ],
     [
       // Ignoring links without rel
@@ -69,15 +68,15 @@ describe('HTML representor', () => {
 
   tests.forEach( value => {
 
-    it('should parse ' + value[0], () => {
+    it('should parse ' + value[0], async () => {
 
-      const html = new Html('/index.html', 'text/html', value[0], new Map());
+      const response = new Response(value[0]);
+      const html = await factory('/index.html', response);
 
       const links = value.slice(1);
 
       expect(html.uri).to.equal('/index.html');
-      expect(html.contentType).to.equal('text/html');
-      expect(html.getLinks()).to.eql(links);
+      expect(html.links.getAll()).to.eql(links);
 
     });
 

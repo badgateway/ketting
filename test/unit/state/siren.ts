@@ -1,9 +1,10 @@
 import { expect } from 'chai';
-import Link from '../../../src/link';
-import Siren from '../../../src/representor/siren';
+import { factory } from '../../../src/state/siren';
+import { SirenState } from '../../../src';
+
 describe('Siren representor', () => {
 
-  it('should parse the example Siren object', () => {
+  it('should parse the example Siren object', async () => {
 
     const exampleObj = {
       "class": [ "order" ],
@@ -51,53 +52,53 @@ describe('Siren representor', () => {
       ]
     };
 
-    const siren = new Siren('http://api.x.io/orders/42', 'application/vnd.siren+json', JSON.stringify(exampleObj), new Map());
-    expect(siren.getLinks()).to.eql([
-      new Link({
+    const siren = await callFactory(exampleObj);
+    expect(siren.links.getAll()).to.eql([
+      {
         rel: 'self',
         href: 'http://api.x.io/orders/42',
         context: 'http://api.x.io/orders/42',
-      }),
-      new Link({
+      },
+      {
         rel: 'previous',
         href: 'http://api.x.io/orders/41',
         context: 'http://api.x.io/orders/42',
-      }),
-      new Link({
+      },
+      {
         rel: 'next',
         href: 'http://api.x.io/orders/43',
         context: 'http://api.x.io/orders/42',
-      }),
-      new Link({
+      },
+      {
         rel: 'http://x.io/rels/order-items',
         href: 'http://api.x.io/orders/42/items',
         context: 'http://api.x.io/orders/42',
-      }),
-      new Link({
+        class: ['items', 'collection'],
+      },
+      {
         rel: 'http://x.io/rels/customer',
         href: 'http://api.x.io/customers/pj123',
         context: 'http://api.x.io/orders/42',
-      }),
+      },
     ]);
 
-    expect(siren.getEmbedded()).to.eql({
-      'http://api.x.io/customers/pj123':
-        {
-          "class": [ "info", "customer" ],
-          "rel": [ "http://x.io/rels/customer" ],
-          "properties": {
-            "customerId": "pj123",
-            "name": "Peter Joseph"
-          },
-          "links": [
-            { "rel": [ "self" ], "href": "http://api.x.io/customers/pj123" }
-          ]
-        }
+    const embedded = siren.getEmbedded()[0];
+    expect(embedded.uri).to.eql('http://api.x.io/customers/pj123');
+    expect(embedded.body).to.eql({
+      "class": [ "info", "customer" ],
+      "rel": [ "http://x.io/rels/customer" ],
+      "properties": {
+        "customerId": "pj123",
+        "name": "Peter Joseph"
+      },
+      "links": [
+        { "rel": [ "self" ], "href": "http://api.x.io/customers/pj123" }
+      ]
     });
 
   });
 
-  it('should parse simple objects', () => {
+  it('should parse simple objects', async() => {
 
     const input = {
       "class": [ "order" ],
@@ -108,15 +109,13 @@ describe('Siren representor', () => {
       },
     };
 
-    const siren = new Siren('http://api.x.io/orders/42', 'application/vnd.siren+json', null, new Map());
-    siren.setBody(input);
-
-    expect(siren.getLinks()).to.eql([]);
-    expect(siren.getEmbedded()).to.eql({});
+    const siren = await callFactory(input);
+    expect(siren.links.getAll()).to.eql([]);
+    expect(siren.getEmbedded()).to.eql([]);
 
   });
 
-  it('should ignore entities without self links', () => {
+  it('should ignore entities without self links', async () => {
 
     const input:any = {
       "class": [ "order" ],
@@ -148,11 +147,17 @@ describe('Siren representor', () => {
       ],
     };
 
-    const siren = new Siren('http://api.x.io/orders/42', 'application/vnd.siren+json', null, new Map());
-    siren.setBody(input);
-    expect(siren.getLinks()).to.eql([]);
-    expect(siren.getEmbedded()).to.eql({});
+    const siren = await callFactory(input);
+    expect(siren.links.getAll()).to.eql([]);
+    expect(siren.getEmbedded()).to.eql([]);
 
   });
 
 });
+
+function callFactory(body: any): Promise<SirenState> {
+
+  const response = new Response(JSON.stringify(body));
+  return factory('http://api.x.io/orders/42', response);
+
+}

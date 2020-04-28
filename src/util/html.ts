@@ -19,12 +19,13 @@ export function parseHtmlLinks(contextUri: string, body: string): Link[] {
 
     for (const rel of rels.split(' ')) {
 
-      const link = {
+      const type = <string>node.attributes.TYPE;
+      const link: Link = {
         rel,
         context: contextUri,
         href: <string> node.attributes.HREF,
-        type: <string> node.attributes.TYPE || undefined
       };
+      if (type) link.type = type;
       links.push(link);
 
     }

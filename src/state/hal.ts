@@ -8,7 +8,7 @@ import { resolve } from '../util/uri';
 /**
  * Represents a resource state in the HAL format
  */
-export class HalState<T> extends BaseState<T> {
+export class HalState<T = any> extends BaseState<T> {
 
   serializeBody(): string {
 
@@ -21,7 +21,7 @@ export class HalState<T> extends BaseState<T> {
 /**
  * Turns a HTTP response into a HalState
  */
-export const factory: StateFactory = async (uri: string, response: Response): Promise<HalState<HalResource>> => {
+export const factory = async (uri: string, response: Response): Promise<HalState<HalResource>> => {
 
   const body = await response.json();
 
@@ -90,6 +90,9 @@ function parseHalLinks(context: string, body: HalResource): Link[] {
       for(const innerBody of innerBodies) {
 
         const href:string = innerBody?._links?.self?.href;
+        if (!href) {
+          continue;
+        }
 
         if (foundLinks.has(rel + ';' + href)) {
           continue;
@@ -121,11 +124,8 @@ function parseHalLink(context: string, rel: string, links: HalLink[]): Link[] {
   for (const link of links) {
     result.push({
       rel,
-      href: link.href,
       context,
-      title: link.title,
-      type: link.type,
-      templated: link.templated || undefined,
+      ...link,
     });
   }
 
@@ -161,10 +161,16 @@ function parseHalEmbedded(context: string, body: HalResource, headers: Headers):
         // Skip any embedded without a self link.
         continue;
       }
+      // Remove _links and _embedded from body
+      const {
+        _embedded,
+        _links,
+        ...newBody
+      } = embeddedItem;
 
       result.push(new HalState(
         resolve(context, embeddedItem._links.self.href),
-        embeddedItem,
+        newBody,
         new Headers({
           'Content-Type': headers.get('Content-Type')!,
         }),

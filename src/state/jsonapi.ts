@@ -8,7 +8,7 @@ import { resolve } from '../util/uri';
 /**
  * Represents a resource state in the HAL format
  */
-export class JsonApiState<T> extends BaseState<T> {
+export class JsonApiState<T = any> extends BaseState<T> {
 
   serializeBody(): string {
 
@@ -21,7 +21,7 @@ export class JsonApiState<T> extends BaseState<T> {
 /**
  * Turns a HTTP response into a JsonApiState
  */
-export const factory: StateFactory = async (uri: string, response: Response): Promise<JsonApiState<JsonApiTopLevelObject>> => {
+export const factory = async (uri: string, response: Response): Promise<JsonApiState<JsonApiTopLevelObject>> => {
 
   const body = await response.json();
 
