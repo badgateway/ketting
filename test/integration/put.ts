@@ -25,13 +25,13 @@ describe('Issuing a PUT request', async () => {
   it('should have cleared the resource representation', async () => {
 
     const newBody = await resource.get();
-    expect(newBody).to.eql({newData: 'hi!'});
+    expect(newBody.body).to.eql({newData: 'hi!'});
 
   });
   it('should have cleared the global cache', async () => {
 
     const newBody = await (await ketting.follow('next')).get();
-    expect(newBody).to.eql({newData: 'hi!'});
+    expect(newBody.body).to.eql({newData: 'hi!'});
 
   });
   it('should throw an exception if there was an http error', async () => {

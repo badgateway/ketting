@@ -1,6 +1,6 @@
 import Resource from './resource';
 import { LinkVariables, LinkNotFound } from './link';
-import { resolve } from './util/url';
+import { resolve } from './util/uri';
 import { expand } from './util/uri-template';
 
 /**

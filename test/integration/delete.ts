@@ -48,7 +48,7 @@ describe('Issuing a DELETE request', async () => {
   it('should throw an exception when there was a HTTP error', async () => {
 
     // Resetting the server
-    await ketting.go('/reset').fetch({method: 'POST'});
+    await ketting.go('/reset').post({});
     ketting.clearCache();
     const resource2 = await ketting.follow('error400');
     let exception = null;

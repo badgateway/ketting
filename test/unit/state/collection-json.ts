@@ -1,10 +1,10 @@
 import { expect } from 'chai';
-import Link from '../../../src/link';
-import CollectionJson from '../../../src/representor/collection-json';
+import { CjState } from '../../../src';
+import { factory } from '../../../src/state/collection-json';
 
 describe('collection+json representor', () => {
 
-  it('should parse the "Minimal Representation" example', () => {
+  it('should parse the "Minimal Representation" example',  async() => {
 
     const exampleObj = { "collection" :
       {
@@ -14,17 +14,22 @@ describe('collection+json representor', () => {
       }
     };
 
+
+    const cj = await callFactory('http://example.org/friends/', exampleObj);
+
+    /*
     const cj = new CollectionJson(
       'http://example.org/friends/',
       'application/vnd.collection+json',
       JSON.stringify(exampleObj),
       new Map()
     );
-    expect(cj.getLinks()).to.eql([]);
+     */
+    expect(cj.links.getAll()).to.eql([]);
 
   });
 
-  it('should parse the "Collection Representation" example', () => {
+  it('should parse the "Collection Representation" example', async () => {
 
     const exampleObj = { "collection" :
       {
@@ -94,49 +99,55 @@ describe('collection+json representor', () => {
       }
     };
 
+    const cj = await callFactory('http://example.org/friends/', exampleObj);
+    /*
     const cj = new CollectionJson(
       'http://example.org/friends/',
       'application/vnd.collection+json',
       JSON.stringify(exampleObj),
       new Map()
     );
-    expect(cj.getLinks()).to.eql([
-      new Link({
+     */
+    expect(cj.links.getAll()).to.eql([
+      {
         rel: 'feed',
         href: 'http://example.org/friends/rss',
         context: 'http://example.org/friends/',
-      }),
-      new Link({
+        title: undefined,
+      },
+      {
         rel: 'item',
         href: 'http://example.org/friends/jdoe',
         context: 'http://example.org/friends/',
-      }),
-      new Link({
+      },
+      {
         rel: 'item',
         href: 'http://example.org/friends/msmith',
         context: 'http://example.org/friends/',
-      }),
-      new Link({
+      },
+      {
         rel: 'item',
         href: 'http://example.org/friends/rwilliams',
         context: 'http://example.org/friends/',
-      }),
-      new Link({
+      },
+      {
         rel: 'search',
         href: 'http://example.org/friends/search{?search}',
         templated: true,
         context: 'http://example.org/friends/',
-      }),
-      new Link({
+        title: undefined,
+      },
+      {
         rel: 'get-new',
         href: 'http://example.org/friends/new',
         context: 'http://example.org/friends/',
-      }),
+        title: undefined,
+      },
     ]);
 
   });
 
-  it('should correctly handle edge-cases', () => {
+  it('should correctly handle edge-cases', async () => {
 
     const exampleObj = { "collection" :
       {
@@ -157,13 +168,23 @@ describe('collection+json representor', () => {
       }
     };
 
+    const cj = await callFactory('http://example.org/friends/', exampleObj);
+    /*
     const cj = new CollectionJson(
       'http://example.org/friends/',
       'application/vnd.collection+json',
       JSON.stringify(exampleObj),
       new Map()
     );
-    expect(cj.getLinks()).to.eql([]);
+     */
+    expect(cj.links.getAll()).to.eql([]);
 
   });
 });
+
+function callFactory(uri: string, body: any): Promise<CjState> {
+
+  const response = new Response(JSON.stringify(body));
+  return factory(uri, response);
+
+}

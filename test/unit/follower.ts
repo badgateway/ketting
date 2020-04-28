@@ -1,4 +1,4 @@
-import { Resource, FollowPromiseOne, FollowPromiseMany, Link } from '../../src';
+import { Resource, FollowPromiseOne, FollowPromiseMany, Link, Links } from '../../src';
 import { expect } from 'chai';
 
 describe('FollowPromiseOne', () => {
@@ -51,9 +51,9 @@ describe('FollowPromiseOne', () => {
     const follower = new FollowPromiseOne(fakeResource, 'rel1');
     await follower.preferPush();
     expect(
-      (fakeResource as any).nextRefreshHeaders
+      (fakeResource as any).lastGetOptions
     ).to.eql({
-      'Prefer-Push': 'rel1'
+      headers: { 'Prefer-Push': 'rel1' },
     });
 
   });
@@ -64,9 +64,9 @@ describe('FollowPromiseOne', () => {
     const follower = new FollowPromiseOne(fakeResource, 'rel1');
     await follower.preferTransclude();
     expect(
-      (fakeResource as any).nextRefreshHeaders
+      (fakeResource as any).lastGetOptions
     ).to.eql({
-      'Prefer': 'transclude=rel1'
+      headers: { 'Prefer': 'transclude=rel1' },
     });
 
   });
@@ -76,7 +76,7 @@ describe('FollowPromiseOne', () => {
     const fakeResource = getFakeResource();
     const follower = new FollowPromiseOne(fakeResource, 'rel1');
     const newResource = await follower;
-    expect(await newResource.get()).to.eql({firstGet: true});
+    expect((await newResource.get()).body).to.eql({firstGet: true});
 
   });
 
@@ -85,7 +85,7 @@ describe('FollowPromiseOne', () => {
     const fakeResource = getFakeResource();
     const follower = new FollowPromiseOne(fakeResource, 'rel1');
     const newResource = await follower.preFetch();
-    expect(await newResource.get()).to.eql({firstGet: false});
+    expect((await newResource.get()).body).to.eql({firstGet: false});
 
   });
 
@@ -110,26 +110,15 @@ describe('FollowPromiseMany', () => {
 
   });
 
-  it('should trigger catch() on failure', async() => {
-
-    const follower = new FollowPromiseMany(getFakeResource(), 'error');
-
-    let caught = false;
-
-    await follower.catch( err => { caught = true; });
-    expect(caught).to.equal(true);
-
-  });
-
   it('should add a Prefer-Push header to the next refresh if requested', async() => {
 
     const fakeResource = getFakeResource();
     const follower = new FollowPromiseMany(fakeResource, 'rel1');
     await follower.preferPush();
     expect(
-      (fakeResource as any).nextRefreshHeaders
+      (fakeResource as any).lastGetOptions
     ).to.eql({
-      'Prefer-Push': 'rel1'
+      headers: { 'Prefer-Push': 'rel1' },
     });
 
   });
@@ -140,9 +129,9 @@ describe('FollowPromiseMany', () => {
     const follower = new FollowPromiseMany(fakeResource, 'rel1');
     await follower.preferTransclude();
     expect(
-      (fakeResource as any).nextRefreshHeaders
+      (fakeResource as any).lastGetOptions
     ).to.eql({
-      'Prefer': 'transclude=rel1'
+      headers: { 'Prefer': 'transclude=rel1' },
     });
 
   });
@@ -152,7 +141,7 @@ describe('FollowPromiseMany', () => {
     const fakeResource = getFakeResource();
     const follower = new FollowPromiseMany(fakeResource, 'rel1');
     const newResource = await follower;
-    expect(await newResource[0].get()).to.eql({firstGet: true});
+    expect((await newResource[0].get()).body).to.eql({firstGet: true});
 
   });
 
@@ -161,7 +150,7 @@ describe('FollowPromiseMany', () => {
     const fakeResource = getFakeResource();
     const follower = new FollowPromiseMany(fakeResource, 'rel1');
     const newResource = await follower.preFetch();
-    expect(await newResource[0].get()).to.eql({firstGet: false});
+    expect((await newResource[0].get()).body).to.eql({firstGet: false});
 
   });
 
@@ -177,8 +166,8 @@ describe('FollowPromiseMany', () => {
 function getFakeResource(uri?: string, type?: string): Resource<{ firstGet: boolean }> {
 
   if (!uri) uri = 'https://example.org';
-  const fakeResource = new Resource(null as any, uri);
-  const links: Link[] = [
+  const fakeResource:any = new Resource(null as any, uri);
+  const links = new Links([
     {
       context: fakeResource.uri,
       href: '/child1',
@@ -206,41 +195,29 @@ function getFakeResource(uri?: string, type?: string): Resource<{ firstGet: bool
       rel: 'templated',
       templated: true,
     },
-  ];
+  ]);
 
-  fakeResource.link = async (rel:string): Promise<Link> => {
-
-    if (rel==='error') {
-      throw new Error('Fail!!');
-    }
-
-    const link = links.find( link => link.rel === rel );
-    if (!link) throw new Error('Link with this rel not found');
-    return link;
-  };
-  fakeResource.links = async (rel:string): Promise<Link[]> => {
-    if (rel==='error') {
-      throw new Error('Fail!!');
-    }
-    return links.filter( link => link.rel === rel );
-  };
   fakeResource.go = (uri: string): Resource<any> => {
     return getFakeResource(uri);
   }
+
+  fakeResource.lastGetOptions = null;
 
   // The response to get() is hijacked just to communicate
   // if a get() was issued previously. This will be used for
   // testing prefetch.
   let firstGet = true;
   // @ts-ignore
-  fakeResource.get = async() => {
-    
+  fakeResource.get = async(getOptions: any) => {
+
+    fakeResource.lastGetOptions = getOptions;
     if (fakeResource.uri === 'https://example.org/error-get') {
       throw new Error('Error on GET method');
     }
 
     const response = {
-      firstGet
+      body: { firstGet },
+      links,
     };
     firstGet = false;
     return response;

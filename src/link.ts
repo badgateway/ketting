@@ -47,7 +47,7 @@ export type Link = {
   /**
    * If templated is set to true, the href is a templated URI.
    */
-  templated?: true,
+  templated?: boolean,
 
 }
 

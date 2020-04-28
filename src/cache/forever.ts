@@ -2,7 +2,7 @@ import { StateCache } from './';
 import { State } from '../state';
 import { isSafeMethod } from '../http/util';
 import * as LinkHeader from 'http-link-header';
-import { resolve } from '../util/url';
+import { resolve } from '../util/uri';
 
 export class ForeverCache implements StateCache {
 

@@ -11,7 +11,7 @@ import {
   htmlStateFactory
 } from './state';
 import { parseContentType } from './http/util';
-import { resolve } from './util/url';
+import { resolve } from './util/uri';
 import { LinkVariables } from './link';
 import { FollowPromiseOne } from './follow-promise';
 import { StateCache, ForeverCache } from './cache';

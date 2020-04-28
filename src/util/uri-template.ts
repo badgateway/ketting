@@ -1,5 +1,5 @@
 import * as uriTemplate from 'uri-template';
-import { resolve } from './url';
+import { resolve } from './uri';
 import { LinkVariables, Link } from '../link';
 
 export function expand(context: string, template: string, vars: LinkVariables): string;

@@ -3,12 +3,12 @@ import { StateFactory } from './interface';
 import { HalResource, HalLink } from 'hal-types';
 import { parseLink } from '../http/util';
 import { Link, Links } from '../link';
-import { resolve } from '../util/url';
+import { resolve } from '../util/uri';
 
 /**
  * Represents a resource state in the HAL format
  */
-export class CjState<T> extends BaseState<T> {
+export class CjState<T = any> extends BaseState<T> {
 
   serializeBody(): string {
 
@@ -21,7 +21,7 @@ export class CjState<T> extends BaseState<T> {
 /**
  * Turns a HTTP response into a CjState
  */
-export const factory: StateFactory = async (uri: string, response: Response): Promise<CjState<CjCollection>> => {
+export const factory = async (uri: string, response: Response): Promise<CjState<CjCollection>> => {
 
   const body = await response.json();
 

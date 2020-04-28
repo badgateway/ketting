@@ -1,6 +1,6 @@
 import Client from './client';
 import { State } from './state';
-import { resolve } from './util/url';
+import { resolve } from './util/uri';
 import { FollowPromiseOne, FollowPromiseMany } from './follow-promise';
 import { Link, LinkNotFound, LinkVariables } from './link';
 import { GetRequestOptions, PostRequestOptions, PatchRequestOptions, PutRequestOptions } from './types';
@@ -60,11 +60,14 @@ export default class Resource<T = any> {
     }
     if (!this.activeRefresh) {
       this.activeRefresh = (async() : Promise<State<T>> => {
-        const response = await this.fetchOrThrow(params);
-        const state = await this.client.getStateForResponse(this.uri, response);
-        this.client.cache.store(state);
-        this.activeRefresh = null;
-        return state;
+        try {
+          const response = await this.fetchOrThrow(params);
+          const state = await this.client.getStateForResponse(this.uri, response);
+          this.client.cache.store(state);
+          return state;
+        } finally {
+          this.activeRefresh = null;
+        }
       })();
     }
 

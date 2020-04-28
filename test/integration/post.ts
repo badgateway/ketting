@@ -31,7 +31,7 @@ describe('Issuing a POST request', async () => {
   it('should have created the new resource', async () => {
 
     const newBody = await newResource.get();
-    expect(newBody).to.eql({title: 'Posted resource'});
+    expect(newBody.body).to.eql({title: 'Posted resource'});
 
   });
 
