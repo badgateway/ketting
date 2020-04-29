@@ -1,6 +1,42 @@
 ChangeLog
 =========
 
+6.0.0-alpha.0 (2020-04-28)
+--------------------------
+
+* Big BC-breaking rewrite. Changes are numerous, but the important ones are
+  listed here.
+* `Resource.get()` now returns a `State` object instead of just a response
+  body. This object has methods to make it easier to manipulate and get
+  information about the response, including links. It's also a stable,
+  non-async object.
+* `Ketting` class is now called `Client`. It's still exposed as `Ketting`
+  as well for BC purposes.
+* `Client.getResource()` has been removed. Use `Client.go()` instead.
+* A HTTP Fetch middleware system has been added, for easier manipulation of
+  requests and responses. Middlewares can be added for every request, or
+  for specific origins (domains).
+* All authentication settings have been removed, and reimplemented as
+  fetch middlewares. They take roughly the same options, but the setup
+  has changed.
+* `Resource.get()`, `Resource.put()`, etc. can now all take custom headers
+  and other options to manipulate the request.
+* In the past you could just send a body with `Resource.post()`, `.put()`,
+  .`patch()`. Now this body must be a wrapped in an object with at least a `.body`
+  property. This is an annoying BC break but will allow for more flexibility
+  that was previous impossible.
+* Proper support for 'binary' resources.
+* Hal Links will now be reserialized on `put()`.
+* `Resource.link`, `Resource.links` and `Resource.hasLink` has been deprecated,
+  but not removed.
+* `Link` objects are now a simple typescript type, and no longer implemented
+  as a class.
+* `FollowerOne` is now `FollowPromiseOne` and `FollowerMany` is now
+  `FollowPromiseMany`.
+* All things called `Representor` has been removed, and rewritten with
+  a completely new API. A `HAL representor` is now a `HalState`.
+
+
 5.2.1 (2020-03-03)
 ------------------
 
