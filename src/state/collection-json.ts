@@ -12,8 +12,7 @@ export class CjState<T = any> extends BaseState<T> {
 
   serializeBody(): string {
 
-    return JSON.stringify(this.body);
-
+    throw new Error('Reserializing Collection+JSON states is not yet supported. Please log an issue in the Ketting project to help figure out how this should be done');
   }
 
 }
