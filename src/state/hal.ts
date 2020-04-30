@@ -12,7 +12,41 @@ export class HalState<T = any> extends BaseState<T> {
 
   serializeBody(): string {
 
-    return JSON.stringify(this.body);
+    return JSON.stringify({
+      _links: this.serializeLinks(),
+      ...this.body
+    });
+
+  }
+
+  private serializeLinks(): HalResource['_links'] {
+
+    const links: HalResource['_links'] = {
+      self: { href: this.uri },
+    };
+    for(const link of this.links.getAll()) {
+
+      const { rel, context, ...attributes } = link;
+
+      if (rel === 'self') {
+        // skip
+        continue;
+      }
+
+      if (links[rel] === undefined) {
+        // First link of its kind
+        links[rel] =  attributes;
+      } else if (Array.isArray(links[rel])) {
+        // Add link to link array.
+        (links[rel] as HalLink[]).push(attributes);
+      } else {
+        // 1 link with this rel existed, so we will transform it to an array.
+        links[rel] = [links[rel] as HalLink, attributes];
+      }
+
+    }
+
+    return links;
 
   }
 

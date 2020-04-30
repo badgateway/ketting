@@ -179,6 +179,55 @@ describe('HAL representor', () => {
     expect(hal.getEmbedded()).to.eql([]);
 
   });
+
+  it('should correctly reserialize HAL documents', async() => {
+
+    const hal = await callFactory({
+      _links: {
+        author: {
+          href: 'https://evertpot.com/',
+        },
+        foo: [
+          {
+            href: '/bar',
+          },
+          {
+            href: '/bar2',
+          },
+          {
+            href: '/bar3',
+          },
+        ]
+      },
+      happy: 2020,
+    });
+
+    const result = JSON.parse(hal.serializeBody());
+    expect(result).to.eql({
+      _links: {
+        self: {
+          href: 'http://example/',
+        },
+        author: {
+          href: 'https://evertpot.com/',
+        },
+        foo: [
+          {
+            href: '/bar',
+          },
+          {
+            href: '/bar2',
+          },
+          {
+            href: '/bar3',
+          },
+        ]
+      },
+      happy: 2020,
+    });
+
+  });
+
 });
 
 function callFactory(body: any, url = 'http://example/'): Promise<HalState> {

@@ -13,7 +13,7 @@ export class HtmlState extends BaseState<string> {
 
   serializeBody(): string {
 
-    return JSON.stringify(this.body);
+    throw new Error('Reserializing HTML states is not yet supported. Please log an issue in the Ketting project to help figure out how this should be done');
 
   }
 
