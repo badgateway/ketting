@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import Ketting from '../../src/ketting';
+import { Ketting } from '../../src';
 import Resource from '../../src/resource';
 
 describe('Issuing a POST request', async () => {
@@ -10,14 +10,14 @@ describe('Issuing a POST request', async () => {
 
   before( async () => {
 
-    resource = ketting.getResource();
+    resource = ketting.go();
 
   });
 
   it('should not fail', async () => {
 
     newResource = await resource.post({
-      title: 'Posted resource'
+      body: { title: 'Posted resource' }
     }) as Resource;
 
   });
@@ -31,7 +31,7 @@ describe('Issuing a POST request', async () => {
   it('should have created the new resource', async () => {
 
     const newBody = await newResource.get();
-    expect(newBody).to.eql({title: 'Posted resource'});
+    expect(newBody.body).to.eql({title: 'Posted resource'});
 
   });
 
@@ -40,7 +40,9 @@ describe('Issuing a POST request', async () => {
     const resource400 = await ketting.follow('error400');
     let exception;
     try {
-        await resource400.post({foo: 'bar'});
+      await resource400.post({
+        body: {foo: 'bar'}
+      });
     } catch (ex) {
         exception = ex;
     }

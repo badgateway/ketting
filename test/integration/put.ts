@@ -1,7 +1,6 @@
 import { expect } from 'chai';
 
-import Ketting from '../../src/ketting';
-import Resource from '../../src/resource';
+import { Ketting, Resource } from '../../src';
 
 describe('Issuing a PUT request', async () => {
 
@@ -10,7 +9,7 @@ describe('Issuing a PUT request', async () => {
 
   before( async () => {
 
-    resource = await ketting.getResource().follow('next');
+    resource = await ketting.go().follow('next');
     // Priming the cache
     await resource.get();
 
@@ -18,19 +17,21 @@ describe('Issuing a PUT request', async () => {
 
   it('should not fail', async () => {
 
-    await resource.put({newData: 'hi!'});
+    await resource.put({
+      body: { newData: 'hi!'}
+    });
 
   });
   it('should have cleared the resource representation', async () => {
 
     const newBody = await resource.get();
-    expect(newBody).to.eql({newData: 'hi!'});
+    expect(newBody.body).to.eql({newData: 'hi!'});
 
   });
   it('should have cleared the global cache', async () => {
 
     const newBody = await (await ketting.follow('next')).get();
-    expect(newBody).to.eql({newData: 'hi!'});
+    expect(newBody.body).to.eql({newData: 'hi!'});
 
   });
   it('should throw an exception if there was an http error', async () => {
@@ -38,7 +39,7 @@ describe('Issuing a PUT request', async () => {
     let ok = false;
     try {
       const errResource = await ketting.follow('error400');
-      await errResource.put({foo: 'bar'});
+      await errResource.put({body: {foo: 'bar'}});
     } catch (e) {
       ok = true;
     }
@@ -48,7 +49,7 @@ describe('Issuing a PUT request', async () => {
 
   after( async () => {
 
-    await ketting.getResource('/reset').post({});
+    await ketting.go('/reset').post({});
 
   });
 

@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import Ketting from '../../src/ketting';
+import { Ketting } from '../../src';
 import Resource from '../../src/resource';
 
 describe('Issuing a PATCH request', async () => {
@@ -9,7 +9,7 @@ describe('Issuing a PATCH request', async () => {
 
   before( async () => {
 
-    resource = await ketting.getResource().follow('echo');
+    resource = await ketting.go().follow('echo');
     // Priming the cache
     await resource.get();
 
@@ -17,12 +17,7 @@ describe('Issuing a PATCH request', async () => {
 
   it('should not fail', async () => {
 
-    await resource.patch({newData: 'hi!'});
-
-  });
-  it('should have cleared the resource representation', async () => {
-
-    expect(resource.repr).to.eql(null);
+    await resource.patch({body: {newData: 'hi!'}});
 
   });
 
@@ -31,7 +26,7 @@ describe('Issuing a PATCH request', async () => {
     let ok = false;
     try {
       const errResource = await ketting.follow('error400');
-      await errResource.patch({foo: 'bar'});
+      await errResource.patch({body: {foo: 'bar'}});
     } catch (e) {
       ok = true;
     }
@@ -41,7 +36,7 @@ describe('Issuing a PATCH request', async () => {
 
   after( async () => {
 
-    await ketting.getResource('/reset').post({});
+    await ketting.go('/reset').post({});
 
   });
 

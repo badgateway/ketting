@@ -278,22 +278,12 @@ app.use(
         someId++;
       } while (resources[someId + '.json']);
 
-      let body = '';
-      ctx.req.setEncoding('utf-8');
-      ctx.req.on('data', (chunk: string) => {
-
-        body += chunk;
-
-      });
-      ctx.req.on('end', () => {
-
-        resources[someId + '.json'] = body;
-        ctx.response.status = 201;
-        ctx.response.body = '';
-        ctx.response.set('Location', '/' + someId + '.json');
-        res();
-
-      });
+      let body = ctx.request.body;
+      resources[someId + '.json'] = body;
+      ctx.response.status = 201;
+      ctx.response.body = '';
+      ctx.response.set('Location', '/' + someId + '.json');
+      res();
 
     });
 

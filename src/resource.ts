@@ -1,11 +1,9 @@
-import { FollowerMany, FollowerOne } from './follower';
-import problemFactory from './http-error';
-import Ketting from './ketting';
-import { Link } from './link';
-import Representator from './representor/base';
-import { LinkVariables } from './types';
-import { mergeHeaders } from './utils/fetch-helper';
-import { resolve } from './utils/url';
+import Client from './client';
+import { State } from './state';
+import { resolve } from './util/uri';
+import { FollowPromiseOne, FollowPromiseMany } from './follow-promise';
+import { Link, LinkNotFound, LinkVariables } from './link';
+import { GetRequestOptions, PostRequestOptions, PatchRequestOptions, PutRequestOptions } from './types';
 
 /**
  * A 'resource' represents an endpoint on the server.
@@ -16,87 +14,119 @@ import { resolve } from './utils/url';
  * A resource may also have a list of links on them, pointing to other
  * resources.
  */
-export default class Resource<TResource = any, TPatch = Partial<TResource>> {
+export default class Resource<T = any> {
 
-  /**
-   * Reference to the main Client
-   */
-  client: Ketting;
-
-  /**
-   * The current representation, or body of the resource.
-   */
-  repr: Representator<TResource> | null;
-
-  /**
-   * The uri of the resource
-   */
   uri: string;
+  client: Client;
+
+  activeRefresh: Promise<State<T>> | null;
 
   /**
-   * A default mimetype for the resource.
-   *
-   * This mimetype is used for PUT and POST requests by default.
-   * The mimetype is sniffed in a few different ways.
-   *
-   * If a GET request is done, and the GET request had a mimetype it will
-   * be used to set this value.
-   *
-   * It's also possible for resources to get a mimetype through a link.
+   * uri must be absolute
    */
-  contentType: string | null;
-
-  private inFlightRefresh: Promise<TResource> | null = null;
-
-  constructor(client: Ketting, uri: string, contentType: string | null = null) {
-
+  constructor(client: Client, uri: string) {
     this.client = client;
     this.uri = uri;
-    this.repr = null;
-    this.contentType = contentType;
-    this.nextRefreshHeaders = {};
+    this.activeRefresh = null;
 
   }
 
   /**
-   * Fetches the resource representation.
-   * Returns a promise that resolves to a parsed json object.
+   * Gets the current state of the resource.
+   *
+   * This function will return a State object.
    */
-  async get(): Promise<TResource> {
-    const r = await this.representation();
-    return r.getBody();
+  get(getOptions?: GetRequestOptions): Promise<State<T>> {
+
+    const state = this.client.cache.get(this.uri);
+    if (!state) {
+      return this.refresh(getOptions);
+    }
+    return Promise.resolve(state);
 
   }
 
   /**
-   * Updates the resource representation with a new JSON object.
+   * Gets the current state of the resource, skipping
+   * the cache.
+   *
+   * This function will return a State object.
    */
-  async put(body: TResource): Promise<void> {
+  refresh(getOptions?: GetRequestOptions): Promise<State<T>> {
 
-    const contentType = this.contentType || this.client.representorHelper.getMimeTypes()[0];
+    const params: RequestInit = {};
+    if (getOptions?.getContentHeaders) {
+      params.headers = getOptions.getContentHeaders();
+    }
+    if (!this.activeRefresh) {
+      this.activeRefresh = (async() : Promise<State<T>> => {
+        try {
+          const response = await this.fetchOrThrow(params);
+          const state = await this.client.getStateForResponse(this.uri, response);
+          this.client.cache.store(state);
+          return state;
+        } finally {
+          this.activeRefresh = null;
+        }
+      })();
+    }
+
+    return this.activeRefresh;
+
+  }
+
+  /**
+   * Updates the server state with a PUT request
+   */
+  async put(options: PutRequestOptions<T>): Promise<void> {
+
+    let headers;
+    if (options.getContentHeaders) {
+      headers = new Headers(options.getContentHeaders());
+    } else if (options.headers) {
+      headers = new Headers(options.headers);
+    } else {
+      headers = new Headers();
+    }
+    if (!headers.has('Content-Type')) {
+      headers.set('Content-Type', 'application/json');
+    }
+    let body;
+    if (options.serializeBody) {
+      body = options.serializeBody();
+    } else if (options.body) {
+      body = options.body;
+      if (!(body instanceof Buffer) && typeof body !== 'string') {
+        body = JSON.stringify(body);
+      }
+    } else {
+      body = null;
+    }
+
     const params = {
       method: 'PUT',
-      body: JSON.stringify(body),
-      headers: {
-        'Content-Type': contentType,
-        'Accept' : this.contentType ? this.contentType : this.client.representorHelper.getAcceptHeader()
-      },
+      body,
+      headers,
     };
-    await this.fetchAndThrow(params);
+    await this.fetchOrThrow(params);
 
   }
 
   /**
-   * Updates the resource representation with a new JSON object.
+   * Deletes the resource
    */
   async delete(): Promise<void> {
 
-    await this.fetchAndThrow({ method: 'DELETE' });
+    await this.fetchOrThrow(
+      { method: 'DELETE' }
+    );
 
   }
 
   /**
    * Sends a POST request to the resource.
+   *
+   * See the documentation for PostRequestOptions for more details.
    *
    * This function assumes that POST is used to create new resources, and
    * that the response will be a 201 Created along with a Location header that
@@ -108,18 +138,37 @@ export default class Resource<TResource = any, TPatch = Partial<TResource>> {
    * If no Location header was given, it will resolve still, but with an empty
    * value.
    */
-  post(body: any): Promise<Resource | null>;
-  post<TPostResource>(body: any): Promise<Resource<TPostResource>>;
-  async post(body: any): Promise<Resource | null> {
+  post(options: PostRequestOptions): Promise<Resource | null>;
+  post<TPostResource>(options: PostRequestOptions): Promise<Resource<TPostResource>>;
+  async post(options: PostRequestOptions): Promise<Resource | null> {
 
-    const contentType = this.contentType || this.client.representorHelper.getMimeTypes()[0];
-    const response = await this.fetchAndThrow(
+    let headers;
+    if (options.getContentHeaders) {
+      headers = new Headers(options.getContentHeaders());
+    } else if (options.headers) {
+      headers = new Headers(options.headers);
+    } else {
+      headers = new Headers();
+    }
+    if (!headers.has('Content-Type')) {
+      headers.set('Content-Type', 'application/json');
+    }
+    let body;
+    if (options.serializeBody) {
+      body = options.serializeBody();
+    } else if (options.body) {
+      body = options.body;
+      if (!(body instanceof Buffer) && typeof body !== 'string') {
+        body = JSON.stringify(body);
+      }
+    } else {
+      body = null;
+    }
+    const response = await this.fetchOrThrow(
       {
         method: 'POST',
-        body: JSON.stringify(body),
-        headers: {
-          'Content-Type': contentType,
-        }
+        body,
+        headers,
       }
     );
 
@@ -142,118 +191,37 @@ export default class Resource<TResource = any, TPatch = Partial<TResource>> {
    *
    * This function defaults to a application/json content-type header.
    */
-  async patch(body: TPatch): Promise<void> {
+  async patch(options: PatchRequestOptions): Promise<void> {
 
-    await this.fetchAndThrow(
+    let headers;
+    if (options.getContentHeaders) {
+      headers = new Headers(options.getContentHeaders());
+    } else if (options.headers) {
+      headers = new Headers(options.headers);
+    } else {
+      headers = new Headers();
+    }
+    if (!headers.has('Content-Type')) {
+      headers.set('Content-Type', 'application/json');
+    }
+    let body;
+    if (options.serializeBody) {
+      body = options.serializeBody();
+    } else if (options.body) {
+      body = options.body;
+      if (!(body instanceof Buffer) && typeof body !== 'string') {
+        body = JSON.stringify(body);
+      }
+    } else {
+      body = null;
+    }
+    await this.fetchOrThrow(
       {
         method: 'PATCH',
-        body: JSON.stringify(body),
-        headers: {
-          'Content-Type' : 'application/json'
-        }
+        body,
+        headers
       }
     );
-
-  }
-
-  /**
-   * Refreshes the representation for this resource.
-   *
-   * This function will return the a parsed JSON object, like the get
-   * function does.
-   */
-  refresh(): Promise<TResource> {
-
-    if (this.inFlightRefresh) {
-      return this.inFlightRefresh;
-    }
-
-    const refreshFunc = async (): Promise<TResource> => {
-
-      const headers: { [name: string]: string } = {
-        Accept: this.contentType ? this.contentType : this.client.representorHelper.getAcceptHeader(),
-        ...this.nextRefreshHeaders,
-      };
-
-      const response = await this.fetchAndThrow({
-        method: 'GET' ,
-        headers
-      });
-
-      this.nextRefreshHeaders = {};
-      this.inFlightRefresh = null;
-
-      const body = await response.text();
-
-      this.repr = this.client.representorHelper.createFromResponse(
-        this.uri,
-        response,
-        body,
-      ) as any as Representator<TResource>;
-
-      if (!this.contentType) {
-        this.contentType = this.repr.contentType;
-      }
-
-      for (const [subUri, subBody] of Object.entries(this.repr.getEmbedded())) {
-        const subResource = this.go(subUri);
-        subResource.repr = this.client.representorHelper.create(
-          subUri,
-          this.repr.contentType,
-          null,
-          new Map(),
-        );
-        subResource.repr.setBody(subBody);
-      }
-
-      return this.repr.getBody();
-
-    };
-
-    const refreshResult = refreshFunc();
-    this.inFlightRefresh = refreshResult;
-
-    return refreshResult;
-
-  }
-
-  /**
-   * Returns the links for this resource, as a promise.
-   *
-   * The rel argument is optional. If it's given, we will only return links
-   * from that relationship type.
-   */
-  async links(rel?: string): Promise<Link[]> {
-
-    const r = await this.representation();
-    return r.getLinks(rel);
-
-  }
-
-  /**
-   * Returns a specific link based on it's rel.
-   *
-   * If multiple links with the same rel existed, we're only returning the
-   * first. If no link with the specified link existed, a LinkNotFound
-   * exception will be thrown.
-   *
-   * The rel argument is optional. If it's given, we will only return links
-   * from that relationship type.
-   */
-  async link(rel: string): Promise<Link> {
-
-    const r = await this.representation();
-    return r.getLink(rel);
-
-  }
-
-  /**
-   * Checks if the current resource has the specified link relationship.
-   */
-  async hasLink(rel: string): Promise<boolean> {
-
-    const r = await this.representation();
-    return r.hasLink(rel);
 
   }
 
@@ -264,9 +232,9 @@ export default class Resource<TResource = any, TPatch = Partial<TResource>> {
    * This function can also follow templated uris. You can specify uri
    * variables in the optional variables argument.
    */
-  follow<TFollowedResource = any>(rel: string, variables?: LinkVariables): FollowerOne<TFollowedResource> {
+  follow<TFollowedResource = any>(rel: string, variables?: LinkVariables): FollowPromiseOne<TFollowedResource> {
 
-    return new FollowerOne(this, rel, variables);
+    return new FollowPromiseOne(this, rel, variables);
 
   }
 
@@ -276,9 +244,9 @@ export default class Resource<TResource = any, TPatch = Partial<TResource>> {
    *
    * If no resources were found, the array will be empty.
    */
-  followAll<TFollowedResource = any>(rel: string): FollowerMany<TFollowedResource> {
+  followAll<TFollowedResource = any>(rel: string): FollowPromiseMany<TFollowedResource> {
 
-    return new FollowerMany(this, rel);
+    return new FollowPromiseMany(this, rel);
 
   }
 
@@ -298,141 +266,81 @@ export default class Resource<TResource = any, TPatch = Partial<TResource>> {
   }
 
   /**
-   * Returns the representation for the object.
-   * If it wasn't fetched yet, this function does the fetch as well.
-   *
-   * Usually you will want to use the `get()` method instead, unless you need
-   * the full object.
+   * Does a HTTP request on the current resource URI
    */
-  async representation(): Promise<Representator<TResource>> {
+  fetch(init?: RequestInit): Promise<Response> {
 
-    if (!this.repr) {
-      await this.refresh();
-    }
-
-    return this.repr!;
+    return this.client.fetcher.fetch(this.uri, init);
 
   }
 
   /**
-   * Clears the internal representation cache.
+   * Does a HTTP request on the current resource URI.
+   *
+   * If the response was a 4XX or 5XX, this function will throw
+   * an exception.
+   */
+  fetchOrThrow(init?: RequestInit): Promise<Response> {
+
+    return this.client.fetcher.fetchOrThrow(this.uri, init);
+
+  }
+
+  /**
+   * Clears the state cache for this resource.
    */
   clearCache(): void {
 
-    this.repr = null;
+    this.client.cache.delete(this.uri);
 
   }
 
   /**
-   * Does an arbitrary HTTP request on the resource using the Fetch API.
+   * Returns a Link object, by its REL.
    *
-   * The method signature is the same as the MDN fetch object. However, it's
-   * possible in this case to not specify a URI or specify a relative URI.
+   * If the link does not exist, a LinkNotFound error will be thrown.
    *
-   * When doing the actual request, any relative uri will be resolved to the
-   * uri of the current resource.
-   *
-   * @see https://developer.mozilla.org/en-US/docs/Web/API/Request/Request
+   * @deprecated
    */
-  fetch(input: Request|string|RequestInit, init?: RequestInit): Promise<Response> {
+  async link(rel: string): Promise<Link> {
 
-    let uri = null;
-    let newInit: RequestInit = {};
+    const state = await this.get();
+    const link = state.links.get(rel);
 
-    if (input === undefined) {
-      // Nothing was provided, we're operating on the resource uri.
-      uri = this.uri;
-    } else if (typeof input === 'string') {
-      // If it's a string, it might be relative uri so we're resolving it
-      // first.
-      uri = resolve(this.uri, input);
+    if (!link) {
+      throw new LinkNotFound(`Link with rel: ${rel} not found on ${this.uri}`);
+    }
+    return link;
 
-    } else if (input instanceof Request) {
-      // We were passed a request object. We need to extract all its
-      // information into the init object.
-      uri = resolve(this.uri, (<Request> input).url);
+  }
 
-      newInit.method = input.method;
-      newInit.headers = new Headers(input.headers);
-      // @ts-ignore: Possibly an error due to https://github.com/Microsoft/TypeScript/issues/15199
-      newInit.body = input.body;
-      newInit.mode = input.mode;
-      newInit.credentials = input.credentials;
-      newInit.cache = input.cache;
-      newInit.redirect = input.redirect;
-      newInit.referrer = input.referrer;
-      newInit.integrity = input.integrity;
+  /**
+   * Returns all links defined on this object.
+   *
+   * @deprecated
+   */
+  async links(rel?: string): Promise<Link[]> {
 
-    } else if (input instanceof Object) {
-      // if it was a regular 'object', but not a Request, we're assuming the
-      // method was called with the init object as it's first parameter. This
-      // is not allowed in the default Fetch API, but we do allow it because
-      // in the resource, specifying the uri is optional.
-      uri = this.uri;
-      newInit = <RequestInit> input;
+    const state = await this.get();
+    if (!rel) {
+      return state.links.getAll();
     } else {
-      throw new TypeError('When specified, input must be a string, Request object or a key-value object');
+      return state.links.getMany(rel);
     }
-
-    // if the 'init' argument is specified, we're using it to override things
-    // in newInit.
-    if (init) {
-
-      for (const key of Object.keys(init)) {
-        if (key === 'headers') {
-          // special case.
-          continue;
-        }
-        (<any> newInit)[key] = (<any> init)[key];
-      }
-      newInit.headers = mergeHeaders([
-        newInit.headers,
-        init.headers
-      ]);
-    }
-
-    // @ts-ignore cross-fetch definitions are broken. See https://github.com/lquixada/cross-fetch/pull/19
-    const request = new Request(uri, newInit);
-
-    return this.client.fetch(request);
 
   }
 
   /**
-   * Does a HTTP request and throws an exception if the server emitted
-   * a HTTP error.
    *
-   * @see https://developer.mozilla.org/en-US/docs/Web/API/Request/Request
-   */
-  async fetchAndThrow(input: Request|string|RequestInit, init?: RequestInit): Promise<Response> {
-
-    const response = await this.fetch(input, init);
-
-    if (response.ok) {
-      return response;
-    } else {
-      throw await problemFactory(response);
-    }
-
-  }
-
-
-  /**
-   * A set of HTTP headers that will be sent along with the next call to Refresh()
-   */
-  private nextRefreshHeaders: { [name: string]: string };
-
-  /**
-   * When a HTTP header gets added here, it will automatically get sent along
-   * to the next call to refresh().
+   * Returns true or false depending on if a link with the specified relation
+   * type exists.
    *
-   * This means that the next time a GET request is done, these headers will be
-   * added. This list gets cleared after the GET request.
+   * @deprecated
    */
-  addNextRefreshHeader(name: string, value: string): void {
+  async hasLink(rel: string): Promise<boolean> {
 
-    this.nextRefreshHeaders[name] = value;
+    const state = await this.get();
+    return state.links.has(rel);
 
   }
-
 }

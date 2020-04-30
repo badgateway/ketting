@@ -1,109 +1,134 @@
-import * as uriTemplate from 'uri-template';
-import { resolve } from './utils/url';
-
-type LinkInit = {
-  context: string,
+export type Link = {
+  /**
+   * Target URI
+   */
   href: string,
-  name?: string,
-  rel: string,
-  templated?: boolean,
-  title?: string,
-  type?: string,
-};
-
-/**
- * The Link object represents a hyperlink.
- */
-export class Link {
 
   /**
-   * The base href of the parent document. Used for expanding relative links.
-   */
-  context!: string;
-
-  /**
-   * The URI of the link. Might be relative
-   */
-  href!: string;
-
-  /**
-   * The name for a link. This might be used to disambiguate the link.
+   * Context URI.
    *
-   * If you're looking at this, chances are that you might want 'title'
-   * instead.
+   * Used to resolve relative URIs
    */
-  name!: string;
+  context: string;
 
   /**
-   * The relationship type
+   * Relation type
    */
-  rel!: string;
+  rel: string,
 
   /**
-   * Is it a URI template or not?
+   * Link title
    */
-  templated: boolean;
+  title?: string,
 
   /**
-   * A human-readable label for the link.
+   * Content type hint of the target resource
    */
-  title: string | null;
+  type?: string,
 
   /**
-   * A mimetype
+   * Anchor.
+   *
+   * This describes where the link is linked from, from for example
+   * a fragment in the current document
    */
-  type: string | null;
+  anchor?: string,
 
-  constructor(properties: LinkInit) {
+  /**
+   * Language of the target resource
+   */
+  hreflang?: string,
 
-    this.templated = false;
-    this.title = null;
-    this.type = null;
+  /**
+   * HTML5 media attribute
+   */
+  media?: string,
 
-    for (const key of ['context', 'href', 'name', 'rel', 'templated', 'title', 'type']) {
-      if ((<any> properties)[key]) {
-        (<any> this)[key] = (<any> properties)[key];
+  /**
+   * If templated is set to true, the href is a templated URI.
+   */
+  templated?: boolean,
+
+}
+
+export class Links {
+
+  store: Map<string, Link[]>
+
+  constructor(links?: Link[]) {
+
+    this.store = new Map();
+    if (links) {
+      for (const link of links) {
+        this.add(link);
       }
     }
 
   }
 
+  add(...links: Link[]): void {
 
-  /**
-   * Returns the absolute link url, based on it's base and relative url.
-   */
-  resolve(): string {
-
-    return resolve(this.context, this.href);
-
-  }
-
-  /**
-   * Expands a link template (RFC6570) and resolves the uri
-   */
-  expand(variables: object): string {
-
-    if (!this.templated) {
-      return resolve(this.context, this.href);
-    } else {
-      const templ = uriTemplate.parse(this.href);
-      const expanded = templ.expand(variables);
-      return resolve(this.context, expanded);
+    for(const link of links) {
+      if (this.store.has(link.rel)) {
+        this.store.get(link.rel)!.push(link);
+      } else {
+        this.store.set(link.rel, [link]);
+      }
     }
 
   }
 
+  set(link: Link): void {
+
+    this.store.set(link.rel, [link]);
+
+  }
+
+  get(rel: string): Link|undefined {
+
+    const links = this.store.get(rel);
+    if (!links || links.length < 0) {
+      return undefined;
+    }
+    return links[0];
+
+  }
+
+  getMany(rel: string): Link[] {
+
+    return this.store.get(rel) || [];
+
+  }
+
+  getAll(): Link[] {
+    const result = [];
+    for(const links of this.store.values()) {
+      result.push(...links);
+    }
+    return result;
+  }
+
+  has(rel: string): boolean {
+
+    return this.store.has(rel);
+
+  }
+
+  get size(): number {
+    return this.store.size;
+  }
+
 }
-
-export default Link;
-
-/**
- * A LinkSet is just a map of links, indexes by their rel
- */
-export type LinkSet = Map<string, Link[]>;
 
 /**
  * The LinkNotFound error gets thrown whenever something tries to follow a
  * link by its rel, that doesn't exist
  */
 export class LinkNotFound extends Error {}
+
+/**
+ * A key->value map of variables to place in a templated link
+ */
+export type LinkVariables = {
+  [key: string]: string | number
+};

@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import Resource from '../../src/resource';
+import { Resource, Links } from '../../src';
 
 describe('Resource', () => {
 
@@ -84,8 +84,7 @@ describe('Resource', () => {
       // @ts-ignore
       const result:any = await res.fetch();
 
-      expect(result.method).to.equal('GET');
-      expect(result.url).to.equal('https://example.org/return-request');
+      expect(result).to.equal('https://example.org/return-request');
 
     });
 
@@ -95,42 +94,58 @@ describe('Resource', () => {
 
 function getFakeResource(uri: string = 'https://example.org/') {
 
+  const fakeFetch = (input:any) => {
+    let url;
+    if (input.url) {
+      url = input.url;
+    } else {
+      url = input;
+    }
+    switch(url) {
+      case 'https://example.org/return-request':
+        return input;
+      case 'https://example.org/200':
+        return new Response('', {status: 200});
+      case 'https://example.org/201':
+        return new Response('', {status: 201});
+      case 'https://example.org/201-loc':
+        return new Response('', {status: 201, headers: { 'Location': 'https://evertpot.com/'}});
+      case 'https://example.org/205':
+        return new Response('', {status: 205});
+    }
+  }
+
   const fakeClient:any = {
 
-    fetch: (input: any) => {
-      switch(input.url) {
-        case 'https://example.org/return-request':
-          return input;
-        case 'https://example.org/200':
-          return new Response('', {status: 200});
-        case 'https://example.org/201':
-          return new Response('', {status: 201});
-        case 'https://example.org/201-loc':
-          return new Response('', {status: 201, headers: { 'Location': 'https://evertpot.com/'}});
-        case 'https://example.org/205':
-          return new Response('', {status: 205});
-      }
-    },
+    fetcher: {
 
-    representorHelper: {
-      getMimeTypes: ():any => {
-        return [];
-      }
+      fetch: fakeFetch,
+      fetchOrThrow: fakeFetch,
     },
 
     go: (uri:string) => {
 
       return getFakeResource(uri);
 
+    },
+
+    cache: {
+
+      get: ():null => { return null },
+      store: ():void => { }
+
+    },
+
+    getStateForResponse: () => {
+
+      return {
+        links: new Links([ { href: '/', rel: 'yes', context: '/' }])
+      }
+
     }
 
   };
   const resource = new Resource(fakeClient, uri);
-  (resource as any).repr = {
-    hasLink: (rel:string) => {
-      return rel==='yes';
-    },
-  };
   return resource;
 
 }
