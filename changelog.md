@@ -35,6 +35,7 @@ ChangeLog
   `FollowPromiseMany`.
 * All things called `Representor` has been removed, and rewritten with
   a completely new API. A `HAL representor` is now a `HalState`.
+* #175: Nested embedded items are now also placed in the cache.
 
 
 5.2.1 (2020-03-03)

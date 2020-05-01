@@ -208,7 +208,10 @@ function parseHalEmbedded(context: string, body: HalResource, headers: Headers):
         new Headers({
           'Content-Type': headers.get('Content-Type')!,
         }),
-        new Links(parseHalLinks(context, embeddedItem))
+        new Links(parseHalLinks(context, embeddedItem)),
+        // Parsing nested embedded items. Note that we assume that the base url is relative to
+        // the outermost parent, not relative to the embedded item. HAL is not clear on this.
+        parseHalEmbedded(context, embeddedItem, headers),
       ));
     }
   }
