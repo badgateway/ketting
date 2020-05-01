@@ -1,6 +1,5 @@
 import { StateCache } from './';
 import { State } from '../state';
-import { isSafeMethod } from '../http/util';
 import * as LinkHeader from 'http-link-header';
 import { resolve } from '../util/uri';
 
@@ -34,21 +33,6 @@ export class ForeverCache implements StateCache {
 
   clear() {
     this.cache.clear();
-  }
-
-  processRequest(request: Request, response: Response): void {
-
-    if (isSafeMethod(request.method)) {
-      return;
-    }
-    this.delete(request.url);
-
-    if (response.headers.has('Link')) {
-      for (const httpLink of LinkHeader.parse(response.headers.get('Link')!).rel('invalidates')) {
-        const uri = resolve(request.url, httpLink.uri);
-        this.cache.delete(uri);
-      }
-    }
   }
 
 }

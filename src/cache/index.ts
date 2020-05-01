@@ -9,6 +9,4 @@ export interface StateCache {
   delete: (uri: string) => void;
   clear: () => void;
 
-  processRequest: (request: Request, response: Response) => void;
-
 }

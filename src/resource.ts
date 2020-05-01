@@ -4,6 +4,7 @@ import { resolve } from './util/uri';
 import { FollowPromiseOne, FollowPromiseMany } from './follow-promise';
 import { Link, LinkNotFound, LinkVariables } from './link';
 import { GetRequestOptions, PostRequestOptions, PatchRequestOptions, PutRequestOptions } from './types';
+import { EventEmitter } from 'events';
 
 /**
  * A 'resource' represents an endpoint on the server.
@@ -14,7 +15,7 @@ import { GetRequestOptions, PostRequestOptions, PatchRequestOptions, PutRequestO
  * A resource may also have a list of links on them, pointing to other
  * resources.
  */
-export default class Resource<T = any> {
+export class Resource<T = any> extends EventEmitter {
 
   uri: string;
   client: Client;
@@ -25,6 +26,7 @@ export default class Resource<T = any> {
    * uri must be absolute
    */
   constructor(client: Client, uri: string) {
+    super();
     this.client = client;
     this.uri = uri;
     this.activeRefresh = null;
@@ -344,3 +346,21 @@ export default class Resource<T = any> {
 
   }
 }
+
+export declare interface Resource<T = any> {
+
+  on(event: 'update', listener: (state: State) => void) : this
+  on(event: 'stale',  listener: () => void) : this;
+  on(event: 'delete', listener: () => void) : this;
+
+  off(event: 'update', listener: (state: State) => void) : this
+  off(event: 'stale',  listener: () => void) : this;
+  off(event: 'delete', listener: () => void) : this;
+
+  emit(event: 'update', state: State) : boolean
+  emit(event: 'stale') : boolean;
+  emit(event: 'delete') : boolean;
+
+}
+
+export default Resource;

@@ -19,7 +19,8 @@
       "object-literal-shorthand": false,
       "object-literal-sort-keys": false,
       "quotemark": [true, "single", "avoid-template", "avoid-escape"],
-      "trailing-comma": "never"
+      "trailing-comma": "never",
+      "unified-signatures": false
     },
     "rulesDirectory": []
 }
