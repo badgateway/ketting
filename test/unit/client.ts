@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { Client, TextState, Links } from '../../src';
+import { Client, TextState, Links, HalState } from '../../src';
 
 describe('Client', () => {
 
@@ -74,6 +74,75 @@ describe('Client', () => {
 
     });
 
+    it('should cache embedded resources', async() => {
+
+      const client = new Client('https://example.org');
+      const body = {
+        _embedded: {
+          rel: {
+            _links: {
+              self: { href: '/embedded'},
+            },
+            item: 1
+          }
+        },
+        item: 2,
+      };
+      const response = new Response(JSON.stringify(body), {
+        headers: { 'Content-Type': 'application/hal+json'}
+      });
+
+      const halState = await client.getStateForResponse('https://example.org/parent', response);
+      expect(halState.uri).to.equal('https://example.org/parent');
+      expect(halState.body).to.eql({item: 2});
+
+      expect(client.cache.has('https://example.org/embedded')).to.equal(true);
+
+      const embedded = client.cache.get('https://example.org/embedded')!;
+      expect(embedded).to.be.an.instanceof(HalState);
+      expect(embedded.uri).to.equal('https://example.org/embedded');
+      expect(embedded.body).to.eql({item: 1});
+
+    });
+
+    it('should cache nested embedded resources', async() => {
+
+      const client = new Client('https://example.org');
+      const body = {
+        _embedded: {
+          rel: {
+            _links: {
+              self: { href: '/embedded'},
+            },
+            item: 1,
+            _embedded: {
+              rel: {
+                _links: {
+                  self: { href: '/nested'}
+                },
+                item: 3
+              }
+            },
+          }
+        },
+        item: 2,
+      };
+      const response = new Response(JSON.stringify(body), {
+        headers: { 'Content-Type': 'application/hal+json'}
+      });
+
+      const halState = await client.getStateForResponse('https://example.org/parent', response);
+      expect(halState.uri).to.equal('https://example.org/parent');
+      expect(halState.body).to.eql({item: 2});
+
+      expect(client.cache.has('https://example.org/nested')).to.equal(true);
+
+      const embedded = client.cache.get('https://example.org/nested')!;
+      expect(embedded).to.be.an.instanceof(HalState);
+      expect(embedded.uri).to.equal('https://example.org/nested');
+      expect(embedded.body).to.eql({item: 3});
+
+    });
   });
 
 });

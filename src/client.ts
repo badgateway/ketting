@@ -109,17 +109,34 @@ export default class Client {
   /**
    * Transforms a fetch Response to a State object.
    */
-  getStateForResponse(uri: string, response: Response): Promise<State> {
+  async getStateForResponse(uri: string, response: Response): Promise<State> {
 
     const contentType = parseContentType(response.headers.get('Content-Type')!);
+
+    let state: State;
+
     if (contentType in this.contentTypeMap) {
-      return this.contentTypeMap[contentType][0](uri, response);
+      state = await this.contentTypeMap[contentType][0](uri, response);
+    } else if (contentType.startsWith('text/')) {
+      state = await textStateFactory(uri, response);
+    } else{
+      state = await binaryStateFactory(uri, response);
     }
 
-    if (contentType.startsWith('text/')) {
-      return textStateFactory(uri, response);
-    } else{
-      return binaryStateFactory(uri, response);
+    this.cacheEmbeddedState(state);
+    return state;
+
+  }
+
+  /**
+   * Takes a State, grabs all the embedded items and places them in a cache.
+   */
+  private cacheEmbeddedState(state: State) {
+
+    for(const embeddedState of state.getEmbedded()) {
+      this.cache.store(embeddedState);
+      // Recursion. MADNESS
+      this.cacheEmbeddedState(embeddedState);
     }
 
   }
