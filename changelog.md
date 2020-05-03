@@ -1,6 +1,13 @@
 ChangeLog
 =========
 
+6.0.0-alpha.1 (2020-05-03)
+--------------------------
+
+* Re-release. The build contained a few older files that weren't meant to be
+  packaged.
+
+
 6.0.0-alpha.0 (2020-04-28)
 --------------------------
 
