@@ -4,6 +4,7 @@ export { default as Resource } from './resource';
 export { Link, LinkNotFound, Links } from './link';
 
 export {
+  State,
   HalState,
   BinaryState,
   JsonApiState,

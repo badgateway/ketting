@@ -1,6 +1,15 @@
 ChangeLog
 =========
 
+6.0.0-alpha.2 (2020-05-03)
+--------------------------
+
+* `State` is now exported.
+* #184: Added a new `postFollow()` function that takes over the role of
+  `post()`.  `post()` is now intended for RPC-like operations and form
+  submissions.
+
+
 6.0.0-alpha.1 (2020-05-03)
 --------------------------
 
