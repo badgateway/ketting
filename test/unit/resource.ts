@@ -41,28 +41,38 @@ describe('Resource', () => {
 
   });
 
-  describe('post()', () => {
+  describe('postFollow()', () => {
 
-    it('should return null if 200 OK was returned', async () => {
+    it('should throw an error if 200 OK was returned', async () => {
 
       const res = getFakeResource('https://example.org/200');
-      const result = await res.post({});
-      expect(result).to.eql(null);
+      let err = false;
+      try {
+        await res.postFollow({});
+      } catch (e) {
+        err = true;
+      }
+      expect(err).to.eql(true);
 
     });
 
-    it('should return null if 201 Created was returned and no Location header', async () => {
+    it('should throw an error if 201 Created was returned and no Location header', async () => {
 
       const res = getFakeResource('https://example.org/201');
-      const result = await res.post({});
-      expect(result).to.eql(null);
+      let err = false;
+      try {
+        await res.postFollow({});
+      } catch (e) {
+        err = true;
+      }
+      expect(err).to.eql(true);
 
     });
 
     it('should return a new resource if 201 Created was returned with a new location header', async () => {
 
       const res = getFakeResource('https://example.org/201-loc');
-      const result = await res.post({});
+      const result = await res.postFollow({});
       expect(result!.uri).to.eql('https://evertpot.com/');
 
     });
@@ -70,7 +80,7 @@ describe('Resource', () => {
     it('should return itself if 205 Reset Content was returned', async () => {
 
       const res = getFakeResource('https://example.org/205');
-      const result = await res.post({});
+      const result = await res.postFollow({});
       expect(result).to.equal(res);
 
     });

@@ -16,7 +16,7 @@ describe('Issuing a POST request', async () => {
 
   it('should not fail', async () => {
 
-    newResource = await resource.post({
+    newResource = await resource.postFollow({
       body: { title: 'Posted resource' }
     }) as Resource;
 
@@ -40,7 +40,7 @@ describe('Issuing a POST request', async () => {
     const resource400 = await ketting.follow('error400');
     let exception;
     try {
-      await resource400.post({
+      await resource400.postFollow({
         body: {foo: 'bar'}
       });
     } catch (ex) {

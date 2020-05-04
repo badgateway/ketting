@@ -115,6 +115,10 @@ export default class Client {
 
     let state: State;
 
+    if (!contentType) {
+      return binaryStateFactory(uri, response);
+    }
+
     if (contentType in this.contentTypeMap) {
       state = await this.contentTypeMap[contentType][0](uri, response);
     } else if (contentType.startsWith('text/')) {
