@@ -1,9 +1,9 @@
 import Client from './client';
-import { State } from './state';
+import { State, headStateFactory, HeadState } from './state';
 import { resolve } from './util/uri';
 import { FollowPromiseOne, FollowPromiseMany } from './follow-promise';
 import { Link, LinkNotFound, LinkVariables } from './link';
-import { GetRequestOptions, PostRequestOptions, PatchRequestOptions, PutRequestOptions } from './types';
+import { GetRequestOptions, PostRequestOptions, PatchRequestOptions, PutRequestOptions, HeadRequestOptions } from './types';
 
 /**
  * A 'resource' represents an endpoint on the server.
@@ -47,6 +47,29 @@ export default class Resource<T = any> {
   }
 
   /**
+   * Does a HEAD request and returns a HeadState object.
+   *
+   * If there was a valid existing cache for a GET request, it will
+   * still return that.
+   */
+  async head(headOptions?: HeadRequestOptions): Promise<HeadState> {
+
+    let state: State|HeadState|null = this.client.cache.get(this.uri);
+    if (state) {
+      return state;
+    }
+
+    const response = await this.fetchOrThrow(
+      optionsToRequestInit('HEAD', headOptions)
+    );
+
+    state = await headStateFactory(this.uri, response);
+    return state;
+
+  }
+
+
+  /**
    * Gets the current state of the resource, skipping
    * the cache.
    *
@@ -80,7 +103,7 @@ export default class Resource<T = any> {
    */
   async put(options: PutRequestOptions<T>): Promise<void> {
 
-    const response = await this.fetchOrThrow(
+    await this.fetchOrThrow(
       optionsToRequestInit('PUT', options)
     );
 
@@ -152,7 +175,7 @@ export default class Resource<T = any> {
    */
   async patch(options: PatchRequestOptions): Promise<void> {
 
-    const response = await this.fetchOrThrow(
+    await this.fetchOrThrow(
       optionsToRequestInit('PATCH', options)
     );
 
@@ -283,8 +306,18 @@ export default class Resource<T = any> {
  *
  * RequestInit is passed to the constructor of fetch(). We have our own 'options' format
  */
-function optionsToRequestInit(method: string, options: PostRequestOptions | PatchRequestOptions | PutRequestOptions): RequestInit {
+function optionsToRequestInit(method: 'GET', options?: GetRequestOptions): RequestInit;
+function optionsToRequestInit(method: 'HEAD', options?: HeadRequestOptions): RequestInit;
+function optionsToRequestInit(method: 'PATCH', options?: PatchRequestOptions): RequestInit;
+function optionsToRequestInit(method: 'POST', options?: PostRequestOptions): RequestInit;
+function optionsToRequestInit(method: 'PUT', options?: PutRequestOptions): RequestInit;
+function optionsToRequestInit(method: string, options?: GetRequestOptions | PostRequestOptions | PatchRequestOptions | PutRequestOptions): RequestInit {
 
+  if (!options) {
+    return {
+      method
+    };
+  }
   let headers;
   if (options.getContentHeaders) {
     headers = new Headers(options.getContentHeaders());
@@ -297,10 +330,10 @@ function optionsToRequestInit(method: string, options: PostRequestOptions | Patc
     headers.set('Content-Type', 'application/json');
   }
   let body;
-  if (options.serializeBody) {
-    body = options.serializeBody();
-  } else if (options.body) {
-    body = options.body;
+  if ((options as any).serializeBody !== undefined) {
+    body = (options as any).serializeBody();
+  } else if ((options as any).body) {
+    body = (options as any).body;
     if (!(body instanceof Buffer) && typeof body !== 'string') {
       body = JSON.stringify(body);
     }

@@ -26,7 +26,7 @@ export default class Client {
   } = {
     'application/hal+json': [halStateFactory, '1.0'],
     'application/vnd.api+json': [jsonApiStateFactory, '0.9'],
-    'application/vnd.siren+json': [jsonApiStateFactory, '0.9'],
+    'application/vnd.siren+json': [sirenStateFactory, '0.9'],
     'application/vnd.collection+json': [cjStateFactory, '0.9'],
     'application/json': [halStateFactory, '0.8'],
     'text/html': [htmlStateFactory, '0.7'],

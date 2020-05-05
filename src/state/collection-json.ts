@@ -1,9 +1,6 @@
 import { BaseState } from './base-state';
-import { StateFactory } from './interface';
-import { HalResource, HalLink } from 'hal-types';
 import { parseLink } from '../http/util';
-import { Link, Links } from '../link';
-import { resolve } from '../util/uri';
+import { Link } from '../link';
 
 /**
  * Represents a resource state in the HAL format

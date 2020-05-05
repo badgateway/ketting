@@ -1,4 +1,4 @@
-import { Resource, FollowPromiseOne, FollowPromiseMany, Link, Links } from '../../src';
+import { Resource, FollowPromiseOne, FollowPromiseMany, Links } from '../../src';
 import { expect } from 'chai';
 
 describe('FollowPromiseOne', () => {
