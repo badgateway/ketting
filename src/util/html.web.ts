@@ -1,5 +1,4 @@
-import * as sax from 'sax';
-import { Link, Links } from '../link';
+import { Link } from '../link';
 
 export function parseHtmlLinks(contextUri: string, body: string): Link[] {
 

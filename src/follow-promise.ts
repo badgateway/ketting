@@ -11,11 +11,13 @@ abstract class FollowPromise<T> implements PromiseLike<T> {
   protected prefetchEnabled: boolean;
   protected preferPushEnabled: boolean;
   protected preferTranscludeEnabled: boolean;
+  protected useHeadEnabled: boolean;
 
   constructor() {
     this.prefetchEnabled = false;
     this.preferPushEnabled = false;
     this.preferTranscludeEnabled = false;
+    this.useHeadEnabled = false;
   }
 
   preFetch(): this {
@@ -31,6 +33,19 @@ abstract class FollowPromise<T> implements PromiseLike<T> {
   preferTransclude(): this {
     this.preferTranscludeEnabled = true;
     return this;
+  }
+
+  /**
+   * Use a HTTP HEAD request to fetch the links.
+   *
+   * This is useful when interacting with servers that embed links in Link
+   * Headers.
+   */
+  useHead(): this {
+
+    this.useHeadEnabled = true;
+    return this;
+
   }
 
   abstract then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): PromiseLike<TResult1 | TResult2>;
@@ -140,13 +155,18 @@ export class FollowPromiseOne<T = any> extends FollowPromise<Resource<T>> {
     if (this.preferPushEnabled) {
       headers['Prefer-Push'] = this.rel;
     }
-    if (this.preferTranscludeEnabled) {
+    if (!this.useHeadEnabled && this.preferTranscludeEnabled) {
       headers.Prefer = 'transclude=' + this.rel;
     }
 
-    const state = await resource.get({
-      headers
-    });
+    let state;
+    if (this.useHeadEnabled) {
+      state = await resource.head({headers});
+    } else {
+      state = await resource.get({
+        headers
+      });
+    }
 
     const link = state.links.get(this.rel);
 
@@ -233,13 +253,18 @@ export class FollowPromiseMany<T = any> extends FollowPromise<Resource<T>[]> {
     if (this.preferPushEnabled) {
       headers['Prefer-Push'] = this.rel;
     }
-    if (this.preferTranscludeEnabled) {
+    if (!this.useHeadEnabled && this.preferTranscludeEnabled) {
       headers.Prefer = 'transclude=' + this.rel;
     }
 
-    const state = await resource.get({
-      headers
-    });
+    let state;
+    if (this.useHeadEnabled) {
+      state = await resource.head({headers});
+    } else {
+      state = await resource.get({
+        headers
+      });
+    }
 
     const links = state.links.getMany(this.rel);
 

@@ -1,5 +1,4 @@
 import { BaseState } from './base-state';
-import { StateFactory } from './interface';
 import { HalResource, HalLink } from 'hal-types';
 import { parseLink } from '../http/util';
 import { Link, Links } from '../link';
@@ -179,7 +178,7 @@ function parseHalEmbedded(context: string, body: HalResource, headers: Headers):
 
   const result: HalState<any>[] = [];
 
-  for (const [rel, embedded] of Object.entries(body._embedded)) {
+  for (const embedded of Object.values(body._embedded)) {
 
     let embeddedList: HalResource[];
 

@@ -1,6 +1,4 @@
 import { BaseState } from './base-state';
-import { StateFactory } from './interface';
-import { HalResource, HalLink } from 'hal-types';
 import { parseLink } from '../http/util';
 import { Link, Links } from '../link';
 import { resolve } from '../util/uri';
