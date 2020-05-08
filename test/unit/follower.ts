@@ -18,6 +18,15 @@ describe('FollowPromiseOne', () => {
     expect(newResource.uri).to.equal('https://example.org/templated?q=foo');
 
   });
+  it('should support HEAD requests', async() => {
+
+    const follower = new FollowPromiseOne(getFakeResource(), 'rel1');
+    follower.useHead();
+    const newResource = await follower;
+    expect(newResource.uri).to.equal('https://example.org/child1');
+
+  });
+
 
   it('should support chaining with follow()', async() => {
 
@@ -105,6 +114,14 @@ describe('FollowPromiseMany', () => {
   it('should resolve to an array of linked resources', async() => {
 
     const follower = new FollowPromiseMany(getFakeResource(), 'rel1');
+    const resources = await follower;
+    expect(resources[0].uri).to.equal('https://example.org/child1');
+
+  });
+  it('should support HEAD requests', async() => {
+
+    const follower = new FollowPromiseMany(getFakeResource(), 'rel1');
+    follower.useHead();
     const resources = await follower;
     expect(resources[0].uri).to.equal('https://example.org/child1');
 
@@ -223,6 +240,20 @@ function getFakeResource(uri?: string, type?: string): Resource<{ firstGet: bool
     return response;
   }
 
+  fakeResource.head = async(headOptions: any) => {
+
+    fakeResource.lastGetOptions = headOptions;
+    if (fakeResource.uri === 'https://example.org/error-get') {
+      throw new Error('Error on HEAD method');
+    }
+
+    const response = {
+      body: { firstGet },
+      links,
+    };
+    firstGet = false;
+    return response;
+  }
   return fakeResource;
 
 }
