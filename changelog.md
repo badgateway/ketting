@@ -1,6 +1,15 @@
 ChangeLog
 =========
 
+6.0.0-alpha.3 (2020-05-08)
+--------------------------
+
+* #141: Added `head()` function and ability to follow links just through `HEAD`
+  methods via the `Link` header.
+* Siren was not correctly parsed.
+* #130: Support relative bookmark URIs when using Ketting in a browser.
+
+
 6.0.0-alpha.2 (2020-05-03)
 --------------------------
 
