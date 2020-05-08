@@ -19,7 +19,7 @@ export function resolve(base: string|Link, relative?: string): string {
   }
 
   // If the URL object is supported, we prefer that.
-  if (typeof URL !== 'undefined') {
+  if (typeof URL !== 'undefined' && /https?:\/\//.exec(base)?.index === 0) {
     return (new URL(relative!, base).toString());
   }
 
