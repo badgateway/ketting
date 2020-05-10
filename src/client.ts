@@ -127,21 +127,28 @@ export default class Client {
     } else{
       state = await binaryStateFactory(uri, response);
     }
-
-    this.cacheEmbeddedState(state);
     return state;
 
   }
 
   /**
-   * Takes a State, grabs all the embedded items and places them in a cache.
+   * Caches a State object
+   *
+   * This function will also emit 'update' events to resources, and store all
+   * embedded states.
    */
-  private cacheEmbeddedState(state: State) {
+  cacheState(state: State) {
+
+    this.cache.store(state);
+    const resource = this.resources.get(state.uri);
+    if (resource) {
+      // We have a resource for this object, notify it as well.
+      resource.emit('update', state);
+    }
 
     for(const embeddedState of state.getEmbedded()) {
-      this.cache.store(embeddedState);
       // Recursion. MADNESS
-      this.cacheEmbeddedState(embeddedState);
+      this.cacheState(embeddedState);
     }
 
   }

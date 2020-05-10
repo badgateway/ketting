@@ -144,6 +144,40 @@ describe('Resource Events', () => {
     });
 
   });
+  describe('"update" event', () => {
+
+    it('should not trigger when a state served from cache', async() => {
+
+      const client = new Client('http://example');
+      client.use( mockFetchMw );
+      const resource = client.go('/res');
+      await resource.get();
+
+      let triggered = false;
+      resource.once('update', () => {
+        triggered = true;
+      });
+      await resource.get();
+      expect(triggered).to.equal(false);
+
+    });
+
+    it('should trigger when state is refreshed', async() => {
+
+      const client = new Client('http://example');
+      client.use( mockFetchMw );
+      const resource = client.go('/res');
+      await resource.get();
+
+      let triggered = false;
+      resource.once('update', () => {
+        triggered = true;
+      });
+      await resource.refresh();
+      expect(triggered).to.equal(true);
+
+    });
+  });
 
 });
 

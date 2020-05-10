@@ -5,7 +5,7 @@ describe('Client', () => {
 
   describe('Resource caching', () => {
 
-    it('should invalidate a resource\'s cache if an unsafe method was used', () => {
+    it('should invalidate a resource\'s cache if an unsafe method was used', async () => {
 
       const client = new Client('https://example.org');
       client.cache.store(new TextState(
@@ -22,7 +22,7 @@ describe('Client', () => {
         method: 'POST'
       });
 
-      client.fetcher.fetch(request);
+      await client.fetcher.fetch(request);
       expect(client.cache.has('https://example.org/foo')).to.equal(false);
 
     });
@@ -50,7 +50,7 @@ describe('Client', () => {
 
     });
 
-    it('should invalidate resources if they were mentioned in a Link header with rel="invalidates"', () => {
+    it('should invalidate resources if they were mentioned in a Link header with rel="invalidates"', async () => {
 
       const client = new Client('https://example.org');
       client.cache.store(new TextState(
@@ -68,10 +68,10 @@ describe('Client', () => {
       headers.append('Link', '</bar>; rel="invalidates"');
       headers.append('Link', '</zim>; rel="invalidates"');
       client.use( async req => {
-        return new Response('OK');
+        return new Response('OK', { headers });
       });
 
-      client.fetcher.fetch(request);
+      await client.fetcher.fetch(request);
       expect(client.cache.has('https://example.org/foo')).to.equal(false);
 
     });
@@ -95,6 +95,7 @@ describe('Client', () => {
       });
 
       const halState = await client.getStateForResponse('https://example.org/parent', response);
+      client.cacheState(halState);
       expect(halState.uri).to.equal('https://example.org/parent');
       expect(halState.data).to.eql({item: 2});
 
@@ -134,6 +135,7 @@ describe('Client', () => {
       });
 
       const halState = await client.getStateForResponse('https://example.org/parent', response);
+      client.cacheState(halState);
       expect(halState.uri).to.equal('https://example.org/parent');
       expect(halState.data).to.eql({item: 2});
 

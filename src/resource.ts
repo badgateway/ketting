@@ -88,7 +88,7 @@ export class Resource<T = any> extends EventEmitter {
         try {
           const response = await this.fetchOrThrow(params);
           const state = await this.client.getStateForResponse(this.uri, response);
-          this.client.cache.store(state);
+          this.client.cacheState(state);
           return state;
         } finally {
           this.activeRefresh = null;
@@ -308,6 +308,10 @@ export declare interface Resource<T = any> {
   on(event: 'update', listener: (state: State) => void) : this
   on(event: 'stale',  listener: () => void) : this;
   on(event: 'delete', listener: () => void) : this;
+
+  once(event: 'update', listener: (state: State) => void) : this
+  once(event: 'stale',  listener: () => void) : this;
+  once(event: 'delete', listener: () => void) : this;
 
   off(event: 'update', listener: (state: State) => void) : this
   off(event: 'stale',  listener: () => void) : this;

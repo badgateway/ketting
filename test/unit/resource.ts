@@ -146,6 +146,12 @@ function getFakeResource(uri: string = 'https://example.org/') {
 
     },
 
+    cacheState: (state: any) => {
+
+      return;
+
+    },
+
     getStateForResponse: () => {
 
       return {

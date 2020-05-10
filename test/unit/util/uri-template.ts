@@ -15,6 +15,18 @@ describe('uri-template utility', () => {
     expect(expand(link, { bar: 'zim' })).to.equal('http://example.org/foo/zim');
 
   });
+  it('should be able to expand templated links from strings', () => {
+
+    const link = {
+      context: 'http://example.org/',
+      href: '/foo/{bar}',
+      rel: 'about',
+      templated: true
+    };
+
+    expect(expand(link.context, link.href, { bar: 'zim' })).to.equal('http://example.org/foo/zim');
+
+  });
 
   it('should not error when expanding non-templated links', () => {
 
