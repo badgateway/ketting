@@ -85,7 +85,7 @@ describe('FollowPromiseOne', () => {
     const fakeResource = getFakeResource();
     const follower = new FollowPromiseOne(fakeResource, 'rel1');
     const newResource = await follower;
-    expect((await newResource.get()).body).to.eql({firstGet: true});
+    expect((await newResource.get()).data).to.eql({firstGet: true});
 
   });
 
@@ -94,7 +94,7 @@ describe('FollowPromiseOne', () => {
     const fakeResource = getFakeResource();
     const follower = new FollowPromiseOne(fakeResource, 'rel1');
     const newResource = await follower.preFetch();
-    expect((await newResource.get()).body).to.eql({firstGet: false});
+    expect((await newResource.get()).data).to.eql({firstGet: false});
 
   });
 
@@ -158,7 +158,7 @@ describe('FollowPromiseMany', () => {
     const fakeResource = getFakeResource();
     const follower = new FollowPromiseMany(fakeResource, 'rel1');
     const newResource = await follower;
-    expect((await newResource[0].get()).body).to.eql({firstGet: true});
+    expect((await newResource[0].get()).data).to.eql({firstGet: true});
 
   });
 
@@ -167,7 +167,7 @@ describe('FollowPromiseMany', () => {
     const fakeResource = getFakeResource();
     const follower = new FollowPromiseMany(fakeResource, 'rel1');
     const newResource = await follower.preFetch();
-    expect((await newResource[0].get()).body).to.eql({firstGet: false});
+    expect((await newResource[0].get()).data).to.eql({firstGet: false});
 
   });
 
@@ -233,7 +233,7 @@ function getFakeResource(uri?: string, type?: string): Resource<{ firstGet: bool
     }
 
     const response = {
-      body: { firstGet },
+      data: { firstGet },
       links,
     };
     firstGet = false;
@@ -248,7 +248,7 @@ function getFakeResource(uri?: string, type?: string): Resource<{ firstGet: bool
     }
 
     const response = {
-      body: { firstGet },
+      data: { firstGet },
       links,
     };
     firstGet = false;

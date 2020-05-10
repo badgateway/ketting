@@ -17,7 +17,7 @@ describe('Issuing a PATCH request', async () => {
 
   it('should not fail', async () => {
 
-    await resource.patch({body: {newData: 'hi!'}});
+    await resource.patch({data: {newData: 'hi!'}});
 
   });
 
@@ -26,7 +26,7 @@ describe('Issuing a PATCH request', async () => {
     let ok = false;
     try {
       const errResource = await ketting.follow('error400');
-      await errResource.patch({body: {foo: 'bar'}});
+      await errResource.patch({data: {foo: 'bar'}});
     } catch (e) {
       ok = true;
     }

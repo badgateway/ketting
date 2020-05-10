@@ -17,7 +17,7 @@ describe('Issuing a POST request', async () => {
   it('should not fail', async () => {
 
     newResource = await resource.postFollow({
-      body: { title: 'Posted resource' }
+      data: { title: 'Posted resource' }
     }) as Resource;
 
   });
@@ -31,7 +31,7 @@ describe('Issuing a POST request', async () => {
   it('should have created the new resource', async () => {
 
     const newBody = await newResource.get();
-    expect(newBody.body).to.eql({title: 'Posted resource'});
+    expect(newBody.data).to.eql({title: 'Posted resource'});
 
   });
 
@@ -41,7 +41,7 @@ describe('Issuing a POST request', async () => {
     let exception;
     try {
       await resource400.postFollow({
-        body: {foo: 'bar'}
+        data: {foo: 'bar'}
       });
     } catch (ex) {
         exception = ex;

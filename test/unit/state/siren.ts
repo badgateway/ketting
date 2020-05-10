@@ -84,7 +84,7 @@ describe('Siren representor', () => {
 
     const embedded = siren.getEmbedded()[0];
     expect(embedded.uri).to.eql('http://api.x.io/customers/pj123');
-    expect(embedded.body).to.eql({
+    expect(embedded.data).to.eql({
       "class": [ "info", "customer" ],
       "rel": [ "http://x.io/rels/customer" ],
       "properties": {
