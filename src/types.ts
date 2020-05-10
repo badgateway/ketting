@@ -22,7 +22,7 @@ export type RequestOptions<T = any> = {
    * If body is not a `string` or a `Buffer`, the body will
    * be json encoded.
    */
-  body?: T;
+  data?: T;
 
   /**
    * List of headers that will be set in the request.
@@ -38,7 +38,7 @@ export type RequestOptions<T = any> = {
 
 }
 
-export type GetRequestOptions = Omit<RequestOptions, 'serializeBody' | 'body'>;
+export type GetRequestOptions = Omit<RequestOptions, 'serializeBody' | 'data'>;
 export type HeadRequestOptions = GetRequestOptions;
 export type PatchRequestOptions<T = any> = RequestOptions<T>;
 export type PutRequestOptions<T = any> = RequestOptions<T>;

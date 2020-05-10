@@ -9,7 +9,7 @@ export class JsonApiState<T = any> extends BaseState<T> {
 
   serializeBody(): string {
 
-    return JSON.stringify(this.body);
+    return JSON.stringify(this.data);
 
   }
 

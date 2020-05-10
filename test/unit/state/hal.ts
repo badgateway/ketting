@@ -44,11 +44,11 @@ describe('HAL representor', () => {
     const embedded = hal.getEmbedded()[0];
 
     expect(embedded.uri).to.eql('http://example/bar');
-    expect(embedded.body).to.eql({hello: 'world'});
+    expect(embedded.data).to.eql({hello: 'world'});
     expect(embedded.links.has('self')).to.eql(true);
 
 
-    expect(hal.body).to.eql({ happy: 2020 });
+    expect(hal.data).to.eql({ happy: 2020 });
 
   });
 
@@ -166,7 +166,7 @@ describe('HAL representor', () => {
     const embedded = hal.getEmbedded()[0];
 
     expect(embedded.uri).to.eql('http://example/bar');
-    expect(embedded.body).to.eql({hello: 'world'});
+    expect(embedded.data).to.eql({hello: 'world'});
     expect(embedded.links.has('self')).to.eql(true);
 
   });

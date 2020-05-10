@@ -18,20 +18,20 @@ describe('Issuing a PUT request', async () => {
   it('should not fail', async () => {
 
     await resource.put({
-      body: { newData: 'hi!'}
+      data: { newData: 'hi!'}
     });
 
   });
   it('should have cleared the resource representation', async () => {
 
     const newBody = await resource.get();
-    expect(newBody.body).to.eql({newData: 'hi!'});
+    expect(newBody.data).to.eql({newData: 'hi!'});
 
   });
   it('should have cleared the global cache', async () => {
 
     const newBody = await (await ketting.follow('next')).get();
-    expect(newBody.body).to.eql({newData: 'hi!'});
+    expect(newBody.data).to.eql({newData: 'hi!'});
 
   });
   it('should throw an exception if there was an http error', async () => {
@@ -39,7 +39,7 @@ describe('Issuing a PUT request', async () => {
     let ok = false;
     try {
       const errResource = await ketting.follow('error400');
-      await errResource.put({body: {foo: 'bar'}});
+      await errResource.put({data: {foo: 'bar'}});
     } catch (e) {
       ok = true;
     }
