@@ -4,6 +4,8 @@ ChangeLog
 6.0.0-alpha.4 (2020-05-??)
 --------------------------
 
+* `Resources` implement EventEmitter, and can emit `stale`, `update` and
+  `delete` events.
 * The 'body' property on State is now 'data'
 
 

@@ -1,8 +1,5 @@
 import { StateCache } from './';
 import { State } from '../state';
-import { isSafeMethod } from '../http/util';
-import * as LinkHeader from 'http-link-header';
-import { resolve } from '../util/uri';
 
 export class ForeverCache implements StateCache {
 
@@ -12,43 +9,52 @@ export class ForeverCache implements StateCache {
     this.cache = new Map();
   }
 
+  /**
+   * Store a State object.
+   *
+   * This function will clone the state object before storing
+   */
   store(state: State) {
-    this.cache.set(state.uri, state);
+    this.cache.set(
+      state.uri,
+      state.clone()
+    );
   }
 
+  /**
+   * Retrieve a State object from the cache by its absolute uri
+   */
   get(uri: string): State | null {
 
-    return this.cache.get(uri) || null;
+    const state = this.cache.get(uri);
+    if (!state) {
+      return null;
+    }
+    return state.clone();
 
   }
 
+  /**
+   * Return true if a State object with the specified uri exists in the cache
+   */
   has(uri: string): boolean {
 
     return this.cache.has(uri);
 
   }
 
+  /**
+   * Delete a State object from the cache, by its uri
+   */
   delete(uri: string) {
     this.cache.delete(uri);
   }
 
+  /**
+   * Purge the entire cache
+   */
   clear() {
     this.cache.clear();
-  }
-
-  processRequest(request: Request, response: Response): void {
-
-    if (isSafeMethod(request.method)) {
-      return;
-    }
-    this.delete(request.url);
-
-    if (response.headers.has('Link')) {
-      for (const httpLink of LinkHeader.parse(response.headers.get('Link')!).rel('invalidates')) {
-        const uri = resolve(request.url, httpLink.uri);
-        this.cache.delete(uri);
-      }
-    }
   }
 
 }

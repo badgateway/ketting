@@ -59,6 +59,8 @@ export interface State<T = any> {
    */
   timestamp: number;
 
+  clone(): State<T>;
+
 }
 
 /**
@@ -106,3 +108,13 @@ export interface HeadState {
  * an object that impements the State interface
  */
 export type StateFactory<T = any> = (uri: string, request: Response) => Promise<State<T>>;
+
+export function isState(input: object): input is State {
+
+  return (
+    typeof (input as any).uri === 'string' &&
+    (input as any).links instanceof Links &&
+    (input as any).headers instanceof Headers
+  );
+
+}

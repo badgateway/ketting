@@ -10,11 +10,12 @@ import {
   cjStateFactory,
   htmlStateFactory
 } from './state';
-import { parseContentType } from './http/util';
+import { parseContentType, isSafeMethod } from './http/util';
 import { resolve } from './util/uri';
 import { LinkVariables } from './link';
 import { FollowPromiseOne } from './follow-promise';
 import { StateCache, ForeverCache } from './cache';
+import * as LinkHeader from 'http-link-header';
 
 export default class Client {
 
@@ -39,7 +40,7 @@ export default class Client {
   constructor(bookmarkUri: string) {
     this.bookmarkUri = bookmarkUri;
     this.fetcher = new Fetcher();
-    this.fetcher.use( this.cacheHandler );
+    this.fetcher.use( this.cacheExpireHandler );
     this.fetcher.use( this.acceptHeader );
     this.cache = new ForeverCache();
     this.resources = new Map();
@@ -126,21 +127,28 @@ export default class Client {
     } else{
       state = await binaryStateFactory(uri, response);
     }
-
-    this.cacheEmbeddedState(state);
     return state;
 
   }
 
   /**
-   * Takes a State, grabs all the embedded items and places them in a cache.
+   * Caches a State object
+   *
+   * This function will also emit 'update' events to resources, and store all
+   * embedded states.
    */
-  private cacheEmbeddedState(state: State) {
+  cacheState(state: State) {
+
+    this.cache.store(state);
+    const resource = this.resources.get(state.uri);
+    if (resource) {
+      // We have a resource for this object, notify it as well.
+      resource.emit('update', state);
+    }
 
     for(const embeddedState of state.getEmbedded()) {
-      this.cache.store(embeddedState);
       // Recursion. MADNESS
-      this.cacheEmbeddedState(embeddedState);
+      this.cacheState(embeddedState);
     }
 
   }
@@ -157,10 +165,75 @@ export default class Client {
 
   };
 
-  private cacheHandler: FetchMiddleware = async(request, next) => {
+  private cacheExpireHandler: FetchMiddleware = async(request, next) => {
+
+    /**
+     * Prevent a 'stale' event from being emitted, but only for the main
+     * uri
+     */
+    let noStaleEvent = false;
+
+    if (request.headers.has('X-KETTING-NO-STALE')) {
+      noStaleEvent = true;
+      request.headers.delete('X-KETTING-NO-STALE');
+    }
 
     const response = await next(request);
-    this.cache.processRequest(request, response);
+    if (isSafeMethod(request.method)) {
+      return response;
+    }
+
+    if (!response.ok) {
+      // There was an error, no cache changes
+      return response;
+    }
+
+    // We just processed an unsafe method, lets notify all subsystems.
+    const expireUris = [];
+    if (!noStaleEvent && request.method !== 'DELETE') {
+      // Sorry for the double negative
+      expireUris.push(request.url);
+    }
+
+    // If the response had a Link: rel=invalidate header, we want to
+    // expire those too.
+    if (response.headers.has('Link')) {
+      for (const httpLink of LinkHeader.parse(response.headers.get('Link')!).rel('invalidates')) {
+        const uri = resolve(request.url, httpLink.uri);
+        expireUris.push(uri);
+      }
+    }
+
+    // Location headers should also expire
+    if (response.headers.has('Location')) {
+      expireUris.push(
+        resolve(request.url, response.headers.get('Location')!)
+      );
+    }
+    // Content-Location headers should also expire
+    if (response.headers.has('Content-Location')) {
+      expireUris.push(
+        resolve(request.url, response.headers.get('Content-Location')!)
+      );
+    }
+
+    for (const uri of expireUris) {
+      this.cache.delete(request.url);
+
+      const resource = this.resources.get(uri);
+      if (resource) {
+        // We have a resource for this object, notify it as well.
+        resource.emit('stale');
+      }
+    }
+    if (request.method === 'DELETE') {
+      this.cache.delete(request.url);
+      const resource = this.resources.get(request.url);
+      if (resource) {
+        resource.emit('delete');
+      }
+    }
+
     return response;
 
   };

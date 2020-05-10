@@ -1,14 +1,38 @@
 export { ForeverCache } from './forever';
 import { State } from '../state';
 
+/**
+ * Cache interface
+ *
+ * The cache is responsible for storing 'state' objects
+ */
 export interface StateCache {
 
+  /**
+   * Store a State object.
+   *
+   * This function will clone the state object before storing
+   */
   store: (state: State) => void;
-  get: (uri: string) => State | null;
-  has: (uri: string) => boolean;
-  delete: (uri: string) => void;
-  clear: () => void;
 
-  processRequest: (request: Request, response: Response) => void;
+  /**
+   * Retrieve a State object from the cache by its absolute uri
+   */
+  get: (uri: string) => State | null;
+
+  /**
+   * Return true if a State object with the specified uri exists in the cache
+   */
+  has: (uri: string) => boolean;
+
+  /**
+   * Delete a State object from the cache, by its uri
+   */
+  delete: (uri: string) => void;
+
+  /**
+   * Purge the entire cache
+   */
+  clear: () => void;
 
 }

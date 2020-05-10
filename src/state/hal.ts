@@ -49,6 +49,17 @@ export class HalState<T = any> extends BaseState<T> {
 
   }
 
+  clone(): HalState {
+
+    return new HalState(
+      this.uri,
+      this.data,
+      new Headers(this.headers),
+      new Links(this.links)
+    );
+
+  }
+
 }
 
 /**

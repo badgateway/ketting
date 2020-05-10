@@ -1,4 +1,4 @@
-export { State, StateFactory, HeadState } from './interface';
+export { State, StateFactory, HeadState, isState } from './interface';
 export { BaseState } from './base-state';
 export { factory as halStateFactory, HalState } from './hal';
 export { factory as binaryStateFactory, BinaryState } from './binary';

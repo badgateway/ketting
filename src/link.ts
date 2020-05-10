@@ -55,12 +55,17 @@ export class Links {
 
   store: Map<string, Link[]>
 
-  constructor(links?: Link[]) {
+  constructor(links?: Link[] | Links) {
 
     this.store = new Map();
+
     if (links) {
-      for (const link of links) {
-        this.add(link);
+      if (links instanceof Links) {
+        this.add(...links.getAll());
+      } else {
+        for (const link of links) {
+          this.add(link);
+        }
       }
     }
 

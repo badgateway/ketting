@@ -96,4 +96,6 @@ export abstract class BaseState<T> implements State<T> {
    */
   timestamp: number;
 
+  abstract clone(): State<T>;
+
 }
