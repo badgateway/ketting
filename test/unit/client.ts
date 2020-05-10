@@ -15,13 +15,14 @@ describe('Client', () => {
         new Links(),
       ));
 
+      client.use( async req => {
+        return new Response('OK');
+      });
       const request = new Request('https://example.org/foo', {
         method: 'POST'
       });
 
-      const response = new Response('', {status: 200});
-      client.cache.processRequest(request, response);
-
+      client.fetcher.fetch(request);
       expect(client.cache.has('https://example.org/foo')).to.equal(false);
 
     });
@@ -40,9 +41,11 @@ describe('Client', () => {
         method: 'SEARCH'
       });
 
-      const response = new Response('', {status: 200});
-      client.cache.processRequest(request, response);
+      client.use( async req => {
+        return new Response('OK');
+      });
 
+      client.fetcher.fetch(request);
       expect(client.cache.has('https://example.org/foo')).to.equal(true);
 
     });
@@ -64,12 +67,11 @@ describe('Client', () => {
       const headers = new Headers();
       headers.append('Link', '</bar>; rel="invalidates"');
       headers.append('Link', '</zim>; rel="invalidates"');
-      const response = new Response('', {
-        status: 200,
-        headers
+      client.use( async req => {
+        return new Response('OK');
       });
 
-      client.cache.processRequest(request, response);
+      client.fetcher.fetch(request);
       expect(client.cache.has('https://example.org/foo')).to.equal(false);
 
     });
