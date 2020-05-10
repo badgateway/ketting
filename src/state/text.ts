@@ -10,7 +10,7 @@ export class TextState extends BaseState<string> {
 
   serializeBody(): string {
 
-    return this.body;
+    return this.data;
 
   }
 

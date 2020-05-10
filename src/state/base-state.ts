@@ -13,7 +13,7 @@ export abstract class BaseState<T> implements State<T> {
    *
    * In the case of a JSON response, this will be deserialized
    */
-  body: T
+  data: T
 
   /**
    * The full list of HTTP headers that were sent with the response.
@@ -30,10 +30,10 @@ export abstract class BaseState<T> implements State<T> {
    */
   protected embedded: State[];
 
-  constructor(uri: string, body: T, headers: Headers, links: Links, embedded?: State[]) {
+  constructor(uri: string, data: T, headers: Headers, links: Links, embedded?: State[]) {
 
     this.uri = uri;
-    this.body = body;
+    this.data = data;
     this.headers = headers;
     this.links = links;
     this.embedded = embedded || [];

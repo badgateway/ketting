@@ -11,7 +11,7 @@ export class BinaryState extends BaseState<Blob> {
 
   serializeBody(): Blob {
 
-    return this.body;
+    return this.data;
 
   }
 
