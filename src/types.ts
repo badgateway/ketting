@@ -14,7 +14,7 @@ export type RequestOptions<T = any> = {
    * Will be used as the body in the HTTP request.
    * If not set, `body` will be used instead.
    */
-  serializeBody?: () => string | Buffer;
+  serializeBody?: () => string | Buffer | Blob;
 
   /**
    * If set, contains the body of the current state.

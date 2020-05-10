@@ -167,6 +167,17 @@ export default class Client {
 
   private cacheExpireHandler: FetchMiddleware = async(request, next) => {
 
+    /**
+     * Prevent a 'stale' event from being emitted, but only for the main
+     * uri
+     */
+    let noStaleEvent = false;
+
+    if (request.headers.has('X-KETTING-NO-STALE')) {
+      noStaleEvent = true;
+      request.headers.delete('X-KETTING-NO-STALE');
+    }
+
     const response = await next(request);
     if (isSafeMethod(request.method)) {
       return response;
@@ -178,7 +189,11 @@ export default class Client {
     }
 
     // We just processed an unsafe method, lets notify all subsystems.
-    const expireUris = [request.url];
+    const expireUris = [];
+    if (!noStaleEvent) {
+      // Sorry for the double negative
+      expireUris.push(request.url);
+    }
 
     // If the response had a Link: rel=invalidate header, we want to
     // expire those too.

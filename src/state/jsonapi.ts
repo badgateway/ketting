@@ -1,6 +1,6 @@
 import { BaseState } from './base-state';
 import { parseLink } from '../http/util';
-import { Link } from '../link';
+import { Link, Links } from '../link';
 
 /**
  * Represents a resource state in the HAL format
@@ -10,6 +10,17 @@ export class JsonApiState<T = any> extends BaseState<T> {
   serializeBody(): string {
 
     return JSON.stringify(this.data);
+
+  }
+
+  clone(): JsonApiState<T> {
+
+    return new JsonApiState(
+      this.uri,
+      this.data,
+      new Headers(this.headers),
+      new Links(this.links)
+    );
 
   }
 

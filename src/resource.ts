@@ -1,5 +1,5 @@
 import Client from './client';
-import { State, headStateFactory, HeadState } from './state';
+import { State, headStateFactory, HeadState, isState } from './state';
 import { resolve } from './util/uri';
 import { FollowPromiseOne, FollowPromiseMany } from './follow-promise';
 import { Link, LinkNotFound, LinkVariables } from './link';
@@ -103,11 +103,29 @@ export class Resource<T = any> extends EventEmitter {
   /**
    * Updates the server state with a PUT request
    */
-  async put(options: PutRequestOptions<T>): Promise<void> {
+  async put(options: PutRequestOptions<T> | State): Promise<void> {
 
-    await this.fetchOrThrow(
-      optionsToRequestInit('PUT', options)
-    );
+
+    const requestInit = optionsToRequestInit('PUT', options);
+
+    /**
+     * If we got a 'State' object passed, it means we don't need to emit a
+     * stale event, as the passed object is the new
+     * state.
+     *
+     * We're gonna track that with a custom header that will be removed
+     * later in the fetch pipeline.
+     */
+    if (isState(options)) {
+      requestInit.headers.set('X-KETTING-NO-STALE', '1');
+    }
+
+    await this.fetchOrThrow(requestInit);
+
+    if (isState(options)) {
+      this.client.cache.store(options);
+      this.emit('update', options);
+    }
 
   }
 
@@ -325,21 +343,26 @@ export declare interface Resource<T = any> {
 
 export default Resource;
 
+type StrictRequestInit = RequestInit & {
+  headers: Headers,
+};
+
 /**
  * Convert request options to RequestInit
  *
  * RequestInit is passed to the constructor of fetch(). We have our own 'options' format
  */
-function optionsToRequestInit(method: 'GET', options?: GetRequestOptions): RequestInit;
-function optionsToRequestInit(method: 'HEAD', options?: HeadRequestOptions): RequestInit;
-function optionsToRequestInit(method: 'PATCH', options?: PatchRequestOptions): RequestInit;
-function optionsToRequestInit(method: 'POST', options?: PostRequestOptions): RequestInit;
-function optionsToRequestInit(method: 'PUT', options?: PutRequestOptions): RequestInit;
-function optionsToRequestInit(method: string, options?: GetRequestOptions | PostRequestOptions | PatchRequestOptions | PutRequestOptions): RequestInit {
+function optionsToRequestInit(method: 'GET', options?: GetRequestOptions): StrictRequestInit;
+function optionsToRequestInit(method: 'HEAD', options?: HeadRequestOptions): StrictRequestInit;
+function optionsToRequestInit(method: 'PATCH', options?: PatchRequestOptions): StrictRequestInit;
+function optionsToRequestInit(method: 'POST', options?: PostRequestOptions): StrictRequestInit;
+function optionsToRequestInit(method: 'PUT', options?: PutRequestOptions): StrictRequestInit;
+function optionsToRequestInit(method: string, options?: GetRequestOptions | PostRequestOptions | PatchRequestOptions | PutRequestOptions): StrictRequestInit {
 
   if (!options) {
     return {
-      method
+      method,
+      headers: new Headers(),
     };
   }
   let headers;
@@ -367,7 +390,7 @@ function optionsToRequestInit(method: string, options?: GetRequestOptions | Post
   return {
     method,
     body,
-    headers
+    headers,
   };
 
 }

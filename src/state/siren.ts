@@ -14,6 +14,17 @@ export class SirenState<T = any> extends BaseState<T> {
 
   }
 
+  clone(): SirenState<T> {
+
+    return new SirenState(
+      this.uri,
+      this.data,
+      new Headers(this.headers),
+      new Links(this.links),
+    );
+
+  }
+
 }
 
 /**

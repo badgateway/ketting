@@ -1,6 +1,6 @@
 import { BaseState } from './base-state';
 import { parseLink } from '../http/util';
-import { Link } from '../link';
+import { Link, Links } from '../link';
 
 /**
  * Represents a resource state in the HAL format
@@ -10,6 +10,17 @@ export class CjState<T = any> extends BaseState<T> {
   serializeBody(): string {
 
     throw new Error('Reserializing Collection+JSON states is not yet supported. Please log an issue in the Ketting project to help figure out how this should be done');
+  }
+
+  clone(): CjState<T> {
+
+    return new CjState(
+      this.uri,
+      this.data,
+      new Headers(this.headers),
+      new Links(this.links)
+    );
+
   }
 
 }

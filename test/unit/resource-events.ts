@@ -177,6 +177,35 @@ describe('Resource Events', () => {
       expect(triggered).to.equal(true);
 
     });
+
+    it('should trigger when state is updated with PUT, and it should not trigger a "stale" event', async() => {
+
+      const client = new Client('http://example');
+      client.use( mockFetchMw );
+      const resource = client.go('/res');
+      const oldState = await resource.get();
+
+      let triggeredStale = false;
+      let triggeredUpdate = false;
+      let newBody = null;
+      resource.once('update', (state) => {
+        triggeredUpdate = true;
+        newBody = state.data;
+      });
+      resource.once('stale', () => {
+        triggeredStale = true;
+      });
+      oldState.data = 'New body!';
+      await resource.put(oldState);
+      expect(triggeredUpdate,'"update" event should have triggered').to.equal(true);
+      expect(triggeredStale,'"stale" event should not have triggered').to.equal(false);
+      expect(newBody).to.equal('New body!');
+
+      // Check cache too.
+      const newState = await resource.get();
+      expect(newState.data).to.equal('New body!');
+
+    });
   });
 
 });
