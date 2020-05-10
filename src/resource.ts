@@ -332,8 +332,8 @@ function optionsToRequestInit(method: string, options?: GetRequestOptions | Post
   let body;
   if ((options as any).serializeBody !== undefined) {
     body = (options as any).serializeBody();
-  } else if ((options as any).body) {
-    body = (options as any).body;
+  } else if ((options as any).data) {
+    body = (options as any).data;
     if (!(body instanceof Buffer) && typeof body !== 'string') {
       body = JSON.stringify(body);
     }

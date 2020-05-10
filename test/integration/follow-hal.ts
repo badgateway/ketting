@@ -18,7 +18,7 @@ describe('Following a link', async () => {
   it('should get the correct response to GET', async () => {
 
     const state = await hal2.get();
-    expect(state.body).to.eql({title: 'HAL 2!'});
+    expect(state.data).to.eql({title: 'HAL 2!'});
 
 
   });
@@ -26,7 +26,7 @@ describe('Following a link', async () => {
 
     const hal1 = await client.follow('next').follow('prev');
     const hal1State = await hal1.get();
-    expect(hal1State.body).to.eql({title: 'Hal 1', foo: 'bar'});
+    expect(hal1State.data).to.eql({title: 'Hal 1', foo: 'bar'});
 
   });
 
@@ -48,7 +48,7 @@ describe('Following a link', async () => {
 
     const hal1 = await client.follow('next').follow('prev').follow('next').follow('prev');
     const hal1State = await hal1.get();
-    expect(hal1State.body).to.eql({title: 'Hal 1', foo: 'bar'});
+    expect(hal1State.data).to.eql({title: 'Hal 1', foo: 'bar'});
 
   });
 

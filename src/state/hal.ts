@@ -13,7 +13,7 @@ export class HalState<T = any> extends BaseState<T> {
 
     return JSON.stringify({
       _links: this.serializeLinks(),
-      ...this.body
+      ...this.data
     });
 
   }

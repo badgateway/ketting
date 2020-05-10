@@ -21,8 +21,8 @@ describe('Issuing a GET request', async () => {
 
   it('should have sent the correct headers', async () => {
 
-    expect(result.body).to.have.property('user-agent');
-    expect(result.body['user-agent']).to.match(/^Ketting\//);
+    expect(result.data).to.have.property('user-agent');
+    expect(result.data['user-agent']).to.match(/^Ketting\//);
 
     const mediaTypes = [
       'application/hal+json;q=1.0',
@@ -33,7 +33,7 @@ describe('Issuing a GET request', async () => {
       'text/html;q=0.7',
     ];
 
-    expect(result.body.accept).to.eql(mediaTypes.join(', '));
+    expect(result.data.accept).to.eql(mediaTypes.join(', '));
 
   });
 

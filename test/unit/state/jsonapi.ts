@@ -7,7 +7,7 @@ describe('JsonApi representor', () => {
   it('should parse objects without links' , async () => {
 
     const r = await callFactory({"foo": "bar"});
-    expect(r.body).to.eql({foo: 'bar'});
+    expect(r.data).to.eql({foo: 'bar'});
     expect(r.links.getAll().length).to.equal(0);
 
   });

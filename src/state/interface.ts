@@ -12,7 +12,7 @@ export interface State<T = any> {
    *
    * In the case of a JSON response, this will be deserialized
    */
-  body: T
+  data: T
 
   /**
    * All links associated with the resource.

@@ -94,14 +94,14 @@ describe('Client', () => {
 
       const halState = await client.getStateForResponse('https://example.org/parent', response);
       expect(halState.uri).to.equal('https://example.org/parent');
-      expect(halState.body).to.eql({item: 2});
+      expect(halState.data).to.eql({item: 2});
 
       expect(client.cache.has('https://example.org/embedded')).to.equal(true);
 
       const embedded = client.cache.get('https://example.org/embedded')!;
       expect(embedded).to.be.an.instanceof(HalState);
       expect(embedded.uri).to.equal('https://example.org/embedded');
-      expect(embedded.body).to.eql({item: 1});
+      expect(embedded.data).to.eql({item: 1});
 
     });
 
@@ -133,14 +133,14 @@ describe('Client', () => {
 
       const halState = await client.getStateForResponse('https://example.org/parent', response);
       expect(halState.uri).to.equal('https://example.org/parent');
-      expect(halState.body).to.eql({item: 2});
+      expect(halState.data).to.eql({item: 2});
 
       expect(client.cache.has('https://example.org/nested')).to.equal(true);
 
       const embedded = client.cache.get('https://example.org/nested')!;
       expect(embedded).to.be.an.instanceof(HalState);
       expect(embedded.uri).to.equal('https://example.org/nested');
-      expect(embedded.body).to.eql({item: 3});
+      expect(embedded.data).to.eql({item: 3});
 
     });
   });
