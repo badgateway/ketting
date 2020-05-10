@@ -190,7 +190,7 @@ export default class Client {
 
     // We just processed an unsafe method, lets notify all subsystems.
     const expireUris = [];
-    if (!noStaleEvent) {
+    if (!noStaleEvent && request.method !== 'DELETE') {
       // Sorry for the double negative
       expireUris.push(request.url);
     }
@@ -224,6 +224,13 @@ export default class Client {
       if (resource) {
         // We have a resource for this object, notify it as well.
         resource.emit('stale');
+      }
+    }
+    if (request.method === 'DELETE') {
+      this.cache.delete(request.url);
+      const resource = this.resources.get(request.url);
+      if (resource) {
+        resource.emit('delete');
       }
     }
 

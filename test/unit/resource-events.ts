@@ -208,6 +208,33 @@ describe('Resource Events', () => {
     });
   });
 
+  describe('"delete" event', () => {
+
+    it('should trigger after a DELETE request', async () => {
+
+      const client = new Client('http://example');
+      client.use( mockFetchMw );
+      const resource = client.go('/res');
+
+      let triggeredStale = false;
+      let triggeredDelete = false;
+      resource.once('delete', () => {
+        triggeredDelete = true;
+      });
+      resource.once('stale', () => {
+        triggeredStale = true;
+      });
+      await resource.delete();
+      expect(triggeredDelete,'"delete" event should have triggered').to.equal(true);
+      expect(triggeredStale,'"stale" event should not have triggered').to.equal(false);
+
+      // Check cache too.
+      expect(client.cache.has('http://example/res')).to.equal(false);
+
+    });
+
+  });
+
 });
 
 const mockFetchMw = async(req: Request): Promise<Response> => {
