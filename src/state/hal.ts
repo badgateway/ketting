@@ -1,5 +1,4 @@
 import { BaseState } from './base-state';
-import { StateFactory } from './interface';
 import { HalResource, HalLink } from 'hal-types';
 import { parseLink } from '../http/util';
 import { Link, Links } from '../link';
@@ -179,7 +178,7 @@ function parseHalEmbedded(context: string, body: HalResource, headers: Headers):
 
   const result: HalState<any>[] = [];
 
-  for (const [rel, embedded] of Object.entries(body._embedded)) {
+  for (const embedded of Object.values(body._embedded)) {
 
     let embeddedList: HalResource[];
 
@@ -208,7 +207,10 @@ function parseHalEmbedded(context: string, body: HalResource, headers: Headers):
         new Headers({
           'Content-Type': headers.get('Content-Type')!,
         }),
-        new Links(parseHalLinks(context, embeddedItem))
+        new Links(parseHalLinks(context, embeddedItem)),
+        // Parsing nested embedded items. Note that we assume that the base url is relative to
+        // the outermost parent, not relative to the embedded item. HAL is not clear on this.
+        parseHalEmbedded(context, embeddedItem, headers),
       ));
     }
   }

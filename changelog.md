@@ -1,6 +1,31 @@
 ChangeLog
 =========
 
+6.0.0-alpha.3 (2020-05-08)
+--------------------------
+
+* #141: Added `head()` function and ability to follow links just through `HEAD`
+  methods via the `Link` header.
+* Siren was not correctly parsed.
+* #130: Support relative bookmark URIs when using Ketting in a browser.
+
+
+6.0.0-alpha.2 (2020-05-03)
+--------------------------
+
+* `State` is now exported.
+* #184: Added a new `postFollow()` function that takes over the role of
+  `post()`.  `post()` is now intended for RPC-like operations and form
+  submissions.
+
+
+6.0.0-alpha.1 (2020-05-03)
+--------------------------
+
+* Re-release. The build contained a few older files that weren't meant to be
+  packaged.
+
+
 6.0.0-alpha.0 (2020-04-28)
 --------------------------
 
@@ -35,6 +60,7 @@ ChangeLog
   `FollowPromiseMany`.
 * All things called `Representor` has been removed, and rewritten with
   a completely new API. A `HAL representor` is now a `HalState`.
+* #175: Nested embedded items are now also placed in the cache.
 
 
 5.2.1 (2020-03-03)

@@ -27,7 +27,7 @@ export default class Client {
   } = {
     'application/hal+json': [halStateFactory, '1.0'],
     'application/vnd.api+json': [jsonApiStateFactory, '0.9'],
-    'application/vnd.siren+json': [jsonApiStateFactory, '0.9'],
+    'application/vnd.siren+json': [sirenStateFactory, '0.9'],
     'application/vnd.collection+json': [cjStateFactory, '0.9'],
     'application/json': [halStateFactory, '0.8'],
     'text/html': [htmlStateFactory, '0.7'],
@@ -110,17 +110,38 @@ export default class Client {
   /**
    * Transforms a fetch Response to a State object.
    */
-  getStateForResponse(uri: string, response: Response): Promise<State> {
+  async getStateForResponse(uri: string, response: Response): Promise<State> {
 
     const contentType = parseContentType(response.headers.get('Content-Type')!);
-    if (contentType in this.contentTypeMap) {
-      return this.contentTypeMap[contentType][0](uri, response);
+
+    let state: State;
+
+    if (!contentType) {
+      return binaryStateFactory(uri, response);
     }
 
-    if (contentType.startsWith('text/')) {
-      return textStateFactory(uri, response);
+    if (contentType in this.contentTypeMap) {
+      state = await this.contentTypeMap[contentType][0](uri, response);
+    } else if (contentType.startsWith('text/')) {
+      state = await textStateFactory(uri, response);
     } else{
-      return binaryStateFactory(uri, response);
+      state = await binaryStateFactory(uri, response);
+    }
+
+    this.cacheEmbeddedState(state);
+    return state;
+
+  }
+
+  /**
+   * Takes a State, grabs all the embedded items and places them in a cache.
+   */
+  private cacheEmbeddedState(state: State) {
+
+    for(const embeddedState of state.getEmbedded()) {
+      this.cache.store(embeddedState);
+      // Recursion. MADNESS
+      this.cacheEmbeddedState(embeddedState);
     }
 
   }

@@ -1,11 +1,14 @@
 import * as LinkHeader from 'http-link-header';
-import { Link, Links } from '../link';
+import { Links } from '../link';
 
 /**
  * Takes a Content-Type header, and only returns the mime-type part.
  */
-export function parseContentType(contentType: string): string {
+export function parseContentType(contentType: string | null): string | null {
 
+  if (!contentType) {
+    return null;
+  }
   if (contentType.includes(';')) {
     contentType = contentType.split(';')[0];
   }

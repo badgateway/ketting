@@ -1,7 +1,5 @@
 import { StateCache } from './';
 import { State } from '../state';
-import * as LinkHeader from 'http-link-header';
-import { resolve } from '../util/uri';
 
 export class ForeverCache implements StateCache {
 

@@ -1,10 +1,10 @@
 import Client from './client';
-import { State } from './state';
+import { State, headStateFactory, HeadState } from './state';
 import { resolve } from './util/uri';
 import { FollowPromiseOne, FollowPromiseMany } from './follow-promise';
 import { Link, LinkNotFound, LinkVariables } from './link';
-import { GetRequestOptions, PostRequestOptions, PatchRequestOptions, PutRequestOptions } from './types';
 import { EventEmitter } from 'events';
+import { GetRequestOptions, PostRequestOptions, PatchRequestOptions, PutRequestOptions, HeadRequestOptions } from './types';
 
 /**
  * A 'resource' represents an endpoint on the server.
@@ -49,6 +49,29 @@ export class Resource<T = any> extends EventEmitter {
   }
 
   /**
+   * Does a HEAD request and returns a HeadState object.
+   *
+   * If there was a valid existing cache for a GET request, it will
+   * still return that.
+   */
+  async head(headOptions?: HeadRequestOptions): Promise<HeadState> {
+
+    let state: State|HeadState|null = this.client.cache.get(this.uri);
+    if (state) {
+      return state;
+    }
+
+    const response = await this.fetchOrThrow(
+      optionsToRequestInit('HEAD', headOptions)
+    );
+
+    state = await headStateFactory(this.uri, response);
+    return state;
+
+  }
+
+
+  /**
    * Gets the current state of the resource, skipping
    * the cache.
    *
@@ -82,35 +105,9 @@ export class Resource<T = any> extends EventEmitter {
    */
   async put(options: PutRequestOptions<T>): Promise<void> {
 
-    let headers;
-    if (options.getContentHeaders) {
-      headers = new Headers(options.getContentHeaders());
-    } else if (options.headers) {
-      headers = new Headers(options.headers);
-    } else {
-      headers = new Headers();
-    }
-    if (!headers.has('Content-Type')) {
-      headers.set('Content-Type', 'application/json');
-    }
-    let body;
-    if (options.serializeBody) {
-      body = options.serializeBody();
-    } else if (options.body) {
-      body = options.body;
-      if (!(body instanceof Buffer) && typeof body !== 'string') {
-        body = JSON.stringify(body);
-      }
-    } else {
-      body = null;
-    }
-
-    const params = {
-      method: 'PUT',
-      body,
-      headers,
-    };
-    await this.fetchOrThrow(params);
+    await this.fetchOrThrow(
+      optionsToRequestInit('PUT', options)
+    );
 
   }
 
@@ -129,61 +126,46 @@ export class Resource<T = any> extends EventEmitter {
    * Sends a POST request to the resource.
    *
    * See the documentation for PostRequestOptions for more details.
+   * This function is used for RPC-like endpoints and form submissions.
    *
-   * This function assumes that POST is used to create new resources, and
-   * that the response will be a 201 Created along with a Location header that
-   * identifies the new resource location.
-   *
-   * This function returns a Promise that resolves into the newly created
-   * Resource.
-   *
-   * If no Location header was given, it will resolve still, but with an empty
-   * value.
+   * This function will return the response as a State object.
    */
-  post(options: PostRequestOptions): Promise<Resource | null>;
-  post<TPostResource>(options: PostRequestOptions): Promise<Resource<TPostResource>>;
-  async post(options: PostRequestOptions): Promise<Resource | null> {
+  async post(options: PostRequestOptions): Promise<State> {
 
-    let headers;
-    if (options.getContentHeaders) {
-      headers = new Headers(options.getContentHeaders());
-    } else if (options.headers) {
-      headers = new Headers(options.headers);
-    } else {
-      headers = new Headers();
-    }
-    if (!headers.has('Content-Type')) {
-      headers.set('Content-Type', 'application/json');
-    }
-    let body;
-    if (options.serializeBody) {
-      body = options.serializeBody();
-    } else if (options.body) {
-      body = options.body;
-      if (!(body instanceof Buffer) && typeof body !== 'string') {
-        body = JSON.stringify(body);
-      }
-    } else {
-      body = null;
-    }
     const response = await this.fetchOrThrow(
-      {
-        method: 'POST',
-        body,
-        headers,
-      }
+      optionsToRequestInit('POST', options)
+    );
+
+    return this.client.getStateForResponse(this.uri, response);
+
+  }
+
+  /**
+   * Sends a POST request, and follows to the next resource.
+   *
+   * If a server responds with a 201 Status code and a Location header,
+   * it will automatically return the newly created resource.
+   *
+   * If the server responded with a 204 or 205, this function will return
+   * `this`.
+   */
+  async postFollow(options: PostRequestOptions): Promise<Resource> {
+
+    const response = await this.fetchOrThrow(
+      optionsToRequestInit('POST', options)
     );
 
     switch (response.status) {
-      case 205 :
-        return this;
       case 201:
         if (response.headers.has('location')) {
           return this.go(<string> response.headers.get('location'));
         }
-        return null;
+        throw new Error('Could not follow after a 201 request, because the server did not reply with a Location header');
+      case 204 :
+      case 205 :
+        return this;
       default:
-        return null;
+        throw new Error('Did not receive a 201, 204 or 205 status code so we could not follow to the next resource');
     }
 
   }
@@ -195,34 +177,8 @@ export class Resource<T = any> extends EventEmitter {
    */
   async patch(options: PatchRequestOptions): Promise<void> {
 
-    let headers;
-    if (options.getContentHeaders) {
-      headers = new Headers(options.getContentHeaders());
-    } else if (options.headers) {
-      headers = new Headers(options.headers);
-    } else {
-      headers = new Headers();
-    }
-    if (!headers.has('Content-Type')) {
-      headers.set('Content-Type', 'application/json');
-    }
-    let body;
-    if (options.serializeBody) {
-      body = options.serializeBody();
-    } else if (options.body) {
-      body = options.body;
-      if (!(body instanceof Buffer) && typeof body !== 'string') {
-        body = JSON.stringify(body);
-      }
-    } else {
-      body = null;
-    }
     await this.fetchOrThrow(
-      {
-        method: 'PATCH',
-        body,
-        headers
-      }
+      optionsToRequestInit('PATCH', options)
     );
 
   }
@@ -364,3 +320,50 @@ export declare interface Resource<T = any> {
 }
 
 export default Resource;
+
+/**
+ * Convert request options to RequestInit
+ *
+ * RequestInit is passed to the constructor of fetch(). We have our own 'options' format
+ */
+function optionsToRequestInit(method: 'GET', options?: GetRequestOptions): RequestInit;
+function optionsToRequestInit(method: 'HEAD', options?: HeadRequestOptions): RequestInit;
+function optionsToRequestInit(method: 'PATCH', options?: PatchRequestOptions): RequestInit;
+function optionsToRequestInit(method: 'POST', options?: PostRequestOptions): RequestInit;
+function optionsToRequestInit(method: 'PUT', options?: PutRequestOptions): RequestInit;
+function optionsToRequestInit(method: string, options?: GetRequestOptions | PostRequestOptions | PatchRequestOptions | PutRequestOptions): RequestInit {
+
+  if (!options) {
+    return {
+      method
+    };
+  }
+  let headers;
+  if (options.getContentHeaders) {
+    headers = new Headers(options.getContentHeaders());
+  } else if (options.headers) {
+    headers = new Headers(options.headers);
+  } else {
+    headers = new Headers();
+  }
+  if (!headers.has('Content-Type')) {
+    headers.set('Content-Type', 'application/json');
+  }
+  let body;
+  if ((options as any).serializeBody !== undefined) {
+    body = (options as any).serializeBody();
+  } else if ((options as any).body) {
+    body = (options as any).body;
+    if (!(body instanceof Buffer) && typeof body !== 'string') {
+      body = JSON.stringify(body);
+    }
+  } else {
+    body = null;
+  }
+  return {
+    method,
+    body,
+    headers
+  };
+
+}

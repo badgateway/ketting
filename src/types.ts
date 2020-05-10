@@ -1,5 +1,3 @@
-import * as url from 'url';
-
 export type HttpHeaders = Record<string, string>;
 
 /**

@@ -61,6 +61,45 @@ export interface State<T = any> {
 
 }
 
+/**
+ * HeadState represents the response to a HEAD request.
+ *
+ * Some information in HEAD responses might be available, but many aren't.
+ * Notably, the body.
+ */
+export interface HeadState {
+
+  /**
+   * The URI associated with this state
+   */
+  uri: string;
+
+  /**
+   * All links associated with the resource.
+   */
+  links: Links,
+
+  /**
+   * The full list of HTTP headers that were sent with the response.
+   */
+  headers: Headers;
+
+  /**
+   * Content-headers are a subset of HTTP headers that related directly
+   * to the content. The obvious ones are Content-Type.
+   *
+   * This set of headers will be sent by the server along with a GET
+   * response, but will also be sent back to the server in a PUT
+   * request.
+   */
+  contentHeaders(): Headers;
+
+  /**
+   * Timestamp of when the State was first generated
+   */
+  timestamp: number;
+
+}
 
 /**
  * A 'StateFactory' is responsible for taking a Fetch Response, and returning

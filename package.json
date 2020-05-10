@@ -1,6 +1,6 @@
 {
   "name": "ketting",
-  "version": "5.2.1",
+  "version": "6.0.0-alpha.2",
   "description": "Opiniated HATEAOS / Rest client.",
   "main": "dist/index.js",
   "browser": "browser/ketting.min.js",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/evert/ketting.git"
+    "url": "git+https://github.com/badgateway/ketting.git"
   },
   "keywords": [
     "rest",
@@ -24,9 +24,9 @@
   "author": "Evert Pot",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/evert/ketting/issues"
+    "url": "https://github.com/badgateway/ketting/issues"
   },
-  "homepage": "https://github.com/evert/ketting#readme",
+  "homepage": "https://github.com/badgateway/ketting#readme",
   "files": [
     "src/",
     "dist/",
@@ -44,28 +44,28 @@
     "uri-template": "^1.0.1"
   },
   "devDependencies": {
-    "@types/chai": "^4.2.10",
+    "@types/chai": "^4.2.11",
     "@types/http-link-header": "^1.0.1",
     "@types/koa-bodyparser": "^4.3.0",
     "@types/koa-logger": "^3.1.1",
     "@types/koa-static": "^4.0.1",
     "@types/mocha": "^7.0.2",
-    "@types/node": "^10.17.17",
-    "@types/node-fetch": "^2.5.5",
+    "@types/node": "^10.17.21",
+    "@types/node-fetch": "^2.5.7",
     "@types/sax": "^1.2.1",
     "awesome-typescript-loader": "^5.2.1",
     "chai": "^4.2.0",
     "koa": "^2.11.0",
-    "koa-bodyparser": "^4.2.1",
+    "koa-bodyparser": "^4.3.0",
     "koa-logger": "^3.2.1",
     "koa-path-match": "^2.0.0",
     "koa-static": "^5.0.0",
-    "mocha": "^7.1.0",
-    "nyc": "^15.0.0",
-    "ts-node": "^8.6.2",
-    "tslint": "^6.0.0",
+    "mocha": "^7.1.2",
+    "nyc": "^15.0.1",
+    "ts-node": "^8.10.1",
+    "tslint": "^6.1.2",
     "typescript": "^3.8.3",
-    "webpack": "^4.42.0",
+    "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11"
   },
   "nyc": {
