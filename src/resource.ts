@@ -5,6 +5,7 @@ import { FollowPromiseOne, FollowPromiseMany } from './follow-promise';
 import { Link, LinkNotFound, LinkVariables } from './link';
 import { EventEmitter } from 'events';
 import { GetRequestOptions, PostRequestOptions, PatchRequestOptions, PutRequestOptions, HeadRequestOptions } from './types';
+import { needsJsonStringify } from './util/fetch-body-helper';
 
 /**
  * A 'resource' represents an endpoint on the server.
@@ -383,7 +384,7 @@ function optionsToRequestInit(method: string, options?: GetRequestOptions | Post
     body = (options as any).serializeBody();
   } else if ((options as any).data) {
     body = (options as any).data;
-    if (!(body instanceof Buffer) && typeof body !== 'string') {
+    if (needsJsonStringify(body)) {
       body = JSON.stringify(body);
     }
   } else {
@@ -396,3 +397,4 @@ function optionsToRequestInit(method: string, options?: GetRequestOptions | Post
   };
 
 }
+

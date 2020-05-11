@@ -37,12 +37,12 @@ function linkFromTags(contextUri: string, elements: HTMLCollectionOf<HTMLElement
 
     for (const rel of rels.split(' ')) {
 
-      const link = {
+      const link:Link = {
         rel: rel,
         context: contextUri,
         href: href,
-        type: type
       };
+      if (type) link.type = type;
       result.push(link);
 
     }

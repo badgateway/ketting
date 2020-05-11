@@ -80,7 +80,7 @@ describe('Resource', () => {
     it('should return itself if 205 Reset Content was returned', async () => {
 
       const res = getFakeResource('https://example.org/205');
-      const result = await res.postFollow({});
+      const result = await res.postFollow({data: ''});
       expect(result).to.equal(res);
 
     });
@@ -121,7 +121,7 @@ function getFakeResource(uri: string = 'https://example.org/') {
       case 'https://example.org/201-loc':
         return new Response('', {status: 201, headers: { 'Location': 'https://evertpot.com/'}});
       case 'https://example.org/205':
-        return new Response('', {status: 205});
+        return new Response(null, {status: 205});
     }
   }
 
