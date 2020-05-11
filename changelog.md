@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+6.0.0-alpha.4 (2020-05-11)
+--------------------------
+
+* Fixing bugs related to `patch()`, `post()` in the browser build.
+
+
 6.0.0-alpha.3 (2020-05-10)
 --------------------------
 
