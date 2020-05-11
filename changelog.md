@@ -1,23 +1,24 @@
 ChangeLog
 =========
 
-6.0.0-alpha.4 (2020-05-??)
+6.0.0-alpha.3 (2020-05-10)
 --------------------------
 
 * `Resources` implement EventEmitter, and can emit `stale`, `update` and
   `delete` events.
 * The 'body' property on State is now 'data'
-* When refreshing, `fetch()` is now given the 'reload' cache setting, so that
-  `refresh()` is a true Refresh, even with a browser cache.
-
-
-6.0.0-alpha.3 (2020-05-08)
---------------------------
-
 * #141: Added `head()` function and ability to follow links just through `HEAD`
   methods via the `Link` header.
-* Siren was not correctly parsed.
+* Added a `NeverCache` and `ShortCache` if automatically storing every `State`
+  object until invalidation is not desired.
+* When calling `put()` with a new `State` object, that object will now be placed
+  in cache.
+* When refreshing, `fetch()` is now given the 'reload' cache setting, so that
+  `refresh()` is a true Refresh, even with a browser cache.
 * #130: Support relative bookmark URIs when using Ketting in a browser.
+* Siren was not correctly parsed.
+* Add `.clone()` method to all `State` object.
+
 
 
 6.0.0-alpha.2 (2020-05-03)
