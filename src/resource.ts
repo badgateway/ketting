@@ -79,7 +79,9 @@ export class Resource<T = any> extends EventEmitter {
    */
   refresh(getOptions?: GetRequestOptions): Promise<State<T>> {
 
-    const params: RequestInit = {};
+    const params: RequestInit = {
+      cache: 'reload',
+    };
     if (getOptions?.getContentHeaders) {
       params.headers = getOptions.getContentHeaders();
     }
