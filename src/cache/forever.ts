@@ -10,7 +10,7 @@ import { State } from '../state';
  * until something was done to expire caches.
  *
  * Executing an unsafe method, calling clearCache() on a resource, or
- * when a resource appears in Location, COntent-Location, or "invalidates"
+ * when a resource appears in Location, Content-Location, or "invalidates"
  * link relationships.
  */
 export class ForeverCache implements StateCache {
