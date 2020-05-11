@@ -15,8 +15,9 @@ export {
 } from './state';
 
 export {
+  ForeverCache,
+  NeverCache,
   ShortCache,
-  ForeverCache
 } from './cache';
 
 export { default as basicAuth } from './http/basic-auth';

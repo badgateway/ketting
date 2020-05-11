@@ -86,4 +86,17 @@ describe('ShortCache', () => {
 
   });
 
+  it('should still work when storing 1 object after another', async() => {
+
+    // Small timeout
+    const shortCache = new ShortCache(0);
+    const state = new TextState('http://example/foo','hi', new Headers(), new Links());
+    shortCache.store(state);
+    shortCache.store(state);
+
+    await new Promise(res => setTimeout(res, 10));
+
+    expect(shortCache.has('http://example/foo')).to.equal(false);
+
+  });
 });
