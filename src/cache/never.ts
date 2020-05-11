@@ -17,7 +17,9 @@ export class NeverCache implements StateCache {
    *
    * This function will clone the state object before storing
    */
-  store(state: State) {}
+  store(state: State) {
+    // Nothing to do
+  }
 
   /**
    * Retrieve a State object from the cache by its absolute uri
@@ -39,12 +41,14 @@ export class NeverCache implements StateCache {
    * Delete a State object from the cache, by its uri
    */
   delete(uri: string) {
+    // Nothing to do
   }
 
   /**
    * Purge the entire cache
    */
   clear() {
+    // Nothing to do
   }
 
 }
