@@ -7,6 +7,8 @@ ChangeLog
 * `Resources` implement EventEmitter, and can emit `stale`, `update` and
   `delete` events.
 * The 'body' property on State is now 'data'
+* When refreshing, `fetch()` is now given the 'reload' cache setting, so that
+  `refresh()` is a true Refresh, even with a browser cache.
 
 
 6.0.0-alpha.3 (2020-05-08)
