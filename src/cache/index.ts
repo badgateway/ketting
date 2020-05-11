@@ -1,4 +1,5 @@
 export { ForeverCache } from './forever';
+export { ShortCache } from './short';
 import { State } from '../state';
 
 /**

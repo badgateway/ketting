@@ -14,6 +14,11 @@ export {
   HtmlState
 } from './state';
 
+export {
+  ShortCache,
+  ForeverCache
+} from './cache';
+
 export { default as basicAuth } from './http/basic-auth';
 export { default as bearerAuth } from './http/bearer-auth';
 export { default as oauth2 } from './http/oauth2';
