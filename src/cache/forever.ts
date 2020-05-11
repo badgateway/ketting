@@ -1,6 +1,18 @@
 import { StateCache } from './';
 import { State } from '../state';
 
+/**
+ * The 'Forever' cache stores any State for as long as the application
+ * lives.
+ *
+ * It is a good default for most applications, but it means that if
+ * a resource was changed server-side, Ketting will not pick up that change
+ * until something was done to expire caches.
+ *
+ * Executing an unsafe method, calling clearCache() on a resource, or
+ * when a resource appears in Location, Content-Location, or "invalidates"
+ * link relationships.
+ */
 export class ForeverCache implements StateCache {
 
   private cache: Map<string, State>;
