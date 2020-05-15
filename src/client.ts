@@ -127,6 +127,8 @@ export default class Client {
     } else{
       state = await binaryStateFactory(uri, response);
     }
+
+    state.client = this;
     return state;
 
   }

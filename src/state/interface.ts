@@ -1,4 +1,5 @@
 import { Links } from '../link';
+import Client from '../client';
 
 export interface State<T = any> {
 
@@ -23,6 +24,11 @@ export interface State<T = any> {
    * The full list of HTTP headers that were sent with the response.
    */
   headers: Headers;
+
+  /**
+   * Reference to main client that created this state
+   */
+  client: Client;
 
   /**
    * Returns a serialization of the state that can be used in a HTTP
