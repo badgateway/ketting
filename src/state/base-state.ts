@@ -1,5 +1,7 @@
 import { State } from './interface';
 import { Links } from '../link';
+import Client from '../client';
+import { Action, ActionNotFound } from '../action';
 
 export abstract class BaseState<T> implements State<T> {
 
@@ -24,6 +26,11 @@ export abstract class BaseState<T> implements State<T> {
    * All links associated with the resource.
    */
   links: Links;
+
+  /**
+   * Reference to main client that created this state
+   */
+  client!: Client;
 
   /**
    * Embedded resoureces
@@ -64,6 +71,17 @@ export abstract class BaseState<T> implements State<T> {
       }
     }
     return new Headers(result);
+
+  }
+
+  /**
+   * Return an action by name.
+   *
+   * If the format provides a default action, the name may be omitted.
+   */
+  action<TFormData = any>(name?: string): Action<TFormData> {
+
+    throw new ActionNotFound('This State defines no action');
 
   }
 

@@ -2,15 +2,92 @@ import { BaseState } from './base-state';
 import { parseLink } from '../http/util';
 import { Link, Links } from '../link';
 import { resolve } from '../util/uri';
+import { Action, ActionNotFound } from '../action';
+import * as qs from 'querystring';
+import { State } from './interface';
 
 /**
  * Represents a resource state in the Siren format
  */
-export class SirenState<T = any> extends BaseState<T> {
+export class SirenState<T> extends BaseState<T> {
 
+  private actions: SirenAction[];
+
+  constructor(uri: string, data: SirenEntity<T>, headers: Headers, links: Links, embedded?: SirenState<any>[]) {
+
+    const properties = data.properties;
+    const actions = data.actions;
+
+    super(uri, properties, headers, links, embedded);
+    this.actions = actions || [];
+
+  }
+
+  /**
+   * Returns a serialization of the state that can be used in a HTTP
+   * response.
+   *
+   * For example, a JSON object might simply serialize using
+   * JSON.serialize().
+   */
   serializeBody(): string {
 
     throw new Error('Reserializing Siren states is not yet supported. Please log an issue in the Ketting project to help figure out how this should be done');
+
+  }
+
+  /**
+   * Return an action by name.
+   *
+   * If the format provides a default action, the name may be omitted.
+   */
+  action<TFormData = any>(name?: string): Action<TFormData> {
+
+    if (name === undefined) {
+      throw new ActionNotFound('Siren doesn\'t define default actions');
+    }
+
+    for(const action of this.actions) {
+      if (action.name === name) {
+        return {
+          submit: async(formData: TFormData): Promise<State<any>> => {
+
+            const method = action.method || 'GET';
+            const type = action.type || 'application/x-www-form-urlencoded';
+
+            const uri = new URL(action.href);
+
+            if (method === 'GET') {
+              uri.search = qs.stringify(formData);
+              const resource = this.client.go(uri.toString());
+              return resource.get();
+            }
+            let body;
+            switch (type) {
+              case 'application/x-www-form-urlencoded' :
+                body = qs.stringify(formData);
+                break;
+              case 'application/json':
+                body = JSON.stringify(formData);
+                break;
+              default :
+                throw new Error(`Serializing mimetype ${type} is not yet supported in actions`);
+            }
+            const response = await this.client.fetcher.fetchOrThrow(uri.toString(), {
+              method,
+              body,
+              headers: {
+                'Content-Type': type
+              }
+            });
+            const state = this.client.getStateForResponse(uri.toString(), response);
+            return state;
+
+          }
+        };
+      }
+    }
+    throw new ActionNotFound(`Action with name "${name}" not found.`);
 
   }
 
@@ -18,7 +95,9 @@ export class SirenState<T = any> extends BaseState<T> {
 
     return new SirenState(
       this.uri,
-      this.data,
+      {
+        properties: this.data
+      },
       new Headers(this.headers),
       new Links(this.links),
     );
@@ -30,7 +109,7 @@ export class SirenState<T = any> extends BaseState<T> {
 /**
  * Turns a HTTP response into a SirenState
  */
-export const factory = async (uri: string, response: Response): Promise<SirenState<SirenEntity>> => {
+export const factory = async (uri: string, response: Response): Promise<SirenState<any>> => {
 
   const body = await response.json();
 
@@ -47,14 +126,13 @@ export const factory = async (uri: string, response: Response): Promise<SirenSta
 
 }
 
+type SirenProperties = Record<string, any> | undefined;
 
-type SirenEntity = {
+type SirenEntity<T extends SirenProperties> = {
 
   class?: string[],
 
-  properties?: {
-    [key: string]: any
-  },
+  properties: T
   entities?: (SirenLink | SirenSubEntity)[],
 
   links?: SirenLink[],
@@ -63,7 +141,7 @@ type SirenEntity = {
 
 };
 
-type SirenSubEntity = SirenEntity & { rel: string[] };
+type SirenSubEntity = SirenEntity<any> & { rel: string[] };
 
 type SirenLink = {
 
@@ -93,7 +171,7 @@ type SirenField = {
   title?: string
 };
 
-function parseSirenLinks(contextUri: string, body: SirenEntity): Link[] {
+function parseSirenLinks(contextUri: string, body: SirenEntity<any>): Link[] {
 
   const result: Link[] = [];
 
@@ -140,16 +218,16 @@ function parseSirenLink(contextUri: string, link: SirenLink): Link[] {
 
 }
 
-function parseSirenEmbedded(contextUri: string, body: SirenEntity, headers: Headers): SirenState<SirenEntity>[] {
+function parseSirenEmbedded(contextUri: string, body: SirenEntity<any>, headers: Headers): SirenState<SirenEntity<any>>[] {
 
   if (body.entities === undefined) {
     return [];
   }
 
-  const result: SirenState<SirenEntity>[] = [];
+  const result: SirenState<SirenEntity<any>>[] = [];
 
   for (const entity of body.entities) {
-    if ((entity as SirenLink).href === undefined) {
+    if (isSubEntity(entity)) {
       const subState = parseSirenSubEntityAsEmbedded(contextUri, entity, headers);
       if (subState !== null) {
         result.push(subState);
@@ -193,7 +271,7 @@ function parseSirenSubEntityAsLink(contextUri: string, subEntity: SirenSubEntity
 
 }
 
-function parseSirenSubEntityAsEmbedded(contextUri: string, subEntity: SirenSubEntity, headers: Headers): SirenState<SirenEntity> | null {
+function parseSirenSubEntityAsEmbedded(contextUri: string, subEntity: SirenSubEntity, headers: Headers): SirenState<SirenEntity<any>> | null {
 
   if (subEntity.links === undefined) {
     // We don't yet support subentities that don't have a URI.
@@ -219,5 +297,11 @@ function parseSirenSubEntityAsEmbedded(contextUri: string, subEntity: SirenSubEn
     new Links(parseSirenLinks(selfHref, subEntity)),
 
   );
+
+}
+
+function isSubEntity(input: SirenLink | SirenSubEntity): input is SirenSubEntity {
+
+  return (input as any).href === undefined;
 
 }
