@@ -4,13 +4,13 @@ import { resolve } from './uri';
 type ParseHtmlResult = {
 
   links: Link[],
-  forms: Array<{
+  forms: {
     action: string,
     method: string,
     enctype: string | null,
     rel: string | null,
     id: string | null,
-  }>;
+  }[];
 
 }
 export function parseHtml(contextUri: string, body: string): ParseHtmlResult {

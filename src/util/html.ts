@@ -5,13 +5,13 @@ import { resolve } from './uri';
 type ParseHtmlResult = {
 
   links: Link[],
-  forms: Array<{
+  forms: {
     action: string,
     method: string | null,
     enctype: string | null,
     rel: string | null,
     id: string | null,
-  }>;
+  }[];
 
 }
 
