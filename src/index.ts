@@ -3,6 +3,8 @@ export { default as Resource } from './resource';
 
 export { Link, LinkNotFound, Links } from './link';
 
+export { resolve } from './util/uri';
+
 export {
   State,
   HalState,
