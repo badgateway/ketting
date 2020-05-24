@@ -1,7 +1,7 @@
 import { BaseState } from './base-state';
 import { StateFactory } from './interface';
 import { parseLink } from '../http/util';
-import { parseHtmlLinks } from '../util/html';
+import { parseHtml } from '../util/html';
 import { Links } from '../link';
 
 /**
@@ -36,9 +36,8 @@ export const factory: StateFactory = async (uri: string, response: Response): Pr
   const body = await response.text();
 
   const links = parseLink(uri, response.headers.get('Link'));
-  links.add(
-    ...parseHtmlLinks(uri, body),
-  );
+  const htmlResult = parseHtml(uri, body);
+  links.add(...htmlResult.links);
 
   return new HtmlState(
     uri,
