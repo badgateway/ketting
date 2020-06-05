@@ -1,16 +1,18 @@
 import { Link } from '../link';
 import { resolve } from './uri';
 
+export type HtmlForm = {
+  action: string,
+  method: string | null,
+  enctype: string | null,
+  rel: string | null,
+  id: string | null,
+}
+
 type ParseHtmlResult = {
 
   links: Link[],
-  forms: {
-    action: string,
-    method: string,
-    enctype: string | null,
-    rel: string | null,
-    id: string | null,
-  }[];
+  forms: HtmlForm[],
 
 }
 export function parseHtml(contextUri: string, body: string): ParseHtmlResult {
@@ -68,7 +70,7 @@ function linkFromTags(contextUri: string, elements: HTMLCollectionOf<HTMLElement
 
 }
 
-function formFromTags(contextUri: string, elements: HTMLCollectionOf<HTMLFormElement>): ParseHtmlResult['forms'] {
+function formFromTags(contextUri: string, elements: HTMLCollectionOf<HTMLFormElement>): HtmlForm[] {
 
   const result = [];
 

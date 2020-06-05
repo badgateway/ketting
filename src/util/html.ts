@@ -2,16 +2,18 @@ import * as sax from 'sax';
 import { Link } from '../link';
 import { resolve } from './uri';
 
+export type HtmlForm = {
+  action: string,
+  method: string | null,
+  enctype: string | null,
+  rel: string | null,
+  id: string | null,
+}
+
 type ParseHtmlResult = {
 
   links: Link[],
-  forms: {
-    action: string,
-    method: string | null,
-    enctype: string | null,
-    rel: string | null,
-    id: string | null,
-  }[];
+  forms: HtmlForm[],
 
 }
 
@@ -73,7 +75,7 @@ function parseLink(contextUri: string, node: sax.Tag): Link[] {
 
 }
 
-function parseForm(contextUri: string, node: sax.Tag): ParseHtmlResult['forms'] {
+function parseForm(contextUri: string, node: sax.Tag): HtmlForm[] {
 
   const rels = node.attributes.REL || null;
   const id = node.attributes.ID || null;

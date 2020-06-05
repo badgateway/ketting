@@ -2,9 +2,7 @@ import { BaseState } from './base-state';
 import { parseLink } from '../http/util';
 import { Link, Links } from '../link';
 import { resolve } from '../util/uri';
-import { Action, ActionNotFound } from '../action';
-import * as qs from 'querystring';
-import { State } from './interface';
+import { Action, ActionNotFound, SimpleAction } from '../action';
 
 /**
  * Represents a resource state in the Siren format
@@ -49,42 +47,12 @@ export class SirenState<T> extends BaseState<T> {
 
     for(const action of this.actions) {
       if (action.name === name) {
-        return {
-          submit: async(formData: TFormData): Promise<State<any>> => {
-
-            const method = action.method || 'GET';
-            const type = action.type || 'application/x-www-form-urlencoded';
-
-            const uri = new URL(action.href);
-
-            if (method === 'GET') {
-              uri.search = qs.stringify(formData);
-              const resource = this.client.go(uri.toString());
-              return resource.get();
-            }
-            let body;
-            switch (type) {
-              case 'application/x-www-form-urlencoded' :
-                body = qs.stringify(formData);
-                break;
-              case 'application/json':
-                body = JSON.stringify(formData);
-                break;
-              default :
-                throw new Error(`Serializing mimetype ${type} is not yet supported in actions`);
-            }
-            const response = await this.client.fetcher.fetchOrThrow(uri.toString(), {
-              method,
-              body,
-              headers: {
-                'Content-Type': type
-              }
-            });
-            const state = this.client.getStateForResponse(uri.toString(), response);
-            return state;
-
-          }
-        };
+        return new SimpleAction(
+          this.client,
+          action.method || 'GET',
+          resolve(this.uri, action.href),
+          action.type || 'application/x-www-form-urlencoded',
+        );
       }
     }
     throw new ActionNotFound(`Action with name "${name}" not found.`);
