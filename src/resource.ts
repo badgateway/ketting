@@ -91,7 +91,7 @@ export class Resource<T = any> extends EventEmitter {
         try {
           const response = await this.fetchOrThrow(params);
           const state = await this.client.getStateForResponse(this.uri, response);
-          this.client.cacheState(state);
+          this.updateCache(state);
           return state;
         } finally {
           this.activeRefresh = null;
@@ -107,7 +107,6 @@ export class Resource<T = any> extends EventEmitter {
    * Updates the server state with a PUT request
    */
   async put(options: PutRequestOptions<T> | State): Promise<void> {
-
 
     const requestInit = optionsToRequestInit('PUT', options);
 
@@ -126,8 +125,8 @@ export class Resource<T = any> extends EventEmitter {
     await this.fetchOrThrow(requestInit);
 
     if (isState(options)) {
-      this.client.cache.store(options);
-      this.emit('update', options);
+      this.updateCache(options);
+
     }
 
   }
@@ -262,6 +261,18 @@ export class Resource<T = any> extends EventEmitter {
   fetchOrThrow(init?: RequestInit): Promise<Response> {
 
     return this.client.fetcher.fetchOrThrow(this.uri, init);
+
+  }
+
+  /**
+   * Updates the state cache, and emits events.
+   *
+   * This will update the local state but *not* update the server
+   */
+  updateCache(state: State<T>) {
+
+    this.client.cache.store(state);
+    this.emit('update', state);
 
   }
 
