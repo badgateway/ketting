@@ -51,8 +51,8 @@ export type Link = {
 
 }
 
-type NewLink = Omit<Link, 'context'>; 
-  
+type NewLink = Omit<Link, 'context'>;
+
 
 /**
  * Links container, providing an easy way to manage a set of links.
@@ -78,9 +78,9 @@ export class Links {
   }
 
   /**
-   * Adds a link to the list 
+   * Adds a link to the list
    */
-  add(...links: Array<Link | NewLink>): void
+  add(...links: (Link | NewLink)[]): void
   add(rel: string, href: string): void
   add(...args: any[]): void {
 
