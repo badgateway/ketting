@@ -12,7 +12,7 @@ describe('Client', () => {
         'https://example.org/foo',
         'hello',
         new Headers(),
-        new Links(),
+        new Links('http://example.org/foo'),
       ));
 
       client.use( async req => {
@@ -34,7 +34,7 @@ describe('Client', () => {
         'https://example.org/foo',
         'hello',
         new Headers(),
-        new Links(),
+        new Links('http://example.org/foo'),
       ));
 
       const request = new Request('https://example.org/foo', {
@@ -57,7 +57,7 @@ describe('Client', () => {
         'https://example.org/foo',
         'hello',
         new Headers(),
-        new Links(),
+        new Links('http://example.org/foo'),
       ));
 
       const request = new Request('https://example.org/foo', {

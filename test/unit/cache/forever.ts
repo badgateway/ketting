@@ -6,7 +6,7 @@ describe('ForeverCache', () => {
   it('should store and retrieve State objects', () => {
 
     const foreverCache = new ForeverCache();
-    const state = new TextState('http://example/foo','hi', new Headers(), new Links());
+    const state = new TextState('http://example/foo','hi', new Headers(), new Links('http://example/foo'));
     foreverCache.store(state);
 
     expect(foreverCache.has('http://example/foo')).to.equal(true);
@@ -27,7 +27,7 @@ describe('ForeverCache', () => {
   it('should clone objects, not store the original', () => {
 
     const foreverCache = new ForeverCache();
-    const state = new TextState('http://example/foo','hi', new Headers(), new Links());
+    const state = new TextState('http://example/foo','hi', new Headers(), new Links('http://example/foo'));
     foreverCache.store(state);
 
     const ts = Date.now();
@@ -46,7 +46,7 @@ describe('ForeverCache', () => {
   it('should allow items to be deleted', () => {
 
     const foreverCache = new ForeverCache();
-    const state = new TextState('http://example/foo','hi', new Headers(), new Links());
+    const state = new TextState('http://example/foo','hi', new Headers(), new Links('http://example/foo'));
     foreverCache.store(state);
     foreverCache.delete('http://example/foo');
 
@@ -62,7 +62,7 @@ describe('ForeverCache', () => {
   it('clear() should work', () => {
 
     const foreverCache = new ForeverCache();
-    const state = new TextState('http://example/foo','hi', new Headers(), new Links());
+    const state = new TextState('http://example/foo','hi', new Headers(), new Links('http://example/foo'));
     foreverCache.store(state);
     foreverCache.clear();
 
