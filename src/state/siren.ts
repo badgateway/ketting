@@ -67,7 +67,7 @@ export class SirenState<T> extends BaseState<T> {
         properties: this.data
       },
       new Headers(this.headers),
-      new Links(this.links),
+      new Links(this.uri, this.links),
     );
 
   }
@@ -262,7 +262,7 @@ function parseSirenSubEntityAsEmbedded(contextUri: string, subEntity: SirenSubEn
     subEntityUrl,
     subEntity,
     headers,
-    new Links(parseSirenLinks(selfHref, subEntity)),
+    new Links(selfHref, parseSirenLinks(selfHref, subEntity)),
 
   );
 

@@ -184,7 +184,7 @@ function getFakeResource(uri?: string, type?: string): Resource<{ firstGet: bool
 
   if (!uri) uri = 'https://example.org';
   const fakeResource:any = new Resource(null as any, uri);
-  const links = new Links([
+  const links = new Links(uri, [
     {
       context: fakeResource.uri,
       href: '/child1',

@@ -21,7 +21,7 @@ export class TextState extends BaseState<string> {
       this.uri,
       this.data,
       new Headers(this.headers),
-      new Links(this.links),
+      new Links(this.uri, this.links),
     );
 
   }

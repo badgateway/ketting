@@ -22,7 +22,7 @@ export class BinaryState extends BaseState<Blob> {
       this.uri,
       this.data,
       new Headers(this.headers),
-      new Links(this.links)
+      new Links(this.uri, this.links)
     );
 
   }

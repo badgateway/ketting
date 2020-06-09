@@ -6,7 +6,7 @@ describe('ShortCache', () => {
   it('should store and retrieve State objects', () => {
 
     const shortCache = new ShortCache();
-    const state = new TextState('http://example/foo','hi', new Headers(), new Links());
+    const state = new TextState('http://example/foo','hi', new Headers(), new Links('http://example/foo'));
     shortCache.store(state);
 
     expect(shortCache.has('http://example/foo')).to.equal(true);
@@ -27,7 +27,7 @@ describe('ShortCache', () => {
   it('should clone objects, not store the original', () => {
 
     const shortCache = new ShortCache();
-    const state = new TextState('http://example/foo','hi', new Headers(), new Links());
+    const state = new TextState('http://example/foo','hi', new Headers(), new Links('http://example/foo'));
     shortCache.store(state);
 
     const ts = Date.now();
@@ -46,7 +46,7 @@ describe('ShortCache', () => {
   it('should allow items to be deleted', () => {
 
     const shortCache = new ShortCache();
-    const state = new TextState('http://example/foo','hi', new Headers(), new Links());
+    const state = new TextState('http://example/foo','hi', new Headers(), new Links('http://example/foo'));
     shortCache.store(state);
     shortCache.delete('http://example/foo');
 
@@ -62,7 +62,7 @@ describe('ShortCache', () => {
   it('clear() should work', () => {
 
     const shortCache = new ShortCache();
-    const state = new TextState('http://example/foo','hi', new Headers(), new Links());
+    const state = new TextState('http://example/foo','hi', new Headers(), new Links('http://example/foo'));
     shortCache.store(state);
     shortCache.clear();
 
@@ -77,7 +77,7 @@ describe('ShortCache', () => {
 
     // Small timeout
     const shortCache = new ShortCache(0);
-    const state = new TextState('http://example/foo','hi', new Headers(), new Links());
+    const state = new TextState('http://example/foo','hi', new Headers(), new Links('http://example/foo'));
     shortCache.store(state);
 
     await new Promise(res => setTimeout(res, 10));
@@ -90,7 +90,7 @@ describe('ShortCache', () => {
 
     // Small timeout
     const shortCache = new ShortCache(0);
-    const state = new TextState('http://example/foo','hi', new Headers(), new Links());
+    const state = new TextState('http://example/foo','hi', new Headers(), new Links('http://example/foo'));
     shortCache.store(state);
     shortCache.store(state);
 

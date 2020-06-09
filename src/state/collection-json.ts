@@ -18,7 +18,7 @@ export class CjState<T = any> extends BaseState<T> {
       this.uri,
       this.data,
       new Headers(this.headers),
-      new Links(this.links)
+      new Links(this.uri, this.links)
     );
 
   }
