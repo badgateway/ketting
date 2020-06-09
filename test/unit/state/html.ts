@@ -301,6 +301,7 @@ describe('HTML representor', () => {
     const state = await callFactory(html);
     const state2 = state.clone();
     state2.client = state.client;
+    state2.timestamp = state.timestamp;
 
     expect(state).to.deep.equal(state2);
 
