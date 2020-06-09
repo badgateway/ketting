@@ -1,6 +1,22 @@
 ChangeLog
 =========
 
+6.0.0-alpha.5 (2020-06-08)
+--------------------------
+
+* Added 'actions', allowing users to automatically submit actions and/or Forms
+  for supported formats.
+* Action support is added for `text/html` and `application/vnd.siren+json`
+* Supported content-types for actions are `application/json` and
+  `application/x-www-form-urlencoded`.
+* `State` objects now have a reference to `Client`.
+* `resolve()` function is now a package export, providing a cross-platform
+  function for resolving urls.
+* `Resource` has now a `updateCache` function for local state changes without
+  submitting to the server.
+* `refresh()` now emits an `update` event.
+
+
 6.0.0-alpha.4 (2020-05-11)
 --------------------------
 
