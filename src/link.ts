@@ -51,11 +51,17 @@ export type Link = {
 
 }
 
+type NewLink = Omit<Link, 'context'>; 
+  
+
+/**
+ * Links container, providing an easy way to manage a set of links.
+ */
 export class Links {
 
   store: Map<string, Link[]>
 
-  constructor(links?: Link[] | Links) {
+  constructor(public defaultContext: string, links?: Link[] | Links) {
 
     this.store = new Map();
 
@@ -71,7 +77,24 @@ export class Links {
 
   }
 
-  add(...links: Link[]): void {
+  /**
+   * Adds a link to the list 
+   */
+  add(...links: Array<Link | NewLink>): void
+  add(rel: string, href: string): void
+  add(...args: any[]): void {
+
+    let links: Link[];
+
+    if (typeof args[0] === 'string') {
+      links = [{
+        rel: args[0],
+        href: args[1],
+        context: this.defaultContext,
+      }];
+    } else {
+      links = args.map( link => { return { context: this.defaultContext, ...link }} );
+    }
 
     for(const link of links) {
       if (this.store.has(link.rel)) {
@@ -83,8 +106,28 @@ export class Links {
 
   }
 
-  set(link: Link): void {
+  /**
+   * Set a link
+   *
+   * If a link with the provided 'rel' already existed, it will be overwritten.
+   */
+  set(link: Link | NewLink): void
+  set(rel: string, href: string): void
+  set(arg1: any, arg2?: any): void {
 
+    let link: Link;
+    if (typeof arg1 === 'string') {
+      link = {
+        rel: arg1,
+        href: arg2,
+        context: this.defaultContext,
+      };
+    } else {
+      link = {
+        context: this.defaultContext,
+        ...arg1,
+      }
+    }
     this.store.set(link.rel, [link]);
 
   }
@@ -117,10 +160,6 @@ export class Links {
 
     return this.store.has(rel);
 
-  }
-
-  get size(): number {
-    return this.store.size;
   }
 
 }

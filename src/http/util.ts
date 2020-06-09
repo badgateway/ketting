@@ -19,7 +19,7 @@ export function parseContentType(contentType: string | null): string | null {
 
 export function parseLink(context: string, header: string|null): Links {
 
-  const result = new Links();
+  const result = new Links(context);
   if (!header) {
     return result;
   }
