@@ -142,6 +142,12 @@ export class Links {
 
   }
 
+  delete(rel: string): void {
+
+    this.store.delete(rel);
+
+  }
+
   getMany(rel: string): Link[] {
 
     return this.store.get(rel) || [];
