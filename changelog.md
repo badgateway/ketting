@@ -1,6 +1,15 @@
 ChangeLog
 =========
 
+6.0.0-alpha.6 (2020-06-16)
+--------------------------
+
+* The Links object now has a default 'context', making it easier to add
+  relative links.
+* Links now has an easier to use API for setting or adding new links.
+* Links now has a `.delete()` method to delete by `rel`.
+
+
 6.0.0-alpha.5 (2020-06-08)
 --------------------------
 
