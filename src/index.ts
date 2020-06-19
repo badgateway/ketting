@@ -13,7 +13,8 @@ export {
   SirenState,
   TextState,
   CjState,
-  HtmlState
+  HtmlState,
+  isState,
 } from './state';
 
 export {
