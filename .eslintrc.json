@@ -31,10 +31,14 @@
           }
       ],
       "semi": ["error", "always"],
-      "@typescript-eslint/no-inferrable-types": [
-        2,
+      "@typescript-eslint/no-inferrable-types": ["error",
         {
           "ignoreParameters": false
+        }
+      ],
+      "@typescript-eslint/ban-ts-comment": ["error",
+        {
+          "ts-expect-error": "allow-with-description"
         }
       ]
       // "valid-jsdoc" : ["warn",

@@ -87,7 +87,7 @@ export const factory = async (uri: string, response: Response): Promise<HalState
     parseHalEmbedded(uri, body, response.headers),
   );
 
-}
+};
 
 /**
  * Parse the Hal _links object and populate the 'links' property.
@@ -125,6 +125,7 @@ function parseHalLinks(context: string, body: HalResource): Link[] {
   }
 
   if (body._embedded) {
+    // eslint-disable-next-line prefer-const
     for (let [rel, innerBodies] of Object.entries(body._embedded)) {
 
       if (!Array.isArray(innerBodies)) {

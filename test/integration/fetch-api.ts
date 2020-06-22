@@ -20,7 +20,6 @@ describe('Using the fetch api', () => {
 
   it('should also work when passing a Request object', async () => {
 
-    // @ts-ignore cross-fetch has broken types.
     const request = new Request('?foo=bar');
     const response = await hal2.fetch(request);
     expect(response).to.have.property('status');

@@ -91,7 +91,6 @@ describe('Resource', () => {
     it('should use the current uri and a GET request if no arguments were passed', async () => {
 
       const res = getFakeResource('https://example.org/return-request');
-      // @ts-ignore
       const result:any = await res.fetch();
 
       expect(result).to.equal('https://example.org/return-request');
@@ -141,8 +140,8 @@ function getFakeResource(uri: string = 'https://example.org/') {
 
     cache: {
 
-      get: ():null => { return null },
-      store: ():void => { }
+      get: ():null => { return null; },
+      store: ():void => { /* Intentionally Empty */ }
 
     },
 
@@ -156,7 +155,7 @@ function getFakeResource(uri: string = 'https://example.org/') {
 
       return {
         links: new Links('/', [ { href: '/', rel: 'yes', context: '/' }])
-      }
+      };
 
     }
 

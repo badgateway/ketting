@@ -30,6 +30,7 @@ export class Fetcher {
     mws.push((innerRequest: Request) => {
 
       if (!innerRequest.headers.has('User-Agent')) {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
         innerRequest.headers.set('User-Agent', 'Ketting/' + require('../../package.json').version);
       }
 
@@ -98,7 +99,7 @@ function invokeMiddlewares(mws: FetchMiddleware[], request: Request): Promise<Re
   return mws[0](
     request,
     (nextRequest: Request) => {
-      return invokeMiddlewares(mws.slice(1), nextRequest)
+      return invokeMiddlewares(mws.slice(1), nextRequest);
     }
   );
 

@@ -7,49 +7,49 @@ describe('Siren representor', () => {
   it('should parse the example Siren object', async () => {
 
     const exampleObj = {
-      "class": [ "order" ],
-      "properties": {
-          "orderNumber": 42,
-          "itemCount": 3,
-          "status": "pending"
+      'class': [ 'order' ],
+      'properties': {
+        'orderNumber': 42,
+        'itemCount': 3,
+        'status': 'pending'
       },
-      "entities": [
+      'entities': [
         {
-          "class": [ "items", "collection" ],
-          "rel": [ "http://x.io/rels/order-items" ],
-          "href": "http://api.x.io/orders/42/items",
+          'class': [ 'items', 'collection' ],
+          'rel': [ 'http://x.io/rels/order-items' ],
+          'href': 'http://api.x.io/orders/42/items',
         },
         {
-          "class": [ "info", "customer" ],
-          "rel": [ "http://x.io/rels/customer" ],
-          "properties": {
-            "customerId": "pj123",
-            "name": "Peter Joseph"
+          'class': [ 'info', 'customer' ],
+          'rel': [ 'http://x.io/rels/customer' ],
+          'properties': {
+            'customerId': 'pj123',
+            'name': 'Peter Joseph'
           },
-          "title": "Go to customer",
-          "links": [
-            { "rel": [ "self" ], "href": "http://api.x.io/customers/pj123" }
+          'title': 'Go to customer',
+          'links': [
+            { 'rel': [ 'self' ], 'href': 'http://api.x.io/customers/pj123' }
           ]
         }
       ],
-      "actions": [
+      'actions': [
         {
-          "name": "add-item",
-          "title": "Add Item",
-          "method": "POST",
-          "href": "http://api.x.io/orders/42/items",
-          "type": "application/x-www-form-urlencoded",
-          "fields": [
-            { "name": "orderNumber", "type": "hidden", "value": "42" },
-            { "name": "productCode", "type": "text" },
-            { "name": "quantity", "type": "number" }
+          'name': 'add-item',
+          'title': 'Add Item',
+          'method': 'POST',
+          'href': 'http://api.x.io/orders/42/items',
+          'type': 'application/x-www-form-urlencoded',
+          'fields': [
+            { 'name': 'orderNumber', 'type': 'hidden', 'value': '42' },
+            { 'name': 'productCode', 'type': 'text' },
+            { 'name': 'quantity', 'type': 'number' }
           ]
         }
       ],
-      "links": [
-        { "rel": [ "self" ], "href": "http://api.x.io/orders/42" },
-        { "rel": [ "previous" ], "href": "http://api.x.io/orders/41" },
-        { "rel": [ "next" ], "href": "http://api.x.io/orders/43" }
+      'links': [
+        { 'rel': [ 'self' ], 'href': 'http://api.x.io/orders/42' },
+        { 'rel': [ 'previous' ], 'href': 'http://api.x.io/orders/41' },
+        { 'rel': [ 'next' ], 'href': 'http://api.x.io/orders/43' }
       ]
     };
 
@@ -80,15 +80,15 @@ describe('Siren representor', () => {
         rel: 'http://x.io/rels/customer',
         href: 'http://api.x.io/customers/pj123',
         context: 'http://api.x.io/orders/42',
-        title: "Go to customer",
+        title: 'Go to customer',
       },
     ]);
 
     const embedded = siren.getEmbedded()[0];
     expect(embedded.uri).to.eql('http://api.x.io/customers/pj123');
     expect(embedded.data).to.eql({
-      "customerId": "pj123",
-      "name": "Peter Joseph"
+      'customerId': 'pj123',
+      'name': 'Peter Joseph'
     });
 
   });
@@ -96,11 +96,11 @@ describe('Siren representor', () => {
   it('should parse simple objects', async() => {
 
     const input = {
-      "class": [ "order" ],
-      "properties": {
-          "orderNumber": 42,
-          "itemCount": 3,
-          "status": "pending"
+      'class': [ 'order' ],
+      'properties': {
+        'orderNumber': 42,
+        'itemCount': 3,
+        'status': 'pending'
       },
     };
 
@@ -113,11 +113,11 @@ describe('Siren representor', () => {
   it('should clone objects', async() => {
 
     const input = {
-      "class": [ "order" ],
-      "properties": {
-          "orderNumber": 42,
-          "itemCount": 3,
-          "status": "pending"
+      'class': [ 'order' ],
+      'properties': {
+        'orderNumber': 42,
+        'itemCount': 3,
+        'status': 'pending'
       },
     };
 
@@ -132,30 +132,30 @@ describe('Siren representor', () => {
   it('should ignore entities without self links', async () => {
 
     const input:any = {
-      "class": [ "order" ],
-      "properties": {
-          "orderNumber": 42,
-          "itemCount": 3,
-          "status": "pending"
+      'class': [ 'order' ],
+      'properties': {
+        'orderNumber': 42,
+        'itemCount': 3,
+        'status': 'pending'
       },
-      "entities": [
+      'entities': [
         {
-          "class": [ "info", "customer" ],
-          "rel": [ "http://x.io/rels/customer" ],
-          "properties": {
-            "customerId": "pj123",
-            "name": "Peter Joseph"
+          'class': [ 'info', 'customer' ],
+          'rel': [ 'http://x.io/rels/customer' ],
+          'properties': {
+            'customerId': 'pj123',
+            'name': 'Peter Joseph'
           },
-          "links": [
+          'links': [
             {href: '/foo', rel: 'about' },
           ]
         },
         {
-          "class": [ "info", "customer" ],
-          "rel": [ "http://x.io/rels/customer" ],
-          "properties": {
-            "customerId": "pj123",
-            "name": "Peter Joseph"
+          'class': [ 'info', 'customer' ],
+          'rel': [ 'http://x.io/rels/customer' ],
+          'properties': {
+            'customerId': 'pj123',
+            'name': 'Peter Joseph'
           },
         }
       ],
@@ -172,23 +172,23 @@ describe('Siren representor', () => {
     it('should execute POST actions', async () => {
 
       const exampleObj = {
-        "class": [ "order" ],
-        "properties": {
-            "orderNumber": 42,
-            "itemCount": 3,
-            "status": "pending"
+        'class': [ 'order' ],
+        'properties': {
+          'orderNumber': 42,
+          'itemCount': 3,
+          'status': 'pending'
         },
-        "actions": [
+        'actions': [
           {
-            "name": "add-item",
-            "title": "Add Item",
-            "method": "POST",
-            "href": "http://api.x.io/orders/42/items",
-            "type": "application/x-www-form-urlencoded",
-            "fields": [
-              { "name": "orderNumber", "type": "hidden", "value": "42" },
-              { "name": "productCode", "type": "text" },
-              { "name": "quantity", "type": "number" }
+            'name': 'add-item',
+            'title': 'Add Item',
+            'method': 'POST',
+            'href': 'http://api.x.io/orders/42/items',
+            'type': 'application/x-www-form-urlencoded',
+            'fields': [
+              { 'name': 'orderNumber', 'type': 'hidden', 'value': '42' },
+              { 'name': 'productCode', 'type': 'text' },
+              { 'name': 'quantity', 'type': 'number' }
             ]
           }
         ],
@@ -209,13 +209,13 @@ describe('Siren representor', () => {
     it('should throw an error when an unknown action is requested', async () => {
 
       const exampleObj:any = {
-        "class": [ "order" ],
-        "properties": {
-            "orderNumber": 42,
-            "itemCount": 3,
-            "status": "pending"
+        'class': [ 'order' ],
+        'properties': {
+          'orderNumber': 42,
+          'itemCount': 3,
+          'status': 'pending'
         },
-        "actions": []
+        'actions': []
       };
 
       const siren = await callFactory(exampleObj);
@@ -232,13 +232,13 @@ describe('Siren representor', () => {
     it('should throw an error an action without a name is ran', async () => {
 
       const exampleObj:any = {
-        "class": [ "order" ],
-        "properties": {
-            "orderNumber": 42,
-            "itemCount": 3,
-            "status": "pending"
+        'class': [ 'order' ],
+        'properties': {
+          'orderNumber': 42,
+          'itemCount': 3,
+          'status': 'pending'
         },
-        "actions": []
+        'actions': []
       };
 
       const siren = await callFactory(exampleObj);
@@ -255,23 +255,23 @@ describe('Siren representor', () => {
     it('should execute POST actions with application/json type', async () => {
 
       const exampleObj = {
-        "class": [ "order" ],
-        "properties": {
-            "orderNumber": 42,
-            "itemCount": 3,
-            "status": "pending"
+        'class': [ 'order' ],
+        'properties': {
+          'orderNumber': 42,
+          'itemCount': 3,
+          'status': 'pending'
         },
-        "actions": [
+        'actions': [
           {
-            "name": "add-item",
-            "title": "Add Item",
-            "method": "POST",
-            "href": "http://api.x.io/orders/42/items",
-            "type": "application/json",
-            "fields": [
-              { "name": "orderNumber", "type": "hidden", "value": "42" },
-              { "name": "productCode", "type": "text" },
-              { "name": "quantity", "type": "number" }
+            'name': 'add-item',
+            'title': 'Add Item',
+            'method': 'POST',
+            'href': 'http://api.x.io/orders/42/items',
+            'type': 'application/json',
+            'fields': [
+              { 'name': 'orderNumber', 'type': 'hidden', 'value': '42' },
+              { 'name': 'productCode', 'type': 'text' },
+              { 'name': 'quantity', 'type': 'number' }
             ]
           }
         ],
@@ -293,23 +293,23 @@ describe('Siren representor', () => {
     it('should throw an error for unknown mimetypes', async () => {
 
       const exampleObj = {
-        "class": [ "order" ],
-        "properties": {
-            "orderNumber": 42,
-            "itemCount": 3,
-            "status": "pending"
+        'class': [ 'order' ],
+        'properties': {
+          'orderNumber': 42,
+          'itemCount': 3,
+          'status': 'pending'
         },
-        "actions": [
+        'actions': [
           {
-            "name": "add-item",
-            "title": "Add Item",
-            "method": "POST",
-            "href": "http://api.x.io/orders/42/items",
-            "type": "application/foo-bar",
-            "fields": [
-              { "name": "orderNumber", "type": "hidden", "value": "42" },
-              { "name": "productCode", "type": "text" },
-              { "name": "quantity", "type": "number" }
+            'name': 'add-item',
+            'title': 'Add Item',
+            'method': 'POST',
+            'href': 'http://api.x.io/orders/42/items',
+            'type': 'application/foo-bar',
+            'fields': [
+              { 'name': 'orderNumber', 'type': 'hidden', 'value': '42' },
+              { 'name': 'productCode', 'type': 'text' },
+              { 'name': 'quantity', 'type': 'number' }
             ]
           }
         ],
@@ -334,19 +334,19 @@ describe('Siren representor', () => {
     it('should work with GET', async () => {
 
       const exampleObj = {
-        "class": [ "order" ],
-        "properties": {
-            "orderNumber": 42,
-            "itemCount": 3,
-            "status": "pending"
+        'class': [ 'order' ],
+        'properties': {
+          'orderNumber': 42,
+          'itemCount': 3,
+          'status': 'pending'
         },
-        "actions": [
+        'actions': [
           {
-            "name": "add-item",
-            "title": "Add Item",
-            "method": "GET",
-            "href": "http://api.x.io/orders/42/items",
-            "type": "application/foo-bar",
+            'name': 'add-item',
+            'title': 'Add Item',
+            'method': 'GET',
+            'href': 'http://api.x.io/orders/42/items',
+            'type': 'application/foo-bar',
           }
         ]
       };
@@ -367,11 +367,11 @@ describe('Siren representor', () => {
   it('should throw an error when attempting to re-serialize Siren', async() => {
 
     const input = {
-      "class": [ "order" ],
-      "properties": {
-          "orderNumber": 42,
-          "itemCount": 3,
-          "status": "pending"
+      'class': [ 'order' ],
+      'properties': {
+        'orderNumber': 42,
+        'itemCount': 3,
+        'status': 'pending'
       },
     };
 

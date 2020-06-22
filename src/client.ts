@@ -84,7 +84,7 @@ export default class Client {
       absoluteUri = this.bookmarkUri;
     }
     if (!this.resources.has(absoluteUri)) {
-      const resource = new Resource(this, absoluteUri)
+      const resource = new Resource(this, absoluteUri);
       this.resources.set(absoluteUri, resource);
       return resource;
     }

@@ -53,9 +53,9 @@ describe('Issuing a DELETE request', async () => {
     const resource2 = await ketting.follow('error400');
     let exception = null;
     try {
-        await resource2.delete();
+      await resource2.delete();
     } catch (ex) {
-        exception = ex;
+      exception = ex;
     }
     expect(exception.response.status).to.equal(400);
 
@@ -69,9 +69,9 @@ describe('Issuing a DELETE request', async () => {
     const resource2 = await ketting.follow('problem');
     let exception;
     try {
-        await resource2.delete();
+      await resource2.delete();
     } catch (ex) {
-        exception = ex;
+      exception = ex;
     }
     expect(exception.status).to.equal(410);
     expect(exception).to.be.an.instanceof(Problem);

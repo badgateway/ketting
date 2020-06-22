@@ -100,4 +100,4 @@ export const factory = async (uri: string, response: Response): Promise<HtmlStat
     htmlResult.forms,
   );
 
-}
+};

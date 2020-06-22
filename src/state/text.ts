@@ -40,4 +40,4 @@ export const factory: StateFactory<string> = async (uri: string, response: Respo
     parseLink(uri, response.headers.get('Link')),
   );
 
-}
+};

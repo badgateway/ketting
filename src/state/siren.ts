@@ -92,7 +92,7 @@ export const factory = async (uri: string, response: Response): Promise<SirenSta
     parseSirenEmbedded(uri, body, response.headers),
   );
 
-}
+};
 
 type SirenProperties = Record<string, any> | undefined;
 

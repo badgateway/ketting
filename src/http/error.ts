@@ -31,7 +31,7 @@ export class Problem extends HttpError {
     title?: string
   };
 
-  constructor(response: Response, problemBody: object) {
+  constructor(response: Response, problemBody: Record<string, any>) {
     super(response);
     this.body = problemBody;
     if (this.body.title) {

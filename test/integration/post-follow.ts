@@ -44,7 +44,7 @@ describe('Issuing a POST request', async () => {
         data: {foo: 'bar'}
       });
     } catch (ex) {
-        exception = ex;
+      exception = ex;
     }
     expect(exception.response.status).to.equal(400);
 
