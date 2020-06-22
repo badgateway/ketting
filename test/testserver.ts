@@ -293,5 +293,5 @@ app.use(
 const port = 3000;
 app.listen(port);
 
-// tslint:disable no-console
+// eslint-disable-next-line no-console
 console.log('Server is now online. Head to http://localhost:' + port + '/ to run tests in a browser');

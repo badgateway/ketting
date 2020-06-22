@@ -183,7 +183,7 @@ export class FollowPromiseOne<T = any> extends FollowPromise<Resource<T>> {
 
     if (this.prefetchEnabled) {
       newResource.get().catch( err => {
-        // tslint:disable-next-line no-console
+        // eslint-disable-next-line no-console
         console.warn('Error while prefetching linked resource', err);
       });
     }
@@ -279,7 +279,7 @@ export class FollowPromiseMany<T = any> extends FollowPromise<Resource<T>[]> {
       result.push(newResource);
       if (this.prefetchEnabled) {
         newResource.get().catch( err => {
-          // tslint:disable-next-line no-console
+          // eslint-disable-next-line no-console
           console.warn('Error while prefetching linked resource', err);
         });
       }
