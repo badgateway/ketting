@@ -18,11 +18,13 @@ test-debug:
 
 .PHONY: lint
 lint:
-	tslint -c tslint.json --project tsconfig.json 'src/**/*.ts' 'test/**/*.ts'
+	# tslint -c tslint.json --project tsconfig.json 'src/**/*.ts' 'test/**/*.ts'
+	eslint ./
 
 .PHONY: fix
 fix:
-	tslint -c tslint.json --project tsconfig.json 'src/**/*.ts' 'test/**/*.ts' --fix
+	# tslint -c tslint.json --project tsconfig.json 'src/**/*.ts' 'test/**/*.ts' --fix
+	eslint '*/**/*.ts' --quiet --fix
 
 .PHONY: tsbuild
 tsbuild:

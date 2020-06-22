@@ -57,6 +57,7 @@
     "@typescript-eslint/parser": "^3.4.0",
     "awesome-typescript-loader": "^5.2.1",
     "chai": "^4.2.0",
+    "eslint": "^7.3.0",
     "koa": "^2.13.0",
     "koa-bodyparser": "^4.3.0",
     "koa-logger": "^3.2.1",
