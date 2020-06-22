@@ -3,6 +3,7 @@ import * as Koa from 'koa';
 import { Context as KoaContext } from 'koa';
 import * as bodyParser from 'koa-bodyparser';
 import * as logger from 'koa-logger';
+// @ts-expect-error Bad types, lets ignore
 import * as Route from 'koa-path-match';
 import * as koaStatic from 'koa-static';
 

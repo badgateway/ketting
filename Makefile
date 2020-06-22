@@ -18,11 +18,11 @@ test-debug:
 
 .PHONY: lint
 lint:
-	eslint ./
+	eslint 'src/**/*.ts' 'test/**/*.ts'
 
 .PHONY: fix
 fix:
-	eslint '*/**/*.ts' --quiet --fix
+	eslint 'src/**/*.ts' 'test/**/*.ts' --fix
 
 .PHONY: tsbuild
 tsbuild:
