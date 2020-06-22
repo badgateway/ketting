@@ -65,7 +65,7 @@ export class Fetcher {
     const matchSplit = origin.split('*');
     const matchRegex = matchSplit.map(
       part =>
-      part.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+        part.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
     ).join('(.*)');
 
     const regex = new RegExp('^' + matchRegex + '$');

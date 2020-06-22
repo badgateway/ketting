@@ -22,7 +22,9 @@
       "@typescript-eslint"
   ],
   "rules": {
-      "indent": ["error", 2],
+      "indent": ["error", 2, {
+        "SwitchCase": 1
+      }],
       "linebreak-style": ["error", "unix"],
       "quotes": ["error", "single",
           {
@@ -33,7 +35,7 @@
       "semi": ["error", "always"],
       "@typescript-eslint/no-inferrable-types": ["error",
         {
-          "ignoreParameters": false
+          "ignoreParameters": true
         }
       ],
       "@typescript-eslint/ban-ts-comment": ["error",
@@ -41,12 +43,5 @@
           "ts-expect-error": "allow-with-description"
         }
       ]
-      // "valid-jsdoc" : ["warn",
-      //   {
-      //     "requireReturn" : false,
-      //     "requireParamDescription" : false,
-      //     "requireReturnDescription" : false
-      //   }
-      // ]
   }
 }

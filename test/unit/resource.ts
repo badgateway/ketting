@@ -122,7 +122,7 @@ function getFakeResource(uri: string = 'https://example.org/') {
       case 'https://example.org/205':
         return new Response(null, {status: 205});
     }
-  }
+  };
 
   const fakeClient:any = {
 
