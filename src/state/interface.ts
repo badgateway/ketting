@@ -115,7 +115,7 @@ export interface HeadState {
  */
 export type StateFactory<T = any> = (uri: string, request: Response) => Promise<State<T>>;
 
-export function isState(input: object): input is State {
+export function isState(input: Record<string, any>): input is State {
 
   return (
     typeof (input as any).uri === 'string' &&

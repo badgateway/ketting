@@ -93,7 +93,7 @@ export class Links {
         context: this.defaultContext,
       }];
     } else {
-      links = args.map( link => { return { context: this.defaultContext, ...link }} );
+      links = args.map( link => { return { context: this.defaultContext, ...link };} );
     }
 
     for(const link of links) {
@@ -126,7 +126,7 @@ export class Links {
       link = {
         context: this.defaultContext,
         ...arg1,
-      }
+      };
     }
     this.store.set(link.rel, [link]);
 

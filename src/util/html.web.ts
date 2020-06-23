@@ -34,7 +34,7 @@ export function parseHtml(contextUri: string, body: string): ParseHtmlResult {
         contextUri,
         doc.getElementsByTagName('a')
       )
-   ]
+    ]
   };
 
 }
@@ -101,7 +101,7 @@ function formFromTags(contextUri: string, elements: HTMLCollectionOf<HTMLFormEle
         enctype,
         id,
         method
-      }
+      };
       result.push(form);
 
     }

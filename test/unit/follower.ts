@@ -216,7 +216,7 @@ function getFakeResource(uri?: string, type?: string): Resource<{ firstGet: bool
 
   fakeResource.go = (uri: string): Resource<any> => {
     return getFakeResource(uri);
-  }
+  };
 
   fakeResource.lastGetOptions = null;
 
@@ -224,7 +224,7 @@ function getFakeResource(uri?: string, type?: string): Resource<{ firstGet: bool
   // if a get() was issued previously. This will be used for
   // testing prefetch.
   let firstGet = true;
-  // @ts-ignore
+  
   fakeResource.get = async(getOptions: any) => {
 
     fakeResource.lastGetOptions = getOptions;
@@ -238,7 +238,7 @@ function getFakeResource(uri?: string, type?: string): Resource<{ firstGet: bool
     };
     firstGet = false;
     return response;
-  }
+  };
 
   fakeResource.head = async(headOptions: any) => {
 
@@ -253,7 +253,7 @@ function getFakeResource(uri?: string, type?: string): Resource<{ firstGet: bool
     };
     firstGet = false;
     return response;
-  }
+  };
   return fakeResource;
 
 }

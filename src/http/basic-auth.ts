@@ -12,4 +12,4 @@ export default (userName: string, password: string): FetchMiddleware => {
 
   };
 
-}
+};

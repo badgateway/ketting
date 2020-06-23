@@ -35,4 +35,4 @@ export const factory = async (uri: string, response: Response): Promise<HeadStat
     timestamp: Date.now(),
   };
 
-}
+};

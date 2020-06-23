@@ -27,7 +27,7 @@ describe('Basic Authentication', () => {
 
     const ketting = new Client('http://localhost:3000/hal1.json');
     ketting.fetcher.use(basicAuth('user', 'pass'));
-    const resource = await ketting.follow('auth-basic')
+    const resource = await ketting.follow('auth-basic');
     const response = await resource.fetch({method: 'GET'});
     expect(response.status).to.eql(200);
 

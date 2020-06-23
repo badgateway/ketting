@@ -11,4 +11,4 @@ export default (token: string): FetchMiddleware => {
 
   };
 
-}
+};

@@ -3,7 +3,7 @@ import * as Koa from 'koa';
 import { Context as KoaContext } from 'koa';
 import * as bodyParser from 'koa-bodyparser';
 import * as logger from 'koa-logger';
-// @ts-ignore don't have a definition for this.
+// @ts-expect-error Bad types, lets ignore
 import * as Route from 'koa-path-match';
 import * as koaStatic from 'koa-static';
 
@@ -27,10 +27,10 @@ app.use(bodyParser());
 function staticFile(url: string, path: string, type: string) {
   app.use(
     route(url)
-    .get((ctx: Context) => {
-      ctx.response.body = fs.readFileSync(path);
-      ctx.response.type = type;
-    })
+      .get((ctx: Context) => {
+        ctx.response.body = fs.readFileSync(path);
+        ctx.response.type = type;
+      })
   );
 
 }
@@ -51,11 +51,11 @@ app.use(
 // Reset the server to the beginning state
 app.use(
   route('/reset')
-  .post((ctx: Context) => {
-    resources = {};
-    ctx.response.status = 204;
-    ctx.response.body = '';
-  })
+    .post((ctx: Context) => {
+      resources = {};
+      ctx.response.status = 204;
+      ctx.response.body = '';
+    })
 );
 
 // HTTP errors as a service
@@ -69,9 +69,9 @@ app.use(
 // Redirect testing
 app.use(
   route('/redirect')
-  .get((ctx: Context) => {
-    ctx.response.redirect('/hal2.json');
-  })
+    .get((ctx: Context) => {
+      ctx.response.redirect('/hal2.json');
+    })
 );
 
 
@@ -100,76 +100,76 @@ app.use(
 // Return a HTTP Link header
 app.use(
   route('/link-header')
-  .get((ctx: Context) => {
+    .get((ctx: Context) => {
 
-     ctx.response.set('Link', [
-       '</hal2.json>; rel="next"',
-       '</TheBook/chapter2>; rel="previous"; title*=UTF-8\'de\'n%c3%a4chstes%20Kapitel',
-       '<http://example.org/>; rel="start http://example.net/relation/other"'
-     ]);
-     ctx.response.body = { ok: true };
+      ctx.response.set('Link', [
+        '</hal2.json>; rel="next"',
+        '</TheBook/chapter2>; rel="previous"; title*=UTF-8\'de\'n%c3%a4chstes%20Kapitel',
+        '<http://example.org/>; rel="start http://example.net/relation/other"'
+      ]);
+      ctx.response.body = { ok: true };
 
-  })
+    })
 );
 
 // Return a JSON problem document (RFC7807)
 app.use(
   route('/problem')
-  .delete((ctx: Context) => {
+    .delete((ctx: Context) => {
 
-     ctx.response.status = 410;
-     ctx.response.body = {
-       type: 'http://evertpot.com/problem-test',
-       title: 'Some sort of error!'
-     };
-     ctx.response.type = 'application/problem+json';
+      ctx.response.status = 410;
+      ctx.response.body = {
+        type: 'http://evertpot.com/problem-test',
+        title: 'Some sort of error!'
+      };
+      ctx.response.type = 'application/problem+json';
 
-  })
+    })
 );
 
 app.use(
   route('/auth/basic')
-  .get((ctx: Context) => {
-    const encoded = 'Basic dXNlcjpwYXNz'; // base64(user:pass)
-    if (!ctx.request.headers.authorization || ctx.request.headers.authorization !== encoded) {
-      ctx.response.status = 401;
-      ctx.response.body = '';
-      ctx.response.set('WWW-Authenticate', 'Basic');
-    } else {
-      ctx.response.body = { ok: true };
-      ctx.response.status = 200;
-    }
-  })
+    .get((ctx: Context) => {
+      const encoded = 'Basic dXNlcjpwYXNz'; // base64(user:pass)
+      if (!ctx.request.headers.authorization || ctx.request.headers.authorization !== encoded) {
+        ctx.response.status = 401;
+        ctx.response.body = '';
+        ctx.response.set('WWW-Authenticate', 'Basic');
+      } else {
+        ctx.response.body = { ok: true };
+        ctx.response.status = 200;
+      }
+    })
 );
 
 app.use(
   route('/auth/bearer')
-  .get((ctx: Context) => {
-    const encoded = 'Bearer foo';
-    if (!ctx.request.headers.authorization || ctx.request.headers.authorization !== encoded) {
-      ctx.response.status = 401;
-      ctx.response.body = '';
-      ctx.response.set('WWW-Authenticate', 'Bearer');
-    } else {
-      ctx.response.body = { ok: true };
-      ctx.response.status = 200;
-    }
-  })
+    .get((ctx: Context) => {
+      const encoded = 'Bearer foo';
+      if (!ctx.request.headers.authorization || ctx.request.headers.authorization !== encoded) {
+        ctx.response.status = 401;
+        ctx.response.body = '';
+        ctx.response.set('WWW-Authenticate', 'Bearer');
+      } else {
+        ctx.response.body = { ok: true };
+        ctx.response.status = 200;
+      }
+    })
 );
 
 app.use(
   route('/auth/oauth')
-  .get((ctx: Context) => {
-    const encoded = 'Bearer foo';
-    if (!ctx.request.headers.authorization || ctx.request.headers.authorization !== encoded) {
-      ctx.response.status = 401;
-      ctx.response.body = '';
-      ctx.response.set('WWW-Authenticate', 'Bearer');
-    } else {
-      ctx.response.body = { ok: true };
-      ctx.response.status = 200;
-    }
-  })
+    .get((ctx: Context) => {
+      const encoded = 'Bearer foo';
+      if (!ctx.request.headers.authorization || ctx.request.headers.authorization !== encoded) {
+        ctx.response.status = 401;
+        ctx.response.body = '';
+        ctx.response.set('WWW-Authenticate', 'Bearer');
+      } else {
+        ctx.response.body = { ok: true };
+        ctx.response.status = 200;
+      }
+    })
 );
 
 app.use(
@@ -183,7 +183,7 @@ app.use(
       // valid if doing a refresh grant
       if (
         (
-            clientInfo === 'fooClient:barSecret'
+          clientInfo === 'fooClient:barSecret'
           && (
             (requestBody.grant_type === 'password'
               && requestBody.username === 'fooOwner'
@@ -191,7 +191,7 @@ app.use(
             ||
               (requestBody.grant_type === 'refresh_token'
               && requestBody.refresh_token === 'fooRefresh')
-            )
+          )
         ) || (
           clientInfo === 'fooClientCredentials:barSecretCredentials'
           && (
@@ -229,69 +229,69 @@ app.use(route('/counter').get( (ctx: Context) => {
 // Rest stuff!
 app.use(
   route('/:id')
-  .get((ctx: Context) => {
+    .get((ctx: Context) => {
 
-    if (resources[ctx.params.id] === undefined) {
-      resources[ctx.params.id] = fs.readFileSync(__dirname + '/fixtures/' + ctx.params.id);
-    }
+      if (resources[ctx.params.id] === undefined) {
+        resources[ctx.params.id] = fs.readFileSync(__dirname + '/fixtures/' + ctx.params.id);
+      }
 
-    if (resources[ctx.params.id] === null) {
-      ctx.response.status = 404;
+      if (resources[ctx.params.id] === null) {
+        ctx.response.status = 404;
+        ctx.response.body = '';
+        return;
+      }
+      // The test server needs cleanup :(
+      if (ctx.params.id.includes('json-api')) {
+        ctx.response.type = 'application/vnd.api+json';
+      } else {
+        ctx.response.type = 'application/json';
+      }
+      ctx.response.body = resources[ctx.params.id];
+
+    })
+    .put((ctx: Context) => {
+
+      let body;
+      if (typeof ctx.request.body === 'string') {
+        body = ctx.request.body;
+      } else {
+        body = JSON.stringify(ctx.request.body);
+      }
+      resources[ctx.params.id] = body;
+      ctx.response.status = 204;
       ctx.response.body = '';
-      return;
-    }
-    // The test server needs cleanup :(
-    if (ctx.params.id.includes('json-api')) {
-      ctx.response.type = 'application/vnd.api+json';
-    } else {
-      ctx.response.type = 'application/json';
-    }
-    ctx.response.body = resources[ctx.params.id];
 
-  })
-  .put((ctx: Context) => {
+    })
+    .delete((ctx: Context) => {
 
-    let body;
-    if (typeof ctx.request.body === 'string') {
-      body = ctx.request.body;
-    } else {
-      body = JSON.stringify(ctx.request.body);
-    }
-    resources[ctx.params.id] = body;
-    ctx.response.status = 204;
-    ctx.response.body = '';
-
-  })
-  .delete((ctx: Context) => {
-
-    resources[ctx.params.id] = null;
-    ctx.response.status = 204;
-    ctx.response.body = '';
-
-  })
-  .post((ctx: Context) => {
-
-    return new Promise( (res, rej) => {
-
-      let someId = 0;
-      do {
-        someId++;
-      } while (resources[someId + '.json']);
-
-      let body = ctx.request.body;
-      resources[someId + '.json'] = body;
-      ctx.response.status = 201;
+      resources[ctx.params.id] = null;
+      ctx.response.status = 204;
       ctx.response.body = '';
-      ctx.response.set('Location', '/' + someId + '.json');
-      res();
 
-    });
+    })
+    .post((ctx: Context) => {
 
-  })
+      return new Promise( (res, rej) => {
+
+        let someId = 0;
+        do {
+          someId++;
+        } while (resources[someId + '.json']);
+
+        const body = ctx.request.body;
+        resources[someId + '.json'] = body;
+        ctx.response.status = 201;
+        ctx.response.body = '';
+        ctx.response.set('Location', '/' + someId + '.json');
+        res();
+
+      });
+
+    })
 );
 
 const port = 3000;
 app.listen(port);
 
-// tslint:disable no-console
+// eslint-disable-next-line no-console
 console.log('Server is now online. Head to http://localhost:' + port + '/ to run tests in a browser');

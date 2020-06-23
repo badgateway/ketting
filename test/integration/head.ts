@@ -23,9 +23,9 @@ describe('Issuing a HEAD request', async () => {
     const resource2 = await ketting.follow('error400');
     let exception;
     try {
-        await resource2.head();
+      await resource2.head();
     } catch (ex) {
-        exception = ex;
+      exception = ex;
     }
     expect(exception.response.status).to.equal(400);
 

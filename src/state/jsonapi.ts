@@ -46,7 +46,7 @@ export const factory = async (uri: string, response: Response): Promise<JsonApiS
     links,
   );
 
-}
+};
 /**
  * A JSON:API link can either be a string, or an object with at least a href
  * property.

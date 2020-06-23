@@ -51,7 +51,7 @@ export const factory = async (uri: string, response: Response): Promise<CjState<
     links,
   );
 
-}
+};
 
 type CjDocument = {
   collection: CjCollection,
