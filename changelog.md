@@ -1,6 +1,13 @@
 ChangeLog
 =========
 
+6.0.0-beta.0 (2020-07-06)
+-------------------------
+
+* Switched from tslint to eslint.
+* Feature complete!
+
+
 6.0.0-alpha.7 (2020-06-19)
 --------------------------
 
