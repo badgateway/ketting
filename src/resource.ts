@@ -8,23 +8,29 @@ import { GetRequestOptions, PostRequestOptions, PatchRequestOptions, PutRequestO
 import { needsJsonStringify } from './util/fetch-body-helper';
 
 /**
- * A 'resource' represents an endpoint on the server.
+ * A 'resource' represents an endpoint on a server.
  *
- * The endpoint has a uri, you might for example be able to GET its
- * presentation.
- *
- * A resource may also have a list of links on them, pointing to other
- * resources.
+ * A resource has a uri, methods that correspond to HTTP methods,
+ * and events to subscribe to state changes.
  */
 export class Resource<T = any> extends EventEmitter {
 
+  /**
+   * URI of the current resource
+   */
   uri: string;
-  client: Client;
-
-  activeRefresh: Promise<State<T>> | null;
 
   /**
-   * uri must be absolute
+   * Reference to the Client that created the resource
+   */
+  client: Client;
+
+  private activeRefresh: Promise<State<T>> | null;
+
+  /**
+   * Create the resource.
+   *
+   * This is usually done by the Client.
    */
   constructor(client: Client, uri: string) {
     super();
@@ -337,20 +343,81 @@ export class Resource<T = any> extends EventEmitter {
 
 export declare interface Resource<T = any> {
 
+  /**
+   * Subscribe to the 'update' event.
+   *
+   * This event will get triggered whenever a new State is received
+   * from the server, either through a GET request or if it was
+   * transcluded.
+   *
+   * It will also trigger when calling 'PUT' with a full state object,
+   * and when updateCache() was used.
+   */
   on(event: 'update', listener: (state: State) => void) : this
+  
+  /**
+   * Subscribe to the 'stale' event.
+   *
+   * This event will get triggered whenever an unsafe method was
+   * used, such as POST, PUT, PATCH, etc.
+   *
+   * When any of these methods are used, the local cache is stale.
+   */
   on(event: 'stale',  listener: () => void) : this;
+
+  /**
+   * Subscribe to the 'delete' event.
+   *
+   * This event gets triggered when the `DELETE` http method is used.
+   */
   on(event: 'delete', listener: () => void) : this;
 
+  /**
+   * Subscribe to the 'update' event and unsubscribe after it was
+   * emitted the first time.
+   */
   once(event: 'update', listener: (state: State) => void) : this
+
+  /**
+   * Subscribe to the 'stale' event and unsubscribe after it was
+   * emitted the first time.
+   */
   once(event: 'stale',  listener: () => void) : this;
+
+  /**
+   * Subscribe to the 'delete' event and unsubscribe after it was
+   * emitted the first time.
+   */
   once(event: 'delete', listener: () => void) : this;
 
+  /**
+   * Unsubscribe from the 'update' event
+   */
   off(event: 'update', listener: (state: State) => void) : this
+
+  /**
+   * Unsubscribe from the 'stale' event
+   */
   off(event: 'stale',  listener: () => void) : this;
+
+  /**
+   * Unsubscribe from the 'delete' event
+   */
   off(event: 'delete', listener: () => void) : this;
 
+  /**
+   * Emit an 'update' event.
+   */
   emit(event: 'update', state: State) : boolean
+
+  /**
+   * Emit a 'stale' event.
+   */
   emit(event: 'stale') : boolean;
+
+  /**
+   * Emit a 'delete' event.
+   */
   emit(event: 'delete') : boolean;
 
 }

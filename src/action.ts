@@ -2,8 +2,14 @@ import { State } from './state';
 import * as qs from 'querystring';
 import Client from './client';
 
+/**
+ * An action represents a hypermedia form submission or action.
+ */
 export interface Action<T> {
 
+  /**
+   * Execute the action or submit the form.
+   */
   submit(formData: T): Promise<State>;
 
 }
@@ -14,6 +20,9 @@ export class SimpleAction<TFormData> {
 
   }
 
+  /**
+   * Execute the action or submit the form.
+   */
   async submit(formData: TFormData): Promise<State<any>> {
 
     const method = this.method || 'GET';

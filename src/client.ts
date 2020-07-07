@@ -19,9 +19,22 @@ import * as LinkHeader from 'http-link-header';
 
 export default class Client {
 
-  fetcher: Fetcher;
+  /**
+   * All relative urls will by default use the bookmarkUri to
+   * expand. It should usually be the starting point of your
+   * API
+   */
   bookmarkUri: string;
 
+  /**
+   * Supported content types
+   *
+   * Each content-type has a 'factory' that turns a HTTP response
+   * into a State object.
+   *
+   * The last value in the array is the 'q=' value, used in Accept
+   * headers. Higher means higher priority.
+   */
   contentTypeMap: {
     [mimeType: string]: [StateFactory<any>, string],
   } = {
@@ -33,9 +46,22 @@ export default class Client {
     'text/html': [htmlStateFactory, '0.7'],
   }
 
+  /**
+   * The cache for 'State' objects
+   */
   cache: StateCache;
 
+  /**
+   * The cache for 'Resource' objects. Each unique uri should
+   * only ever get 1 associated resource.
+   */
   resources: Map<string, Resource>;
+
+  /**
+   * Fetcher is a utility object that handles fetch() requests
+   * and middlewares.
+   */
+  fetcher: Fetcher;
 
   constructor(bookmarkUri: string) {
     this.bookmarkUri = bookmarkUri;
@@ -92,6 +118,13 @@ export default class Client {
 
   }
 
+  /**
+   * Adds a fetch middleware, which will be executed for
+   * each fetch() call.
+   *
+   * If 'origin' is specified, fetch middlewares can be executed
+   * only if the host/origin matches.
+   */
   use(middleware: FetchMiddleware, origin: string = '*') {
 
     this.fetcher.use(middleware, origin);
@@ -99,7 +132,7 @@ export default class Client {
   }
 
   /**
-   * Clears the entire resource cache
+   * Clears the entire state cache
    */
   clearCache() {
 
