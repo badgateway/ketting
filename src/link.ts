@@ -59,7 +59,7 @@ type NewLink = Omit<Link, 'context'>;
  */
 export class Links {
 
-  store: Map<string, Link[]>
+  private store: Map<string, Link[]>
 
   constructor(public defaultContext: string, links?: Link[] | Links) {
 
@@ -132,6 +132,11 @@ export class Links {
 
   }
 
+  /**
+   * Return a single link by its 'rel'.
+   *
+   * If the link does not exist, undefined is returned.
+   */
   get(rel: string): Link|undefined {
 
     const links = this.store.get(rel);
@@ -142,18 +147,29 @@ export class Links {
 
   }
 
+  /**
+   * Delete all links with the given 'rel'.
+   */
   delete(rel: string): void {
 
     this.store.delete(rel);
 
   }
 
+  /**
+   * Return all links that have a given rel.
+   *
+   * If no links with the rel were found, an empty array is returned.
+   */
   getMany(rel: string): Link[] {
 
     return this.store.get(rel) || [];
 
   }
 
+  /**
+   * Return all links.
+   */
   getAll(): Link[] {
     const result = [];
     for(const links of this.store.values()) {
@@ -162,6 +178,9 @@ export class Links {
     return result;
   }
 
+  /**
+   * Returns true if at least 1 link with the given rel exists.
+   */
   has(rel: string): boolean {
 
     return this.store.has(rel);
