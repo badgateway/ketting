@@ -33,11 +33,7 @@
           }
       ],
       "semi": ["error", "always"],
-      "@typescript-eslint/no-inferrable-types": ["error",
-        {
-          "ignoreParameters": true
-        }
-      ],
+      "@typescript-eslint/no-inferrable-types": 0,
       "@typescript-eslint/ban-ts-comment": ["error",
         {
           "ts-expect-error": "allow-with-description"
