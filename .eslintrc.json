@@ -33,11 +33,18 @@
           }
       ],
       "semi": ["error", "always"],
+      "no-unused-vars": ["error",
+          {
+            "args": "none",
+            "ignoreRestSiblings": true
+          }
+        ],
       "@typescript-eslint/no-inferrable-types": 0,
       "@typescript-eslint/ban-ts-comment": ["error",
         {
           "ts-expect-error": "allow-with-description"
         }
-      ]
+      ],
+      "@typescript-eslint/no-explicit-any" : 0
   }
 }
