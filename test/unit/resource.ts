@@ -126,6 +126,10 @@ function getFakeResource(uri: string = 'https://example.org/') {
 
   const fakeClient:any = {
 
+    resources: {
+      get: ():false => { return false; },
+    },
+
     fetcher: {
 
       fetch: fakeFetch,

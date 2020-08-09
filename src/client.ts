@@ -172,7 +172,7 @@ export default class Client {
    * This function will also emit 'update' events to resources, and store all
    * embedded states.
    */
-  cacheState(state: State) {
+  cacheState(state: State): void {
 
     this.cache.store(state);
     const resource = this.resources.get(state.uri);

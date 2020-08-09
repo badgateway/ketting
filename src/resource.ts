@@ -275,10 +275,14 @@ export class Resource<T = any> extends EventEmitter {
    *
    * This will update the local state but *not* update the server
    */
-  updateCache(state: State<T>) {
+  updateCache(state: State<T>): void {
 
-    this.client.cache.store(state);
-    this.emit('update', state);
+    this.client.cacheState(state);
+
+    const resource = this.client.resources.get(state.uri);
+    if (!resource) {
+      this.emit('update', state);
+    }
 
   }
 
