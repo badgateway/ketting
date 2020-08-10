@@ -1,6 +1,16 @@
 ChangeLog
 =========
 
+6.0.0-beta.1 (2020-08-10)
+-------------------------
+
+* #229: Embedded resources were not cached. (@madsmadsen)
+* #230: Respect `headers` property in options of `refresh()` function.
+  (@madsmadsen)
+* Lots of Ketting 6 doc updates.
+* JSDocs everywhere gotten a fresh proof read.
+
+
 6.0.0-beta.0 (2020-07-06)
 -------------------------
 

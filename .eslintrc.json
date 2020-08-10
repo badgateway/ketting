@@ -45,6 +45,7 @@
           "ts-expect-error": "allow-with-description"
         }
       ],
-      "@typescript-eslint/no-explicit-any" : 0
+      "@typescript-eslint/no-explicit-any" : 0,
+      "@typescript-eslint/no-this-alias": 0
   }
 }
