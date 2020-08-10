@@ -277,8 +277,10 @@ export class Resource<T = any> extends EventEmitter {
    */
   updateCache(state: State<T>) {
 
-    this.client.cache.store(state);
-    this.emit('update', state);
+    if (state.uri !== this.uri) {
+      throw new Error('When calling updateCache on a resource, the uri of the State object must match the uri of the Resource');
+    }
+    this.client.cacheState(state);
 
   }
 
