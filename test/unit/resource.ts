@@ -154,6 +154,7 @@ function getFakeResource(uri: string = 'https://example.org/') {
     getStateForResponse: () => {
 
       return {
+        uri,
         links: new Links('/', [ { href: '/', rel: 'yes', context: '/' }])
       };
 
