@@ -15,6 +15,8 @@ export class Fetcher {
 
   middlewares: [RegExp, FetchMiddleware][] = [];
 
+  advertiseKetting: boolean = true
+
   /**
    * A wrapper for MDN fetch()
    *
@@ -29,7 +31,7 @@ export class Fetcher {
     const mws = this.getMiddlewaresByOrigin(origin);
     mws.push((innerRequest: Request) => {
 
-      if (!innerRequest.headers.has('User-Agent')) {
+      if (!innerRequest.headers.has('User-Agent') && this.advertiseKetting) {
         // eslint-disable-next-line @typescript-eslint/no-var-requires
         innerRequest.headers.set('User-Agent', 'Ketting/' + require('../../package.json').version);
       }
