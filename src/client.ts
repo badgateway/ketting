@@ -157,7 +157,7 @@ export default class Client {
       state = await this.contentTypeMap[contentType][0](uri, response);
     } else if (contentType.startsWith('text/')) {
       state = await textStateFactory(uri, response);
-    } else{
+    } else {
       state = await binaryStateFactory(uri, response);
     }
 
