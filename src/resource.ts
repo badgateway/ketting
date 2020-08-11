@@ -206,13 +206,18 @@ export class Resource<T = any> extends EventEmitter {
    * Sends a PATCH request to the resource.
    *
    * This function defaults to a application/json content-type header.
+   *
+   * If the server responds with 200 Status code this will return a State object
    */
-  async patch(options: PatchRequestOptions): Promise<void> {
+  async patch(options: PatchRequestOptions): Promise<void | State<T>> {
 
-    await this.fetchOrThrow(
+    const response = await this.fetchOrThrow(
       optionsToRequestInit('PATCH', options)
     );
 
+    if (response.status === 200) {
+      return await this.client.getStateForResponse(this.uri, response);
+    }
   }
 
   /**
