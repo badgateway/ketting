@@ -172,7 +172,7 @@ export default class Client {
    * This function will also emit 'update' events to resources, and store all
    * embedded states.
    */
-  cacheState(state: State) {
+  cacheState(state: State): void {
 
     this.cache.store(state);
     const resource = this.resources.get(state.uri);
@@ -182,8 +182,17 @@ export default class Client {
     }
 
     for(const embeddedState of state.getEmbedded()) {
+      // There is no rule against self embedding, but it should be safe to assume the outermost state is more "full" than the "inner"
+      if (embeddedState.links.get('self')?.href === state.uri) {
+        continue;
+      }
+
       // Recursion. MADNESS
-      this.cacheState(embeddedState);
+      // An embedded item can be partial, so it should only update the cache, if the state from cache has the same defaultContext
+      const stateFromCache = this.cache.get(embeddedState.uri);
+      if (stateFromCache?.links.defaultContext === embeddedState.links.defaultContext || !stateFromCache) {
+        this.cacheState(embeddedState);
+      }
     }
 
   }
