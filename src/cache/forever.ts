@@ -58,7 +58,16 @@ export class ForeverCache implements StateCache {
   /**
    * Delete a State object from the cache, by its uri
    */
-  delete(uri: string) {
+  delete(uri: string): void {
+    const stateInCache = this.cache.get(uri);
+    if (stateInCache) {
+      for (const embeddedItem of stateInCache.getEmbedded()) {
+        if (embeddedItem.links.defaultContext === uri) {
+          this.cache.delete(embeddedItem.uri);
+        }
+      }
+    }
+
     this.cache.delete(uri);
   }
 
