@@ -156,7 +156,11 @@ export default class Client {
     if (contentType in this.contentTypeMap) {
       state = await this.contentTypeMap[contentType][0](uri, response);
     } else if (contentType.startsWith('text/')) {
+      // Default to TextState for any format starting with text/
       state = await textStateFactory(uri, response);
+    } else if (contentType.match(/^application\/[A-Za-z-\.]+\+json/)) {
+      // Default to HalState for any format containing a pattern like application/*+json
+      state = await halStateFactory(uri, response);
     } else {
       state = await binaryStateFactory(uri, response);
     }
