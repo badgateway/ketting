@@ -5,6 +5,10 @@ ChangeLog
 -------------------------
 
 * Support `draft-nottingham-link-hint` on Links.
+* Added: `client.fetcher.advertiseKetting`. Setting this to false will cause
+  Ketting to *not* set the `User-Agent` header.
+* `Resource.patch()` will now return a `State `object if the server responded
+  with `200 OK` and a body.
 
 
 6.0.0-beta.1 (2020-08-10)
