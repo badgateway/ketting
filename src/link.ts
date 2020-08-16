@@ -1,3 +1,5 @@
+import { LinkHints } from 'hal-types';
+
 export type Link = {
   /**
    * Target URI
@@ -48,6 +50,11 @@ export type Link = {
    * If templated is set to true, the href is a templated URI.
    */
   templated?: boolean,
+
+  /**
+   * Link hints, as defined in draft-nottingham-link-hint
+   */
+  hints?: LinkHints;
 
 }
 

@@ -158,7 +158,6 @@ function parseHalLinks(context: string, body: HalResource): Link[] {
 
 }
 
-
 /**
  * Parses a single HAL link from a _links object
  */
