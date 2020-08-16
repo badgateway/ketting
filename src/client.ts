@@ -158,7 +158,7 @@ export default class Client {
     } else if (contentType.startsWith('text/')) {
       // Default to TextState for any format starting with text/
       state = await textStateFactory(uri, response);
-    } else if (contentType.match(/^application\/[A-Za-z-\.]+\+json/)) {
+    } else if (contentType.match(/^application\/[A-Za-z-.]+\+json/)) {
       // Default to HalState for any format containing a pattern like application/*+json
       state = await halStateFactory(uri, response);
     } else {
