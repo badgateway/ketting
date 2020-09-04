@@ -16,34 +16,39 @@ export default class RepresentorHelper {
 
     const defaultTypes: ContentType[] = [
       {
-        mime: 'application/hal+json',
+        mime: 'application/prs.hal-forms+json',
         representor: 'hal',
         q: '1.0',
       },
       {
+        mime: 'application/hal+json',
+        representor: 'hal',
+        q: '0.9',
+      },
+      {
         mime: 'application/vnd.api+json',
         representor: 'jsonapi',
-        q: '0.9',
+        q: '0.8',
       },
       {
         mime: 'application/vnd.siren+json',
         representor: 'siren',
-        q: '0.9',
+        q: '0.8',
       },
       {
         mime: 'application/vnd.collection+json',
         representor: 'collection-json',
-        q: '0.9',
+        q: '0.8',
       },
       {
         mime: 'application/json',
         representor: 'hal',
-        q: '0.8',
+        q: '0.7',
       },
       {
         mime: 'text/html',
         representor: 'html',
-        q: '0.7',
+        q: '0.6',
       }
 
     ];
