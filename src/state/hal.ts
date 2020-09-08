@@ -271,7 +271,7 @@ function parseHalForm(context: string, templ: HalFormsTemplate): (client: Client
       templ.properties ? templ.properties.map( prop => parseHalField(prop)) : [],
     );
 
-  }
+  };
 
 }
 
