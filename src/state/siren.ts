@@ -3,6 +3,7 @@ import { parseLink } from '../http/util';
 import { Link, Links } from '../link';
 import { resolve } from '../util/uri';
 import { Action, ActionNotFound, SimpleAction } from '../action';
+import { Field } from '../field';
 
 /**
  * Represents a resource state in the Siren format
@@ -52,6 +53,7 @@ export class SirenState<T> extends BaseState<T> {
           action.method || 'GET',
           resolve(this.uri, action.href),
           action.type || 'application/x-www-form-urlencoded',
+          action.fields ? action.fields.map( f => sirenFieldToField(f)) : []
         );
       }
     }
@@ -71,6 +73,17 @@ export class SirenState<T> extends BaseState<T> {
     );
 
   }
+
+}
+
+export function sirenFieldToField(input: SirenField): Field {
+
+  return {
+    name: input.name,
+    type: input.type || 'text',
+    required: false,
+    readOnly: false,
+  };
 
 }
 

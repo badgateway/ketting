@@ -1,11 +1,17 @@
 import { State } from './state';
 import * as qs from 'querystring';
 import Client from './client';
+import { Field } from './field';
 
 /**
  * An action represents a hypermedia form submission or action.
  */
 export interface Action<T> {
+
+  /**
+   * Returns the list of fields associated to an action
+   */
+  getFields(): Field[]
 
   /**
    * Execute the action or submit the form.
@@ -16,8 +22,17 @@ export interface Action<T> {
 
 export class SimpleAction<TFormData> {
 
-  constructor(public client: Client, public method: string, public href:string, public type: string) {
+  constructor(
+    public client: Client,
+    public method: string,
+    public href:string,
+    public type: string,
+    public fields: Field[]
+  ) {
+  }
 
+  getFields(): Field[] {
+    return this.fields;
   }
 
   /**
