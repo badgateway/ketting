@@ -1,10 +1,18 @@
 ChangeLog
 =========
 
+5.2.2 (2020-09-08)
+------------------
+
+* Add `application/prs.hal-forms+json` to list of mime types. (@reda-alaoui).
+* Compiles in full Typescript strict mode.
+
+
 5.2.1 (2020-03-03)
 ------------------
 
 * Use the `title=` attribute from the HTTP Link header, if it exists.
+
 
 5.2.0 (2020-02-17)
 ------------------
