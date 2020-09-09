@@ -8,7 +8,7 @@ clean:
 
 .PHONY: test
 test: lint
-	./node_modules/.bin/nyc mocha
+	./node_modules/.bin/nyc ./node_modules/.bin/mocha
 
 .PHONY: test-debug
 test-debug:
