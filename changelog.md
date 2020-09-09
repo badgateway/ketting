@@ -1,6 +1,13 @@
 ChangeLog
 =========
 
+6.0.1 (2020-09-09)
+------------------
+
+* Quick re-release. Some files were left in the `dist/` directory that were
+  not cleaned up.
+
+
 6.0.0 (2020-09-09)
 ------------------
 
