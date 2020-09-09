@@ -27,6 +27,14 @@ describe('Representor Helper', () => {
 
     });
 
+    it('should return a Hal representor when requested', () => {
+
+      const helper = new Helper([]);
+      const representor = helper.create('/foo', 'application/prs.hal-forms+json', null, new Map());
+      expect(representor).to.be.instanceof(Hal);
+
+    });
+
     it('should return a Siren representor when requested', () => {
 
       const helper = new Helper([]);
