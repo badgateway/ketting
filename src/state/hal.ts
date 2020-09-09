@@ -1,13 +1,24 @@
 import { BaseState } from './base-state';
-import { HalResource, HalLink } from 'hal-types';
+import { HalResource, HalLink, HalFormsTemplate, HalFormsProperty } from 'hal-types';
 import { parseLink } from '../http/util';
 import { Link, Links } from '../link';
 import { resolve } from '../util/uri';
+import { Action, ActionNotFound, SimpleAction } from '../action';
+import Client from '../client';
+import { Field } from '../field';
 
 /**
  * Represents a resource state in the HAL format
  */
 export class HalState<T = any> extends BaseState<T> {
+
+  private halForm?: (client: Client) => Action<any>;
+
+  constructor(uri: string, body: T, headers: Headers, links: Links, embedded?: HalState[], halForm?: (client: Client) => Action<any>) {
+    super(uri, body, headers, links, embedded);
+
+    this.halForm = halForm;
+  }
 
   serializeBody(): string {
 
@@ -60,6 +71,20 @@ export class HalState<T = any> extends BaseState<T> {
 
   }
 
+  /**
+   * Return an action by name.
+   *
+   * If the format provides a default action, the name may be omitted.
+   */
+  action<TFormData = any>(name?: string): Action<TFormData> {
+
+    if (!this.halForm || name !== 'action' || name !== undefined) {
+      throw new ActionNotFound('This State defines no action');
+    }
+    return this.halForm(this.client);
+
+  }
+
 }
 
 /**
@@ -76,8 +101,11 @@ export const factory = async (uri: string, response: Response): Promise<HalState
   const {
     _embedded,
     _links,
+    _templates,
     ...newBody
   } = body;
+
+  const halForm: HalFormsTemplate|undefined = body._templates?.default;
 
   return new HalState(
     uri,
@@ -85,6 +113,7 @@ export const factory = async (uri: string, response: Response): Promise<HalState
     response.headers,
     links,
     parseHalEmbedded(uri, body, response.headers),
+    halForm ? parseHalForm(uri, halForm) : undefined
   );
 
 };
@@ -227,5 +256,35 @@ function parseHalEmbedded(context: string, body: HalResource, headers: Headers):
   }
 
   return result;
+
+}
+
+function parseHalForm(context: string, templ: HalFormsTemplate): (client: Client) => Action<any> {
+
+  return (client: Client) => {
+
+    return new SimpleAction(
+      client,
+      templ.method,
+      context,
+      templ.contentType || 'application/json',
+      templ.properties ? templ.properties.map( prop => parseHalField(prop)) : [],
+    );
+
+  };
+
+}
+
+function parseHalField(halField: HalFormsProperty): Field {
+
+  return {
+    name: halField.name,
+    type: 'text',
+    required: halField.required || false,
+    readOnly: halField.readOnly || false,
+    value: halField.value,
+    pattern: halField.regex ? new RegExp(halField.regex) : undefined,
+    label: halField.prompt,
+  };
 
 }

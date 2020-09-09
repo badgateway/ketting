@@ -1,4 +1,4 @@
-Ketting - A hypermedia client for javascript
+Ketting 🔗 - A hypermedia client for javascript
 ============================================
 
 * Go to the [Wiki][9] for full documentation.

@@ -74,6 +74,7 @@ export class HtmlState extends BaseState<string> {
       resultForm.method || 'GET',
       resolve(this.uri, resultForm.action),
       resultForm.enctype || 'application/x-www-form-urlencoded',
+      [],
     );
 
   }
