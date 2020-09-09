@@ -1,6 +1,14 @@
 ChangeLog
 =========
 
+6.0.0 (2020-09-09)
+------------------
+
+* New major release!
+* Added support for [Siren][1] action fields.
+* Added support for [HAL Forms][4].
+
+
 6.0.0-beta.2 (2020-08-15)
 -------------------------
 
@@ -717,3 +725,4 @@ ChangeLog
 [2]: https://tools.ietf.org/html/draft-nottingham-linked-cache-inv-04
 [3]: https://tools.ietf.org/html/draft-pot-prefer-push
 [4]: http://amundsen.com/media-types/collection/format/
+[5]: http://rwcbook.github.io/hal-forms/

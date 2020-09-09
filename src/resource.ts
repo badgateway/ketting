@@ -354,6 +354,8 @@ export class Resource<T = any> extends EventEmitter {
   }
 }
 
+// eslint doesn't like that we have a generic T but not using it.
+// eslint-disable-next-line
 export declare interface Resource<T = any> {
 
   /**
