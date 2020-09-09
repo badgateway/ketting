@@ -105,7 +105,7 @@ export const factory = async (uri: string, response: Response): Promise<HalState
     ...newBody
   } = body;
 
-  const halForm: HalFormsTemplate|undefined = body._templates.default;
+  const halForm: HalFormsTemplate|undefined = body._templates?.default;
 
   return new HalState(
     uri,
