@@ -61,6 +61,8 @@ export abstract class BaseState<T> implements State<T> {
     const contentHeaderNames = [
       'Content-Type',
       'Content-Language',
+      'ETag',
+      'Last-Modified',
     ];
 
     const result: {[name: string]: string} = {};
