@@ -227,6 +227,16 @@ describe('HAL representor', () => {
     });
 
   });
+  it('should handle JSON documents that are arrays', async () => {
+
+    const hal = await callFactory([
+      1, 2, 3
+    ]);
+
+    expect(hal.links.getAll()).to.eql([]);
+    expect(hal.data).to.eql([1, 2, 3]);
+
+  });
 
 });
 

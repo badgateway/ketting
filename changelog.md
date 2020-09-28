@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+6.0.2 (2020-09-28)
+------------------
+
+* #248: Parse JSON objects that have an array at the top-level.
+
+
 6.0.1 (2020-09-09)
 ------------------
 

@@ -90,11 +90,23 @@ export class HalState<T = any> extends BaseState<T> {
 /**
  * Turns a HTTP response into a HalState
  */
-export const factory = async (uri: string, response: Response): Promise<HalState<HalResource>> => {
+export const factory = async (uri: string, response: Response): Promise<HalState> => {
 
   const body = await response.json();
-
   const links = parseLink(uri, response.headers.get('Link'));
+
+  // The HAL factory is also respondible for plain JSON, which might be an
+  // array.
+  if (Array.isArray(body)) {
+    return new HalState(
+      uri,
+      body,
+      response.headers,
+      links,
+      [],
+    );
+  }
+
   links.add(...parseHalLinks(uri, body));
 
   // Remove _links and _embedded from body
