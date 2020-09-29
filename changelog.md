@@ -5,6 +5,8 @@ ChangeLog
 ------------------
 
 * #248: Parse JSON objects that have an array at the top-level.
+* #257: `ETag` and `Last-Modified` are now treated as 'Content headers', which
+  means they will get returned from `getContentHeaders()`.
 
 
 6.0.1 (2020-09-09)
