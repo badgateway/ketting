@@ -1,6 +1,16 @@
 ChangeLog
 =========
 
+6.0.3 (2020-09-30)
+------------------
+
+* #241: Add `application/prs.hal-forms+json` to Accept header and treat as
+  HAL (@reda-alaoui).
+* #260: `action()` could not be successfully called on a HAL action.
+  (@reda-alaoui).
+* Add `action()` function to `State` interface.
+
+
 6.0.2 (2020-09-28)
 ------------------
 
