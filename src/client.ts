@@ -38,12 +38,13 @@ export default class Client {
   contentTypeMap: {
     [mimeType: string]: [StateFactory<any>, string],
   } = {
-    'application/hal+json': [halStateFactory, '1.0'],
-    'application/vnd.api+json': [jsonApiStateFactory, '0.9'],
-    'application/vnd.siren+json': [sirenStateFactory, '0.9'],
-    'application/vnd.collection+json': [cjStateFactory, '0.9'],
-    'application/json': [halStateFactory, '0.8'],
-    'text/html': [htmlStateFactory, '0.7'],
+    'application/prs.hal-forms+json': [halStateFactory, '1.0'],
+    'application/hal+json': [halStateFactory, '0.9'],
+    'application/vnd.api+json': [jsonApiStateFactory, '0.8'],
+    'application/vnd.siren+json': [sirenStateFactory, '0.8'],
+    'application/vnd.collection+json': [cjStateFactory, '0.8'],
+    'application/json': [halStateFactory, '0.7'],
+    'text/html': [htmlStateFactory, '0.6'],
   }
 
   /**
