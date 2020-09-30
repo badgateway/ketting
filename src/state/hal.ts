@@ -78,7 +78,7 @@ export class HalState<T = any> extends BaseState<T> {
    */
   action<TFormData = any>(name?: string): Action<TFormData> {
 
-    if (!this.halForm || name !== 'action' || name !== undefined) {
+    if (!this.halForm || name !== undefined) {
       throw new ActionNotFound('This State defines no action');
     }
     return this.halForm(this.client);
