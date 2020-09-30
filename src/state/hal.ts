@@ -85,6 +85,18 @@ export class HalState<T = any> extends BaseState<T> {
 
   }
 
+  /**
+   * Returns all actions
+   */
+  actions(): Action<any>[] {
+ 
+    if (this.halForm) {
+      return [this.halForm(this.client)]
+    }
+    return [];
+
+  }
+
 }
 
 /**

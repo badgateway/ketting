@@ -69,13 +69,16 @@ export class HtmlState extends BaseState<string> {
     if (!resultForm) {
       throw new ActionNotFound(`Form with name "${name}" not found.`);
     }
-    return new SimpleAction(
-      this.client,
-      resultForm.method || 'GET',
-      resolve(this.uri, resultForm.action),
-      resultForm.enctype || 'application/x-www-form-urlencoded',
-      [],
-    );
+    return formToAction(this.client, this.uri, resultForm);
+
+  }
+
+  /**
+   * Returns all actions
+   */
+  actions(): Action<any>[] {
+
+    return this.forms.map( form => formToAction(this.client, this.uri, form));
 
   }
 
@@ -102,3 +105,14 @@ export const factory = async (uri: string, response: Response): Promise<HtmlStat
   );
 
 };
+
+function formToAction<T>(client: Client, uri: string, form: HtmlForm): Action<T> {
+
+  return new SimpleAction(
+    client,
+    form.method || 'GET',
+    resolve(uri, form.action),
+    form.enctype || 'application/x-www-form-urlencoded',
+    [],
+  );
+}
