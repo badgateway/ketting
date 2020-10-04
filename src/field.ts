@@ -68,4 +68,4 @@ export type Week = BaseField<'week', string>
 export type Field = Checkbox | Color | Date | DateTime | DateTimeLocal | Email
 // eslint-disable-next-line
   | File | Hidden | Number | Month | Password | Radio | Range | Search | Tel
-  | Text | Time | Url | Week; 
+  | Text | Time | Url | Week;

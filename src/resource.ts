@@ -369,7 +369,7 @@ export declare interface Resource<T = any> {
    * and when updateCache() was used.
    */
   on(event: 'update', listener: (state: State) => void) : this
-  
+
   /**
    * Subscribe to the 'stale' event.
    *

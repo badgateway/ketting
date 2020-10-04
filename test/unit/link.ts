@@ -57,7 +57,7 @@ describe('Links object', () => {
 
   it('should return the correct value from "has()"', () => {
 
-    const links = new Links('http://base.example/', [ 
+    const links = new Links('http://base.example/', [
       {
         context: 'http://base.example',
         href: 'http://a.example',

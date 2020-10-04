@@ -41,7 +41,7 @@ export interface State<T = any> {
   /**
    * Returns all actions
    */
-  actions(): Action[]; 
+  actions(): Action[];
 
   /**
    * Returns a serialization of the state that can be used in a HTTP

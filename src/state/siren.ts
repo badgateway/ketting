@@ -2,26 +2,13 @@ import { BaseState } from './base-state';
 import { parseLink } from '../http/util';
 import { Link, Links } from '../link';
 import { resolve } from '../util/uri';
-import { Action, ActionNotFound, SimpleAction } from '../action';
+import { ActionInfo } from '../action';
 import { Field } from '../field';
-import Client from '../client';
 
 /**
  * Represents a resource state in the Siren format
  */
 export class SirenState<T> extends BaseState<T> {
-
-  private sirenActions: SirenAction[];
-
-  constructor(uri: string, data: SirenEntity<T>, headers: Headers, links: Links, embedded?: SirenState<any>[]) {
-
-    const properties = data.properties;
-    const actions = data.actions;
-
-    super(uri, properties, headers, links, embedded);
-    this.sirenActions = actions || [];
-
-  }
 
   /**
    * Returns a serialization of the state that can be used in a HTTP
@@ -36,44 +23,15 @@ export class SirenState<T> extends BaseState<T> {
 
   }
 
-  /**
-   * Return an action by name.
-   *
-   * If the format provides a default action, the name may be omitted.
-   */
-  action<TFormData = any>(name?: string): Action<TFormData> {
-
-    if (name === undefined) {
-      throw new ActionNotFound('Siren doesn\'t define default actions');
-    }
-
-    for(const action of this.sirenActions) {
-      if (action.name === name) {
-        return sirenActionToAction(this.client, this.uri, action);
-      }
-    }
-    throw new ActionNotFound(`Action with name "${name}" not found.`);
-
-  }
-
-  /**
-   * Returns all actions
-   */
-  actions(): Action<any>[] {
-
-    return this.sirenActions.map( action => sirenActionToAction(this.client, this.uri, action));
-
-  }
-
   clone(): SirenState<T> {
 
     return new SirenState(
       this.uri,
-      {
-        properties: this.data
-      },
+      this.data,
       new Headers(this.headers),
       new Links(this.uri, this.links),
+      [],
+      this.actionInfo,
     );
 
   }
@@ -87,17 +45,18 @@ export class SirenState<T> extends BaseState<T> {
  */
 export const factory = async (uri: string, response: Response): Promise<SirenState<any>> => {
 
-  const body = await response.json();
+  const body:SirenEntity<any> = await response.json();
 
   const links = parseLink(uri, response.headers.get('Link'));
   links.add(...parseSirenLinks(uri, body));
 
   return new SirenState(
     uri,
-    body,
+    body.properties,
     response.headers,
     links,
     parseSirenEmbedded(uri, body, response.headers),
+    body.actions ? body.actions.map( action => parseSirenAction(uri, action) ) : [],
   );
 
 };
@@ -282,15 +241,17 @@ function isSubEntity(input: SirenLink | SirenSubEntity): input is SirenSubEntity
 
 }
 
-function sirenActionToAction(client: Client, uri: string, action: SirenAction): Action<any> {
-  return new SimpleAction(
-    client,
-    action.method || 'GET',
-    resolve(uri, action.href),
-    action.type || 'application/x-www-form-urlencoded',
-    action.fields ? action.fields.map( f => sirenFieldToField(f)) : []
-  );
+function parseSirenAction(uri: string, action: SirenAction): ActionInfo {
+  return {
+    uri: resolve(uri, action.href),
+    name: action.name,
+    title: action.title,
+    method: action.method || 'GET',
+    contentType: action.type || 'application/x-www-form-urlencoded',
+    fields: action.fields ? action.fields.map( field => sirenFieldToField(field)) : [],
+  };
 }
+
 function sirenFieldToField(input: SirenField): Field {
   return {
     name: input.name,
