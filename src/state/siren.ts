@@ -4,13 +4,14 @@ import { Link, Links } from '../link';
 import { resolve } from '../util/uri';
 import { Action, ActionNotFound, SimpleAction } from '../action';
 import { Field } from '../field';
+import Client from '../client';
 
 /**
  * Represents a resource state in the Siren format
  */
 export class SirenState<T> extends BaseState<T> {
 
-  private actions: SirenAction[];
+  private sirenActions: SirenAction[];
 
   constructor(uri: string, data: SirenEntity<T>, headers: Headers, links: Links, embedded?: SirenState<any>[]) {
 
@@ -18,7 +19,7 @@ export class SirenState<T> extends BaseState<T> {
     const actions = data.actions;
 
     super(uri, properties, headers, links, embedded);
-    this.actions = actions || [];
+    this.sirenActions = actions || [];
 
   }
 
@@ -46,18 +47,21 @@ export class SirenState<T> extends BaseState<T> {
       throw new ActionNotFound('Siren doesn\'t define default actions');
     }
 
-    for(const action of this.actions) {
+    for(const action of this.sirenActions) {
       if (action.name === name) {
-        return new SimpleAction(
-          this.client,
-          action.method || 'GET',
-          resolve(this.uri, action.href),
-          action.type || 'application/x-www-form-urlencoded',
-          action.fields ? action.fields.map( f => sirenFieldToField(f)) : []
-        );
+        return sirenActionToAction(this.client, this.uri, action);
       }
     }
     throw new ActionNotFound(`Action with name "${name}" not found.`);
+
+  }
+
+  /**
+   * Returns all actions
+   */
+  actions(): Action<any>[] {
+
+    return this.sirenActions.map( action => sirenActionToAction(this.client, this.uri, action));
 
   }
 
@@ -76,16 +80,7 @@ export class SirenState<T> extends BaseState<T> {
 
 }
 
-export function sirenFieldToField(input: SirenField): Field {
 
-  return {
-    name: input.name,
-    type: input.type || 'text',
-    required: false,
-    readOnly: false,
-  };
-
-}
 
 /**
  * Turns a HTTP response into a SirenState
@@ -285,4 +280,22 @@ function isSubEntity(input: SirenLink | SirenSubEntity): input is SirenSubEntity
 
   return (input as any).href === undefined;
 
+}
+
+function sirenActionToAction(client: Client, uri: string, action: SirenAction): Action<any> {
+  return new SimpleAction(
+    client,
+    action.method || 'GET',
+    resolve(uri, action.href),
+    action.type || 'application/x-www-form-urlencoded',
+    action.fields ? action.fields.map( f => sirenFieldToField(f)) : []
+  );
+}
+function sirenFieldToField(input: SirenField): Field {
+  return {
+    name: input.name,
+    type: input.type || 'text',
+    required: false,
+    readOnly: false,
+  };
 }

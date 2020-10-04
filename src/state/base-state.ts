@@ -88,6 +88,15 @@ export abstract class BaseState<T> implements State<T> {
   }
 
   /**
+   * Returns all actions
+   */
+  actions(): Action[] {
+  
+    return [];
+
+  }
+
+  /**
    * Returns a serialization of the state that can be used in a HTTP
    * response.
    *

@@ -1,6 +1,6 @@
 {
   "name": "ketting",
-  "version": "6.0.2",
+  "version": "6.0.3",
   "description": "Opiniated HATEAOS / Rest client.",
   "main": "dist/index.js",
   "browser": "browser/ketting.min.js",

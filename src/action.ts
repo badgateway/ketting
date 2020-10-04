@@ -6,7 +6,7 @@ import { Field } from './field';
 /**
  * An action represents a hypermedia form submission or action.
  */
-export interface Action<T> {
+export interface Action<T extends Record<string, any> = Record<string, any>> {
 
   /**
    * Returns the list of fields associated to an action
