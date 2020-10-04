@@ -1,6 +1,13 @@
 ChangeLog
 =========
 
+6.0.4 (2020-10-04)
+------------------
+
+* State objects now have an `actions()` method that return all defined
+  actions.
+
+
 6.0.3 (2020-09-30)
 ------------------
 
