@@ -90,7 +90,7 @@ export abstract class BaseState<T> implements State<T> {
   /**
    * Returns all actions
    */
-  actions(): Action<any>[] {
+  actions(): Action[] {
   
     return [];
 

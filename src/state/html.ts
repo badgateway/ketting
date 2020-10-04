@@ -4,6 +4,7 @@ import { parseHtml, HtmlForm } from '../util/html';
 import { Links } from '../link';
 import { Action, SimpleAction, ActionNotFound } from '../action';
 import { resolve } from '../util/uri';
+import Client from '../client';
 
 /**
  * Represents a resource state in the HAL format
@@ -76,7 +77,7 @@ export class HtmlState extends BaseState<string> {
   /**
    * Returns all actions
    */
-  actions(): Action<any>[] {
+  actions(): Action[] {
 
     return this.forms.map( form => formToAction(this.client, this.uri, form));
 

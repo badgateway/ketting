@@ -12,9 +12,9 @@ import { Field } from '../field';
  */
 export class HalState<T = any> extends BaseState<T> {
 
-  private halForm?: (client: Client) => Action<any>;
+  private halForm?: (client: Client) => Action;
 
-  constructor(uri: string, body: T, headers: Headers, links: Links, embedded?: HalState[], halForm?: (client: Client) => Action<any>) {
+  constructor(uri: string, body: T, headers: Headers, links: Links, embedded?: HalState[], halForm?: (client: Client) => Action) {
     super(uri, body, headers, links, embedded);
 
     this.halForm = halForm;
@@ -88,10 +88,10 @@ export class HalState<T = any> extends BaseState<T> {
   /**
    * Returns all actions
    */
-  actions(): Action<any>[] {
+  actions(): Action[] {
  
     if (this.halForm) {
-      return [this.halForm(this.client)]
+      return [this.halForm(this.client)];
     }
     return [];
 
@@ -283,7 +283,7 @@ function parseHalEmbedded(context: string, body: HalResource, headers: Headers):
 
 }
 
-function parseHalForm(context: string, templ: HalFormsTemplate): (client: Client) => Action<any> {
+function parseHalForm(context: string, templ: HalFormsTemplate): (client: Client) => Action {
 
   return (client: Client) => {
 

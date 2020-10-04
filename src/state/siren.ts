@@ -4,6 +4,7 @@ import { Link, Links } from '../link';
 import { resolve } from '../util/uri';
 import { Action, ActionNotFound, SimpleAction } from '../action';
 import { Field } from '../field';
+import Client from '../client';
 
 /**
  * Represents a resource state in the Siren format
@@ -281,7 +282,7 @@ function isSubEntity(input: SirenLink | SirenSubEntity): input is SirenSubEntity
 
 }
 
-function sirenActionToAction(client: Client, uri: string, action: SirenAction): Action {
+function sirenActionToAction(client: Client, uri: string, action: SirenAction): Action<any> {
   return new SimpleAction(
     client,
     action.method || 'GET',

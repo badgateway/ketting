@@ -39,6 +39,11 @@ export interface State<T = any> {
   action<TFormData = any>(name?: string): Action<TFormData>;
 
   /**
+   * Returns all actions
+   */
+  actions(): Action[]; 
+
+  /**
    * Returns a serialization of the state that can be used in a HTTP
    * response.
    *
