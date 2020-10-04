@@ -42,7 +42,7 @@ export class SirenState<T> extends BaseState<T> {
 /**
  * Turns a HTTP response into a SirenState
  */
-export const factory = async (uri: string, response: Response): Promise<SirenState<SirenEntity<any>>> => {
+export const factory = async (uri: string, response: Response): Promise<SirenState<any>> => {
 
   const body:SirenEntity<any> = await response.json();
 
@@ -51,7 +51,7 @@ export const factory = async (uri: string, response: Response): Promise<SirenSta
 
   return new SirenState(
     uri,
-    body,
+    body.properties,
     response.headers,
     links,
     parseSirenEmbedded(uri, body, response.headers),
@@ -226,7 +226,7 @@ function parseSirenSubEntityAsEmbedded(contextUri: string, subEntity: SirenSubEn
 
   return new SirenState(
     subEntityUrl,
-    subEntity,
+    subEntity.properties,
     headers,
     new Links(selfHref, parseSirenLinks(selfHref, subEntity)),
 
