@@ -39,11 +39,10 @@ export class SirenState<T> extends BaseState<T> {
 }
 
 
-
 /**
  * Turns a HTTP response into a SirenState
  */
-export const factory = async (uri: string, response: Response): Promise<SirenState<any>> => {
+export const factory = async (uri: string, response: Response): Promise<SirenState<SirenEntity<any>>> => {
 
   const body:SirenEntity<any> = await response.json();
 
@@ -52,7 +51,7 @@ export const factory = async (uri: string, response: Response): Promise<SirenSta
 
   return new SirenState(
     uri,
-    body.properties,
+    body,
     response.headers,
     links,
     parseSirenEmbedded(uri, body, response.headers),
