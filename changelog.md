@@ -1,6 +1,17 @@
 ChangeLog
 =========
 
+6.1.0 (2020-10-04)
+------------------
+
+* Large changes in the actions/form system. This should still be considered
+  experimental and could cause some minor BC breaks.
+* Actions are now effectively a serialization of a HTML form, and it's now
+  possible to introspect information such as the `target`, `method`,
+  `contentType`, etc.
+* Some refactoring in the `State` objects, simplifiying these significantly.
+
+
 6.0.4 (2020-10-04)
 ------------------
 
