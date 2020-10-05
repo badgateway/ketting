@@ -44,6 +44,13 @@ export interface State<T = any> {
   actions(): Action[];
 
   /**
+   * Checks if the specified action exists.
+   *
+   * If no name is given, checks if _any_ action exists.
+   */
+  hasAction(name?: string): boolean;
+
+  /**
    * Returns a serialization of the state that can be used in a HTTP
    * response.
    *

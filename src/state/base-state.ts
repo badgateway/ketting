@@ -91,6 +91,23 @@ export abstract class BaseState<T> implements State<T> {
   }
 
   /**
+   * Checks if the specified action exists.
+   *
+   * If no name is given, checks if _any_ action exists.
+   */
+  hasAction(name?: string): boolean {
+
+    if (name===undefined) return this.actionInfo.length>0;
+    for(const action of this.actionInfo) {
+      if (name === action.name) {
+        return true;
+      }
+    }
+    return false;
+
+  }
+
+  /**
    * Returns a serialization of the state that can be used in a HTTP
    * response.
    *
