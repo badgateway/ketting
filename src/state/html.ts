@@ -2,23 +2,13 @@ import { BaseState } from './base-state';
 import { parseLink } from '../http/util';
 import { parseHtml, HtmlForm } from '../util/html';
 import { Links } from '../link';
-import { Action, SimpleAction, ActionNotFound } from '../action';
+import { ActionInfo } from '../action';
 import { resolve } from '../util/uri';
-import Client from '../client';
 
 /**
  * Represents a resource state in the HAL format
  */
 export class HtmlState extends BaseState<string> {
-
-  private forms: HtmlForm[];
-
-  constructor(uri: string, body: string, headers: Headers, links: Links, forms: HtmlForm[]) {
-
-    super(uri, body, headers, links);
-    this.forms = forms;
-
-  }
 
   serializeBody(): string {
 
@@ -33,56 +23,13 @@ export class HtmlState extends BaseState<string> {
       this.data,
       new Headers(this.headers),
       new Links(this.uri, this.links),
-      this.forms,
+      [],
+      this.actionInfo,
     );
     state.client = this.client;
     return state;
 
   }
-
-  /**
-   * Return an action by name.
-   *
-   * Actions in HTML are HTML <form> tags.
-   *
-   * If no name is given, the first HTML form is returned.
-   */
-  action<TFormData = any>(name?: string): Action<TFormData> {
-
-    let resultForm: HtmlForm | null = null;
-    if (name === undefined) {
-      if (this.forms.length === 0) {
-        throw new ActionNotFound('This HTML state does not define any forms.');
-      }
-      resultForm = this.forms[0];
-    } else{
-      for (const form of this.forms) {
-        if (form.rel === name) {
-          resultForm = form;
-        }
-        if (form.id === name && !resultForm) {
-          // Only using the 'id' if we didnt already find one by rel.
-          resultForm = form;
-        }
-      }
-    }
-
-    if (!resultForm) {
-      throw new ActionNotFound(`Form with name "${name}" not found.`);
-    }
-    return formToAction(this.client, this.uri, resultForm);
-
-  }
-
-  /**
-   * Returns all actions
-   */
-  actions(): Action[] {
-
-    return this.forms.map( form => formToAction(this.client, this.uri, form));
-
-  }
-
 
 }
 
@@ -102,18 +49,20 @@ export const factory = async (uri: string, response: Response): Promise<HtmlStat
     body,
     response.headers,
     links,
-    htmlResult.forms,
+    [],
+    htmlResult.forms.map(form => formToAction(uri, form)),
   );
 
 };
 
-function formToAction<T>(client: Client, uri: string, form: HtmlForm): Action<T> {
+function formToAction(context: string, form: HtmlForm): ActionInfo {
 
-  return new SimpleAction(
-    client,
-    form.method || 'GET',
-    resolve(uri, form.action),
-    form.enctype || 'application/x-www-form-urlencoded',
-    [],
-  );
+  return {
+    uri: resolve(context, form.action),
+    name: form.rel || form.id || '',
+    method: form.method || 'GET',
+    contentType: form.enctype || 'application/x-www-form-urlencoded',
+    // Fields are not yet supported :(
+    fields: [],
+  };
 }

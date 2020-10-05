@@ -1,49 +1,31 @@
 import { State } from './interface';
 import { Links } from '../link';
 import Client from '../client';
-import { Action, ActionNotFound } from '../action';
+import { Action, ActionNotFound, ActionInfo, SimpleAction } from '../action';
 
+/**
+ * The Base State provides a convenient way to implement a new State type.
+ */
 export abstract class BaseState<T> implements State<T> {
 
   /**
-   * The URI associated with this state
+   * Timestamp of when the State was first generated
    */
-  uri: string;
-
-  /**
-   * Represents the body of the HTTP response.
-   *
-   * In the case of a JSON response, this will be deserialized
-   */
-  data: T
-
-  /**
-   * The full list of HTTP headers that were sent with the response.
-   */
-  headers: Headers;
-
-  /**
-   * All links associated with the resource.
-   */
-  links: Links;
+  timestamp: number;
 
   /**
    * Reference to main client that created this state
    */
   client!: Client;
 
-  /**
-   * Embedded resoureces
-   */
-  protected embedded: State[];
+  constructor(
+    public uri: string,
+    public data: T,
+    public headers: Headers,
+    public links: Links,
+    protected embedded: State[] = [],
+    protected actionInfo: ActionInfo[] = []) {
 
-  constructor(uri: string, data: T, headers: Headers, links: Links, embedded?: State[]) {
-
-    this.uri = uri;
-    this.data = data;
-    this.headers = headers;
-    this.links = links;
-    this.embedded = embedded || [];
     this.timestamp = Date.now();
 
   }
@@ -79,10 +61,22 @@ export abstract class BaseState<T> implements State<T> {
   /**
    * Return an action by name.
    *
-   * If the format provides a default action, the name may be omitted.
+   * If no name is given, the first action is returned. This is useful for
+   * formats that only supply 1 action, and no name.
    */
   action<TFormData = any>(name?: string): Action<TFormData> {
 
+    if (!this.actionInfo.length) {
+      throw new ActionNotFound('This State does not define any actions');
+    }
+    if (name === undefined) {
+      return new SimpleAction(this.client, this.actionInfo[0]);
+    }
+    for(const action of this.actionInfo) {
+      if (action.name === name) {
+        return new SimpleAction(this.client, this.actionInfo[0]);
+      }
+    }
     throw new ActionNotFound('This State defines no action');
 
   }
@@ -91,8 +85,25 @@ export abstract class BaseState<T> implements State<T> {
    * Returns all actions
    */
   actions(): Action[] {
-  
-    return [];
+
+    return this.actionInfo.map(action => new SimpleAction(this.client, action));
+
+  }
+
+  /**
+   * Checks if the specified action exists.
+   *
+   * If no name is given, checks if _any_ action exists.
+   */
+  hasAction(name?: string): boolean {
+
+    if (name===undefined) return this.actionInfo.length>0;
+    for(const action of this.actionInfo) {
+      if (name === action.name) {
+        return true;
+      }
+    }
+    return false;
 
   }
 
@@ -119,11 +130,6 @@ export abstract class BaseState<T> implements State<T> {
     return this.embedded;
 
   }
-
-  /**
-   * Timestamp of when the State was first generated
-   */
-  timestamp: number;
 
   abstract clone(): State<T>;
 

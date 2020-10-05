@@ -33,6 +33,7 @@
           }
       ],
       "semi": ["error", "always"],
+      "no-trailing-spaces": "error",
       "no-unused-vars": ["error",
           {
             "args": "none",
@@ -45,7 +46,6 @@
           "ts-expect-error": "allow-with-description"
         }
       ],
-      "@typescript-eslint/no-explicit-any" : 0,
-      "@typescript-eslint/no-this-alias": 0
+      "@typescript-eslint/no-explicit-any" : 0
   }
 }

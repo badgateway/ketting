@@ -224,7 +224,7 @@ function getFakeResource(uri?: string, type?: string): Resource<{ firstGet: bool
   // if a get() was issued previously. This will be used for
   // testing prefetch.
   let firstGet = true;
-  
+
   fakeResource.get = async(getOptions: any) => {
 
     fakeResource.lastGetOptions = getOptions;
