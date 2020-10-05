@@ -1,17 +1,64 @@
+/**
+ * A Field describes a single field in an action or form.
+ *
+ * Fields can be used to automatically render forms or other UIs based on
+ * hypermedia actions.
+ */
 export interface BaseField<TType extends string, TValue> {
+  /**
+   * Name of the field.
+   *
+   * Typically this is the property that will get sent to a server.
+   */
   name: string;
+
+  /**
+   * Type describes the type of the property.
+   *
+   * This is similar to the HTML5 "type" attribute on forms.
+   */
   type: TType,
+
+  /**
+   * The current (pre-filed) value on the form.
+   */
   value?: TValue;
+
+  /**
+   * This could be used to describe a sample value.
+   */
   placeholder?: TValue;
+
+  /**
+   * Whether this field is required for submitting the form.
+   */
   required: boolean;
+
+  /**
+   * Render the field as read-only.
+   */
   readOnly: boolean;
+
+  /**
+   * A human-readable label for the field.
+   */
   label?: string;
 }
 
+
+/**
+ * A checkbox basically behaves like a boolean.
+ */
 export type Checkbox = BaseField<'checkbox', boolean>
 
+/**
+ * A color picker.
+ */
 export type Color = BaseField<'color', string>
 
+/**
+ * A 'date' field.
+ */
 export type Date = BaseField<'date', string>
 
 /**
