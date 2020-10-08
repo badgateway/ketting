@@ -1,5 +1,5 @@
-Ketting 🔗 - A hypermedia client for javascript
-============================================
+![Logo](logo_badge_ketting.png) Ketting - A hypermedia client for javascript
+============================================================================
 
 * Go to the [Wiki][9] for full documentation.
 
