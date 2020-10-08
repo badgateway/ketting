@@ -92,7 +92,7 @@ Read further on the [Wiki][9]
 [2]: https://github.com/evert/ketting/wiki/Authentication
 [3]: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API
 
-[4]: https://raw.githubusercontent.com/badgateway/ketting/master/logo-badge-ketting.png
+[4]: https://raw.githubusercontent.com/badgateway/ketting/master/logo.png
 
 [7]: https://github.com/evert/ketting/wiki/Installation
 [8]: https://github.com/evert/ketting/wiki/Getting-Started
