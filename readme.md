@@ -1,5 +1,5 @@
-![Logo](logo_badge_ketting.png) Ketting - A hypermedia client for javascript
-============================================================================
+![Logo][4] Ketting - A hypermedia client for javascript
+=======================================================
 
 * Go to the [Wiki][9] for full documentation.
 
@@ -91,6 +91,8 @@ Read further on the [Wiki][9]
 [1]: https://tools.ietf.org/html/rfc8288 "Web Linking"
 [2]: https://github.com/evert/ketting/wiki/Authentication
 [3]: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API
+
+[4]: https://raw.githubusercontent.com/badgateway/ketting/master/logo-badge-ketting.png
 
 [7]: https://github.com/evert/ketting/wiki/Installation
 [8]: https://github.com/evert/ketting/wiki/Getting-Started
