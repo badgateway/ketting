@@ -50,7 +50,7 @@
     "@types/koa-logger": "^3.1.1",
     "@types/koa-static": "^4.0.1",
     "@types/mocha": "^8.0.3",
-    "@types/node": "^10.17.35",
+    "@types/node": "^14.11.10",
     "@types/node-fetch": "^2.5.7",
     "@types/sax": "^1.2.1",
     "@typescript-eslint/eslint-plugin": "^4.3.0",
