@@ -26,11 +26,7 @@ module.exports = [
           loader: 'awesome-typescript-loader'
         }
       ]
-    },
-    node: {
-      Buffer: false
     }
-
   },
   {
     entry: [
@@ -57,10 +53,6 @@ module.exports = [
           loader: 'awesome-typescript-loader'
         }
       ]
-    },
-    node: {
-      Buffer: false
     }
-
   },
 ];
