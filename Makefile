@@ -33,12 +33,7 @@ watch:
 .PHONY: browserbuild
 browserbuild: tsbuild
 	mkdir -p browser
-	./node_modules/.bin/webpack \
-		--optimize-minimize \
-		-p \
-		--display-modules \
-		--sort-modules-by size
-
+	./node_modules/.bin/webpack
 
 browser/ketting.min.js: browserbuild
 browser/mocha-tests.js: browserbuild
