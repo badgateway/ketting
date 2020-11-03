@@ -1,4 +1,5 @@
 import { LinkHints } from 'hal-types';
+import { resolve } from './util/uri';
 
 export type Link = {
   /**
@@ -155,12 +156,26 @@ export class Links {
   }
 
   /**
-   * Delete all links with the given 'rel'.
+    * Delete all links with the given 'rel'.
+   *
+   * If the second argument is provided, only links that match the href will
+   * be removed.
    */
-  delete(rel: string): void {
+  delete(rel: string, href?: string): void {
+
+    if (href===undefined) {
+      this.store.delete(rel);
+      return;
+    }
+
+    const uris = this.store.get(rel);
+    if (!uris) return;
 
     this.store.delete(rel);
-
+    const absHref = resolve(this.defaultContext, href);
+    this.store.set(rel,
+      uris.filter(uri => resolve(uri) !== absHref)
+    );
   }
 
   /**
