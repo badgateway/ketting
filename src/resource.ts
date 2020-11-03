@@ -192,7 +192,7 @@ export class Resource<T = any> extends EventEmitter {
         if (response.headers.has('location')) {
           return this.go(<string> response.headers.get('location'));
         }
-        throw new Error('Could not follow after a 201 request, because the server did not reply with a Location header');
+        throw new Error('Could not follow after a 201 request, because the server did not reply with a Location header. If you sent a Location header, check if your service is returning "Access-Control-Expose-Headers: Location".');
       case 204 :
       case 205 :
         return this;
