@@ -85,7 +85,7 @@ export type Month = BaseField<'month', string>
 export type Password = BaseField<'password', string>
 
 export interface Radio extends BaseField<'radio', string> {
-  options?: Map<string, string>;
+  options: Map<string, string>;
 }
 
 export interface Range extends BaseField<'range', number> {
