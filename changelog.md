@@ -1,6 +1,15 @@
 ChangeLog
 =========
 
+6.1.1 (2020-11-05)
+------------------
+
+* `state.links.delete()` can now take a `href` argument to delete a specific
+  link from its list.
+* Improvements in error messaging.
+* Upgrade to Webpack 5
+
+
 6.1.0 (2020-10-04)
 ------------------
 
