@@ -47,7 +47,7 @@ export class Resource<T = any> extends EventEmitter {
    */
   get(getOptions?: GetRequestOptions): Promise<State<T>> {
 
-    const state = this.client.cache.get(this.uri);
+    const state = this.getCache();
     if (!state) {
       return this.refresh(getOptions);
     }
@@ -301,6 +301,16 @@ export class Resource<T = any> extends EventEmitter {
   clearCache(): void {
 
     this.client.cache.delete(this.uri);
+
+  }
+
+  /**
+   * Retrieves the current cached resource state, and return `null` if it's
+   * not available.
+   */
+  getCache(): State<T>|null {
+
+    return this.client.cache.get(this.uri);
 
   }
 
