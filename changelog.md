@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+6.1.2 (2020-11-09)
+------------------
+
+* Update the `fetch-mw-oauth2` dependency, which adds an `onAuthError` event.
+
+
 6.1.1 (2020-11-05)
 ------------------
 
