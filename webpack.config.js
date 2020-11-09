@@ -14,7 +14,8 @@ module.exports = [
         // We need an alternative 'querystring', because the default is not
         // 100% compatible
         querystring: 'querystring-browser'
-      }
+      },
+      fallback: { "buffer": false }
     },
 
     devtool: 'source-map',
@@ -42,7 +43,8 @@ module.exports = [
         // We need an alternative 'querystring', because the default is not
         // 100% compatible
         querystring: 'querystring-browser'
-      }
+      },
+      fallback: { "buffer": false }
     },
     mode: 'production',
 
