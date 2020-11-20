@@ -252,10 +252,16 @@ function parseSirenAction(uri: string, action: SirenAction): ActionInfo {
 }
 
 function sirenFieldToField(input: SirenField): Field {
-  return {
+
+  const result: Field = {
     name: input.name,
     type: input.type || 'text',
     required: false,
     readOnly: false,
   };
+
+  if (input.value) {
+    result.value = input.value;
+  }
+  return result;
 }
