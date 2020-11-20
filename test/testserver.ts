@@ -269,7 +269,7 @@ app.use(
       ctx.response.body = '';
 
     })
-    .post((ctx: Context) => {
+    .post((ctx: Context): Promise<void> => {
 
       return new Promise( (res, rej) => {
 
