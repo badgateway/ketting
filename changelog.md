@@ -1,6 +1,16 @@
 ChangeLog
 =========
 
+6.1.3 (2020-11-19)
+------------------
+
+* Add a `getCache()` function to Resource, which allows a user to get the
+  latest Resource State in a synchronous manner.
+* #292: Parse Siren's 'value' property in action fields.
+* `fetch-mw-oauth2` dependency had a bug related to refreshing tokens. This
+  release ships with a version without that bug.
+
+
 6.1.2 (2020-11-09)
 ------------------
 
