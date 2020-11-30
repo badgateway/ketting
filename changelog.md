@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+6.1.4 (2020-11-30)
+------------------
+
+* #302: Templated links without template data don't work.
+
+
 6.1.3 (2020-11-19)
 ------------------
 

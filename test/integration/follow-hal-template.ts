@@ -23,4 +23,12 @@ describe('Following a templated link', async () => {
 
   });
 
+  it('should work even if no variables are specified', async () => {
+
+    hal2 = await ketting.follow('next').follow('prev').follow('templated');
+    expect(hal2).to.be.an.instanceof(Resource);
+    expect(hal2.uri).to.eql('http://localhost:3000/templated.json');
+
+  });
+
 });

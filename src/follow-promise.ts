@@ -173,8 +173,8 @@ export class FollowPromiseOne<T = any> extends FollowPromise<Resource<T>> {
     if (!link) throw new LinkNotFound(`Link with rel ${this.rel} on ${state.uri} not found`);
     let href;
 
-    if (link.templated && this.variables) {
-      href = expand(link, this.variables);
+    if (link.templated) {
+      href = expand(link, this.variables || {});
     } else {
       href = resolve(link);
     }
