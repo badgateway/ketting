@@ -19,7 +19,7 @@ when using it with formats that have support for links, including:
 And it even works with HTML links, and [HTTP Link Headers][1].
 
 Ketting is designed to both work in the browser and in Node.js. Additionally,
-it has [react bindings][ketting-react] that will make it work in a way that's
+it has [react bindings][react-ketting] that will make it work in a way that's
 familiar to Apollo-Client users.
 
 ### Example
@@ -70,12 +70,13 @@ and discover resources and features on the server.
 Supported formats:
 
 * [HAL][hal]
+* [JSON:API][jsonapi] - Understands the `links` object and registers collection
+  members as `item` relationships.
+* [Collection+JSON][coljson]
 * [Siren][siren] - Including support for actions.
 * HTML - Can automatically follow `<link>` and `<a>` element with `rel=`
   attributes, and submit HTML `<form>`s.
 * [HTTP Link header][1] - automatically registers as links regardless of format.
-* [JSON:API][jsonapi] - Understands the `links` object and registers collection
-  members as `item` relationships.
 * [application/problem+json][problem] - Will extract useful information from
   the standard problem object and embed them in exception objects.
 
