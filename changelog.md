@@ -1,6 +1,15 @@
 ChangeLog
 =========
 
+6.2.0 (2020-12-01)
+------------------
+
+* Updated `fetch-mw-oauth2`, which has a few new features:
+  * Fixed a race condition where two 401's in quick succession could result
+    in two OAuth2 refresh requests, ultimately causing 1 to fail.
+  * Preemptively refresh if we know when the access token will expire.
+
+
 6.1.4 (2020-11-30)
 ------------------
 
