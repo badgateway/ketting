@@ -21,4 +21,4 @@ export default function(client: Client): FetchMiddleware {
 
   };
 
-};
+}

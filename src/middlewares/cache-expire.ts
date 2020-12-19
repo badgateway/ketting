@@ -84,3 +84,5 @@ export default function(client: Client): FetchMiddleware {
     return response;
 
   };
+
+}
