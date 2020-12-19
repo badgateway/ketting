@@ -5,8 +5,8 @@ ChangeLog
 ------------------
 
 * Support for `draft-dalal-deprecation-header`. Ketting will now emit warnings
-  if a `Deprecated` header is detected, and will also provide information from
-  the `Sunset` header and include the uri of the `deprecated` link relation.
+  if a `Deprecation` header is detected, and will also provide information from
+  the `Sunset` header and include the uri of the `depreciation` link relation.
 
 
 6.2.0 (2020-12-01)
