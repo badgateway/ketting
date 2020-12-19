@@ -37,8 +37,7 @@ export class Fetcher {
       }
 
       return fetch(innerRequest);
-    }
-    );
+    });
 
     return invokeMiddlewares(mws, request);
 
