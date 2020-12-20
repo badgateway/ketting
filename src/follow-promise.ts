@@ -179,6 +179,10 @@ export class FollowPromiseOne<T = any> extends FollowPromise<Resource<T>> {
       href = resolve(link);
     }
 
+    if (link.hints?.status === 'deprecated') {
+      console.warn(`[ketting] The ${link.rel} link on ${resource.uri} is marked deprecated.`, link);
+    }
+
     const newResource = resource.go(href);
 
     if (this.prefetchEnabled) {
@@ -274,6 +278,10 @@ export class FollowPromiseMany<T = any> extends FollowPromise<Resource<T>[]> {
 
     for (const link of links) {
       href = resolve(link);
+
+      if (link.hints?.status === 'deprecated') {
+        console.warn(`[ketting] The ${link.rel} link on ${resource.uri} is marked deprecated.`, link);
+      }
 
       const newResource = resource.go(href);
       result.push(newResource);
