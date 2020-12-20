@@ -17,6 +17,7 @@ import { FollowPromiseOne } from './follow-promise';
 import { StateCache, ForeverCache } from './cache';
 import cacheExpireMiddleware from './middlewares/cache-expire';
 import acceptMiddleware from './middlewares/accept-header';
+import warningMiddleware from './middlewares/warning';
 
 export default class Client {
 
@@ -70,6 +71,7 @@ export default class Client {
     this.fetcher = new Fetcher();
     this.fetcher.use(cacheExpireMiddleware(this));
     this.fetcher.use(acceptMiddleware(this));
+    this.fetcher.use(warningMiddleware());
     this.cache = new ForeverCache();
     this.resources = new Map();
   }
