@@ -45,6 +45,17 @@ export interface BaseField<TType extends string, TValue> {
   label?: string;
 }
 
+/**
+ * The base type for things that are range-like.
+ *
+ * This includes numbers, dates and time fields.
+ */
+export interface RangeField<TType extends string, TValue> extends BaseField<TType, TValue>  {
+  max?: number;
+  min?: number;
+  step?: number;
+}
+
 
 /**
  * A checkbox basically behaves like a boolean.
@@ -59,28 +70,24 @@ export type Color = BaseField<'color', string>
 /**
  * A 'date' field.
  */
-export type Date = BaseField<'date', string>
+export type Date = RangeField<'date', string>
 
 /**
  * @deprecated
  */
-export type DateTime = BaseField<'datetime', Date>
+export type DateTime = RangeField<'datetime', Date>
 
-export type DateTimeLocal = BaseField<'datetime-local', Date>
+export type DateTimeLocal = RangeField<'datetime-local', Date>
 
 export type Email = BaseField<'email', string>
 
 export type File = BaseField<'file', never>
 
-export type Hidden = BaseField<'hidden', string>
+export type Hidden = BaseField<'hidden', string | number | null | boolean>
 
-export interface Number extends BaseField<'number', number> {
-  max?: number;
-  min?: number;
-  step?: number;
-}
+export type Number = RangeField<'number', number>;
 
-export type Month = BaseField<'month', string>
+export type Month = RangeField<'month', string>
 
 export type Password = BaseField<'password', string>
 
@@ -88,11 +95,7 @@ export interface Radio extends BaseField<'radio', string> {
   options?: Map<string, string>;
 }
 
-export interface Range extends BaseField<'range', number> {
-  max?: number;
-  min?: number;
-  step?: number;
-}
+export type Range = RangeField<'range', number>;
 
 export type Search = BaseField<'search', string>
 
@@ -105,14 +108,14 @@ export interface Text extends BaseField<'text', string> {
   options?: Map<string, string>;
 }
 
-export type Time = BaseField<'time', string>
+export type Time = RangeField<'time', string>
 
 export type Url = BaseField<'url', string>
 
-export type Week = BaseField<'week', string>
+export type Week = RangeField<'week', string>
 
 // eslint will want to fix the number type here
 export type Field = Checkbox | Color | Date | DateTime | DateTimeLocal | Email
-// eslint-disable-next-line
+  // eslint-disable-next-line
   | File | Hidden | Number | Month | Password | Radio | Range | Search | Tel
   | Text | Time | Url | Week;

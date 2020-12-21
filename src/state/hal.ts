@@ -253,7 +253,7 @@ function parseHalEmbedded(context: string, body: HalResource, headers: Headers):
 function parseHalForm(context: string, templ: HalFormsTemplate): ActionInfo {
 
   return {
-    uri: context,
+    uri: resolve(context, templ.target || ''),
     name: 'default',
     title: templ.title,
     method: templ.method,
@@ -265,14 +265,63 @@ function parseHalForm(context: string, templ: HalFormsTemplate): ActionInfo {
 
 function parseHalField(halField: HalFormsProperty): Field {
 
-  return {
-    name: halField.name,
-    type: 'text',
-    required: halField.required || false,
-    readOnly: halField.readOnly || false,
-    value: halField.value,
-    pattern: halField.regex ? new RegExp(halField.regex) : undefined,
-    label: halField.prompt,
-  };
+  const fieldType = halField.type || 'text' as const;
+
+  switch(fieldType) {
+    case 'text' :
+    case 'hidden' :
+    case 'search' :
+    case 'tel' :
+    case 'url' :
+    case 'email' :
+      return {
+        name: halField.name,
+        type: fieldType,
+        required: halField.required || false,
+        readOnly: halField.readOnly || false,
+        value: halField.value,
+        pattern: halField.regex ? new RegExp(halField.regex) : undefined,
+        label: halField.prompt,
+        placeholder: halField.placeHolder,
+        minLength: halField.minLength,
+        maxLength: halField.maxLength,
+      };
+    case 'password' :
+      return {
+        name: halField.name,
+        type: fieldType,
+        required: halField.required || false,
+        readOnly: halField.readOnly || false,
+        label: halField.prompt,
+        placeholder: halField.placeHolder,
+      };
+    case 'date' :
+    case 'month' :
+    case 'week' :
+    case 'time' :
+    case 'datetime-local' :
+    case 'number' :
+    case 'range' :
+      return {
+        name: halField.name,
+        type: fieldType,
+        required: halField.required || false,
+        readOnly: halField.readOnly || false,
+        label: halField.prompt,
+        min: halField.min,
+        max: halField.max,
+        step: halField.step,
+      };
+
+    case 'color' :
+      return {
+        name: halField.name,
+        type: fieldType,
+        required: halField.required || false,
+        readOnly: halField.readOnly || false,
+        label: halField.prompt,
+      };
+
+  }
 
 }
