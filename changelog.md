@@ -7,6 +7,8 @@ ChangeLog
 * Support for `draft-dalal-deprecation-header`. Ketting will now emit warnings
   if a `Deprecation` header is detected, and will also provide information from
   the `Sunset` header and include the uri of the `depreciation` link relation.
+* Support for the latest [HAL-Forms][5] features, including `target`, `step`,
+  `min`, `max`, `type`, `minLength`, `maxLength`, `placeholder`.
 
 
 6.2.0 (2020-12-01)
