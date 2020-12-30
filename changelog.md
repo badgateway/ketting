@@ -8,7 +8,8 @@ ChangeLog
   if a `Deprecation` header is detected, and will also provide information from
   the `Sunset` header and include the uri of the `depreciation` link relation.
 * Support for the latest [HAL-Forms][5] features, including `target`, `step`,
-  `min`, `max`, `type`, `minLength`, `maxLength`, `placeholder`.
+  `min`, `max`, `type`, `minLength`, `maxLength`, `placeholder`, `cols`, `rows`.
+* Add `textarea` form field type.
 
 
 6.2.0 (2020-12-01)

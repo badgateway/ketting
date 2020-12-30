@@ -286,6 +286,18 @@ function parseHalField(halField: HalFormsProperty): Field {
         minLength: halField.minLength,
         maxLength: halField.maxLength,
       };
+    case 'textarea' :
+      return {
+        name: halField.name,
+        type: fieldType,
+        required: halField.required || false,
+        readOnly: halField.readOnly || false,
+        value: halField.value,
+        label: halField.prompt,
+        placeholder: halField.placeHolder,
+        minLength: halField.minLength,
+        maxLength: halField.maxLength,
+      };
     case 'password' :
       return {
         name: halField.name,
