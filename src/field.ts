@@ -108,6 +108,13 @@ export interface Text extends BaseField<'text', string> {
   options?: Map<string, string>;
 }
 
+export interface TextArea extends BaseField<'textarea', string> {
+  minLength?: number;
+  maxLength?: number;
+  cols?: number;
+  rows?: number;
+}
+
 export type Time = RangeField<'time', string>
 
 export type Url = BaseField<'url', string>
@@ -118,4 +125,4 @@ export type Week = RangeField<'week', string>
 export type Field = Checkbox | Color | Date | DateTime | DateTimeLocal | Email
   // eslint-disable-next-line
   | File | Hidden | Number | Month | Password | Radio | Range | Search | Tel
-  | Text | Time | Url | Week;
+  | Text | TextArea | Time | Url | Week;
