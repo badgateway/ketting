@@ -96,15 +96,13 @@ export const factory = async (uri: string, response: Response): Promise<HalState
     ...newBody
   } = body;
 
-  const halForm: HalFormsTemplate|undefined = body._templates?.default;
-
   return new HalState(
     uri,
     newBody,
     response.headers,
     links,
     parseHalEmbedded(uri, body, response.headers),
-    halForm ? [parseHalForm(uri, halForm)] : [],
+    parseHalForms(uri, body),
   );
 
 };
@@ -250,16 +248,20 @@ function parseHalEmbedded(context: string, body: HalResource, headers: Headers):
 
 }
 
-function parseHalForm(context: string, templ: HalFormsTemplate): ActionInfo {
+function parseHalForms(context: string, body: HalResource): ActionInfo[] {
 
-  return {
-    uri: resolve(context, templ.target || ''),
-    name: 'default',
-    title: templ.title,
-    method: templ.method,
-    contentType: templ.contentType || 'application/json',
-    fields: templ.properties ? templ.properties.map(prop => parseHalField(prop)) : [],
-  };
+  if (!body._templates) return [];
+
+  return Object.entries(body._templates).map( ([key, hf]) => {
+    return {
+      uri: resolve(context, hf.target || ''),
+      name: key,
+      title: hf.title,
+      method: hf.method,
+      contentType: hf.contentType || 'application/json',
+      fields: hf.properties ? hf.properties.map(prop => parseHalField(prop)) : [],
+    }
+  });
 
 }
 
