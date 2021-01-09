@@ -1,5 +1,5 @@
 import { BaseState } from './base-state';
-import { HalResource, HalLink, HalFormsTemplate, HalFormsProperty } from 'hal-types';
+import { HalResource, HalLink, HalFormsProperty } from 'hal-types';
 import { parseLink } from '../http/util';
 import { Link, Links } from '../link';
 import { resolve } from '../util/uri';
