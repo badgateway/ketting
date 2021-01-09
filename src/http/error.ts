@@ -28,12 +28,23 @@ export class HttpError extends Error {
 export class Problem extends HttpError {
 
   body: {
+    type: string
     title?: string
+    status: number
+    detail?: string
+    instance?: string
+    [x: string]: any
   };
 
   constructor(response: Response, problemBody: Record<string, any>) {
     super(response);
-    this.body = problemBody;
+
+    this.body = {
+      type: problemBody.type ?? 'about:blank',
+      status: problemBody.status ?? this.status,
+      ...problemBody
+    };
+
     if (this.body.title) {
       this.message = 'HTTP Error ' + this.status + ': ' + this.body.title;
     }
