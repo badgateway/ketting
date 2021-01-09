@@ -260,7 +260,7 @@ function parseHalForms(context: string, body: HalResource): ActionInfo[] {
       method: hf.method,
       contentType: hf.contentType || 'application/json',
       fields: hf.properties ? hf.properties.map(prop => parseHalField(prop)) : [],
-    }
+    };
   });
 
 }
