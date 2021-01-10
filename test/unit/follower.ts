@@ -1,4 +1,4 @@
-import { Resource, FollowPromiseOne, FollowPromiseMany, Links } from '../../src';
+import { BaseState, BaseHeadState, Resource, FollowPromiseOne, FollowPromiseMany, Links } from '../../src';
 import { expect } from 'chai';
 
 describe('FollowPromiseOne', () => {
@@ -182,8 +182,14 @@ describe('FollowPromiseMany', () => {
 
 function getFakeResource(uri?: string, type?: string): Resource<{ firstGet: boolean }> {
 
+  const client = {
+    go(uri: string) {
+      return getFakeResource(uri);
+    }
+  };
+
   if (!uri) uri = 'https://example.org';
-  const fakeResource:any = new Resource(null as any, uri);
+  const fakeResource:any = new Resource(client as any, uri);
   const links = new Links(uri, [
     {
       context: fakeResource.uri,
@@ -214,9 +220,6 @@ function getFakeResource(uri?: string, type?: string): Resource<{ firstGet: bool
     },
   ]);
 
-  fakeResource.go = (uri: string): Resource<any> => {
-    return getFakeResource(uri);
-  };
 
   fakeResource.lastGetOptions = null;
 
@@ -232,12 +235,16 @@ function getFakeResource(uri?: string, type?: string): Resource<{ firstGet: bool
       throw new Error('Error on GET method');
     }
 
-    const response = {
+    const state = new BaseState({
+      uri: fakeResource.uri,
+      client: fakeResource.client,
       data: { firstGet },
       links,
-    };
+      headers: new Headers(),
+    });
+
     firstGet = false;
-    return response;
+    return state;
   };
 
   fakeResource.head = async(headOptions: any) => {
@@ -246,13 +253,15 @@ function getFakeResource(uri?: string, type?: string): Resource<{ firstGet: bool
     if (fakeResource.uri === 'https://example.org/error-get') {
       throw new Error('Error on HEAD method');
     }
-
-    const response = {
-      data: { firstGet },
+    const state = new BaseHeadState({
+      uri: fakeResource.uri,
+      client: fakeResource.client,
       links,
-    };
+      headers: new Headers()
+    });
+
     firstGet = false;
-    return response;
+    return state;
   };
   return fakeResource;
 

@@ -1,8 +1,9 @@
-import {Action} from '../action';
-import { Links } from '../link';
+import { Action } from '../action';
+import { Links, LinkVariables } from '../link';
 import Client from '../client';
+import { Resource } from '../resource';
 
-export interface State<T = any> {
+export type State<T = any> = {
 
   /**
    * The URI associated with this state
@@ -30,6 +31,23 @@ export interface State<T = any> {
    * Reference to main client that created this state
    */
   client: Client;
+
+  /**
+   * Follows a relationship, based on its reltype. For example, this might be
+   * 'alternate', 'item', 'edit' or a custom url-based one.
+   *
+   * This function can also follow templated uris. You can specify uri
+   * variables in the optional variables argument.
+   */
+  follow<TFollowedResource = any>(rel: string, variables?: LinkVariables): Resource<TFollowedResource>;
+
+  /**
+   * Follows a relationship based on its reltype. This function returns a
+   * Promise that resolves to an array of Resource objects.
+   *
+   * If no resources were found, the array will be empty.
+   */
+  followAll<TFollowedResource = any>(rel: string): Resource<TFollowedResource>[];
 
   /**
    * Return an action by name.
@@ -95,45 +113,13 @@ export interface State<T = any> {
  * Some information in HEAD responses might be available, but many aren't.
  * Notably, the body.
  */
-export interface HeadState {
-
-  /**
-   * The URI associated with this state
-   */
-  uri: string;
-
-  /**
-   * All links associated with the resource.
-   */
-  links: Links,
-
-  /**
-   * The full list of HTTP headers that were sent with the response.
-   */
-  headers: Headers;
-
-  /**
-   * Content-headers are a subset of HTTP headers that related directly
-   * to the content. The obvious ones are Content-Type.
-   *
-   * This set of headers will be sent by the server along with a GET
-   * response, but will also be sent back to the server in a PUT
-   * request.
-   */
-  contentHeaders(): Headers;
-
-  /**
-   * Timestamp of when the State was first generated
-   */
-  timestamp: number;
-
-}
+export type HeadState = Omit<State, 'data' | 'action' | 'actions' | 'hasAction' | 'serializeBody' | 'getEmbedded' | 'client' | 'clone'>;
 
 /**
  * A 'StateFactory' is responsible for taking a Fetch Response, and returning
  * an object that impements the State interface
  */
-export type StateFactory<T = any> = (uri: string, request: Response) => Promise<State<T>>;
+export type StateFactory<T = any> = (client: Client, uri: string, request: Response) => Promise<State<T>>;
 
 export function isState(input: Record<string, any>): input is State {
 

@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { Ketting, Resource, JsonApiState } from '../../src';
+import { Ketting, Resource, BaseState } from '../../src';
 
 describe('Following a JSON API link', async () => {
 
@@ -17,7 +17,7 @@ describe('Following a JSON API link', async () => {
   it('should use the JSON:API representor', async () => {
 
     const rep = await jsonapi.get();
-    expect(rep).to.be.an.instanceof(JsonApiState);
+    expect(rep).to.be.an.instanceof(BaseState);
 
   });
   it('should allow following links further', async () => {

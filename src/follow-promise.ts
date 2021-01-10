@@ -1,7 +1,5 @@
 import Resource from './resource';
-import { LinkVariables, LinkNotFound } from './link';
-import { resolve } from './util/uri';
-import { expand } from './util/uri-template';
+import { LinkVariables } from './link';
 
 /**
  * Base interface for both FollowOne and FollowAll
@@ -168,22 +166,7 @@ export class FollowPromiseOne<T = any> extends FollowPromise<Resource<T>> {
       });
     }
 
-    const link = state.links.get(this.rel);
-
-    if (!link) throw new LinkNotFound(`Link with rel ${this.rel} on ${state.uri} not found`);
-    let href;
-
-    if (link.templated) {
-      href = expand(link, this.variables || {});
-    } else {
-      href = resolve(link);
-    }
-
-    if (link.hints?.status === 'deprecated') {
-      console.warn(`[ketting] The ${link.rel} link on ${resource.uri} is marked deprecated.`, link);
-    }
-
-    const newResource = resource.go(href);
+    const newResource = state.follow(this.rel, this.variables);
 
     if (this.prefetchEnabled) {
       newResource.get().catch( err => {
@@ -270,27 +253,15 @@ export class FollowPromiseMany<T = any> extends FollowPromise<Resource<T>[]> {
       });
     }
 
-    const links = state.links.getMany(this.rel);
+    const result: Resource<T>[] = state.followAll(this.rel);
 
-    let href;
-
-    const result: Resource<T>[] = [];
-
-    for (const link of links) {
-      href = resolve(link);
-
-      if (link.hints?.status === 'deprecated') {
-        console.warn(`[ketting] The ${link.rel} link on ${resource.uri} is marked deprecated.`, link);
-      }
-
-      const newResource = resource.go(href);
-      result.push(newResource);
-      if (this.prefetchEnabled) {
-        newResource.get().catch( err => {
+    if (this.prefetchEnabled) {
+      result.map( resource => {
+        resource.get().catch( err => {
           // eslint-disable-next-line no-console
           console.warn('Error while prefetching linked resource', err);
         });
-      }
+      });
     }
 
     return result;

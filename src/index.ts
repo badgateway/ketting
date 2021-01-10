@@ -6,14 +6,12 @@ export { Link, LinkNotFound, Links } from './link';
 export { resolve } from './util/uri';
 
 export {
+  BaseState,
+  BaseHeadState,
   State,
   HalState,
-  BinaryState,
-  JsonApiState,
   SirenState,
-  TextState,
   CjState,
-  HtmlState,
   isState,
 } from './state';
 

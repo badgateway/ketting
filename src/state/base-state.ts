@@ -1,12 +1,39 @@
-import { State } from './interface';
-import { Links } from '../link';
+import { State, HeadState } from './interface';
+import { Links, LinkVariables, LinkNotFound } from '../link';
 import Client from '../client';
 import { Action, ActionNotFound, ActionInfo, SimpleAction } from '../action';
+import { Resource } from '../resource';
+import { resolve } from '../util/uri';
+import { expand } from '../util/uri-template';
+
+type HeadStateInit = {
+
+  client: Client,
+  uri: string;
+  links: Links;
+
+  /**
+   * The full list of HTTP headers that were sent with the response.
+   */
+  headers: Headers;
+}
+
+type StateInit<T> = {
+  client: Client,
+  uri: string;
+  data: T;
+  headers: Headers;
+  links: Links;
+  embedded?: State[];
+  actions?: ActionInfo[];
+}
 
 /**
- * The Base State provides a convenient way to implement a new State type.
+ * Implements a State object for HEAD responses
  */
-export abstract class BaseState<T> implements State<T> {
+export class BaseHeadState implements HeadState {
+
+  uri: string;
 
   /**
    * Timestamp of when the State was first generated
@@ -14,21 +41,75 @@ export abstract class BaseState<T> implements State<T> {
   timestamp: number;
 
   /**
+   * The full list of HTTP headers that were sent with the response.
+   */
+  headers: Headers;
+
+  /**
+   * All links associated with the resource.
+   */
+  links: Links;
+
+  /**
    * Reference to main client that created this state
    */
-  client!: Client;
+  client: Client;
 
-  constructor(
-    public uri: string,
-    public data: T,
-    public headers: Headers,
-    public links: Links,
-    protected embedded: State[] = [],
-    protected actionInfo: ActionInfo[] = []) {
-
+  constructor(init: HeadStateInit) {
+    this.client = init.client;
+    this.uri = init.uri;
+    this.headers = init.headers;
     this.timestamp = Date.now();
+    this.links = init.links;
+  }
+
+  /**
+   * Follows a relationship, based on its reltype. For example, this might be
+   * 'alternate', 'item', 'edit' or a custom url-based one.
+   *
+   * This function can also follow templated uris. You can specify uri
+   * variables in the optional variables argument.
+   */
+  follow<TFollowedResource = any>(rel: string, variables?: LinkVariables): Resource<TFollowedResource> {
+
+    const link = this.links.get(rel);
+    if (!link) throw new LinkNotFound(`Link with rel ${rel} on ${this.uri} not found`);
+
+    let href;
+
+    if (link.templated) {
+      href = expand(link, variables || {});
+    } else {
+      href = resolve(link);
+    }
+    if (link.hints?.status === 'deprecated') {
+      console.warn(`[ketting] The ${link.rel} link on ${this.uri} is marked deprecated.`, link);
+    }
+
+    return this.client.go(href);
 
   }
+
+  /**
+   * Follows a relationship based on its reltype. This function returns a
+   * Promise that resolves to an array of Resource objects.
+   *
+   * If no resources were found, the array will be empty.
+   */
+  followAll<TFollowedResource = any>(rel: string): Resource<TFollowedResource>[] {
+
+    return this.links.getMany(rel).map( link => {
+
+      if (link.hints?.status === 'deprecated') {
+        console.warn(`[ketting] The ${link.rel} link on ${this.uri} is marked deprecated.`, link);
+      }
+      const href = resolve(link);
+      return this.client.go(href);
+
+    });
+
+  }
+
 
   /**
    * Content-headers are a subset of HTTP headers that related directly
@@ -58,6 +139,28 @@ export abstract class BaseState<T> implements State<T> {
       }
     }
     return new Headers(result);
+
+  }
+
+}
+
+/**
+ * The Base State provides a convenient way to implement a new State type.
+ */
+export class BaseState<T> extends BaseHeadState implements State<T> {
+
+
+  data: T;
+
+  protected embedded: State[];
+  protected actionInfo: ActionInfo[];
+
+  constructor(init: StateInit<T>) {
+
+    super(init);
+    this.data = init.data;
+    this.actionInfo = init.actions || [];
+    this.embedded = init.embedded || [];
 
   }
 
@@ -117,7 +220,18 @@ export abstract class BaseState<T> implements State<T> {
    * For example, a JSON object might simply serialize using
    * JSON.serialize().
    */
-  abstract serializeBody(): Buffer|Blob|string;
+  serializeBody(): Buffer|Blob|string {
+
+    if (
+      ((global as any).Buffer && this.data instanceof Buffer) ||
+      ((global as any).Blob && this.data instanceof Blob) ||
+      typeof this.data === 'string')
+    {
+      return this.data;
+    }
+    return JSON.stringify(this.data);
+
+  }
 
   /**
    * Certain formats can embed other resources, identified by their
@@ -134,6 +248,17 @@ export abstract class BaseState<T> implements State<T> {
 
   }
 
-  abstract clone(): State<T>;
+  clone(): State<T> {
+
+    return new BaseState({
+      client: this.client,
+      uri: this.uri,
+      data: this.data,
+      headers: new Headers(this.headers),
+      links: new Links(this.links.defaultContext, this.links.getAll()),
+      actions: this.actionInfo,
+    });
+
+  }
 
 }

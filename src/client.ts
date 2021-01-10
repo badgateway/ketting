@@ -154,22 +154,21 @@ export default class Client {
     let state: State;
 
     if (!contentType) {
-      return binaryStateFactory(uri, response);
+      return binaryStateFactory(this, uri, response);
     }
 
     if (contentType in this.contentTypeMap) {
-      state = await this.contentTypeMap[contentType][0](uri, response);
+      state = await this.contentTypeMap[contentType][0](this, uri, response);
     } else if (contentType.startsWith('text/')) {
       // Default to TextState for any format starting with text/
-      state = await textStateFactory(uri, response);
+      state = await textStateFactory(this, uri, response);
     } else if (contentType.match(/^application\/[A-Za-z-.]+\+json/)) {
       // Default to HalState for any format containing a pattern like application/*+json
-      state = await halStateFactory(uri, response);
+      state = await halStateFactory(this, uri, response);
     } else {
-      state = await binaryStateFactory(uri, response);
+      state = await binaryStateFactory(this, uri, response);
     }
 
-    state.client = this;
     return state;
 
   }

@@ -385,7 +385,7 @@ describe('Siren representor', () => {
 async function callFactory(body: any): Promise<SirenState<any>> {
 
   const response = new Response(JSON.stringify(body));
-  const state = await factory('http://api.x.io/orders/42', response);
+  const state = await factory(new Client('http://example/'), 'http://api.x.io/orders/42', response);
 
   state.client = new Client('/');
   state.client.fetcher.use( async request => {

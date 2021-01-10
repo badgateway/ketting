@@ -1,42 +1,14 @@
 import { BaseState } from './base-state';
 import { parseLink } from '../http/util';
 import { parseHtml, HtmlForm } from '../util/html';
-import { Links } from '../link';
 import { ActionInfo } from '../action';
 import { resolve } from '../util/uri';
-
-/**
- * Represents a resource state in the HAL format
- */
-export class HtmlState extends BaseState<string> {
-
-  serializeBody(): string {
-
-    return this.data;
-
-  }
-
-  clone(): HtmlState {
-
-    const state = new HtmlState(
-      this.uri,
-      this.data,
-      new Headers(this.headers),
-      new Links(this.uri, this.links),
-      [],
-      this.actionInfo,
-    );
-    state.client = this.client;
-    return state;
-
-  }
-
-}
+import { StateFactory } from './interface';
 
 /**
  * Turns a HTTP response into a HtmlState
  */
-export const factory = async (uri: string, response: Response): Promise<HtmlState> => {
+export const factory:StateFactory = async (client, uri, response): Promise<BaseState<string>> => {
 
   const body = await response.text();
 
@@ -44,14 +16,14 @@ export const factory = async (uri: string, response: Response): Promise<HtmlStat
   const htmlResult = parseHtml(uri, body);
   links.add(...htmlResult.links);
 
-  return new HtmlState(
+  return new BaseState({
+    client,
     uri,
-    body,
-    response.headers,
+    data: body,
+    headers: response.headers,
     links,
-    [],
-    htmlResult.forms.map(form => formToAction(uri, form)),
-  );
+    actions: htmlResult.forms.map(form => formToAction(uri, form)),
+  });
 
 };
 

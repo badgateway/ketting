@@ -5,6 +5,8 @@ import { Link, Links } from '../link';
 import { resolve } from '../util/uri';
 import { ActionInfo } from '../action';
 import { Field } from '../field';
+import { StateFactory } from './interface';
+import Client from '../client';
 
 /**
  * Represents a resource state in the HAL format
@@ -51,16 +53,16 @@ export class HalState<T = any> extends BaseState<T> {
 
   }
 
-  clone(): HalState {
+  clone(): HalState<T> {
 
-    return new HalState(
-      this.uri,
-      this.data,
-      new Headers(this.headers),
-      new Links(this.uri, this.links),
-      [],
-      this.actionInfo,
-    );
+    return new HalState({
+      client: this.client,
+      uri: this.uri,
+      data: this.data,
+      headers: new Headers(this.headers),
+      links: new Links(this.links.defaultContext, this.links.getAll()),
+      actions: this.actionInfo,
+    });
 
   }
 
@@ -69,7 +71,7 @@ export class HalState<T = any> extends BaseState<T> {
 /**
  * Turns a HTTP response into a HalState
  */
-export const factory = async (uri: string, response: Response): Promise<HalState> => {
+export const factory:StateFactory = async (client, uri, response): Promise<HalState> => {
 
   const body = await response.json();
   const links = parseLink(uri, response.headers.get('Link'));
@@ -77,13 +79,13 @@ export const factory = async (uri: string, response: Response): Promise<HalState
   // The HAL factory is also respondible for plain JSON, which might be an
   // array.
   if (Array.isArray(body)) {
-    return new HalState(
+    return new HalState({
+      client,
       uri,
-      body,
-      response.headers,
+      data: body,
+      headers: response.headers,
       links,
-      [],
-    );
+    });
   }
 
   links.add(...parseHalLinks(uri, body));
@@ -96,14 +98,15 @@ export const factory = async (uri: string, response: Response): Promise<HalState
     ...newBody
   } = body;
 
-  return new HalState(
-    uri,
-    newBody,
-    response.headers,
-    links,
-    parseHalEmbedded(uri, body, response.headers),
-    parseHalForms(uri, body),
-  );
+  return new HalState({
+    client,
+    uri: uri,
+    data: newBody,
+    headers: response.headers,
+    links: links,
+    embedded: parseHalEmbedded(client, uri, body, response.headers),
+    actions: parseHalForms(uri, body),
+  });
 
 };
 
@@ -199,7 +202,7 @@ function parseHalLink(context: string, rel: string, links: HalLink[]): Link[] {
  * Parse the HAL _embedded object. Right now we're just grabbing the
  * information from _embedded and turn it into links.
  */
-function parseHalEmbedded(context: string, body: HalResource, headers: Headers): HalState<any>[] {
+function parseHalEmbedded(client: Client, context: string, body: HalResource, headers: Headers): HalState<any>[] {
 
   if (body._embedded === undefined) {
     return [];
@@ -230,17 +233,18 @@ function parseHalEmbedded(context: string, body: HalResource, headers: Headers):
         ...newBody
       } = embeddedItem;
 
-      result.push(new HalState(
-        resolve(context, embeddedItem._links.self.href),
-        newBody,
-        new Headers({
+      result.push(new HalState({
+        client,
+        uri: resolve(context, embeddedItem._links.self.href),
+        data: newBody,
+        headers: new Headers({
           'Content-Type': headers.get('Content-Type')!,
         }),
-        new Links(context, parseHalLinks(context, embeddedItem)),
+        links: new Links(context, parseHalLinks(context, embeddedItem)),
         // Parsing nested embedded items. Note that we assume that the base url is relative to
         // the outermost parent, not relative to the embedded item. HAL is not clear on this.
-        parseHalEmbedded(context, embeddedItem, headers),
-      ));
+        embedded: parseHalEmbedded(client, context, embeddedItem, headers),
+      }));
     }
   }
 

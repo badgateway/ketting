@@ -107,6 +107,7 @@ function formFromTags(contextUri: string, elements: HTMLCollectionOf<HTMLFormEle
     }
 
   }
+
   return result;
 
 }

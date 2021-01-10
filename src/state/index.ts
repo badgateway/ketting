@@ -1,10 +1,10 @@
 export { State, StateFactory, HeadState, isState } from './interface';
-export { BaseState } from './base-state';
+export { BaseState, BaseHeadState } from './base-state';
 export { factory as halStateFactory, HalState } from './hal';
-export { factory as binaryStateFactory, BinaryState } from './binary';
-export { factory as jsonApiStateFactory, JsonApiState } from './jsonapi';
+export { factory as binaryStateFactory } from './binary';
+export { factory as jsonApiStateFactory } from './jsonapi';
 export { factory as sirenStateFactory, SirenState } from './siren';
-export { factory as textStateFactory, TextState } from './text';
+export { factory as textStateFactory } from './text';
 export { factory as cjStateFactory, CjState } from './collection-json';
-export { factory as htmlStateFactory, HtmlState } from './html';
+export { factory as htmlStateFactory } from './html';
 export { factory as headStateFactory } from './head';

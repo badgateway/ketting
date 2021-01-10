@@ -1,6 +1,7 @@
 import { BaseState } from './base-state';
 import { parseLink } from '../http/util';
-import { Link, Links } from '../link';
+import { Link } from '../link';
+import { StateFactory } from './interface';
 
 /**
  * Represents a resource state in the HAL format
@@ -12,23 +13,12 @@ export class CjState<T = any> extends BaseState<T> {
     throw new Error('Reserializing Collection+JSON states is not yet supported. Please log an issue in the Ketting project to help figure out how this should be done');
   }
 
-  clone(): CjState<T> {
-
-    return new CjState(
-      this.uri,
-      this.data,
-      new Headers(this.headers),
-      new Links(this.uri, this.links)
-    );
-
-  }
-
 }
 
 /**
  * Turns a HTTP response into a CjState
  */
-export const factory = async (uri: string, response: Response): Promise<CjState<CjCollection>> => {
+export const factory: StateFactory = async (client, uri, response): Promise<CjState<CjCollection>> => {
 
   const body = await response.json();
 
@@ -44,12 +34,13 @@ export const factory = async (uri: string, response: Response): Promise<CjState<
     ...newBody
   } = body;
 
-  return new CjState(
+  return new CjState({
+    client,
     uri,
-    newBody,
-    response.headers,
+    data: newBody,
+    headers: response.headers,
     links,
-  );
+  });
 
 };
 

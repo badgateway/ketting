@@ -1,35 +1,12 @@
 import { BaseState } from './base-state';
 import { parseLink } from '../http/util';
-import { Link, Links } from '../link';
-
-/**
- * Represents a resource state in the HAL format
- */
-export class JsonApiState<T = any> extends BaseState<T> {
-
-  serializeBody(): string {
-
-    return JSON.stringify(this.data);
-
-  }
-
-  clone(): JsonApiState<T> {
-
-    return new JsonApiState(
-      this.uri,
-      this.data,
-      new Headers(this.headers),
-      new Links(this.uri, this.links)
-    );
-
-  }
-
-}
+import { Link } from '../link';
+import Client from '../client';
 
 /**
  * Turns a HTTP response into a JsonApiState
  */
-export const factory = async (uri: string, response: Response): Promise<JsonApiState<JsonApiTopLevelObject>> => {
+export const factory = async (client: Client, uri: string, response: Response): Promise<BaseState<JsonApiTopLevelObject>> => {
 
   const body = await response.json();
 
@@ -39,12 +16,13 @@ export const factory = async (uri: string, response: Response): Promise<JsonApiS
     ...parseJsonApiCollection(uri, body),
   );
 
-  return new JsonApiState(
+  return new BaseState({
+    client,
     uri,
-    body,
-    response.headers,
-    links,
-  );
+    data: body,
+    headers: response.headers,
+    links: links,
+  });
 
 };
 /**

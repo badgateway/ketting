@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { htmlStateFactory } from '../../../src/state';
-import { Link, HtmlState, Client } from '../../../src';
+import { Link, Client } from '../../../src';
 
 describe('HTML representor', () => {
 
@@ -71,7 +71,11 @@ describe('HTML representor', () => {
     it('should parse ' + value[0], async () => {
 
       const response = new Response(value[0]);
-      const html = await htmlStateFactory('/index.html', response);
+      const html = await htmlStateFactory(
+        new Client('http://example/'),
+        '/index.html',
+        response
+      );
 
       const links = value.slice(1);
 
@@ -309,10 +313,14 @@ describe('HTML representor', () => {
 
 });
 
-async function callFactory(body: string): Promise<HtmlState> {
+async function callFactory(body: string){
 
   const response = new Response(body);
-  const state: HtmlState = await htmlStateFactory('http://example/orders', response);
+  const state = await htmlStateFactory(
+    new Client('http://example/'),
+    'http://example/orders',
+    response
+  );
 
   state.client = new Client('/');
   state.client.fetcher.use( async request => {
