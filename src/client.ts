@@ -15,7 +15,7 @@ import { resolve } from './util/uri';
 import { LinkVariables } from './link';
 import { FollowPromiseOne } from './follow-promise';
 import { StateCache, ForeverCache } from './cache';
-import cacheExpireMiddleware from './middlewares/cache-expire';
+import cacheExpireMiddleware from './middlewares/cache';
 import acceptMiddleware from './middlewares/accept-header';
 import warningMiddleware from './middlewares/warning';
 

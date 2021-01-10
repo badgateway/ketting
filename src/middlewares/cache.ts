@@ -5,8 +5,11 @@ import { resolve } from '../util/uri';
 import Client from '../client';
 
 /**
- * This middleware is responsible for inspecting requests and responses,
- * and decide which cache entries should expire.
+ * This middleware manages the cache based on information in requests
+ * and responses.
+ *
+ * It expires items from the cache and updates the cache if `Content-Location`
+ * appeared in the response.
  *
  * It's also responsible for emitting 'stale' events.
  */
@@ -59,6 +62,12 @@ export default function(client: Client): FetchMiddleware {
     }
     // Content-Location headers should also expire
     if (response.headers.has('Content-Location')) {
+      const cl = resolve(request.url, response.headers.get('Content-Location')!);
+      const clState = await client.getStateForResponse(
+        cl,
+        response
+      );
+      client.cacheState(clState);
       expireUris.push(
         resolve(request.url, response.headers.get('Content-Location')!)
       );
