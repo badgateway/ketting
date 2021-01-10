@@ -1,12 +1,18 @@
 ChangeLog
 =========
 
-6.3.0 (????-??-??)
+7.0.0 (????-??-??)
 ------------------
 
-* Support for `draft-dalal-deprecation-header`. Ketting will now emit warnings
-  if a `Deprecation` header is detected, and will also provide information from
-  the `Sunset` header and include the uri of the `deprecation` link relation.
+* #326: State objects now have `follow()` and `followAll()` methods.
+* #322: Add `type`, `status`, `detail`, `instance` properties to `Problem`
+  class, for better support of [`application/problem+json`][6]. (@sazzer).
+* #327: If a response is received with a `Content-Location` header, the
+  response will not immediately get stored in the cache.
+* Support for [`draft-dalal-deprecation-header`][7]. Ketting will now emit
+  warnings if a `Deprecation` header is detected, and will also provide
+  information from the `Sunset` header and include the uri of the `deprecation`
+  link relation.
 * Support for the latest [HAL-Forms][5] features, including `target`, `step`,
   `min`, `max`, `type`, `minLength`, `maxLength`, `placeholder`, `cols`, `rows`.
 * Support multiple HAL Forms, as per the latest spec updates. Before only a
@@ -822,3 +828,5 @@ ChangeLog
 [3]: https://tools.ietf.org/html/draft-pot-prefer-push
 [4]: http://amundsen.com/media-types/collection/format/
 [5]: http://rwcbook.github.io/hal-forms/
+[6]: https://tools.ietf.org/html/rfc7807 "Problem Details for HTTP APIs"
+[7]: https://tools.ietf.org/html/draft-dalal-deprecation-header-03 "The Deprecation HTTP Header Field"
