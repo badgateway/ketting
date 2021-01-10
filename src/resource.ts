@@ -72,7 +72,7 @@ export class Resource<T = any> extends EventEmitter {
       optionsToRequestInit('HEAD', headOptions)
     );
 
-    state = await headStateFactory(this.uri, response);
+    state = await headStateFactory(this.client, this.uri, response);
     return state;
 
   }

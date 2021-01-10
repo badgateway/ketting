@@ -16,11 +16,15 @@ export function resolve(base: string|Link, relative?: string): string {
   if (typeof base !== 'string') {
     relative = base.href;
     base = base.context;
+  } else {
+    if (!relative) {
+      return base;
+    }
   }
 
   // If the URL object is supported, we prefer that.
   if (typeof URL !== 'undefined' && /https?:\/\//.exec(base)?.index === 0) {
-    return (new URL(relative!, base).toString());
+    return (new URL(relative, base).toString());
   }
 
   // Code taken from this gist:;

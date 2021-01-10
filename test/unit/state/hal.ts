@@ -1,8 +1,8 @@
 import { expect } from 'chai';
-import { HalState } from '../../../src';
 import { factory } from '../../../src/state/hal';
+import { Client } from '../../../src';
 
-describe('HAL representor', () => {
+describe('HAL state factory', () => {
 
   it('should parse a HAL document', async () => {
 
@@ -202,7 +202,7 @@ describe('HAL representor', () => {
       happy: 2020,
     });
 
-    const result = JSON.parse(hal.serializeBody());
+    const result = JSON.parse(hal.serializeBody() as any);
     expect(result).to.eql({
       _links: {
         self: {
@@ -240,9 +240,9 @@ describe('HAL representor', () => {
 
 });
 
-function callFactory(body: any, url = 'http://example/'): Promise<HalState> {
+function callFactory(body: any, url = 'http://example/') {
 
   const response = new Response(JSON.stringify(body));
-  return factory(url, response);
+  return factory(new Client(url), url, response);
 
 }

@@ -1,5 +1,6 @@
-import { HeadState } from './interface';
+import { BaseHeadState } from './base-state';
 import { parseLink } from '../http/util';
+import Client from '../client';
 
 /**
  * Turns the response to a HTTP Head request into a HeadState object.
@@ -7,32 +8,15 @@ import { parseLink } from '../http/util';
  * HeadState is a bit different from normal State objects, because it's
  * missing a bunch of information.
  */
-export const factory = async (uri: string, response: Response): Promise<HeadState> => {
+export const factory = async (client: Client, uri: string, response: Response): Promise<BaseHeadState> => {
 
   const links = parseLink(uri, response.headers.get('Link'));
 
-  return {
+  return new BaseHeadState({
+    client,
     uri,
     headers: response.headers,
-    contentHeaders: (): Headers => {
-
-      const contentHeaderNames = [
-        'Content-Type',
-        'Content-Language',
-      ];
-
-      const result: {[name: string]: string} = {};
-
-      for(const contentHeader of contentHeaderNames) {
-        if (response.headers.has(contentHeader)) {
-          result[contentHeader] = response.headers.get(contentHeader)!;
-        }
-      }
-      return new Headers(result);
-
-    },
     links,
-    timestamp: Date.now(),
-  };
+  });
 
 };

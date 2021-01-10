@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { CjState } from '../../../src';
+import { Client } from '../../../src';
 import { factory } from '../../../src/state/collection-json';
 
 describe('collection+json representor', () => {
@@ -182,9 +182,9 @@ describe('collection+json representor', () => {
   });
 });
 
-function callFactory(uri: string, body: any): Promise<CjState> {
+function callFactory(uri: string, body: any) {
 
   const response = new Response(JSON.stringify(body));
-  return factory(uri, response);
+  return factory(new Client('http://example.org/'), uri, response);
 
 }

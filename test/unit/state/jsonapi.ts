@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { factory } from '../../../src/state/jsonapi';
-import { JsonApiState } from '../../../src';
+import { BaseState, Client } from '../../../src';
 
 describe('JsonApi representor', () => {
 
@@ -120,9 +120,9 @@ describe('JsonApi representor', () => {
 
 });
 
-function callFactory(body: any): Promise<JsonApiState> {
+function callFactory(body: any): Promise<BaseState<any>> {
 
   const response = new Response(JSON.stringify(body));
-  return factory('/foo.json', response);
+  return factory(new Client('http://example/'), '/foo.json', response);
 
 }

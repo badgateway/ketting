@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { Client, TextState, Links, HalState } from '../../src';
+import { Client, BaseState, Links, HalState } from '../../src';
 
 describe('Client', () => {
 
@@ -8,12 +8,13 @@ describe('Client', () => {
     it('should invalidate a resource\'s cache if an unsafe method was used', async () => {
 
       const client = new Client('https://example.org');
-      client.cache.store(new TextState(
-        'https://example.org/foo',
-        'hello',
-        new Headers(),
-        new Links('http://example.org/foo'),
-      ));
+      client.cache.store(new BaseState({
+        client,
+        uri: 'https://example.org/foo',
+        data: 'hello',
+        headers: new Headers(),
+        links: new Links('http://example.org/foo'),
+      }));
 
       client.use( async req => {
         return new Response('OK');
@@ -30,12 +31,13 @@ describe('Client', () => {
     it('should not invalidate a resource\'s cache if a safe method was used', () => {
 
       const client = new Client('https://example.org');
-      client.cache.store(new TextState(
-        'https://example.org/foo',
-        'hello',
-        new Headers(),
-        new Links('http://example.org/foo'),
-      ));
+      client.cache.store(new BaseState({
+        client,
+        uri: 'https://example.org/foo',
+        data: 'hello',
+        headers: new Headers(),
+        links: new Links('http://example.org/foo'),
+      }));
 
       const request = new Request('https://example.org/foo', {
         method: 'SEARCH'
@@ -53,12 +55,13 @@ describe('Client', () => {
     it('should invalidate resources if they were mentioned in a Link header with rel="invalidates"', async () => {
 
       const client = new Client('https://example.org');
-      client.cache.store(new TextState(
-        'https://example.org/foo',
-        'hello',
-        new Headers(),
-        new Links('http://example.org/foo'),
-      ));
+      client.cache.store(new BaseState({
+        client,
+        uri: 'https://example.org/foo',
+        data: 'hello',
+        headers: new Headers(),
+        links: new Links('http://example.org/foo'),
+      }));
 
       const request = new Request('https://example.org/foo', {
         method: 'DELETE',
