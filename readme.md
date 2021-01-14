@@ -1,4 +1,4 @@
-![Logo][4] Ketting - A hypermedia client for javascript
+![Logo][4] Ketting - The HATEOAS client for javascript
 =======================================================
 
 * Go to the [Wiki][9] for full documentation.
