@@ -1,4 +1,3 @@
-import { parse as p, resolve as r } from 'url';
 import { Link } from '../link';
 
 type UrlParts = {
@@ -8,27 +7,36 @@ type UrlParts = {
 /**
  * Resolves a relative url using another url.
  *
- * This is the node.js version.
+ * This is the browser-based version.
  */
 export function resolve(base: string, relative: string): string;
 export function resolve(link: Link): string;
 export function resolve(base: string|Link, relative?: string): string {
 
-  if (typeof base === 'string') {
-    return r(base, relative!);
+  if (typeof base !== 'string') {
+    relative = base.href;
+    base = base.context;
   } else {
-    return r(base.context, base.href);
+    if (!relative) {
+      return base;
+    }
   }
+
+  // If the URL object is supported, we prefer that.
+  return (new URL(relative, base).toString());
 
 }
 
 /**
  * Parses a url in multiple components.
  *
- * This is the node.js version.
+ * This is the browser-based version.
  */
 export function parse(url: string): UrlParts {
 
-  return p(url);
+  const urlObj = new URL(url);
+  return {
+    host: urlObj.host,
+  };
 
 }

@@ -322,7 +322,7 @@ async function callFactory(body: string){
     response
   );
 
-  state.client = new Client('/');
+  state.client = new Client('https://localhost:5555');
   state.client.fetcher.use( async request => {
 
     return Promise.resolve(new Response(request.method + ':' + (await request.text()), { headers: { 'Content-Type': 'text/plain' }}));

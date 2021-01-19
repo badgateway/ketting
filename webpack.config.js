@@ -1,5 +1,6 @@
 module.exports = [
   {
+    target: 'browserslist',
     entry: './src/index',
     output: {
       path: __dirname + '/browser',
