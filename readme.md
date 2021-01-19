@@ -11,7 +11,7 @@ The Ketting library is a generic REST client with Hypermedia features.
 The library will work with any JSON-based HTTP API, but it gets superpowers
 when using it with formats that have support for links, including:
 
-* [HAL][hal]
+* [HAL][hal] + [HAL Forms][hal-forms]
 * [JSON:API][jsonapi]
 * [Siren][siren],
 * [Collection+JSON][coljson]
@@ -82,7 +82,6 @@ Supported formats:
 
 Other features:
 
-* [Prefer-Push][prefer-push]
 * [Prefer-Transclude][prefer-transclude]
 * It can submit HTML forms and Siren actions.
 
@@ -100,6 +99,7 @@ Read further on the [Wiki][9]
 [9]: https://github.com/evert/ketting/wiki/
 
 [hal]: http://stateless.co/hal_specification.html "HAL - Hypertext Application Language"
+[hal-forms]: https://rwcbook.github.io/hal-forms/ "The HAL-FORMS Media Type"
 [jsonapi]: https://jsonapi.org/
 [problem]: https://tools.ietf.org/html/rfc7807
 [siren]: https://github.com/kevinswiber/siren "Structured Interface for Representing Entities"
