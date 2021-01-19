@@ -18,6 +18,7 @@ ChangeLog
 * Support multiple HAL Forms, as per the latest spec updates. Before only a
   'default' form was supported.
 * Add `textarea` form field type.
+* #324: Only use `{cache: 'no-cache'}` with `.refresh()`, not `.get()`.
 
 
 6.2.0 (2020-12-01)
