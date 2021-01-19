@@ -112,21 +112,7 @@ describe('Resource Events', () => {
       expect(triggered).to.equal(true);
 
     });
-    it('should trigger when a response contains a relevant Content-Location header', async() => {
 
-      const client = new Client('http://example');
-      client.use( mockFetchMw );
-      const resource = client.go('/res');
-      await resource.get();
-
-      let triggered = false;
-      resource.once('stale', () => {
-        triggered = true;
-      });
-      await client.fetcher.fetch('http://example/content-location', { method: 'POST' });
-      expect(triggered).to.equal(true);
-
-    });
     it('should trigger when a response contains a relevant Link header', async() => {
 
       const client = new Client('http://example');
@@ -204,6 +190,21 @@ describe('Resource Events', () => {
       // Check cache too.
       const newState = await resource.get();
       expect(newState.data).to.equal('New body!');
+
+    });
+    it('should trigger when a response contains a relevant Content-Location header', async() => {
+
+      const client = new Client('http://example');
+      client.use( mockFetchMw );
+      const resource = client.go('/res');
+      await resource.get();
+
+      let triggered = false;
+      resource.once('update', () => {
+        triggered = true;
+      });
+      await client.fetcher.fetch('http://example/content-location', { method: 'POST' });
+      expect(triggered).to.equal(true);
 
     });
   });
