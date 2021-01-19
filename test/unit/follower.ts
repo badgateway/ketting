@@ -54,19 +54,6 @@ describe('FollowPromiseOne', () => {
 
   });
 
-  it('should add a Prefer-Push header to the next refresh if requested', async() => {
-
-    const fakeResource = getFakeResource();
-    const follower = new FollowPromiseOne(fakeResource, 'rel1');
-    await follower.preferPush();
-    expect(
-      (fakeResource as any).lastGetOptions
-    ).to.eql({
-      headers: { 'Prefer-Push': 'rel1' },
-    });
-
-  });
-
   it('should add a Prefer: transclude= header to the next refresh if requested', async() => {
 
     const fakeResource = getFakeResource();
@@ -124,19 +111,6 @@ describe('FollowPromiseMany', () => {
     follower.useHead();
     const resources = await follower;
     expect(resources[0].uri).to.equal('https://example.org/child1');
-
-  });
-
-  it('should add a Prefer-Push header to the next refresh if requested', async() => {
-
-    const fakeResource = getFakeResource();
-    const follower = new FollowPromiseMany(fakeResource, 'rel1');
-    await follower.preferPush();
-    expect(
-      (fakeResource as any).lastGetOptions
-    ).to.eql({
-      headers: { 'Prefer-Push': 'rel1' },
-    });
 
   });
 
