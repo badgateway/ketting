@@ -1,14 +1,16 @@
 ChangeLog
 =========
 
-7.0.0 (????-??-??)
-------------------
+7.0.0-beta.0 (2021-01-19)
+-------------------------
 
+* Note: this release has a number of BC breaks, which will only affect you if
+  you wrote custom format parsers. See the wiki for more details.
 * #326: State objects now have `follow()` and `followAll()` methods.
 * #322: Add `type`, `status`, `detail`, `instance` properties to `Problem`
   class, for better support of [`application/problem+json`][6]. (@sazzer).
 * #327: If a response is received with a `Content-Location` header, the
-  response will not immediately get stored in the cache.
+  response will now immediately get stored in the cache.
 * Support for [`draft-dalal-deprecation-header`][7]. Ketting will now emit
   warnings if a `Deprecation` header is detected, and will also provide
   information from the `Sunset` header and include the uri of the `deprecation`
@@ -19,7 +21,7 @@ ChangeLog
   'default' form was supported.
 * Add `textarea` form field type.
 * #324: Only use `{cache: 'no-cache'}` with `.refresh()`, not `.get()`.
-
+* Fixed a subtle URL resolving bug in browsers. (Node was not affected).
 
 6.2.0 (2020-12-01)
 ------------------
