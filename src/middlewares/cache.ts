@@ -68,9 +68,6 @@ export default function(client: Client): FetchMiddleware {
         response
       );
       client.cacheState(clState);
-      expireUris.push(
-        resolve(request.url, response.headers.get('Content-Location')!)
-      );
     }
 
     for (const uri of expireUris) {
