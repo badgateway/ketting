@@ -48,10 +48,26 @@ export class Resource<T = any> extends EventEmitter {
   get(getOptions?: GetRequestOptions): Promise<State<T>> {
 
     const state = this.getCache();
-    if (!state) {
-      return this.refresh(getOptions);
+    if (state) {
+      return Promise.resolve(state);
     }
-    return Promise.resolve(state);
+
+    const params = optionsToRequestInit('GET', getOptions);
+
+    if (!this.activeRefresh) {
+      this.activeRefresh = (async() : Promise<State<T>> => {
+        try {
+          const response = await this.fetchOrThrow(params);
+          const state = await this.client.getStateForResponse(this.uri, response);
+          this.updateCache(state);
+          return state;
+        } finally {
+          this.activeRefresh = null;
+        }
+      })();
+    }
+
+    return this.activeRefresh;
 
   }
 
@@ -86,17 +102,8 @@ export class Resource<T = any> extends EventEmitter {
    */
   refresh(getOptions?: GetRequestOptions): Promise<State<T>> {
 
-    const params: RequestInit = {
-      cache: 'reload',
-    };
-    if (getOptions?.getContentHeaders && !getOptions?.headers) {
-      params.headers = getOptions.getContentHeaders();
-    } else if (!getOptions?.getContentHeaders && getOptions?.headers) {
-      params.headers = getOptions.headers;
-    } else if (getOptions?.getContentHeaders && getOptions?.headers) {
-      params.headers = getOptions.getContentHeaders();
-      params.headers = { ...getOptions.headers, ...params.headers};
-    }
+    const params = optionsToRequestInit('GET', getOptions);
+    params.cache = 'no-cache';
 
     if (!this.activeRefresh) {
       this.activeRefresh = (async() : Promise<State<T>> => {
