@@ -7,24 +7,17 @@ import { LinkVariables } from './link';
 abstract class FollowPromise<T> implements PromiseLike<T> {
 
   protected prefetchEnabled: boolean;
-  protected preferPushEnabled: boolean;
   protected preferTranscludeEnabled: boolean;
   protected useHeadEnabled: boolean;
 
   constructor() {
     this.prefetchEnabled = false;
-    this.preferPushEnabled = false;
     this.preferTranscludeEnabled = false;
     this.useHeadEnabled = false;
   }
 
   preFetch(): this {
     this.prefetchEnabled = true;
-    return this;
-  }
-
-  preferPush(): this {
-    this.preferPushEnabled = true;
     return this;
   }
 
@@ -150,9 +143,6 @@ export class FollowPromiseOne<T = any> extends FollowPromise<Resource<T>> {
     const resource = await this.resource;
 
     const headers: { [name: string]: string } = {};
-    if (this.preferPushEnabled) {
-      headers['Prefer-Push'] = this.rel;
-    }
     if (!this.useHeadEnabled && this.preferTranscludeEnabled) {
       headers.Prefer = 'transclude=' + this.rel;
     }
@@ -237,9 +227,6 @@ export class FollowPromiseMany<T = any> extends FollowPromise<Resource<T>[]> {
 
     const resource = await this.resource;
     const headers: { [name: string]: string } = {};
-    if (this.preferPushEnabled) {
-      headers['Prefer-Push'] = this.rel;
-    }
     if (!this.useHeadEnabled && this.preferTranscludeEnabled) {
       headers.Prefer = 'transclude=' + this.rel;
     }

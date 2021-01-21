@@ -1,6 +1,14 @@
 ChangeLog
 =========
 
+7.0.0-beta.1 (2021-??-??)
+-------------------------
+
+* Remove support for `Prefer-Push`. Browsers are basically dropping HTTP/2
+  Push, and not enough work is done to make this very interesting.
+  [More background](https://evertpot.com/http-2-push-is-dead/).
+
+
 7.0.0-beta.0 (2021-01-19)
 -------------------------
 
