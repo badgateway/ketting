@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+7.0.0-beta.2 (2021-??-??)
+-------------------------
+
+* Support for Siren 'title' on fields. This was an oversight.
+
+
 7.0.0-beta.1 (2021-01-25)
 -------------------------
 
