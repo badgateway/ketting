@@ -265,5 +265,9 @@ function sirenFieldToField(input: SirenField): Field {
   if (input.value) {
     result.value = input.value;
   }
+  if (input.title) {
+    result.label = input.title;
+  }
+
   return result;
 }
