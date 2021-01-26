@@ -387,7 +387,7 @@ async function callFactory(body: any): Promise<SirenState<any>> {
   const response = new Response(JSON.stringify(body));
   const state = await factory(new Client('http://example/'), 'http://api.x.io/orders/42', response);
 
-  state.client = new Client('http://localhost:5555');
+  state.client = new Client('/');
   state.client.fetcher.use( async request => {
 
     return Promise.resolve(new Response(request.method + ':' + (await request.text()), { headers: { 'Content-Type': 'text/plain' }}));
