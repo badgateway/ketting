@@ -20,8 +20,6 @@ export default function(): FetchMiddleware {
       if (sunset) {
         msg += ' It will no longer respond ' + sunset;
       }
-      // If the response had a Link: rel=invalidate header, we want to
-      // expire those too.
       if (response.headers.has('Link')) {
         for (const httpLink of LinkHeader.parse(response.headers.get('Link')!).rel('deprecation')) {
           const uri = resolve(request.url, httpLink.uri);
