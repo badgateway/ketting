@@ -15,7 +15,7 @@ describe('HAL forms', () => {
       _templates: {
         default: {
           target: '/submit',
-          method: 'POST', 
+          method: 'POST',
         }
       }
     });
@@ -118,14 +118,14 @@ describe('HAL forms', () => {
     testField(
       'hidden field',
       {
-      type: 'hidden',
-      name: 'hidden',
-    }, {
-      type: 'hidden',
-      name: 'hidden',
-      required: false,
-      readOnly: false,
-    });
+        type: 'hidden',
+        name: 'hidden',
+      }, {
+        type: 'hidden',
+        name: 'hidden',
+        required: false,
+        readOnly: false,
+      });
     testField(
       'password field',
       {
@@ -234,71 +234,71 @@ describe('HAL forms', () => {
     testField(
       'dropdown with inline options',
       {
-      type: 'text',
-      name: 'dropdown',
-      options: {
-        inline: [
-          {
-            prompt: 'l1',
-            value: 'v1',
-          },
-          {
-            prompt: 'l2',
-            value: 'v2',
-          },
-        ]
-      }
-    }, {
-      type: 'select',
-      name: 'dropdown',
-      required: false,
-      readOnly: false,
-      options: {
-        l1: 'v1',
-        l2: 'v2'
-      }
-    });
+        type: 'text',
+        name: 'dropdown',
+        options: {
+          inline: [
+            {
+              prompt: 'l1',
+              value: 'v1',
+            },
+            {
+              prompt: 'l2',
+              value: 'v2',
+            },
+          ]
+        }
+      }, {
+        type: 'select',
+        name: 'dropdown',
+        required: false,
+        readOnly: false,
+        options: {
+          l1: 'v1',
+          l2: 'v2'
+        }
+      });
 
     testField(
       'dropdown with inline options, specified as an array of strings',
       {
-      type: 'text',
-      name: 'dropdown',
-      options: {
-        inline: ['v1', 'v2'],
-      }
-    }, {
-      type: 'select',
-      name: 'dropdown',
-      required: false,
-      readOnly: false,
-      options: {
-        v1: 'v1',
-        v2: 'v2'
-      }
-    });
+        type: 'text',
+        name: 'dropdown',
+        options: {
+          inline: ['v1', 'v2'],
+        }
+      }, {
+        type: 'select',
+        name: 'dropdown',
+        required: false,
+        readOnly: false,
+        options: {
+          v1: 'v1',
+          v2: 'v2'
+        }
+      });
 
     testField(
       'dropdown with external options',
       {
-      type: 'text',
-      name: 'dropdown',
-      options: {
-        link: {
+        type: 'text',
+        name: 'dropdown',
+        options: {
+          link: {
+            href: '/get-options',
+          },
+        }
+      }, {
+        type: 'select',
+        name: 'dropdown',
+        required: false,
+        readOnly: false,
+        dataSource: {
           href: '/get-options',
-        },
-      }
-    }, {
-      type: 'select',
-      name: 'dropdown',
-      required: false,
-      readOnly: false,
-      dataSource: {
-        href: '/get-options',
-        labelField: 'prompt',
-        valueField: 'value',
-      }
-    });
+          labelField: 'prompt',
+          valueField: 'value',
+        }
+      });
 
   });
 
