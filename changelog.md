@@ -1,6 +1,21 @@
 ChangeLog
 =========
 
+7.0.0-beta.3 (2021-02-21)
+-------------------------
+
+* Support for HAL Forms version `2021-02-20`, which adds the 'options'
+  property.
+* Kettings now has support for 'dropdown' fields, allowing users to provide
+  lists of possible options in 3 different ways:
+  1. An inline list
+  2. An external HTTP resource (JSON body or CSV body)
+  3. Provided as links from a hypermedia source.
+  Only 1 and 2 are supported by HAL Forms, 3 is just an internal feature until
+  there is a format that has first-class support for this.
+* A bit of a rewrite of 'fields' again. Only a single type is exported, and
+  all the types are cleaned up.
+
 7.0.0-beta.2 (2021-01-25)
 -------------------------
 

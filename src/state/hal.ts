@@ -1,5 +1,4 @@
 import { BaseState } from './base-state';
-import { HalResource, HalLink, HalFormsProperty } from 'hal-types';
 import { parseLink } from '../http/util';
 import { Link, Links } from '../link';
 import { resolve } from '../util/uri';
@@ -7,6 +6,7 @@ import { ActionInfo } from '../action';
 import { Field } from '../field';
 import { StateFactory } from './interface';
 import Client from '../client';
+import * as hal from 'hal-types';
 
 /**
  * Represents a resource state in the HAL format
@@ -22,9 +22,9 @@ export class HalState<T = any> extends BaseState<T> {
 
   }
 
-  private serializeLinks(): HalResource['_links'] {
+  private serializeLinks(): hal.HalResource['_links'] {
 
-    const links: HalResource['_links'] = {
+    const links: hal.HalResource['_links'] = {
       self: { href: this.uri },
     };
     for(const link of this.links.getAll()) {
@@ -41,10 +41,10 @@ export class HalState<T = any> extends BaseState<T> {
         links[rel] =  attributes;
       } else if (Array.isArray(links[rel])) {
         // Add link to link array.
-        (links[rel] as HalLink[]).push(attributes);
+        (links[rel] as hal.HalLink[]).push(attributes);
       } else {
         // 1 link with this rel existed, so we will transform it to an array.
-        links[rel] = [links[rel] as HalLink, attributes];
+        links[rel] = [links[rel] as hal.HalLink, attributes];
       }
 
     }
@@ -113,7 +113,7 @@ export const factory:StateFactory = async (client, uri, response): Promise<HalSt
 /**
  * Parse the Hal _links object and populate the 'links' property.
  */
-function parseHalLinks(context: string, body: HalResource): Link[] {
+function parseHalLinks(context: string, body: hal.HalResource): Link[] {
 
   if (body._links === undefined) {
     return [];
@@ -182,7 +182,7 @@ function parseHalLinks(context: string, body: HalResource): Link[] {
 /**
  * Parses a single HAL link from a _links object
  */
-function parseHalLink(context: string, rel: string, links: HalLink[]): Link[] {
+function parseHalLink(context: string, rel: string, links: hal.HalLink[]): Link[] {
 
   const result: Link[] = [];
 
@@ -202,7 +202,7 @@ function parseHalLink(context: string, rel: string, links: HalLink[]): Link[] {
  * Parse the HAL _embedded object. Right now we're just grabbing the
  * information from _embedded and turn it into links.
  */
-function parseHalEmbedded(client: Client, context: string, body: HalResource, headers: Headers): HalState<any>[] {
+function parseHalEmbedded(client: Client, context: string, body: hal.HalResource, headers: Headers): HalState<any>[] {
 
   if (body._embedded === undefined) {
     return [];
@@ -212,7 +212,7 @@ function parseHalEmbedded(client: Client, context: string, body: HalResource, he
 
   for (const embedded of Object.values(body._embedded)) {
 
-    let embeddedList: HalResource[];
+    let embeddedList: hal.HalResource[];
 
     if (!Array.isArray(embedded)) {
       embeddedList = [embedded];
@@ -252,7 +252,7 @@ function parseHalEmbedded(client: Client, context: string, body: HalResource, he
 
 }
 
-function parseHalForms(context: string, body: HalResource): ActionInfo[] {
+function parseHalForms(context: string, body: hal.HalResource): ActionInfo[] {
 
   if (!body._templates) return [];
 
@@ -269,45 +269,95 @@ function parseHalForms(context: string, body: HalResource): ActionInfo[] {
 
 }
 
-function parseHalField(halField: HalFormsProperty): Field {
+function parseHalField(halField: hal.HalFormsProperty): Field {
 
-  const fieldType = halField.type || 'text' as const;
-
-  switch(fieldType) {
+  switch(halField.type) {
+    case undefined:
     case 'text' :
-    case 'hidden' :
     case 'search' :
     case 'tel' :
     case 'url' :
     case 'email' :
+
+      if (halField.options) {
+        const baseField = {
+          name: halField.name,
+          type: 'select' as const,
+          required: halField.required || false,
+          readOnly: halField.readOnly || false,
+          multiple: halField.options.multiple as any,
+          value: (halField.options.selectedValues || halField.value) as any
+        };
+
+        const labelField = halField.options.promptField || 'prompt';
+        const valueField = halField.options.valueField || 'value';
+        if (isInlineOptions(halField.options)) {
+
+          const options: Record<string, string> = {};
+
+          for(const entry of halField.options.inline) {
+
+            console.log(entry, labelField, valueField);
+            if (typeof entry === 'string') {
+              options[entry] = entry;
+            } else {
+              options[entry[labelField]] = entry[valueField];
+            }
+          }
+
+          return {
+            ...baseField,
+            options
+          };
+        } else {
+          return {
+            ...baseField,
+            dataSource: {
+              href: halField.options.link.href,
+              type: halField.options.link.type,
+              labelField,
+              valueField,
+            }
+          };
+        }
+      } else {
+        return {
+          name: halField.name,
+          type: halField.type ?? 'text',
+          required: halField.required || false,
+          readOnly: halField.readOnly || false,
+          value: halField.value,
+          pattern: halField.regex ? new RegExp(halField.regex) : undefined,
+          label: halField.prompt,
+          placeholder: halField.placeHolder,
+        };
+      }
+    case 'hidden' :
       return {
         name: halField.name,
-        type: fieldType,
+        type: 'hidden',
         required: halField.required || false,
         readOnly: halField.readOnly || false,
         value: halField.value,
-        pattern: halField.regex ? new RegExp(halField.regex) : undefined,
         label: halField.prompt,
         placeholder: halField.placeHolder,
-        minLength: halField.minLength,
-        maxLength: halField.maxLength,
       };
     case 'textarea' :
       return {
         name: halField.name,
-        type: fieldType,
+        type: halField.type,
         required: halField.required || false,
         readOnly: halField.readOnly || false,
         value: halField.value,
         label: halField.prompt,
         placeholder: halField.placeHolder,
-        minLength: halField.minLength,
-        maxLength: halField.maxLength,
+        cols: halField.cols,
+        rows: halField.rows,
       };
     case 'password' :
       return {
         name: halField.name,
-        type: fieldType,
+        type: halField.type,
         required: halField.required || false,
         readOnly: halField.readOnly || false,
         label: halField.prompt,
@@ -317,12 +367,10 @@ function parseHalField(halField: HalFormsProperty): Field {
     case 'month' :
     case 'week' :
     case 'time' :
-    case 'datetime-local' :
-    case 'number' :
-    case 'range' :
       return {
         name: halField.name,
-        type: fieldType,
+        type: halField.type,
+        value: halField.value,
         required: halField.required || false,
         readOnly: halField.readOnly || false,
         label: halField.prompt,
@@ -330,16 +378,48 @@ function parseHalField(halField: HalFormsProperty): Field {
         max: halField.max,
         step: halField.step,
       };
-
+    case 'number' :
+    case 'range' :
+      return {
+        name: halField.name,
+        type: halField.type,
+        value: halField.value ? +halField.value : undefined,
+        required: halField.required || false,
+        readOnly: halField.readOnly || false,
+        label: halField.prompt,
+        min: halField.min,
+        max: halField.max,
+        step: halField.step,
+      };
+    case 'datetime-local' :
+      return {
+        name: halField.name,
+        type: halField.type,
+        value: halField.value ? new Date(halField.value) : undefined,
+        required: halField.required || false,
+        readOnly: halField.readOnly || false,
+        label: halField.prompt,
+        min: halField.min,
+        max: halField.max,
+        step: halField.step,
+      };
+    case 'radio' :
+    case 'checkbox' :
     case 'color' :
       return {
         name: halField.name,
-        type: fieldType,
+        type: halField.type,
         required: halField.required || false,
         readOnly: halField.readOnly || false,
         label: halField.prompt,
       };
 
   }
+
+}
+
+function isInlineOptions(options: hal.HalFormsSimpleProperty['options']): options is hal.HalFormsOptionsInline {
+
+  return (options as any).inline !== undefined;
 
 }

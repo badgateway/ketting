@@ -184,6 +184,9 @@ describe('HAL state factory', () => {
 
     const hal = await callFactory({
       _links: {
+        self: {
+          href: '/foo',
+        },
         author: {
           href: 'https://evertpot.com/',
         },
