@@ -105,11 +105,11 @@ describe('HAL forms', () => {
         name: 'text',
         required: true,
         readOnly: false,
-        regex: '/[a-z]/',
+        regex: '[a-z]',
       }, {
         type: 'text',
         name: 'text',
-        required: false,
+        required: true,
         readOnly: false,
         pattern: /[a-z]/,
       }
