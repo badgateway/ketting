@@ -1,10 +1,23 @@
+export type Field =
+  BooleanField |
+  BasicStringField |
+  DateTimeField |
+  FileField |
+  HiddenField |
+  NumberField |
+  SelectFieldSingle |
+  SelectFieldMulti |
+  RangeStringField |
+  TextAreaField |
+  TextField;
+
 /**
  * A Field describes a single field in an action or form.
  *
  * Fields can be used to automatically render forms or other UIs based on
  * hypermedia actions.
  */
-export interface BaseField<TType extends string, TValue> {
+interface BaseField<T> {
   /**
    * Name of the field.
    *
@@ -17,17 +30,17 @@ export interface BaseField<TType extends string, TValue> {
    *
    * This is similar to the HTML5 "type" attribute on forms.
    */
-  type: TType,
+  type: string,
 
   /**
    * The current (pre-filed) value on the form.
    */
-  value?: TValue;
+  value?: T;
 
   /**
    * This could be used to describe a sample value.
    */
-  placeholder?: TValue;
+  placeholder?: T;
 
   /**
    * Whether this field is required for submitting the form.
@@ -50,79 +63,135 @@ export interface BaseField<TType extends string, TValue> {
  *
  * This includes numbers, dates and time fields.
  */
-export interface RangeField<TType extends string, TValue> extends BaseField<TType, TValue>  {
+interface RangeField<T> extends BaseField<T>  {
   max?: number;
   min?: number;
   step?: number;
 }
 
-
 /**
- * A checkbox basically behaves like a boolean.
+ * Toggles/checkboxes
  */
-export type Checkbox = BaseField<'checkbox', boolean>
-
-/**
- * A color picker.
- */
-export type Color = BaseField<'color', string>
-
-/**
- * A 'date' field.
- */
-export type Date = RangeField<'date', string>
-
-/**
- * @deprecated
- */
-export type DateTime = RangeField<'datetime', Date>
-
-export type DateTimeLocal = RangeField<'datetime-local', Date>
-
-export type Email = BaseField<'email', string>
-
-export type File = BaseField<'file', never>
-
-export type Hidden = BaseField<'hidden', string | number | null | boolean>
-
-export type Number = RangeField<'number', number>;
-
-export type Month = RangeField<'month', string>
-
-export type Password = BaseField<'password', string>
-
-export interface Radio extends BaseField<'radio', string> {
-  options?: Map<string, string>;
+interface BooleanField extends BaseField<boolean> {
+  type: 'checkbox' | 'radio';
 }
 
-export type Range = RangeField<'range', number>;
+/**
+ * Any field that encodes itself as a string but with no
+ * special features.
+ */
+interface BasicStringField extends BaseField<string> {
+  type: 'color' | 'email' | 'password' | 'search' | 'tel' | 'url',
+}
 
-export type Search = BaseField<'search', string>
+interface RangeStringField extends RangeField<string> {
+  type: 'date' | 'month' | 'time' | 'week',
+}
 
-export type Tel = BaseField<'tel', string>
+interface DateTimeField extends RangeField<Date> {
+  type: 'datetime' | 'datetime-local',
+}
 
-export interface Text extends BaseField<'text', string> {
+interface HiddenField extends BaseField<string | number | null | boolean> {
+  type: 'hidden';
+}
+
+interface FileField extends BaseField<never> {
+  type: 'file';
+}
+
+interface NumberField extends RangeField<number> {
+  type: 'number' | 'range';
+}
+
+/**
+ * OptionsDataSource is a helper type that specifiess the different data
+ * sources for lists of options.
+ */
+
+type OptionsDataSource = {
+  /**
+   * Keys and values are labels and values.
+   *
+   * If specified as a plain array, use array values as labels and values.
+   */
+  options: Record<string, string> | string[]
+} | {
+  /**
+   * If dataSource is specified, we'll grab the list of options from a
+   * simple csv or json resource.
+   */
+  dataSource: {
+    /**
+     * URI where the list of options can be acquired.
+     */
+    href: string;
+
+    /**
+     * Could be text/csv or any json content-type.
+     */
+    type?: string;
+
+    /**
+     * If datasource returns an array of objects, use this
+     * property for the label. Defaults to 'label'
+     *
+     * This is ignored if it doesn't apply for the media type.
+     */
+    labelField?: string;
+
+    /**
+     * If datasource returns an array of objects, use this
+     * property for the value. Defaults to 'value'
+     *
+     * This is ignored if it doesn't apply for the media type.
+     */
+    valueField?: string;
+  }
+} | {
+  /**
+   * If 'linkSource' is specified, we assume that the value will be a URI.
+   *
+   * We will grab the list of options by fetching a resource, and getting
+   * a list of links specified by a rel.
+   */
+  linkSource: {
+    href: string;
+    rel: string;
+  }
+}
+
+/**
+ * Encodes a field that has a list of options a user can choose from.
+ */
+type SelectFieldSingle = BaseField<string> & {
+  type: 'select';
+  renderAs?: 'radio' | 'dropdown';
+  multiple?: false;
+} & OptionsDataSource;
+
+/**
+ * An options field where users can select more than 1 item
+ */
+type SelectFieldMulti = BaseField<string> & {
+  type: 'select';
+  renderAs?: 'radio' | 'dropdown';
+  multiple: true;
+} & OptionsDataSource;
+
+
+interface TextField extends BaseField<string> {
+  type: 'text',
   minLength?: number;
   maxLength?: number;
   pattern?: RegExp,
   options?: Map<string, string>;
 }
 
-export interface TextArea extends BaseField<'textarea', string> {
+interface TextAreaField extends BaseField<string> {
+  type: 'textarea';
   minLength?: number;
   maxLength?: number;
   cols?: number;
   rows?: number;
 }
-
-export type Time = RangeField<'time', string>
-
-export type Url = BaseField<'url', string>
-
-export type Week = RangeField<'week', string>
-
-// eslint will want to fix the number type here
-export type Field = Checkbox | Color | Date | DateTime | DateTimeLocal | Email
-  // eslint-disable-next-line
-  | File | Hidden | Number | Month | Password | Radio | Range | Search | Tel
-  | Text | TextArea | Time | Url | Week;
