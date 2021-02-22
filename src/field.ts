@@ -185,7 +185,6 @@ interface TextField extends BaseField<string> {
   minLength?: number;
   maxLength?: number;
   pattern?: RegExp,
-  options?: Map<string, string>;
 }
 
 interface TextAreaField extends BaseField<string> {

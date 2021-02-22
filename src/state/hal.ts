@@ -297,10 +297,11 @@ function parseHalField(halField: hal.HalFormsProperty): Field {
 
           for(const entry of halField.options.inline) {
 
+            console.log(entry, labelField, valueField);
             if (typeof entry === 'string') {
               options[entry] = entry;
             } else {
-              options[entry[labelField]] = options[entry[valueField]];
+              options[entry[labelField]] = entry[valueField];
             }
           }
 
@@ -334,14 +335,13 @@ function parseHalField(halField: hal.HalFormsProperty): Field {
     case 'hidden' :
       return {
         name: halField.name,
-        type: halField.type ?? 'text',
+        type: 'hidden',
         required: halField.required || false,
         readOnly: halField.readOnly || false,
         value: halField.value,
         label: halField.prompt,
         placeholder: halField.placeHolder,
       };
-      break;
     case 'textarea' :
       return {
         name: halField.name,
@@ -403,7 +403,6 @@ function parseHalField(halField: hal.HalFormsProperty): Field {
         max: halField.max,
         step: halField.step,
       };
-      break;
     case 'radio' :
     case 'checkbox' :
     case 'color' :
