@@ -109,7 +109,7 @@ interface NumberField extends RangeField<number> {
  * sources for lists of options.
  */
 
-type OptionsDataSource = {
+export type OptionsDataSource = {
   /**
    * Keys and values are labels and values.
    *
@@ -175,7 +175,7 @@ type SelectFieldSingle = BaseField<string> & {
  */
 type SelectFieldMulti = BaseField<string> & {
   type: 'select';
-  renderAs?: 'radio' | 'dropdown';
+  renderAs?: 'checkbox' | 'dropdown';
   multiple: true;
 } & OptionsDataSource;
 

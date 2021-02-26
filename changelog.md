@@ -1,6 +1,13 @@
 ChangeLog
 =========
 
+7.0.0-beta.4 (2021-02-26)
+------------------------
+
+* Added renderAs 'checkbox' to multi-select fields in actions.
+* Export `OptionDataSource`.
+
+
 7.0.0-beta.3 (2021-02-21)
 -------------------------
 
