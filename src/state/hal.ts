@@ -297,7 +297,6 @@ function parseHalField(halField: hal.HalFormsProperty): Field {
 
           for(const entry of halField.options.inline) {
 
-            console.log(entry, labelField, valueField);
             if (typeof entry === 'string') {
               options[entry] = entry;
             } else {
