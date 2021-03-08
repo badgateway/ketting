@@ -254,8 +254,8 @@ describe('HAL forms', () => {
         required: false,
         readOnly: false,
         options: {
-          l1: 'v1',
-          l2: 'v2'
+          v1: 'l1',
+          v2: 'l2'
         }
       });
 
