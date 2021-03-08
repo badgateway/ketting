@@ -300,7 +300,7 @@ function parseHalField(halField: hal.HalFormsProperty): Field {
             if (typeof entry === 'string') {
               options[entry] = entry;
             } else {
-              options[entry[labelField]] = entry[valueField];
+              options[entry[valueField]] = entry[labelField];
             }
           }
 
