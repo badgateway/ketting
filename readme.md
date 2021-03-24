@@ -1,7 +1,7 @@
 ![Logo][4] Ketting - The HATEOAS client for javascript
 =======================================================
 
-* Go to the [Wiki][9] for full documentation.
+Check out the [Wiki][9] for full documentation.
 
 Introduction
 ------------
@@ -15,6 +15,9 @@ when using it with formats that have support for links, including:
 * [JSON:API][jsonapi]
 * [Siren][siren],
 * [Collection+JSON][coljson]
+* [application/problem+json][problem] - Will extract useful information from
+  the standard problem object and embed them in exception objects.
+
 
 And it even works with HTML links, and [HTTP Link Headers][1].
 
@@ -66,24 +69,6 @@ OAuth2 support, but also opens the door to development of other plugins.
 
 Using this library it becomes very easy to follow links from a single bookmark,
 and discover resources and features on the server.
-
-Supported formats:
-
-* [HAL][hal]
-* [JSON:API][jsonapi] - Understands the `links` object and registers collection
-  members as `item` relationships.
-* [Collection+JSON][coljson]
-* [Siren][siren] - Including support for actions.
-* HTML - Can automatically follow `<link>` and `<a>` element with `rel=`
-  attributes, and submit HTML `<form>`s.
-* [HTTP Link header][1] - automatically registers as links regardless of format.
-* [application/problem+json][problem] - Will extract useful information from
-  the standard problem object and embed them in exception objects.
-
-Other features:
-
-* [Prefer-Transclude][prefer-transclude]
-* It can submit HTML forms and Siren actions.
 
 Read further on the [Wiki][9]
 
