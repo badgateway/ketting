@@ -128,6 +128,7 @@ export class BaseHeadState implements HeadState {
       'ETag',
       'Last-Modified',
       'Sunset',
+      'Title',
       'Warning',
     ];
 

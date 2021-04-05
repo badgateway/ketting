@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+7.0.0 (????-??-??)
+------------------
+
+* `Title` header is now defined as a HTTP Entity Header.
+
+
 7.0.0-beta.5 (2021-03-08)
 -------------------------
 
