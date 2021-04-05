@@ -5,6 +5,7 @@ import { Action, ActionNotFound, ActionInfo, SimpleAction } from '../action';
 import { Resource } from '../resource';
 import { resolve } from '../util/uri';
 import { expand } from '../util/uri-template';
+import { entityHeaderNames } from '../http/util';
 
 type HeadStateInit = {
 
@@ -121,20 +122,9 @@ export class BaseHeadState implements HeadState {
    */
   contentHeaders(): Headers {
 
-    const contentHeaderNames = [
-      'Content-Type',
-      'Content-Language',
-      'Deprecation',
-      'ETag',
-      'Last-Modified',
-      'Sunset',
-      'Title',
-      'Warning',
-    ];
-
     const result: {[name: string]: string} = {};
 
-    for(const contentHeader of contentHeaderNames) {
+    for(const contentHeader of entityHeaderNames) {
       if (this.headers.has(contentHeader)) {
         result[contentHeader] = this.headers.get(contentHeader)!;
       }
