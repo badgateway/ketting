@@ -47,3 +47,24 @@ const safeMethods = ['GET', 'HEAD', 'OPTIONS', 'PRI', 'PROPFIND', 'REPORT', 'SEA
 export function isSafeMethod(method: string): boolean {
   return safeMethods.includes(method);
 }
+
+/**
+ * Older HTTP versions calls these 'entity headers'.
+ *
+ * Never HTTP/1.1 specs calls some of these 'representation headers'.
+ *
+ * What they have in common is that these headers can exist on request and
+ * response and say something *about* the content.
+ */
+export const entityHeaderNames = [
+  'Content-Type',
+  'Content-Language',
+  'Content-Location',
+  'Deprecation',
+  'ETag',
+  'Expires',
+  'Last-Modified',
+  'Sunset',
+  'Title',
+  'Warning',
+];
