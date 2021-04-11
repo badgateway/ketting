@@ -79,7 +79,7 @@ app.use(
 app.use(
   route('/echo', (ctx: Context) => {
     ctx.response.status = 200;
-    ctx.response.type = ctx.request.headers['content-type'];
+    ctx.response.type = ctx.request.headers['content-type']!;
     ctx.response.body = {
       headers: ctx.request.headers,
       body: ctx.request.body,
@@ -176,7 +176,7 @@ app.use(
   route('/oauth-token')
     .post((ctx: Context) => {
       const requestBody: any = ctx.request.body;
-      const clientInfo = Buffer.from(ctx.request.headers.authorization.split(' ')[1], 'base64').toString('ascii');
+      const clientInfo = Buffer.from(ctx.request.headers.authorization!.split(' ')[1], 'base64').toString('ascii');
 
       // Check that the client info is legitimate an then check if the user
       // information is correct if a password grant or the refresh token is
