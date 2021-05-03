@@ -393,11 +393,11 @@ async function testField(title: string, halField: HalFormsProperty, kettingField
 
     const testField:any = hal.action('default').fields[0];
     // Remove undefined
-    for (const [k, v] of Object.entries(testField)) {
-      if (v === undefined) delete testField[k];
-      if (k === 'dataSource') {
-        for (const [k2, v2] of Object.entries(v as any)) {
-          if (v2 === undefined) delete testField[k][k2];
+    for(const [k,v] of Object.entries(testField)) {
+      if (v===undefined) delete testField[k];
+      if (k==='dataSource') {
+        for(const [k2,v2] of Object.entries(v as any)) {
+          if (v2===undefined) delete testField[k][k2];
         }
       }
     }
