@@ -95,7 +95,7 @@ describe('HAL forms', () => {
           },
           _templates: {
             default: {
-              target: '/update',
+              target: '/foo/1',
               method: 'PUT',
               properties: [
                 {
@@ -126,7 +126,7 @@ describe('HAL forms', () => {
     delete embeddedAction.submit;
 
     const expected: CompareAction = {
-      uri: 'http://example/update',
+      uri: 'http://example/foo/1',
       name: 'default',
       title: undefined,
       contentType: 'application/json',
