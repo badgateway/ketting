@@ -244,6 +244,7 @@ function parseHalEmbedded(client: Client, context: string, body: hal.HalResource
         // Parsing nested embedded items. Note that we assume that the base url is relative to
         // the outermost parent, not relative to the embedded item. HAL is not clear on this.
         embedded: parseHalEmbedded(client, context, embeddedItem, headers),
+        actions: parseHalForms(context, embeddedItem)
       }));
     }
   }

@@ -83,6 +83,70 @@ describe('HAL forms', () => {
     expect(action).to.eql(expected);
 
   });
+  it('should parse embedded actions', async () => {
+    const hal = await callFactory({
+      _links: {},
+      _embedded: {
+        content: [{
+          _links: {
+            self: {
+              href: '/foo/1',
+            }
+          },
+          _templates: {
+            default: {
+              target: '/update',
+              method: 'PUT',
+              properties: [
+                {
+                  type: 'text',
+                  name: 'text',
+                },
+              ]
+            }
+          },
+          id: 1,
+        }]
+      },
+      _templates: {
+        default: {
+          target: '/submit',
+          method: 'POST',
+          properties: [
+            {
+              type: 'text',
+              name: 'text',
+            },
+          ]
+        }
+      }
+    });
+    const embeddedAction: any = hal.getEmbedded()[0].action('default');
+    delete embeddedAction.client;
+    delete embeddedAction.submit;
+
+    const expected: CompareAction = {
+      uri: 'http://example/update',
+      name: 'default',
+      title: undefined,
+      contentType: 'application/json',
+      method: 'PUT',
+      fields: [
+        {
+          type: 'text',
+          name: 'text',
+          required: false,
+          readOnly: false,
+          label: undefined,
+          pattern: undefined,
+          placeholder: undefined,
+          value: undefined,
+        }
+      ],
+    };
+
+    expect(embeddedAction).to.eql(expected);
+  });
 
   describe('fields', () => {
 
@@ -329,11 +393,11 @@ async function testField(title: string, halField: HalFormsProperty, kettingField
 
     const testField:any = hal.action('default').fields[0];
     // Remove undefined
-    for(const [k,v] of Object.entries(testField)) {
-      if (v===undefined) delete testField[k];
-      if (k==='dataSource') {
-        for(const [k2,v2] of Object.entries(v as any)) {
-          if (v2===undefined) delete testField[k][k2];
+    for (const [k, v] of Object.entries(testField)) {
+      if (v === undefined) delete testField[k];
+      if (k === 'dataSource') {
+        for (const [k2, v2] of Object.entries(v as any)) {
+          if (v2 === undefined) delete testField[k][k2];
         }
       }
     }
