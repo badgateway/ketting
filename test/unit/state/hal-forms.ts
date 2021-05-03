@@ -85,7 +85,11 @@ describe('HAL forms', () => {
   });
   it('should parse embedded actions', async () => {
     const hal = await callFactory({
-      _links: {},
+      _links: {
+        self: {
+          href: '/foo'
+        }
+      },
       _embedded: {
         content: [{
           _links: {
@@ -110,7 +114,7 @@ describe('HAL forms', () => {
       },
       _templates: {
         default: {
-          target: '/submit',
+          target: '/foo',
           method: 'POST',
           properties: [
             {
