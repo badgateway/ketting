@@ -1,6 +1,15 @@
 ChangeLog
 =========
 
+7.0.1 (2021-05-04)
+------------------
+
+* No longer testing Node 10 and Node 15. Added Node 16.
+* Actions are now retained when caching. Before this, action information was
+  dropped which meant that any actions in embedded resources were not
+  accessible. (@hugothomas)
+
+
 7.0.0 (2021-04-11)
 ------------------
 
