@@ -53,7 +53,7 @@ export interface Action<T extends Record<string, any> = Record<string, any>> ext
 
 }
 
-export class SimpleAction<TFormData> implements Action {
+export class SimpleAction<TFormData extends Record<string, any>> implements Action {
 
   /**
    * What url to post the form to.
