@@ -5,7 +5,7 @@ export type Link = {
   /**
    * Target URI
    */
-  href: string,
+  href: string;
 
   /**
    * Context URI.
@@ -17,17 +17,17 @@ export type Link = {
   /**
    * Relation type
    */
-  rel: string,
+  rel: string;
 
   /**
    * Link title
    */
-  title?: string,
+  title?: string;
 
   /**
    * Content type hint of the target resource
    */
-  type?: string,
+  type?: string;
 
   /**
    * Anchor.
@@ -35,22 +35,22 @@ export type Link = {
    * This describes where the link is linked from, from for example
    * a fragment in the current document
    */
-  anchor?: string,
+  anchor?: string;
 
   /**
    * Language of the target resource
    */
-  hreflang?: string,
+  hreflang?: string;
 
   /**
    * HTML5 media attribute
    */
-  media?: string,
+  media?: string;
 
   /**
    * If templated is set to true, the href is a templated URI.
    */
-  templated?: boolean,
+  templated?: boolean;
 
   /**
    * Link hints, as defined in draft-nottingham-link-hint
@@ -221,5 +221,5 @@ export class LinkNotFound extends Error {}
  * A key->value map of variables to place in a templated link
  */
 export type LinkVariables = {
-  [key: string]: string | number
+  [key: string]: string | number;
 };

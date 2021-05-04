@@ -6,7 +6,7 @@ import {
 } from 'node-fetch';
 
 // Registering Fetch as a glboal polyfill
-(<any> global).fetch = nodeFetch;
-(<any> global).Request = Request;
-(<any> global).Headers = Headers;
-(<any> global).Response = Response;
+(global as any).fetch = nodeFetch;
+(global as any).Request = Request;
+(global as any).Headers = Headers;
+(global as any).Response = Response;

@@ -66,14 +66,14 @@ type SirenProperties = Record<string, any> | undefined;
 
 type SirenEntity<T extends SirenProperties> = {
 
-  class?: string[],
+  class?: string[];
 
-  properties: T
-  entities?: (SirenLink | SirenSubEntity)[],
+  properties: T;
+  entities?: (SirenLink | SirenSubEntity)[];
 
-  links?: SirenLink[],
-  actions?: SirenAction[],
-  title?: string,
+  links?: SirenLink[];
+  actions?: SirenAction[];
+  title?: string;
 
 };
 
@@ -81,30 +81,30 @@ type SirenSubEntity = SirenEntity<any> & { rel: string[] };
 
 type SirenLink = {
 
-  class?: string[],
-  rel: string[],
-  href: string,
-  type?: string,
-  title?: string,
+  class?: string[];
+  rel: string[];
+  href: string;
+  type?: string;
+  title?: string;
 
 };
 
 type SirenAction = {
-  name: string,
-  class?: string[],
-  method?: string,
-  href: string,
-  title?: string,
-  type?: string,
-  fields?: SirenField[],
+  name: string;
+  class?: string[];
+  method?: string;
+  href: string;
+  title?: string;
+  type?: string;
+  fields?: SirenField[];
 };
 
 type SirenField = {
-  name: string,
-  class?: string[],
-  type?: 'hidden' | 'text' | 'search' | 'tel' | 'url' | 'email' | 'password' | 'datetime' | 'date' | 'month' | 'week' | 'time' | 'datetime-local' | 'number' | 'range' | 'color' | 'checkbox' | 'radio' | 'file'
-  value?: string,
-  title?: string
+  name: string;
+  class?: string[];
+  type?: 'hidden' | 'text' | 'search' | 'tel' | 'url' | 'email' | 'password' | 'datetime' | 'date' | 'month' | 'week' | 'time' | 'datetime-local' | 'number' | 'range' | 'color' | 'checkbox' | 'radio' | 'file';
+  value?: string;
+  title?: string;
 };
 
 function parseSirenLinks(contextUri: string, body: SirenEntity<any>): Link[] {

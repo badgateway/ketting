@@ -38,7 +38,7 @@ export default class Client {
    * headers. Higher means higher priority.
    */
   contentTypeMap: {
-    [mimeType: string]: [StateFactory<any>, string],
+    [mimeType: string]: [StateFactory<any>, string];
   } = {
     'application/prs.hal-forms+json': [halStateFactory, '1.0'],
     'application/hal+json': [halStateFactory, '0.9'],

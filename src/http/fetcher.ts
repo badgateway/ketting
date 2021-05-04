@@ -49,10 +49,10 @@ export class Fetcher {
    */
   getMiddlewaresByOrigin(origin: string): FetchMiddleware[] {
 
-    return this.middlewares.filter( ([regex, middleware]) => {
+    return this.middlewares.filter( ([regex]) => {
       return regex.test(origin);
 
-    }).map( ([regex, middleware]) => {
+    }).map( ([, middleware]) => {
       return middleware;
     });
 

@@ -29,7 +29,7 @@ export type RequestOptions<T = any> = {
    *
    * If this is not set, we'll fall back to 'headers'
    */
-  getContentHeaders?: () => HttpHeaders | Headers,
+  getContentHeaders?: () => HttpHeaders | Headers;
 
   /**
    * Full list of HTTP headers.

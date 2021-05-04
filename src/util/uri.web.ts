@@ -1,7 +1,7 @@
 import { Link } from '../link';
 
 type UrlParts = {
-  host?: string,
+  host?: string;
 };
 
 /**
@@ -32,7 +32,7 @@ export function resolve(base: string|Link, relative?: string): string {
 
   const doc     = document;
   const oldBase = doc.getElementsByTagName('base')[0];
-  const oldHref = oldBase && oldBase.href;
+  const oldHref = oldBase?.href;
   const docHead = doc.head || doc.getElementsByTagName('head')[0];
   const ourBase = oldBase || docHead.appendChild(doc.createElement('base'));
   const resolver = doc.createElement('a');

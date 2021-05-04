@@ -30,7 +30,7 @@ interface BaseField<T> {
    *
    * This is similar to the HTML5 "type" attribute on forms.
    */
-  type: string,
+  type: string;
 
   /**
    * The current (pre-filed) value on the form.
@@ -81,15 +81,15 @@ interface BooleanField extends BaseField<boolean> {
  * special features.
  */
 interface BasicStringField extends BaseField<string> {
-  type: 'color' | 'email' | 'password' | 'search' | 'tel' | 'url',
+  type: 'color' | 'email' | 'password' | 'search' | 'tel' | 'url';
 }
 
 interface RangeStringField extends RangeField<string> {
-  type: 'date' | 'month' | 'time' | 'week',
+  type: 'date' | 'month' | 'time' | 'week';
 }
 
 interface DateTimeField extends RangeField<Date> {
-  type: 'datetime' | 'datetime-local',
+  type: 'datetime' | 'datetime-local';
 }
 
 interface HiddenField extends BaseField<string | number | null | boolean> {
@@ -115,7 +115,7 @@ export type OptionsDataSource = {
    *
    * If specified as a plain array, use array values as labels and values.
    */
-  options: Record<string, string> | string[]
+  options: Record<string, string> | string[];
 } | {
   /**
    * If dataSource is specified, we'll grab the list of options from a
@@ -147,7 +147,7 @@ export type OptionsDataSource = {
      * This is ignored if it doesn't apply for the media type.
      */
     valueField?: string;
-  }
+  };
 } | {
   /**
    * If 'linkSource' is specified, we assume that the value will be a URI.
@@ -158,7 +158,7 @@ export type OptionsDataSource = {
   linkSource: {
     href: string;
     rel: string;
-  }
+  };
 }
 
 /**
@@ -181,10 +181,10 @@ type SelectFieldMulti = BaseField<string> & {
 
 
 interface TextField extends BaseField<string> {
-  type: 'text',
+  type: 'text';
   minLength?: number;
   maxLength?: number;
-  pattern?: RegExp,
+  pattern?: RegExp;
 }
 
 interface TextAreaField extends BaseField<string> {

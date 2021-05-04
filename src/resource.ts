@@ -197,7 +197,7 @@ export class Resource<T = any> extends EventEmitter {
     switch (response.status) {
       case 201:
         if (response.headers.has('location')) {
-          return this.go(<string> response.headers.get('location'));
+          return this.go(response.headers.get('location')!);
         }
         throw new Error('Could not follow after a 201 request, because the server did not reply with a Location header. If you sent a Location header, check if your service is returning "Access-Control-Expose-Headers: Location".');
       case 204 :
@@ -216,7 +216,7 @@ export class Resource<T = any> extends EventEmitter {
    *
    * If the server responds with 200 Status code this will return a State object
    */
-  async patch(options: PatchRequestOptions): Promise<void | State<T>> {
+  async patch(options: PatchRequestOptions): Promise<undefined | State<T>> {
 
     const response = await this.fetchOrThrow(
       optionsToRequestInit('PATCH', options)
@@ -385,7 +385,7 @@ export declare interface Resource<T = any> {
    * It will also trigger when calling 'PUT' with a full state object,
    * and when updateCache() was used.
    */
-  on(event: 'update', listener: (state: State) => void) : this
+  on(event: 'update', listener: (state: State) => void) : this;
 
   /**
    * Subscribe to the 'stale' event.
@@ -408,7 +408,7 @@ export declare interface Resource<T = any> {
    * Subscribe to the 'update' event and unsubscribe after it was
    * emitted the first time.
    */
-  once(event: 'update', listener: (state: State) => void) : this
+  once(event: 'update', listener: (state: State) => void) : this;
 
   /**
    * Subscribe to the 'stale' event and unsubscribe after it was
@@ -425,7 +425,7 @@ export declare interface Resource<T = any> {
   /**
    * Unsubscribe from the 'update' event
    */
-  off(event: 'update', listener: (state: State) => void) : this
+  off(event: 'update', listener: (state: State) => void) : this;
 
   /**
    * Unsubscribe from the 'stale' event
@@ -440,7 +440,7 @@ export declare interface Resource<T = any> {
   /**
    * Emit an 'update' event.
    */
-  emit(event: 'update', state: State) : boolean
+  emit(event: 'update', state: State) : boolean;
 
   /**
    * Emit a 'stale' event.
@@ -457,7 +457,7 @@ export declare interface Resource<T = any> {
 export default Resource;
 
 type StrictRequestInit = RequestInit & {
-  headers: Headers,
+  headers: Headers;
 };
 
 /**

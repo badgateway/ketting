@@ -2,7 +2,7 @@ import { parse as p, resolve as r } from 'url';
 import { Link } from '../link';
 
 type UrlParts = {
-  host?: string|null,
+  host?: string|null;
 };
 
 /**
