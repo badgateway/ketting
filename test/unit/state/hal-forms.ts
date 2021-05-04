@@ -83,6 +83,74 @@ describe('HAL forms', () => {
     expect(action).to.eql(expected);
 
   });
+  it('should parse embedded actions', async () => {
+    const hal = await callFactory({
+      _links: {
+        self: {
+          href: '/foo'
+        }
+      },
+      _embedded: {
+        content: [{
+          _links: {
+            self: {
+              href: '/foo/1',
+            }
+          },
+          _templates: {
+            default: {
+              target: '/foo/1',
+              method: 'PUT',
+              properties: [
+                {
+                  type: 'text',
+                  name: 'text',
+                },
+              ]
+            }
+          },
+          id: 1,
+        }]
+      },
+      _templates: {
+        default: {
+          target: '/foo',
+          method: 'POST',
+          properties: [
+            {
+              type: 'text',
+              name: 'text',
+            },
+          ]
+        }
+      }
+    });
+    const embeddedAction: any = hal.getEmbedded()[0].action('default');
+    delete embeddedAction.client;
+    delete embeddedAction.submit;
+
+    const expected: CompareAction = {
+      uri: 'http://example/foo/1',
+      name: 'default',
+      title: undefined,
+      contentType: 'application/json',
+      method: 'PUT',
+      fields: [
+        {
+          type: 'text',
+          name: 'text',
+          required: false,
+          readOnly: false,
+          label: undefined,
+          pattern: undefined,
+          placeholder: undefined,
+          value: undefined,
+        }
+      ],
+    };
+
+    expect(embeddedAction).to.eql(expected);
+  });
 
   describe('fields', () => {
 
