@@ -152,4 +152,38 @@ describe('Client', () => {
     });
   });
 
+  it('should invalidate dependent resources if they were previously linked with "inv-by"', async () => {
+
+    const client = new Client('https://example.org');
+    client.cache.store(new BaseState({
+      client,
+      uri: 'https://example.org/foo',
+      data: 'hello',
+      headers: new Headers(),
+      links: new Links('http://example.org/foo'),
+    }));
+
+    const request1 = new Request('https://example.org/foo', {
+      method: 'GET',
+    });
+
+    const headers = new Headers();
+    headers.append('Link', '</bar>; rel="inv-by"');
+    client.use( async req => {
+      return new Response('OK', { headers });
+    });
+
+    await client.fetcher.fetch(request1);
+    expect(client.cache.has('https://example.org/foo')).to.equal(true);
+
+    // Lets invalidate /bar, which should also invalidate /foo
+    const request2 = new Request('https://example.org/bar', {
+      method: 'PUT',
+    });
+    await client.fetcher.fetch(request1);
+
+    expect(client.cache.has('https://example.org/foo')).to.equal(false);
+
+  });
+
 });
