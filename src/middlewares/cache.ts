@@ -15,6 +15,8 @@ import Client from '../client';
  */
 export default function(client: Client): FetchMiddleware {
 
+  const cacheDependencies: Map<string, Set<string>> = new Map();
+
   return async(request, next) => {
 
     /**
@@ -29,6 +31,22 @@ export default function(client: Client): FetchMiddleware {
     }
 
     const response = await next(request);
+
+    // If the response had a Link: rel=inv-by header, it means that when the
+    // target uri's cache expires, the uri of this resource should also
+    // expire.
+    if (response.headers.has('Link')) {
+      for (const httpLink of LinkHeader.parse(response.headers.get('Link')!).rel('inv-by')) {
+        const uri = resolve(request.url, httpLink.uri);
+        if (cacheDependencies.has(uri)) {
+          cacheDependencies.get(uri)!.add(request.url);
+        } else {
+          cacheDependencies.set(uri, new Set([request.url]));
+        }
+      }
+    }
+
+
     if (isSafeMethod(request.method)) {
       return response;
     }
@@ -39,10 +57,10 @@ export default function(client: Client): FetchMiddleware {
     }
 
     // We just processed an unsafe method, lets notify all subsystems.
-    const expireUris = [];
+    let expireUris = new Set<string>();
     if (!noStaleEvent && request.method !== 'DELETE') {
       // Sorry for the double negative
-      expireUris.push(request.url);
+      expireUris.add(request.url);
     }
 
     // If the response had a Link: rel=invalidate header, we want to
@@ -50,13 +68,13 @@ export default function(client: Client): FetchMiddleware {
     if (response.headers.has('Link')) {
       for (const httpLink of LinkHeader.parse(response.headers.get('Link')!).rel('invalidates')) {
         const uri = resolve(request.url, httpLink.uri);
-        expireUris.push(uri);
+        expireUris.add(uri);
       }
     }
 
     // Location headers should also expire
     if (response.headers.has('Location')) {
-      expireUris.push(
+      expireUris.add(
         resolve(request.url, response.headers.get('Location')!)
       );
     }
@@ -70,8 +88,9 @@ export default function(client: Client): FetchMiddleware {
       client.cacheState(clState);
     }
 
+    expireUris = expandCacheDependencies(expireUris, cacheDependencies);
     for (const uri of expireUris) {
-      client.cache.delete(request.url);
+      client.cache.delete(uri);
 
       const resource = client.resources.get(uri);
       if (resource) {
@@ -90,5 +109,24 @@ export default function(client: Client): FetchMiddleware {
     return response;
 
   };
+
+}
+
+function expandCacheDependencies(uris: Set<string>, dependencies: Map<string, Set<string>>, output?: Set<string>): Set<string> {
+
+  if (!output) output = new Set();
+
+  for(const uri of uris) {
+
+    if (!output.has(uri)) {
+      output.add(uri);
+      if (dependencies.has(uri)) {
+        expandCacheDependencies(dependencies.get(uri)!, dependencies, output);
+      }
+    }
+
+  }
+
+  return output;
 
 }
