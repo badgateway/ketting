@@ -41,7 +41,7 @@ export default function(client: Client): FetchMiddleware {
         if (cacheDependencies.has(uri)) {
           cacheDependencies.get(uri)!.add(request.url);
         } else {
-          cacheDependencies.set(uri, new Set(request.url));
+          cacheDependencies.set(uri, new Set([request.url]));
         }
       }
     }
@@ -90,7 +90,7 @@ export default function(client: Client): FetchMiddleware {
 
     expireUris = expandCacheDependencies(expireUris, cacheDependencies);
     for (const uri of expireUris) {
-      client.cache.delete(request.url);
+      client.cache.delete(uri);
 
       const resource = client.resources.get(uri);
       if (resource) {

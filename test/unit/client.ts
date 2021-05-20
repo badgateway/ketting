@@ -180,7 +180,7 @@ describe('Client', () => {
     const request2 = new Request('https://example.org/bar', {
       method: 'PUT',
     });
-    await client.fetcher.fetch(request1);
+    await client.fetcher.fetch(request2);
 
     expect(client.cache.has('https://example.org/foo')).to.equal(false);
 
