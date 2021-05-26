@@ -15,12 +15,12 @@ export type State<T = any> = {
    *
    * In the case of a JSON response, this will be deserialized
    */
-  data: T
+  data: T;
 
   /**
    * All links associated with the resource.
    */
-  links: Links,
+  links: Links;
 
   /**
    * The full list of HTTP headers that were sent with the response.

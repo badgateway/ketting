@@ -37,7 +37,7 @@ export interface ActionInfo {
   /**
    * Returns the list of fields associated to an action
    */
-  fields: Field[]
+  fields: Field[];
 
 }
 

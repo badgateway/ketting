@@ -28,12 +28,12 @@ export class HttpError extends Error {
 export class Problem extends HttpError {
 
   body: {
-    type: string
-    title?: string
-    status: number
-    detail?: string
-    instance?: string
-    [x: string]: any
+    type: string;
+    title?: string;
+    status: number;
+    detail?: string;
+    instance?: string;
+    [x: string]: any;
   };
 
   constructor(response: Response, problemBody: Record<string, any>) {
@@ -65,7 +65,7 @@ export class Problem extends HttpError {
 export default async function problemFactory(response: Response): Promise<HttpError | Problem> {
 
   const contentType = response.headers.get('Content-Type');
-  if (contentType && contentType.match(/^application\/problem\+json/i)) {
+  if (contentType?.match(/^application\/problem\+json/i)) {
     const problemBody = await response.json();
     return new Problem(response, problemBody);
   } else {

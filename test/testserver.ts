@@ -8,14 +8,14 @@ import * as Route from 'koa-path-match';
 import * as koaStatic from 'koa-static';
 
 type Context = KoaContext & {
-  params: { [s: string]: string }
+  params: { [s: string]: string };
 };
 
 const app = new Koa();
 const route = Route();
 
 let resources: {
-  [uri: string]: Buffer | string | null
+  [uri: string]: Buffer | string | null;
 } = {};
 
 // Log to console

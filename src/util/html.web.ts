@@ -2,17 +2,17 @@ import { Link } from '../link';
 import { resolve } from './uri';
 
 export type HtmlForm = {
-  action: string,
-  method: string | null,
-  enctype: string | null,
-  rel: string | null,
-  id: string | null,
+  action: string;
+  method: string | null;
+  enctype: string | null;
+  rel: string | null;
+  id: string | null;
 }
 
 type ParseHtmlResult = {
 
-  links: Link[],
-  forms: HtmlForm[],
+  links: Link[];
+  forms: HtmlForm[];
 
 }
 export function parseHtml(contextUri: string, body: string): ParseHtmlResult {

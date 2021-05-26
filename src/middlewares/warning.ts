@@ -27,6 +27,7 @@ export default function(): FetchMiddleware {
         }
       }
 
+      /* eslint-disable-next-line no-console */
       console.warn(msg);
 
     }

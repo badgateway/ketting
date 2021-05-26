@@ -13,7 +13,7 @@ export default function(client: Client): FetchMiddleware {
 
     if (!request.headers.has('Accept')) {
       const acceptHeader = Object.entries(client.contentTypeMap).map(
-        ([contentType, [stateFactory, q]]) => contentType + ';q=' + q
+        ([contentType, [, q]]) => contentType + ';q=' + q
       ).join(', ');
       request.headers.set('Accept', acceptHeader);
     }

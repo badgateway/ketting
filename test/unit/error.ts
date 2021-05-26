@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/consistent-type-assertions */
 import problemFactory, { HttpError, Problem } from '../../src/http/error';
 import { expect } from 'chai';
 

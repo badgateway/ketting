@@ -36,9 +36,9 @@ type JsonApiLink = string | { href: string };
  * or on resource objects.
  */
 type JsonApiLinksObject = {
-  self?: JsonApiLink,
-  profile?: JsonApiLink,
-  [rel: string]: JsonApiLink | JsonApiLink[] | undefined
+  self?: JsonApiLink;
+  profile?: JsonApiLink;
+  [rel: string]: JsonApiLink | JsonApiLink[] | undefined;
 };
 
 /**
@@ -46,9 +46,9 @@ type JsonApiLinksObject = {
  * we care about.
  */
 type JsonApiResource = {
-  type: string,
-  id: string,
-  links?: JsonApiLinksObject,
+  type: string;
+  id: string;
+  links?: JsonApiLinksObject;
 };
 
 
@@ -58,9 +58,9 @@ type JsonApiResource = {
  * untyped.
  */
 type JsonApiTopLevelObject = {
-  links?: JsonApiLinksObject,
-  data: JsonApiResource | JsonApiResource[] | null,
-  [s: string]: any
+  links?: JsonApiLinksObject;
+  data: JsonApiResource | JsonApiResource[] | null;
+  [s: string]: any;
 };
 
 /**

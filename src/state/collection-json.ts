@@ -45,55 +45,55 @@ export const factory: StateFactory = async (client, uri, response): Promise<CjSt
 };
 
 type CjDocument = {
-  collection: CjCollection,
+  collection: CjCollection;
 };
 
 type CjCollection = {
-  version?: string,
-  href?: string,
-  links?: CjLink[],
-  items?: CjItem[],
-  queries?: CjQuery[],
-  template?: CjTemplate,
-  error?: CjError
+  version?: string;
+  href?: string;
+  links?: CjLink[];
+  items?: CjItem[];
+  queries?: CjQuery[];
+  template?: CjTemplate;
+  error?: CjError;
 };
 
 type CjError = {
-  title?: string,
-  code?: string,
-  message?: string,
+  title?: string;
+  code?: string;
+  message?: string;
 };
 
 type CjTemplate = {
-  data?: CjProperty[]
+  data?: CjProperty[];
 };
 
 type CjItem = {
-  href?: string,
-  data?: CjProperty[],
-  links?: CjLink[],
+  href?: string;
+  data?: CjProperty[];
+  links?: CjLink[];
 };
 
 type CjProperty = {
-  name: string,
-  value?: string,
-  prompt?: string
+  name: string;
+  value?: string;
+  prompt?: string;
 };
 
 type CjQuery = {
-  href: string,
-  rel: string,
-  name?: string,
-  prompt?: string,
-  data?: CjProperty[]
+  href: string;
+  rel: string;
+  name?: string;
+  prompt?: string;
+  data?: CjProperty[];
 };
 
 type CjLink = {
-  href: string,
-  rel: string,
-  name?: string,
-  render?: 'image' | 'link',
-  prompt?: string
+  href: string;
+  rel: string;
+  name?: string;
+  render?: 'image' | 'link';
+  prompt?: string;
 };
 
 

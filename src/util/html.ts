@@ -3,17 +3,17 @@ import { Link } from '../link';
 import { resolve } from './uri';
 
 export type HtmlForm = {
-  action: string,
-  method: string | null,
-  enctype: string | null,
-  rel: string | null,
-  id: string | null,
+  action: string;
+  method: string | null;
+  enctype: string | null;
+  rel: string | null;
+  id: string | null;
 }
 
 type ParseHtmlResult = {
 
-  links: Link[],
-  forms: HtmlForm[],
+  links: Link[];
+  forms: HtmlForm[];
 
 }
 
@@ -56,16 +56,16 @@ function parseLink(contextUri: string, node: sax.Tag): Link[] {
     return [];
   }
 
-  const rels = <string> node.attributes.REL;
+  const rels = node.attributes.REL as string;
 
   const links: Link[] = [];
   for (const rel of rels.split(' ')) {
 
-    const type = <string>node.attributes.TYPE;
+    const type = node.attributes.TYPE as string;
     const link: Link = {
       rel,
       context: contextUri,
-      href: <string> node.attributes.HREF,
+      href: node.attributes.HREF as string,
     };
     if (type) link.type = type;
     links.push(link);

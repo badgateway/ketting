@@ -9,7 +9,7 @@ import { entityHeaderNames } from '../http/util';
 
 type HeadStateInit = {
 
-  client: Client,
+  client: Client;
   uri: string;
   links: Links;
 
@@ -20,7 +20,7 @@ type HeadStateInit = {
 }
 
 type StateInit<T> = {
-  client: Client,
+  client: Client;
   uri: string;
   data: T;
   headers: Headers;
@@ -84,6 +84,7 @@ export class BaseHeadState implements HeadState {
       href = resolve(link);
     }
     if (link.hints?.status === 'deprecated') {
+      /* eslint-disable-next-line no-console */
       console.warn(`[ketting] The ${link.rel} link on ${this.uri} is marked deprecated.`, link);
     }
 
@@ -102,6 +103,7 @@ export class BaseHeadState implements HeadState {
     return this.links.getMany(rel).map( link => {
 
       if (link.hints?.status === 'deprecated') {
+        /* eslint-disable-next-line no-console */
         console.warn(`[ketting] The ${link.rel} link on ${this.uri} is marked deprecated.`, link);
       }
       const href = resolve(link);
