@@ -284,6 +284,7 @@ function parseHalField(halField: hal.HalFormsProperty): Field {
         const baseField = {
           name: halField.name,
           type: 'select' as const,
+          label: halField.prompt,
           required: halField.required || false,
           readOnly: halField.readOnly || false,
           multiple: halField.options.multiple as any,

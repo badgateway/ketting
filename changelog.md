@@ -1,6 +1,13 @@
 ChangeLog
 =========
 
+7.1.0 (2021-??-??)
+------------------
+
+* The 'prompt' field in HAL Forms for properties with 'options' set was
+  ignored.
+
+
 7.0.1 (2021-05-04)
 ------------------
 
