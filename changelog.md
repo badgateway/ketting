@@ -1,9 +1,12 @@
 ChangeLog
 =========
 
-7.1.0 (2021-??-??)
+7.1.0 (2021-05-27)
 ------------------
 
+* Support for the `inv-by` Link relationship type from the [Linked Cache
+  Invalidation draft][2]. This link lets a resource tell the client that
+  it's cache should expire when the linked resource's cache also expires.
 * The 'prompt' field in HAL Forms for properties with 'options' set was
   ignored.
 
