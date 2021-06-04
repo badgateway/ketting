@@ -259,7 +259,7 @@ function parseHalForms(context: string, body: hal.HalResource): ActionInfo[] {
 
   return Object.entries(body._templates).map( ([key, hf]) => {
     return {
-      uri: resolve(context, hf.target || ''),
+      uri: resolve(context, hf.target || body._links?.self?.href || ''),
       name: key,
       title: hf.title,
       method: hf.method,
