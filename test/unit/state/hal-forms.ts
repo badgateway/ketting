@@ -16,15 +16,19 @@ describe('HAL forms', () => {
         default: {
           target: '/submit',
           method: 'POST',
+        },
+        delete: {
+          target: '/delete',
+          method: 'DELETE'
         }
       }
     });
 
-    const action:any = hal.action('default');
-    delete action.client;
-    delete action.submit;
+    const defaultAction:any = hal.action('default');
+    delete defaultAction.client;
+    delete defaultAction.submit;
 
-    const expected: CompareAction = {
+    const expectedDefaultAction: CompareAction = {
       uri: 'http://example/submit',
       name: 'default',
       title: undefined,
@@ -33,7 +37,22 @@ describe('HAL forms', () => {
       fields: [],
     };
 
-    expect(action).to.eql(expected);
+    expect(defaultAction).to.eql(expectedDefaultAction);
+
+    const deleteAction:any = hal.action('delete');
+    delete deleteAction.client;
+    delete deleteAction.submit;
+
+    const expectedDeleteAction: CompareAction = {
+      uri: 'http://example/delete',
+      name: 'delete',
+      title: undefined,
+      contentType: 'application/json',
+      method: 'DELETE',
+      fields: [],
+    };
+
+    expect(deleteAction).to.eql(expectedDeleteAction);
 
   });
   it('should parse a field', async () => {
