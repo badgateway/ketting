@@ -173,7 +173,7 @@ export class BaseState<T> extends BaseHeadState implements State<T> {
     }
     for(const action of this.actionInfo) {
       if (action.name === name) {
-        return new SimpleAction(this.client, this.actionInfo[0]);
+        return new SimpleAction(this.client, action);
       }
     }
     throw new ActionNotFound('This State defines no action');
