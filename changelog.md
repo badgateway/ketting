@@ -1,6 +1,15 @@
 ChangeLog
 =========
 
+7.1.1 (2021-06-15)
+------------------
+
+* #392: The `action()` function on State classes would only return the default
+  action (@reda-alaoui).
+* Changed how Cache classes are exported, as an experiment to see if IDE docs
+  are more complete.
+
+
 7.1.0 (2021-05-27)
 ------------------
 
