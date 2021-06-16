@@ -55,6 +55,41 @@ describe('HAL forms', () => {
     expect(deleteAction).to.eql(expectedDeleteAction);
 
   });
+  it('should relate relative URIs of embedded HAL forms to the embedded resource\'s self uri', async () => {
+
+    const hal = await callFactory({
+      _links: {
+      },
+      _embedded: {
+        foo: {
+          _links: {
+            self: { href: '/foo/' },
+          },
+          _templates: {
+            default: {
+              target: 'bar',
+              method: 'POST',
+            },
+          }
+        }
+      }
+    });
+
+    const defaultAction:any = hal.getEmbedded()[0].action('default');
+    delete defaultAction.client;
+
+    const expectedDefaultAction: CompareAction = {
+      uri: 'http://example/foo/bar',
+      name: 'default',
+      title: undefined,
+      contentType: 'application/json',
+      method: 'POST',
+      fields: [],
+    };
+
+    expect(defaultAction).to.eql(expectedDefaultAction);
+
+  });
   it('should parse a field', async () => {
 
     const hal = await callFactory({

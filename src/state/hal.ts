@@ -226,6 +226,9 @@ function parseHalEmbedded(client: Client, context: string, body: hal.HalResource
         // Skip any embedded without a self link.
         continue;
       }
+
+      const embeddedSelf = resolve(context, embeddedItem._links.self.href);
+
       // Remove _links and _embedded from body
       const {
         _embedded,
@@ -235,16 +238,16 @@ function parseHalEmbedded(client: Client, context: string, body: hal.HalResource
 
       result.push(new HalState({
         client,
-        uri: resolve(context, embeddedItem._links.self.href),
+        uri: embeddedSelf,
         data: newBody,
         headers: new Headers({
           'Content-Type': headers.get('Content-Type')!,
         }),
-        links: new Links(context, parseHalLinks(context, embeddedItem)),
+        links: new Links(embeddedSelf, parseHalLinks(context, embeddedItem)),
         // Parsing nested embedded items. Note that we assume that the base url is relative to
         // the outermost parent, not relative to the embedded item. HAL is not clear on this.
-        embedded: parseHalEmbedded(client, context, embeddedItem, headers),
-        actions: parseHalForms(context, embeddedItem)
+        embedded: parseHalEmbedded(client, embeddedSelf, embeddedItem, headers),
+        actions: parseHalForms(embeddedSelf, embeddedItem)
       }));
     }
   }
