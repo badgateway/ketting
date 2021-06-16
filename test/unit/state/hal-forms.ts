@@ -90,6 +90,40 @@ describe('HAL forms', () => {
     expect(defaultAction).to.eql(expectedDefaultAction);
 
   });
+  it('should default to the resource\'s self uri if no target was given', async () => {
+
+    const hal = await callFactory({
+      _links: {
+      },
+      _embedded: {
+        foo: {
+          _links: {
+            self: { href: '/foo/' },
+          },
+          _templates: {
+            default: {
+              method: 'POST',
+            },
+          }
+        }
+      }
+    });
+
+    const defaultAction:any = hal.getEmbedded()[0].action('default');
+    delete defaultAction.client;
+
+    const expectedDefaultAction: CompareAction = {
+      uri: 'http://example/foo/',
+      name: 'default',
+      title: undefined,
+      contentType: 'application/json',
+      method: 'POST',
+      fields: [],
+    };
+
+    expect(defaultAction).to.eql(expectedDefaultAction);
+
+  });
   it('should parse a field', async () => {
 
     const hal = await callFactory({
