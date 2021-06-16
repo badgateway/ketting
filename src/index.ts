@@ -15,11 +15,9 @@ export {
   isState,
 } from './state';
 
-export {
-  ForeverCache,
-  NeverCache,
-  ShortCache,
-} from './cache';
+export { ForeverCache } from './cache/forever';
+export { ShortCache } from './cache/short';
+export { NeverCache } from './cache/never';
 
 export { default as basicAuth } from './http/basic-auth';
 export { default as bearerAuth } from './http/bearer-auth';
