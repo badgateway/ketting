@@ -1,6 +1,16 @@
 ChangeLog
 =========
 
+7.2.0 (2021-08-04)
+-----------------
+
+* #395: Relative URIs in embedded HAL documents are now resolved using the
+  'self' link in the embedded document, instead of the parent. Although not
+  explicitly said in the HAL standards, I feel this is the right behavior.
+  Most users will not see a difference, but if you relied on the old behavior
+  this could cause some subtle BC breaks.
+
+
 7.1.1 (2021-06-15)
 ------------------
 
