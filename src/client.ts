@@ -66,6 +66,15 @@ export default class Client {
    */
   fetcher: Fetcher;
 
+  /**
+   * Resource.activeRefresh behave as a very short cache
+   * even if we use the NeverCache implementation.
+   *
+   * By setting to True this property, this will allow the resource to do multiple parallel refreshes,
+   * False maintains the backward compatibility.
+   */
+  allowMultipleParallelRefreshes: boolean;
+
   constructor(bookmarkUri: string) {
     this.bookmarkUri = bookmarkUri;
     this.fetcher = new Fetcher();
@@ -74,6 +83,7 @@ export default class Client {
     this.fetcher.use(warningMiddleware());
     this.cache = new ForeverCache();
     this.resources = new Map();
+    this.allowMultipleParallelRefreshes = false;
   }
 
   /**

@@ -229,8 +229,10 @@ app.use(route('/counter').get( (ctx: Context) => {
 // Rest stuff!
 app.use(
   route('/:id')
-    .get((ctx: Context) => {
-
+    .get(async (ctx: Context) => {
+      if (ctx?.headers?.['delay-in-ms']) {
+        await new Promise(resolve => setTimeout(resolve, parseInt(ctx.headers?.['delay-in-ms']!.toString())));
+      }
       if (resources[ctx.params.id] === undefined) {
         resources[ctx.params.id] = fs.readFileSync(__dirname + '/fixtures/' + ctx.params.id);
       }

@@ -55,7 +55,7 @@ export class Resource<T = any> extends EventEmitter {
 
     const params = optionsToRequestInit('GET', getOptions);
 
-    if (!this.activeRefresh) {
+    if (!this.activeRefresh || this.client.allowMultipleParallelRefreshes) {
       this.activeRefresh = (async() : Promise<State<T>> => {
         try {
           const response = await this.fetchOrThrow(params);
@@ -69,7 +69,6 @@ export class Resource<T = any> extends EventEmitter {
     }
 
     return this.activeRefresh;
-
   }
 
   /**
@@ -106,7 +105,7 @@ export class Resource<T = any> extends EventEmitter {
     const params = optionsToRequestInit('GET', getOptions);
     params.cache = 'no-cache';
 
-    if (!this.activeRefresh) {
+    if (!this.activeRefresh || this.client.allowMultipleParallelRefreshes) {
       this.activeRefresh = (async() : Promise<State<T>> => {
         try {
           const response = await this.fetchOrThrow(params);
