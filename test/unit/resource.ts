@@ -112,7 +112,7 @@ describe('Resource', () => {
       res.activeRefreshes.put(res.uri, {headers: headers}, null);
       res.activeRefreshes.put(res.uri, {headers: headers2}, null);
 
-      expect((res.activeRefreshes as any).refreshBySerializedRequest.size).to.equal(2);
+      expect((res.activeRefreshes as any).refreshByHash.size).to.equal(2);
     });
   });
 

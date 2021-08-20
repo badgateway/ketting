@@ -23,9 +23,11 @@ describe('Using resources', async () => {
 
     const resource = await ketting.follow('collection');
 
-    const headers = new Headers({'foo': 'baz'});
+    const headers = new Headers();
     headers.append('foo', 'bar');
-    const headers2 = new Headers({'foo': 'bar'});
+    headers.append('foo', 'baz');
+    const headers2 = new Headers();
+    headers2.append('foo', 'bar');
     headers2.append('foo', 'baz');
 
     const [firstState, secondState] =
