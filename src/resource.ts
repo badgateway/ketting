@@ -55,19 +55,18 @@ export class Resource<T = any> extends EventEmitter {
     }
 
     const params = optionsToRequestInit('GET', getOptions);
-
-    if (!this.activeRefreshes.has(this.uri, getOptions)) {
-      const activeRefresh: Promise<State<T>> = (async (): Promise<State<T>> => {
+    const uri = this.uri;
+    if (!this.activeRefreshes.has(uri, getOptions)) {
+      this.activeRefreshes.put(uri, getOptions, (async (): Promise<State<T>> => {
         try {
           const response = await this.fetchOrThrow(params);
-          const state = await this.client.getStateForResponse(this.uri, response);
+          const state = await this.client.getStateForResponse(uri, response);
           this.updateCache(state);
           return state;
         } finally {
-          this.activeRefreshes.remove(this.uri, getOptions);
+          this.activeRefreshes.remove(uri, getOptions);
         }
-      })();
-      this.activeRefreshes.put(activeRefresh, this.uri, getOptions);
+      })());
     }
 
     return this.activeRefreshes.get(this.uri, getOptions)!;
@@ -106,19 +105,18 @@ export class Resource<T = any> extends EventEmitter {
 
     const params = optionsToRequestInit('GET', getOptions);
     params.cache = 'no-cache';
-
-    if (!this.activeRefreshes.has(this.uri, getOptions)) {
-      const activeRefresh: Promise<State<T>> = (async (): Promise<State<T>> => {
+    const uri = this.uri;
+    if (!this.activeRefreshes.has(uri, getOptions)) {
+      this.activeRefreshes.put(uri, getOptions, (async (): Promise<State<T>> => {
         try {
           const response = await this.fetchOrThrow(params);
-          const state = await this.client.getStateForResponse(this.uri, response);
+          const state = await this.client.getStateForResponse(uri, response);
           this.updateCache(state);
           return state;
         } finally {
-          this.activeRefreshes.remove(this.uri, getOptions);
+          this.activeRefreshes.remove(uri, getOptions);
         }
-      })();
-      this.activeRefreshes.put(activeRefresh, this.uri, getOptions);
+      })());
     }
 
     return this.activeRefreshes.get(this.uri, getOptions)!;
@@ -516,30 +514,30 @@ function optionsToRequestInit(method: string, options?: GetRequestOptions | Post
 class ActiveRefreshes<T = any> {
   private readonly refreshBySerializedRequest: Map<string, Promise<State<T>>> = new Map<string, Promise<State<T>>>();
 
-  put(activeRefresh: Promise<State<T>>, uri: string, options?: GetRequestOptions): void {
-    this.refreshBySerializedRequest.set(ActiveRefreshes.serializeRequest(uri, options), activeRefresh);
+  put(uri: string, options: GetRequestOptions | undefined, activeRefresh: Promise<State<T>>): void {
+    this.refreshBySerializedRequest.set(this.hash(uri, options), activeRefresh);
   }
 
-  get(uri: string, options?: GetRequestOptions): Promise<State<T>> | undefined {
-    return this.refreshBySerializedRequest.get(ActiveRefreshes.serializeRequest(uri, options));
+  get(uri: string, options: GetRequestOptions | undefined): Promise<State<T>> | undefined {
+    return this.refreshBySerializedRequest.get(this.hash(uri, options));
   }
 
-  has(uri: string, options?: GetRequestOptions): boolean {
+  has(uri: string, options: GetRequestOptions | undefined): boolean {
     return !!this.get(uri, options);
   }
 
-  remove(uri: string, options?: GetRequestOptions): boolean {
-    return this.refreshBySerializedRequest.delete(ActiveRefreshes.serializeRequest(uri, options));
+  remove(uri: string, options: GetRequestOptions | undefined): boolean {
+    return this.refreshBySerializedRequest.delete(this.hash(uri, options));
   }
 
-  private static serializeRequest(uri: string, options?: GetRequestOptions): string {
+  private hash(uri: string, options: GetRequestOptions | undefined): string {
     if (!options) {
       return objectHash(uri);
     }
-    const sortedHeaders: any = {};
+    const sortedHeaders: Record<string, string> = {};
     new Headers(options.getContentHeaders?.() || options.headers)
       .forEach((value, key) => {
-        sortedHeaders[key] = [value.split(', ').sort()];
+        sortedHeaders[key] = value.split(', ').sort().toString();
       });
     return objectHash(uri) + objectHash(sortedHeaders);
   }
