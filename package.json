@@ -43,6 +43,7 @@
     "hal-types": "^1.7.7",
     "http-link-header": "^1.0.3",
     "node-fetch": "^2.6.1",
+    "object-hash": "^2.2.0",
     "querystring-browser": "^1.0.4",
     "sax": "^1.2.4",
     "uri-template": "^2.0.0"
@@ -56,6 +57,7 @@
     "@types/mocha": "^9.0.0",
     "@types/node": "^12.20.11",
     "@types/node-fetch": "^2.5.8",
+    "@types/object-hash": "^2.1.1",
     "@types/sax": "^1.2.1",
     "@typescript-eslint/eslint-plugin": "^5.5.0",
     "@typescript-eslint/parser": "^5.5.0",
