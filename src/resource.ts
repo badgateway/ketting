@@ -6,7 +6,7 @@ import { Link, LinkNotFound, LinkVariables } from './link';
 import { EventEmitter } from 'events';
 import { GetRequestOptions, PostRequestOptions, PatchRequestOptions, PutRequestOptions, HeadRequestOptions } from './types';
 import { needsJsonStringify } from './util/fetch-body-helper';
-import objectHash = require("object-hash");
+import objectHash = require('object-hash');
 
 /**
  * A 'resource' represents an endpoint on a server.
@@ -26,7 +26,7 @@ export class Resource<T = any> extends EventEmitter {
    */
   client: Client;
 
-  private activeRefresh: Promise<State<T>> | null;
+  private readonly activeRefreshes: ActiveRefreshes<T>;
 
   /**
    * Create the resource.
@@ -37,7 +37,7 @@ export class Resource<T = any> extends EventEmitter {
     super();
     this.client = client;
     this.uri = uri;
-    this.activeRefresh = null;
+    this.activeRefreshes = new ActiveRefreshes<T>();
     this.setMaxListeners(500);
 
   }
@@ -56,20 +56,20 @@ export class Resource<T = any> extends EventEmitter {
 
     const params = optionsToRequestInit('GET', getOptions);
 
-    if (!this.activeRefresh || this.client.allowMultipleParallelRefreshes) {
-      this.activeRefresh = (async() : Promise<State<T>> => {
+    if (!this.activeRefreshes.has(this.uri, params)) {
+      this.activeRefreshes.put(this.uri, params, (async (): Promise<State<T>> => {
         try {
           const response = await this.fetchOrThrow(params);
           const state = await this.client.getStateForResponse(this.uri, response);
           this.updateCache(state);
           return state;
         } finally {
-          this.activeRefresh = null;
+          this.activeRefreshes.remove(this.uri, params);
         }
-      })();
+      })());
     }
 
-    return this.activeRefresh;
+    return this.activeRefreshes.get(this.uri, params)!;
   }
 
   /**
@@ -106,21 +106,20 @@ export class Resource<T = any> extends EventEmitter {
     const params = optionsToRequestInit('GET', getOptions);
     params.cache = 'no-cache';
 
-    if (!this.activeRefresh || this.client.allowMultipleParallelRefreshes) {
-      this.activeRefresh = (async() : Promise<State<T>> => {
+    if (!this.activeRefreshes.has(this.uri, params)) {
+      this.activeRefreshes.put(this.uri, params, (async (): Promise<State<T>> => {
         try {
           const response = await this.fetchOrThrow(params);
           const state = await this.client.getStateForResponse(this.uri, response);
           this.updateCache(state);
           return state;
         } finally {
-          this.activeRefresh = null;
+          this.activeRefreshes.remove(this.uri, params);
         }
-      })();
+      })());
     }
 
-    return this.activeRefresh;
-
+    return this.activeRefreshes.get(this.uri, params)!;
   }
 
   /**
@@ -512,3 +511,31 @@ function optionsToRequestInit(method: string, options?: GetRequestOptions | Post
 
 }
 
+class ActiveRefreshes<T = any> {
+  private readonly refreshBySerializedRequest: Map<string, Promise<State<T>>> = new Map<string, Promise<State<T>>>();
+
+  put(uri: string, options: GetRequestOptions, activeRefresh: Promise<State<T>>): void {
+    this.refreshBySerializedRequest.set(ActiveRefreshes.serializeRequest(uri, options), activeRefresh);
+  }
+
+  get(uri: string, options: GetRequestOptions): Promise<State<T>> | undefined {
+    return this.refreshBySerializedRequest.get(ActiveRefreshes.serializeRequest(uri, options));
+  }
+
+  has(uri: string, options: GetRequestOptions): boolean {
+    return !!this.get(uri, options);
+  }
+
+  remove(uri: string, options: GetRequestOptions): boolean {
+    return this.refreshBySerializedRequest.delete(ActiveRefreshes.serializeRequest(uri, options));
+  }
+
+  private static serializeRequest(uri: string, options: GetRequestOptions): string {
+    const sortedHeaders: any = {};
+    new Headers(options.getContentHeaders?.() || options.headers)
+      .forEach((value, key) => {
+        sortedHeaders[key] = [value.split(', ').sort()];
+      });
+    return objectHash(uri) + objectHash(sortedHeaders);
+  }
+}
