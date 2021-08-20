@@ -6,7 +6,7 @@ import { Link, LinkNotFound, LinkVariables } from './link';
 import { EventEmitter } from 'events';
 import { GetRequestOptions, PostRequestOptions, PatchRequestOptions, PutRequestOptions, HeadRequestOptions } from './types';
 import { needsJsonStringify } from './util/fetch-body-helper';
-import objectHash = require('object-hash');
+import * as objectHash  from 'object-hash';
 
 /**
  * A 'resource' represents an endpoint on a server.
