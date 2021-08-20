@@ -56,20 +56,21 @@ export class Resource<T = any> extends EventEmitter {
 
     const params = optionsToRequestInit('GET', getOptions);
 
-    if (!this.activeRefreshes.has(this.uri, params)) {
-      this.activeRefreshes.put(this.uri, params, (async (): Promise<State<T>> => {
+    if (!this.activeRefreshes.has(this.uri, getOptions)) {
+      const activeRefresh: Promise<State<T>> = (async (): Promise<State<T>> => {
         try {
           const response = await this.fetchOrThrow(params);
           const state = await this.client.getStateForResponse(this.uri, response);
           this.updateCache(state);
           return state;
         } finally {
-          this.activeRefreshes.remove(this.uri, params);
+          this.activeRefreshes.remove(this.uri, getOptions);
         }
-      })());
+      })();
+      this.activeRefreshes.put(activeRefresh, this.uri, getOptions);
     }
 
-    return this.activeRefreshes.get(this.uri, params)!;
+    return this.activeRefreshes.get(this.uri, getOptions)!;
   }
 
   /**
@@ -106,20 +107,21 @@ export class Resource<T = any> extends EventEmitter {
     const params = optionsToRequestInit('GET', getOptions);
     params.cache = 'no-cache';
 
-    if (!this.activeRefreshes.has(this.uri, params)) {
-      this.activeRefreshes.put(this.uri, params, (async (): Promise<State<T>> => {
+    if (!this.activeRefreshes.has(this.uri, getOptions)) {
+      const activeRefresh: Promise<State<T>> = (async (): Promise<State<T>> => {
         try {
           const response = await this.fetchOrThrow(params);
           const state = await this.client.getStateForResponse(this.uri, response);
           this.updateCache(state);
           return state;
         } finally {
-          this.activeRefreshes.remove(this.uri, params);
+          this.activeRefreshes.remove(this.uri, getOptions);
         }
-      })());
+      })();
+      this.activeRefreshes.put(activeRefresh, this.uri, getOptions);
     }
 
-    return this.activeRefreshes.get(this.uri, params)!;
+    return this.activeRefreshes.get(this.uri, getOptions)!;
   }
 
   /**
@@ -514,23 +516,26 @@ function optionsToRequestInit(method: string, options?: GetRequestOptions | Post
 class ActiveRefreshes<T = any> {
   private readonly refreshBySerializedRequest: Map<string, Promise<State<T>>> = new Map<string, Promise<State<T>>>();
 
-  put(uri: string, options: GetRequestOptions, activeRefresh: Promise<State<T>>): void {
+  put(activeRefresh: Promise<State<T>>, uri: string, options?: GetRequestOptions): void {
     this.refreshBySerializedRequest.set(ActiveRefreshes.serializeRequest(uri, options), activeRefresh);
   }
 
-  get(uri: string, options: GetRequestOptions): Promise<State<T>> | undefined {
+  get(uri: string, options?: GetRequestOptions): Promise<State<T>> | undefined {
     return this.refreshBySerializedRequest.get(ActiveRefreshes.serializeRequest(uri, options));
   }
 
-  has(uri: string, options: GetRequestOptions): boolean {
+  has(uri: string, options?: GetRequestOptions): boolean {
     return !!this.get(uri, options);
   }
 
-  remove(uri: string, options: GetRequestOptions): boolean {
+  remove(uri: string, options?: GetRequestOptions): boolean {
     return this.refreshBySerializedRequest.delete(ActiveRefreshes.serializeRequest(uri, options));
   }
 
-  private static serializeRequest(uri: string, options: GetRequestOptions): string {
+  private static serializeRequest(uri: string, options?: GetRequestOptions): string {
+    if (!options) {
+      return objectHash(uri);
+    }
     const sortedHeaders: any = {};
     new Headers(options.getContentHeaders?.() || options.headers)
       .forEach((value, key) => {
