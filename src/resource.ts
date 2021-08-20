@@ -512,14 +512,14 @@ function optionsToRequestInit(method: string, options?: GetRequestOptions | Post
 }
 
 class ActiveRefreshes<T = any> {
-  private readonly refreshBySerializedRequest: Map<string, Promise<State<T>>> = new Map<string, Promise<State<T>>>();
+  private readonly refreshByHash: Map<string, Promise<State<T>>> = new Map<string, Promise<State<T>>>();
 
   put(uri: string, options: GetRequestOptions | undefined, activeRefresh: Promise<State<T>>): void {
-    this.refreshBySerializedRequest.set(this.hash(uri, options), activeRefresh);
+    this.refreshByHash.set(this.hash(uri, options), activeRefresh);
   }
 
   get(uri: string, options: GetRequestOptions | undefined): Promise<State<T>> | undefined {
-    return this.refreshBySerializedRequest.get(this.hash(uri, options));
+    return this.refreshByHash.get(this.hash(uri, options));
   }
 
   has(uri: string, options: GetRequestOptions | undefined): boolean {
@@ -527,7 +527,7 @@ class ActiveRefreshes<T = any> {
   }
 
   remove(uri: string, options: GetRequestOptions | undefined): boolean {
-    return this.refreshBySerializedRequest.delete(this.hash(uri, options));
+    return this.refreshByHash.delete(this.hash(uri, options));
   }
 
   private hash(uri: string, options: GetRequestOptions | undefined): string {
@@ -537,7 +537,7 @@ class ActiveRefreshes<T = any> {
     const sortedHeaders: Record<string, string> = {};
     new Headers(options.getContentHeaders?.() || options.headers)
       .forEach((value, key) => {
-        sortedHeaders[key] = value.split(', ').sort().toString();
+        sortedHeaders[key] = value;
       });
     return objectHash(uri) + objectHash(sortedHeaders);
   }
