@@ -105,8 +105,8 @@ describe('Resource', () => {
 
       const res: any = getFakeResource('https://example.org/return-request');
 
-      const headers = new Headers({'foo': 'baz'});
-      headers.append('foo', 'bar');
+      const headers = new Headers({'foo': 'bar'});
+      headers.append('foo', 'baz');
       const headers2 = new Headers({'foo': 'bar'});
 
       res.activeRefreshes.put(res.uri, {headers: headers}, null);
