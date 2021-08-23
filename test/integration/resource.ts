@@ -11,10 +11,11 @@ describe('Resource', async () => {
 
     const [firstState, secondState] =
       await Promise.all([
-        resource.get({headers: {'delay-in-ms': '2', 'foo': 'bar'}}),
-        resource.get({headers: {'delay-in-ms': '2', 'foo': 'baz'}})
+        resource.get({headers: {'delay-in-ms': '2', 'prefer': 'return=minimal'}}),
+        resource.get({headers: {'delay-in-ms': '2', 'prefer': 'return=representation'}})
       ]);
-
+    expect(firstState.headers.get('preference-applied')).to.eql('return=minimal');
+    expect(secondState.headers.get('preference-applied')).to.eql('return=representation');
     expect(firstState.headers.get('response-id')).to.not.eql(secondState.headers.get('response-id'));
   });
 
@@ -24,12 +25,12 @@ describe('Resource', async () => {
     const resource = await ketting.follow('collection');
 
     const headers1 = new Headers();
-    headers1.append('foo', 'bar');
-    headers1.append('foo', 'baz');
+    headers1.append('prefer', 'return=minimal');
+    headers1.append('prefer', 'return=representation');
     headers1.append('delay-in-ms', '2');
     const headers2 = new Headers();
-    headers2.append('foo', 'bar');
-    headers2.append('foo', 'baz');
+    headers2.append('prefer', 'return=minimal');
+    headers2.append('prefer', 'return=representation');
     headers2.append('delay-in-ms', '2');
 
     const [firstState, secondState] =
