@@ -11,8 +11,8 @@ describe('Using resources', async () => {
 
     const [firstState, secondState] =
       await Promise.all([
-        resource.get({headers: {'prefer': 'bar'}}),
-        resource.get({headers: {'prefer': 'baz'}})
+        resource.get({headers: {'delay-in-ms': '2', 'prefer': 'bar'}}),
+        resource.get({headers: {'delay-in-ms': '2', 'prefer': 'baz'}})
       ]);
 
     expect(firstState.headers.get('preference-applied')).to.not.eql(secondState.headers.get('preference-applied'));
@@ -26,9 +26,11 @@ describe('Using resources', async () => {
     const headers1 = new Headers();
     headers1.append('prefer', 'bar');
     headers1.append('prefer', 'baz');
+    headers1.append('delay-in-ms', '2');
     const headers2 = new Headers();
     headers2.append('prefer', 'bar');
     headers2.append('prefer', 'baz');
+    headers2.append('delay-in-ms', '2');
 
     const [firstState, secondState] =
       await Promise.all([

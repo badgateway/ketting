@@ -229,7 +229,11 @@ app.use(route('/counter').get( (ctx: Context) => {
 // Rest stuff!
 app.use(
   route('/:id')
-    .get((ctx: Context) => {
+    .get(async (ctx: Context) => {
+      const delayInMsHeader = ctx?.headers?.['delay-in-ms'];
+      if (delayInMsHeader) {
+        await new Promise(resolve => setTimeout(resolve, parseInt(delayInMsHeader.toString())));
+      }
       if (resources[ctx.params.id] === undefined) {
         resources[ctx.params.id] = fs.readFileSync(__dirname + '/fixtures/' + ctx.params.id);
       }
@@ -245,8 +249,9 @@ app.use(
       } else {
         ctx.response.type = 'application/json';
       }
-      if (ctx?.headers?.['prefer']) {
-        ctx.res.setHeader('preference-applied', ctx.headers?.['prefer']);
+      const preferHeader = ctx?.headers?.['prefer'];
+      if (preferHeader) {
+        ctx.res.setHeader('preference-applied', preferHeader);
       }
       ctx.res.setHeader('response-id', createRandomString());
       ctx.response.body = resources[ctx.params.id];
