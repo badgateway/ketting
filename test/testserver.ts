@@ -249,10 +249,6 @@ app.use(
       } else {
         ctx.response.type = 'application/json';
       }
-      const preferHeader = ctx?.headers?.['prefer'];
-      if (preferHeader) {
-        ctx.res.setHeader('preference-applied', preferHeader);
-      }
       ctx.res.setHeader('response-id', createRandomString());
       ctx.response.body = resources[ctx.params.id];
 
