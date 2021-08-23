@@ -229,7 +229,7 @@ app.use(route('/counter').get( (ctx: Context) => {
 // Rest stuff!
 app.use(
   route('/:id')
-    .get(async (ctx: Context) => {
+    .get((ctx: Context) => {
       if (resources[ctx.params.id] === undefined) {
         resources[ctx.params.id] = fs.readFileSync(__dirname + '/fixtures/' + ctx.params.id);
       }
