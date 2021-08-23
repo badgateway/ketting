@@ -99,23 +99,6 @@ describe('Resource', () => {
 
   });
 
-  describe('Resource.ActiveRefreshes', () => {
-
-    it('duplicated headers key are handled', async () => {
-
-      const res: any = getFakeResource('https://example.org/return-request');
-
-      const headers = new Headers({'foo': 'bar'});
-      headers.append('foo', 'baz');
-      const headers2 = new Headers({'foo': 'bar'});
-
-      res.activeRefreshes.put(res.uri, {headers: headers}, null);
-      res.activeRefreshes.put(res.uri, {headers: headers2}, null);
-
-      expect((res.activeRefreshes as any).refreshByHash.size).to.equal(2);
-    });
-  });
-
 });
 
 function getFakeResource(uri: string = 'https://example.org/') {

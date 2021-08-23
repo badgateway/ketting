@@ -534,11 +534,11 @@ class ActiveRefreshes<T = any> {
     if (!options) {
       return objectHash(uri);
     }
-    const sortedHeaders: Record<string, string> = {};
+    const headers: Record<string, string> = {};
     new Headers(options.getContentHeaders?.() || options.headers)
       .forEach((value, key) => {
-        sortedHeaders[key] = value;
+        headers[key] = value;
       });
-    return objectHash(uri) + objectHash(sortedHeaders);
+    return objectHash({uri, headers});
   }
 }

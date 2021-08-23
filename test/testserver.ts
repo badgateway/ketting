@@ -230,9 +230,6 @@ app.use(route('/counter').get( (ctx: Context) => {
 app.use(
   route('/:id')
     .get(async (ctx: Context) => {
-      if (ctx?.headers?.['delay-in-ms']) {
-        await new Promise(resolve => setTimeout(resolve, parseInt(ctx.headers?.['delay-in-ms']!.toString())));
-      }
       if (resources[ctx.params.id] === undefined) {
         resources[ctx.params.id] = fs.readFileSync(__dirname + '/fixtures/' + ctx.params.id);
       }
@@ -248,6 +245,10 @@ app.use(
       } else {
         ctx.response.type = 'application/json';
       }
+      if (ctx?.headers?.['prefer']) {
+        ctx.res.setHeader('preference-applied', ctx.headers?.['prefer']);
+      }
+      ctx.res.setHeader('response-id', createRandomString());
       ctx.response.body = resources[ctx.params.id];
 
     })
@@ -297,3 +298,7 @@ app.listen(port);
 
 // eslint-disable-next-line no-console
 console.log('Server is now online. Head to http://localhost:' + port + '/ to run tests in a browser');
+
+function createRandomString(): string {
+  return (Math.random() + 1).toString(36).substring(7);
+}
