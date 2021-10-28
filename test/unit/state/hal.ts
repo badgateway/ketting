@@ -240,6 +240,17 @@ describe('HAL state factory', () => {
     expect(hal.data).to.eql([1, 2, 3]);
 
   });
+  it('shouldnt die when _embedded is encoded as null', async () => {
+
+    // this is probably technically invalid HAL, but we want to be somewhat robust.
+
+    const hal = await callFactory({
+      _embedded: null
+    });
+
+    expect(hal.links.getAll()).to.eql([]);
+
+  });
 
 });
 

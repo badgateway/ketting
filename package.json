@@ -31,7 +31,8 @@
     "src/",
     "dist/",
     "browser/ketting.min.js",
-    "browser/ketting.min.js.map"
+    "browser/ketting.min.js.map",
+    "LICENSE"
   ],
   "types": "dist/index.d.ts",
   "dependencies": {

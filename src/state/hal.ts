@@ -204,7 +204,7 @@ function parseHalLink(context: string, rel: string, links: hal.HalLink[]): Link[
  */
 function parseHalEmbedded(client: Client, context: string, body: hal.HalResource, headers: Headers): HalState<any>[] {
 
-  if (body._embedded === undefined) {
+  if (body._embedded === undefined || !body._embedded) {
     return [];
   }
 
