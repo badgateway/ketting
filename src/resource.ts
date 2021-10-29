@@ -57,7 +57,7 @@ export class Resource<T = any> extends EventEmitter {
     const params = optionsToRequestInit('GET', getOptions);
     const uri = this.uri;
     if (!this.activeRefreshes.has(uri, getOptions)) {
-      this.activeRefreshes.put(uri, getOptions, (async (): Promise<State<T>> => {
+      this.activeRefreshes.set(uri, getOptions, (async (): Promise<State<T>> => {
         try {
           const response = await this.fetchOrThrow(params);
           const state = await this.client.getStateForResponse(uri, response);
@@ -107,7 +107,7 @@ export class Resource<T = any> extends EventEmitter {
     params.cache = 'no-cache';
     const uri = this.uri;
     if (!this.activeRefreshes.has(uri, getOptions)) {
-      this.activeRefreshes.put(uri, getOptions, (async (): Promise<State<T>> => {
+      this.activeRefreshes.set(uri, getOptions, (async (): Promise<State<T>> => {
         try {
           const response = await this.fetchOrThrow(params);
           const state = await this.client.getStateForResponse(uri, response);
@@ -514,7 +514,7 @@ function optionsToRequestInit(method: string, options?: GetRequestOptions | Post
 class ActiveRefreshes<T = any> {
   private readonly refreshByHash: Map<string, Promise<State<T>>> = new Map<string, Promise<State<T>>>();
 
-  put(uri: string, options: GetRequestOptions | undefined, activeRefresh: Promise<State<T>>): void {
+  set(uri: string, options: GetRequestOptions | undefined, activeRefresh: Promise<State<T>>): void {
     this.refreshByHash.set(this.hash(uri, options), activeRefresh);
   }
 
