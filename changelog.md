@@ -1,6 +1,13 @@
 ChangeLog
 =========
 
+7.2.1 (2021-??-??)
+------------------
+
+* #408: Emit a warning when an `_embedded` HAL item is missing a good `self`
+  link.
+
+
 7.2.0 (2021-08-04)
 -----------------
 

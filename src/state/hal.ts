@@ -222,8 +222,9 @@ function parseHalEmbedded(client: Client, context: string, body: hal.HalResource
     }
     for (const embeddedItem of embeddedList) {
 
-      if (embeddedItem._links === undefined || embeddedItem._links.self === undefined || Array.isArray(embeddedItem._links.self)) {
-        // Skip any embedded without a self link.
+      if (embeddedItem._links?.self?.href === undefined) {
+        // eslint-disable-next-line no-console
+        console.warn('An item in _embedded was ignored. Each item must have a single "self" link');
         continue;
       }
 
