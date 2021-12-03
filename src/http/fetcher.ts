@@ -15,7 +15,7 @@ export class Fetcher {
 
   middlewares: [RegExp, FetchMiddleware][] = [];
 
-  advertiseKetting: boolean = true
+  advertiseKetting: boolean = true;
 
   /**
    * A wrapper for MDN fetch()

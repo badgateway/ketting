@@ -87,7 +87,7 @@ export class SimpleAction<TFormData extends Record<string, any>> implements Acti
   /**
    * Returns the list of fields associated to an action
    */
-  fields!: Field[]
+  fields!: Field[];
 
   /**
    * Reference to client
