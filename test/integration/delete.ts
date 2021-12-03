@@ -25,7 +25,7 @@ describe('Issuing a DELETE request', async () => {
     let ok = false;
     try {
       await resource.get();
-    } catch (e) {
+    } catch (e: any) {
       // we're expecting an exception
       ok = true;
     }
@@ -37,7 +37,7 @@ describe('Issuing a DELETE request', async () => {
     let ok = false;
     try {
       await ketting.go().get();
-    } catch (e) {
+    } catch (e: any) {
       // we're expecting an exception
       ok = true;
     }
@@ -54,7 +54,7 @@ describe('Issuing a DELETE request', async () => {
     let exception = null;
     try {
       await resource2.delete();
-    } catch (ex) {
+    } catch (ex: any) {
       exception = ex;
     }
     expect(exception.response.status).to.equal(400);
@@ -70,7 +70,7 @@ describe('Issuing a DELETE request', async () => {
     let exception;
     try {
       await resource2.delete();
-    } catch (ex) {
+    } catch (ex: any) {
       exception = ex;
     }
     expect(exception.status).to.equal(410);

@@ -43,7 +43,7 @@ describe('Issuing a POST request', async () => {
       await resource400.postFollow({
         data: {foo: 'bar'}
       });
-    } catch (ex) {
+    } catch (ex: any) {
       exception = ex;
     }
     expect(exception.response.status).to.equal(400);

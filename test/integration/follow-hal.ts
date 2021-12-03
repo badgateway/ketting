@@ -36,7 +36,7 @@ describe('Following a link', async () => {
     try {
       const hal1 = await client.follow('next').follow('unknown');
       await hal1.get();
-    } catch (e) {
+    } catch (e: any) {
       result = e;
     }
 
