@@ -44,7 +44,7 @@ describe('Issuing a GET request', async () => {
     let exception;
     try {
       await resource2.get();
-    } catch (ex) {
+    } catch (ex: any) {
       exception = ex;
     }
     expect(exception.response.status).to.equal(400);
