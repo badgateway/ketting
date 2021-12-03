@@ -24,7 +24,7 @@ describe('Issuing a HEAD request', async () => {
     let exception;
     try {
       await resource2.head();
-    } catch (ex) {
+    } catch (ex: any) {
       exception = ex;
     }
     expect(exception.response.status).to.equal(400);

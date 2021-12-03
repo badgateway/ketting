@@ -67,7 +67,7 @@ type NewLink = Omit<Link, 'context'>;
  */
 export class Links {
 
-  private store: Map<string, Link[]>
+  private store: Map<string, Link[]>;
 
   constructor(public defaultContext: string, links?: Link[] | Links) {
 
