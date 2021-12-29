@@ -1,9 +1,8 @@
 import { FetchMiddleware } from './fetcher';
-import * as base64 from '../util/base64';
 
 export default (userName: string, password: string): FetchMiddleware => {
 
-  const basicAuthHeader = 'Basic ' + base64.encode(userName + ':' + password);
+  const basicAuthHeader = 'Basic ' + btoa(userName + ':' + password);
 
   return (request, next) => {
 
