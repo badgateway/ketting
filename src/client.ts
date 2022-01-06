@@ -141,6 +141,83 @@ export default class Client {
   clearCache() {
 
     this.cache.clear();
+    this.cacheDependencies = new Map();
+
+  }
+
+  /**
+   * Caches a State object
+   *
+   * This function will also emit 'update' events to resources, and store all
+   * embedded states.
+   */
+  cacheState(state: State) {
+
+    this.cache.store(state);
+    const resource = this.resources.get(state.uri);
+    if (resource) {
+      // We have a resource for this object, notify it as well.
+      resource.emit('update', state);
+    }
+
+    for(const embeddedState of state.getEmbedded()) {
+      // Recursion. MADNESS
+      this.cacheState(embeddedState);
+    }
+
+  }
+
+  /**
+   * cacheDependencies contains all cache relationships between
+   * resources.
+   *
+   * This lets a user (for example) let a resource automatically
+   * expire, if another one expires.
+   *
+   * A server can populate this list using the `inv-by' link.
+   */
+  public cacheDependencies: Map<string, Set<string>> = new Map();
+
+  /**
+   * Helper function for clearing the cache for a resource.
+   *
+   * This function will also emit the 'stale' event for resources that have
+   * subscribers, and handle any dependent resource caches.
+   *
+   * If any resources are specified in deletedUris, those will not
+   * receive 'stale' events, but 'delete' events instead.
+   */
+  clearResourceCache(staleUris: string[], deletedUris: string[]) {
+
+    let stale = new Set<string>();
+    const deleted = new Set<string>();
+    for(const uri of staleUris) {
+      stale.add(resolve(this.bookmarkUri, uri));
+    }
+    for(const uri of deletedUris) {
+      stale.add(resolve(this.bookmarkUri, uri));
+      deleted.add(resolve(this.bookmarkUri, uri));
+    }
+
+    stale = expandCacheDependencies(
+      new Set([...stale, ...deleted]),
+      this.cacheDependencies
+    );
+
+    for(const uri of stale) {
+      this.cache.delete(uri);
+
+      const resource = this.resources.get(uri);
+      if (resource) {
+        if (deleted.has(uri)) {
+          resource.emit('delete');
+        } else {
+          resource.emit('stale');
+        }
+
+      }
+
+    }
 
   }
 
@@ -169,26 +246,38 @@ export default class Client {
 
   }
 
-  /**
-   * Caches a State object
-   *
-   * This function will also emit 'update' events to resources, and store all
-   * embedded states.
-   */
-  cacheState(state: State) {
 
-    this.cache.store(state);
-    const resource = this.resources.get(state.uri);
-    if (resource) {
-      // We have a resource for this object, notify it as well.
-      resource.emit('update', state);
-    }
+}
 
-    for(const embeddedState of state.getEmbedded()) {
-      // Recursion. MADNESS
-      this.cacheState(embeddedState);
+
+
+/**
+ * Find all dependencies for a given resource.
+ *
+ * For example, if
+ *   * if resourceA depends on resourceB
+ *   * and resourceB depends on resourceC
+ *
+ * Then if 'resourceC' expires, so should 'resourceA' and 'resourceB'.
+ *
+ * This function helps us find these dependencies recursively and guarding
+ * against recursive loops.
+ */
+function expandCacheDependencies(uris: Set<string>, dependencies: Map<string, Set<string>>, output?: Set<string>): Set<string> {
+
+  if (!output) output = new Set();
+
+  for(const uri of uris) {
+
+    if (!output.has(uri)) {
+      output.add(uri);
+      if (dependencies.has(uri)) {
+        expandCacheDependencies(dependencies.get(uri)!, dependencies, output);
+      }
     }
 
   }
+
+  return output;
 
 }

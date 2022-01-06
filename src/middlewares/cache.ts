@@ -15,8 +15,6 @@ import Client from '../client';
  */
 export default function(client: Client): FetchMiddleware {
 
-  const cacheDependencies: Map<string, Set<string>> = new Map();
-
   return async(request, next) => {
 
     /**
@@ -38,10 +36,10 @@ export default function(client: Client): FetchMiddleware {
     if (response.headers.has('Link')) {
       for (const httpLink of LinkHeader.parse(response.headers.get('Link')!).rel('inv-by')) {
         const uri = resolve(request.url, httpLink.uri);
-        if (cacheDependencies.has(uri)) {
-          cacheDependencies.get(uri)!.add(request.url);
+        if (client.cacheDependencies.has(uri)) {
+          client.cacheDependencies.get(uri)!.add(request.url);
         } else {
-          cacheDependencies.set(uri, new Set([request.url]));
+          client.cacheDependencies.set(uri, new Set([request.url]));
         }
       }
     }
@@ -57,10 +55,13 @@ export default function(client: Client): FetchMiddleware {
     }
 
     // We just processed an unsafe method, lets notify all subsystems.
-    let expireUris = new Set<string>();
-    if (!noStaleEvent && request.method !== 'DELETE') {
-      // Sorry for the double negative
-      expireUris.add(request.url);
+    const stale = [];
+    const deleted = [];
+
+    if (request.method === 'DELETE') {
+      deleted.push(request.url);
+    } else if (!noStaleEvent) {
+      stale.push(request.url);
     }
 
     // If the response had a Link: rel=invalidate header, we want to
@@ -68,17 +69,22 @@ export default function(client: Client): FetchMiddleware {
     if (response.headers.has('Link')) {
       for (const httpLink of LinkHeader.parse(response.headers.get('Link')!).rel('invalidates')) {
         const uri = resolve(request.url, httpLink.uri);
-        expireUris.add(uri);
+        stale.push(uri);
       }
     }
 
     // Location headers should also expire
     if (response.headers.has('Location')) {
-      expireUris.add(
+      stale.push(
         resolve(request.url, response.headers.get('Location')!)
       );
     }
-    // Content-Location headers should also expire
+
+    client.clearResourceCache(stale, deleted);
+
+    // If the response had a 'Content-Location' header, it means that the
+    // response body is the _new_ state for the url in the content-location
+    // header, so we store it!
     if (response.headers.has('Content-Location')) {
       const cl = resolve(request.url, response.headers.get('Content-Location')!);
       const clState = await client.getStateForResponse(
@@ -88,45 +94,8 @@ export default function(client: Client): FetchMiddleware {
       client.cacheState(clState);
     }
 
-    expireUris = expandCacheDependencies(expireUris, cacheDependencies);
-    for (const uri of expireUris) {
-      client.cache.delete(uri);
-
-      const resource = client.resources.get(uri);
-      if (resource) {
-        // We have a resource for this object, notify it as well.
-        resource.emit('stale');
-      }
-    }
-    if (request.method === 'DELETE') {
-      client.cache.delete(request.url);
-      const resource = client.resources.get(request.url);
-      if (resource) {
-        resource.emit('delete');
-      }
-    }
-
     return response;
 
   };
-
-}
-
-function expandCacheDependencies(uris: Set<string>, dependencies: Map<string, Set<string>>, output?: Set<string>): Set<string> {
-
-  if (!output) output = new Set();
-
-  for(const uri of uris) {
-
-    if (!output.has(uri)) {
-      output.add(uri);
-      if (dependencies.has(uri)) {
-        expandCacheDependencies(dependencies.get(uri)!, dependencies, output);
-      }
-    }
-
-  }
-
-  return output;
 
 }

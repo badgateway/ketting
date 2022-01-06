@@ -307,7 +307,7 @@ export class Resource<T = any> extends EventEmitter {
    */
   clearCache(): void {
 
-    this.client.cache.delete(this.uri);
+    this.client.clearResourceCache([this.uri],[]);
 
   }
 
