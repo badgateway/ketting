@@ -4,6 +4,8 @@ ChangeLog
 7.2.1 (2021-??-??)
 ------------------
 
+* #416: Cache-dependencies setup with `inv-by` links are now respected when
+  manually clearing resource caches.
 * #408: Emit a warning when an `_embedded` HAL item is missing a good `self`
   link.
 
