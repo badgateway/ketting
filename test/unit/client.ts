@@ -186,4 +186,18 @@ describe('Client', () => {
 
   });
 
+  describe('getStateForResponse', () => {
+
+    it('should handle 204 responses', async () => {
+
+      const client = new Client('https://example.org');
+      const resp = new Response(null, {status: 204});
+      const state = await client.getStateForResponse('/foo', resp);
+      expect(state.uri).to.equal('/foo');
+
+    });
+
+
+  });
+
 });
