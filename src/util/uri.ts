@@ -54,11 +54,11 @@ export function parse(url: string): UrlParts {
   if (parsed.hostname === 'ketting.invalid') {
     return {
       host: null
-    }
+    };
   } else {
     return {
       host: parsed.host
-    }
+    };
   }
 
 }
