@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "module": "commonjs",
-        "target": "es2017",
+        "target": "es2021",
 
         "strict": true,
         "noFallthroughCasesInSwitch": true,
@@ -20,10 +20,7 @@
         "lib": [
           "DOM",
           "DOM.Iterable",
-          "ES5",
-          "ES2015",
-          "ES2016",
-          "ES2017",
+          "ES2021",
           "ESNext.bigint"
         ],
         "declaration": true
