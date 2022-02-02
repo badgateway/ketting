@@ -40,14 +40,14 @@ export default class Client {
   contentTypeMap: {
     [mimeType: string]: [StateFactory<any>, string];
   } = {
-    'application/prs.hal-forms+json': [halStateFactory, '1.0'],
-    'application/hal+json': [halStateFactory, '0.9'],
-    'application/vnd.api+json': [jsonApiStateFactory, '0.8'],
-    'application/vnd.siren+json': [sirenStateFactory, '0.8'],
-    'application/vnd.collection+json': [cjStateFactory, '0.8'],
-    'application/json': [halStateFactory, '0.7'],
-    'text/html': [htmlStateFactory, '0.6'],
-  }
+      'application/prs.hal-forms+json': [halStateFactory, '1.0'],
+      'application/hal+json': [halStateFactory, '0.9'],
+      'application/vnd.api+json': [jsonApiStateFactory, '0.8'],
+      'application/vnd.siren+json': [sirenStateFactory, '0.8'],
+      'application/vnd.collection+json': [cjStateFactory, '0.8'],
+      'application/json': [halStateFactory, '0.7'],
+      'text/html': [htmlStateFactory, '0.6'],
+    };
 
   /**
    * The cache for 'State' objects
@@ -141,35 +141,7 @@ export default class Client {
   clearCache() {
 
     this.cache.clear();
-
-  }
-
-  /**
-   * Transforms a fetch Response to a State object.
-   */
-  async getStateForResponse(uri: string, response: Response): Promise<State> {
-
-    const contentType = parseContentType(response.headers.get('Content-Type')!);
-
-    let state: State;
-
-    if (!contentType) {
-      return binaryStateFactory(this, uri, response);
-    }
-
-    if (contentType in this.contentTypeMap) {
-      state = await this.contentTypeMap[contentType][0](this, uri, response);
-    } else if (contentType.startsWith('text/')) {
-      // Default to TextState for any format starting with text/
-      state = await textStateFactory(this, uri, response);
-    } else if (contentType.match(/^application\/[A-Za-z-.]+\+json/)) {
-      // Default to HalState for any format containing a pattern like application/*+json
-      state = await halStateFactory(this, uri, response);
-    } else {
-      state = await binaryStateFactory(this, uri, response);
-    }
-
-    return state;
+    this.cacheDependencies = new Map();
 
   }
 
@@ -194,5 +166,118 @@ export default class Client {
     }
 
   }
+
+  /**
+   * cacheDependencies contains all cache relationships between
+   * resources.
+   *
+   * This lets a user (for example) let a resource automatically
+   * expire, if another one expires.
+   *
+   * A server can populate this list using the `inv-by' link.
+   */
+  public cacheDependencies: Map<string, Set<string>> = new Map();
+
+  /**
+   * Helper function for clearing the cache for a resource.
+   *
+   * This function will also emit the 'stale' event for resources that have
+   * subscribers, and handle any dependent resource caches.
+   *
+   * If any resources are specified in deletedUris, those will not
+   * receive 'stale' events, but 'delete' events instead.
+   */
+  clearResourceCache(staleUris: string[], deletedUris: string[]) {
+
+    let stale = new Set<string>();
+    const deleted = new Set<string>();
+    for(const uri of staleUris) {
+      stale.add(resolve(this.bookmarkUri, uri));
+    }
+    for(const uri of deletedUris) {
+      stale.add(resolve(this.bookmarkUri, uri));
+      deleted.add(resolve(this.bookmarkUri, uri));
+    }
+
+    stale = expandCacheDependencies(
+      new Set([...stale, ...deleted]),
+      this.cacheDependencies
+    );
+
+    for(const uri of stale) {
+      this.cache.delete(uri);
+
+      const resource = this.resources.get(uri);
+      if (resource) {
+        if (deleted.has(uri)) {
+          resource.emit('delete');
+        } else {
+          resource.emit('stale');
+        }
+
+      }
+
+    }
+
+  }
+
+  /**
+   * Transforms a fetch Response to a State object.
+   */
+  async getStateForResponse(uri: string, response: Response): Promise<State> {
+
+    const contentType = parseContentType(response.headers.get('Content-Type')!);
+
+    if (!contentType || response.status === 204) {
+      return binaryStateFactory(this, uri, response);
+    }
+
+    if (contentType in this.contentTypeMap) {
+      return this.contentTypeMap[contentType][0](this, uri, response);
+    } else if (contentType.startsWith('text/')) {
+      // Default to TextState for any format starting with text/
+      return textStateFactory(this, uri, response);
+    } else if (contentType.match(/^application\/[A-Za-z-.]+\+json/)) {
+      // Default to HalState for any format containing a pattern like application/*+json
+      return halStateFactory(this, uri, response);
+    } else {
+      return binaryStateFactory(this, uri, response);
+    }
+
+  }
+
+
+}
+
+
+
+/**
+ * Find all dependencies for a given resource.
+ *
+ * For example, if
+ *   * if resourceA depends on resourceB
+ *   * and resourceB depends on resourceC
+ *
+ * Then if 'resourceC' expires, so should 'resourceA' and 'resourceB'.
+ *
+ * This function helps us find these dependencies recursively and guarding
+ * against recursive loops.
+ */
+function expandCacheDependencies(uris: Set<string>, dependencies: Map<string, Set<string>>, output?: Set<string>): Set<string> {
+
+  if (!output) output = new Set();
+
+  for(const uri of uris) {
+
+    if (!output.has(uri)) {
+      output.add(uri);
+      if (dependencies.has(uri)) {
+        expandCacheDependencies(dependencies.get(uri)!, dependencies, output);
+      }
+    }
+
+  }
+
+  return output;
 
 }

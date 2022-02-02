@@ -26,6 +26,9 @@
         "SwitchCase": 1
       }],
       "linebreak-style": ["error", "unix"],
+      "no-constant-condition": ["error", {
+        "checkLoops": false
+      }],
       "quotes": ["error", "single",
           {
             "allowTemplateLiterals": false,

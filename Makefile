@@ -8,35 +8,35 @@ clean:
 
 .PHONY: test
 test: lint
-	./node_modules/.bin/nyc ./node_modules/.bin/mocha
+	npx nyc mocha
 
 .PHONY: test-debug
 test-debug:
-	./node_modules/.bin/mocha --inspect-brk
+	npx mocha --inspect-brk
 
 .PHONY: lint
 lint:
-	./node_modules/.bin/eslint --quiet 'src/**/*.ts' 'test/**/*.ts'
+	npx eslint --quiet 'src/**/*.ts' 'test/**/*.ts'
 
 .PHONY: fix
 fix:
-	./node_modules/.bin/eslint --quiet 'src/**/*.ts' 'test/**/*.ts' --fix
+	npx eslint --quiet 'src/**/*.ts' 'test/**/*.ts' --fix
 
 .PHONY: tsbuild
 tsbuild:
-	./node_modules/.bin/tsc
+	npx tsc
 
 .PHONY: watch
 watch:
-	./node_modules/.bin/tsc --watch
+	npx tsc --watch
 
 .PHONY: browserbuild
 browserbuild: tsbuild
 	mkdir -p browser
-	./node_modules/.bin/webpack
+	npx webpack
 
 browser/ketting.min.js: browserbuild
 browser/mocha-tests.js: browserbuild
 
 testserver: build
-	./node_modules/.bin/ts-node test/testserver.ts
+	npx ts-node test/testserver.ts

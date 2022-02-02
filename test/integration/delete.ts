@@ -54,7 +54,7 @@ describe('Issuing a DELETE request', async () => {
     let exception = null;
     try {
       await resource2.delete();
-    } catch (ex) {
+    } catch (ex: any) {
       exception = ex;
     }
     expect(exception.response.status).to.equal(400);
@@ -70,7 +70,7 @@ describe('Issuing a DELETE request', async () => {
     let exception;
     try {
       await resource2.delete();
-    } catch (ex) {
+    } catch (ex: any) {
       exception = ex;
     }
     expect(exception.status).to.equal(410);

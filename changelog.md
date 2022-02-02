@@ -1,6 +1,17 @@
 ChangeLog
 =========
 
+7.3.0 (2021-01-06)
+------------------
+
+* #416: Cache-dependencies setup with `inv-by` links are now respected when
+  manually clearing resource caches.
+* #414: Don't attempt to parse the response if it had a `204` status, even
+  if there was a `Content-Type` header.
+* #408: Emit a warning when an `_embedded` HAL item is missing a good `self`
+  link.
+
+
 7.2.0 (2021-08-04)
 -----------------
 
