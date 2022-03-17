@@ -1,7 +1,17 @@
 ChangeLog
 =========
 
-7.3.0 (2021-01-06)
+7.4.0 (2022-03-17)
+------------------
+
+* #426: Setting up cache dependencies through `inv-by` links is now possible
+  via HAL `_links` and in embedded resources, as well as links from all the
+  other formats.
+* #425: Fewer warnings related to 'Max listeners exceeded'. The default of 10
+  is too low for typical Ketting applications.
+
+
+7.3.0 (2022-01-06)
 ------------------
 
 * #416: Cache-dependencies setup with `inv-by` links are now respected when
