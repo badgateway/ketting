@@ -152,37 +152,85 @@ describe('Client', () => {
     });
   });
 
-  it('should invalidate dependent resources if they were previously linked with "inv-by"', async () => {
+  describe('inv-by links', () => {
 
-    const client = new Client('https://example.org');
-    client.cache.store(new BaseState({
-      client,
-      uri: 'https://example.org/foo',
-      data: 'hello',
-      headers: new Headers(),
-      links: new Links('http://example.org/foo'),
-    }));
+    it('should invalidate dependent resources if they were previously linked with "inv-by"', async () => {
 
-    const request1 = new Request('https://example.org/foo', {
-      method: 'GET',
+      const client = new Client('https://example.org');
+      client.cacheState(new BaseState({
+        client,
+        uri: 'https://example.org/foo',
+        data: 'hello',
+        headers: new Headers(),
+        links: new Links('http://example.org/foo'),
+      }));
+
+      const headers = new Headers();
+      headers.append('Link', '</bar>; rel="inv-by"');
+      client.use( async req => {
+        return new Response('OK', { headers });
+      });
+
+      // Get the representation of /foo, which should set up the inv-by link
+      await client.go('https://example.org/foo').refresh();
+
+      expect(client.cache.has('https://example.org/foo')).to.equal(true);
+
+      // Lets invalidate /bar, which should also invalidate /foo
+      const request2 = new Request('https://example.org/bar', {
+        method: 'PUT',
+      });
+      await client.fetcher.fetch(request2);
+
+      expect(client.cache.has('https://example.org/foo')).to.equal(false);
+
     });
 
-    const headers = new Headers();
-    headers.append('Link', '</bar>; rel="inv-by"');
-    client.use( async req => {
-      return new Response('OK', { headers });
+    it('should also work when the inv-by dependency was set up via a link in an embedded HAL document', async() => {
+
+      const embeddedLinks = new Links('https://example.org/parent');
+      embeddedLinks.set('inv-by', '/bar');
+
+      const client = new Client('https://example.org');
+      client.cacheState(new BaseState({
+        client,
+        uri: 'https://example.org/parent',
+        data: 'hello',
+        headers: new Headers(),
+        links: new Links('http://example.org/parent'),
+        embedded: [
+
+          // This is the real resource we're interested in expiring
+          new BaseState({
+            client,
+            uri: 'https://example.org/foo',
+            links: embeddedLinks,
+            headers: new Headers(),
+            data: 'sup',
+          }),
+        ]
+      }));
+
+      const headers = new Headers();
+      headers.append('Link', '</bar>; rel="inv-by"');
+      client.use( async req => {
+        return new Response('OK', { headers });
+      });
+
+      // Get the representation of /foo, which should set up the inv-by link
+      await client.go('https://example.org/foo').refresh();
+
+      expect(client.cache.has('https://example.org/foo')).to.equal(true);
+
+      // Lets invalidate /bar, which should also invalidate /foo
+      const request2 = new Request('https://example.org/bar', {
+        method: 'PUT',
+      });
+      await client.fetcher.fetch(request2);
+
+      expect(client.cache.has('https://example.org/foo')).to.equal(false);
+
     });
-
-    await client.fetcher.fetch(request1);
-    expect(client.cache.has('https://example.org/foo')).to.equal(true);
-
-    // Lets invalidate /bar, which should also invalidate /foo
-    const request2 = new Request('https://example.org/bar', {
-      method: 'PUT',
-    });
-    await client.fetcher.fetch(request2);
-
-    expect(client.cache.has('https://example.org/foo')).to.equal(false);
 
   });
 
