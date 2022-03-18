@@ -30,21 +30,6 @@ export default function(client: Client): FetchMiddleware {
 
     const response = await next(request);
 
-    // If the response had a Link: rel=inv-by header, it means that when the
-    // target uri's cache expires, the uri of this resource should also
-    // expire.
-    if (response.headers.has('Link')) {
-      for (const httpLink of LinkHeader.parse(response.headers.get('Link')!).rel('inv-by')) {
-        const uri = resolve(request.url, httpLink.uri);
-        if (client.cacheDependencies.has(uri)) {
-          client.cacheDependencies.get(uri)!.add(request.url);
-        } else {
-          client.cacheDependencies.set(uri, new Set([request.url]));
-        }
-      }
-    }
-
-
     if (isSafeMethod(request.method)) {
       return response;
     }
