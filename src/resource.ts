@@ -6,7 +6,6 @@ import { Link, LinkNotFound, LinkVariables } from './link';
 import { EventEmitter } from 'events';
 import { GetRequestOptions, PostRequestOptions, PatchRequestOptions, PutRequestOptions, HeadRequestOptions } from './types';
 import { needsJsonStringify } from './util/fetch-body-helper';
-import * as objectHash  from 'object-hash';
 
 /**
  * A 'resource' represents an endpoint on a server.
@@ -531,5 +530,10 @@ function requestHash(uri: string, options: GetRequestOptions | undefined): strin
         headers[key] = value;
       });
   }
-  return objectHash({uri, headers});
+
+  const headerStr = Object.entries(headers).map( ([name, value]) => {
+    return name.toLowerCase() + ':' + value;
+  }).join(',');
+
+  return uri + '|' + headerStr;
 }

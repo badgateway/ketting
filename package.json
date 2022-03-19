@@ -43,7 +43,6 @@
     "hal-types": "^1.7.7",
     "http-link-header": "^1.0.3",
     "node-fetch": "^2.6.1",
-    "object-hash": "^2.2.0",
     "querystring-browser": "^1.0.4",
     "sax": "^1.2.4",
     "uri-template": "^2.0.0"
