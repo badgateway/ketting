@@ -261,10 +261,13 @@ export class Resource<T = any> extends EventEmitter {
    *
    * This function doesn't do any HTTP requests.
    */
-  go<TGoResource = any>(uri: string): Resource<TGoResource> {
+  go<TGoResource = any>(uri: string|Link): Resource<TGoResource> {
 
-    uri = resolve(this.uri, uri);
-    return this.client.go(uri);
+    if (typeof uri === 'string') {
+      return this.client.go(resolve(this.uri, uri));
+    } else {
+      return this.client.go(uri);
+    }
 
   }
 

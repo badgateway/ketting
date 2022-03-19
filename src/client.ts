@@ -12,7 +12,7 @@ import {
 } from './state';
 import { parseContentType } from './http/util';
 import { resolve } from './util/uri';
-import { LinkVariables } from './link';
+import { Link, LinkVariables } from './link';
 import { FollowPromiseOne } from './follow-promise';
 import { StateCache, ForeverCache } from './cache';
 import cacheExpireMiddleware from './middlewares/cache';
@@ -105,13 +105,15 @@ export default class Client {
    * @example
    * const res = ketting.go(); // bookmark
    */
-  go<TResource = any>(uri?: string): Resource<TResource> {
+  go<TResource = any>(uri?: string|Link): Resource<TResource> {
 
     let absoluteUri;
-    if (uri !== undefined) {
+    if (uri === undefined) {
+      absoluteUri = this.bookmarkUri;
+    } else if (typeof uri === 'string') {
       absoluteUri = resolve(this.bookmarkUri, uri);
     } else {
-      absoluteUri = this.bookmarkUri;
+      absoluteUri = resolve(uri);
     }
     if (!this.resources.has(absoluteUri)) {
       const resource = new Resource(this, absoluteUri);
