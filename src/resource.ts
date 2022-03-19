@@ -26,7 +26,13 @@ export class Resource<T = any> extends EventEmitter {
    */
   client: Client;
 
-  private readonly activeRefreshes: ActiveRefreshes<T>;
+  /**
+   * This object tracks all in-flight requests.
+   *
+   * When 2 identical requests are made in quick succession, this object is
+   * used to de-duplicate the requests.
+   */
+  private readonly activeRefresh: Map<string, Promise<State<T>>> = new Map<string, Promise<State<T>>>();
 
   /**
    * Create the resource.
@@ -37,7 +43,6 @@ export class Resource<T = any> extends EventEmitter {
     super();
     this.client = client;
     this.uri = uri;
-    this.activeRefreshes = new ActiveRefreshes<T>();
     this.setMaxListeners(500);
 
   }
@@ -56,20 +61,23 @@ export class Resource<T = any> extends EventEmitter {
 
     const params = optionsToRequestInit('GET', getOptions);
     const uri = this.uri;
-    if (!this.activeRefreshes.has(uri, getOptions)) {
-      this.activeRefreshes.set(uri, getOptions, (async (): Promise<State<T>> => {
+
+    const hash = requestHash(this.uri, getOptions);
+
+    if (!this.activeRefresh.has(hash)) {
+      this.activeRefresh.set(hash, (async (): Promise<State<T>> => {
         try {
           const response = await this.fetchOrThrow(params);
           const state = await this.client.getStateForResponse(uri, response);
           this.updateCache(state);
           return state;
         } finally {
-          this.activeRefreshes.remove(uri, getOptions);
+          this.activeRefresh.delete(hash);
         }
       })());
     }
 
-    return this.activeRefreshes.get(this.uri, getOptions)!;
+    return this.activeRefresh.get(hash)!;
   }
 
   /**
@@ -106,20 +114,23 @@ export class Resource<T = any> extends EventEmitter {
     const params = optionsToRequestInit('GET', getOptions);
     params.cache = 'no-cache';
     const uri = this.uri;
-    if (!this.activeRefreshes.has(uri, getOptions)) {
-      this.activeRefreshes.set(uri, getOptions, (async (): Promise<State<T>> => {
+
+    const hash = requestHash(this.uri, getOptions);
+
+    if (!this.activeRefresh.has(hash)) {
+      this.activeRefresh.set(hash, (async (): Promise<State<T>> => {
         try {
           const response = await this.fetchOrThrow(params);
           const state = await this.client.getStateForResponse(uri, response);
           this.updateCache(state);
           return state;
         } finally {
-          this.activeRefreshes.remove(uri, getOptions);
+          this.activeRefresh.delete(hash);
         }
       })());
     }
 
-    return this.activeRefreshes.get(this.uri, getOptions)!;
+    return this.activeRefresh.get(hash)!;
   }
 
   /**
@@ -511,34 +522,14 @@ function optionsToRequestInit(method: string, options?: GetRequestOptions | Post
 
 }
 
-class ActiveRefreshes<T = any> {
-  private readonly refreshByHash: Map<string, Promise<State<T>>> = new Map<string, Promise<State<T>>>();
-
-  set(uri: string, options: GetRequestOptions | undefined, activeRefresh: Promise<State<T>>): void {
-    this.refreshByHash.set(this.hash(uri, options), activeRefresh);
+function requestHash(uri: string, options: GetRequestOptions | undefined): string {
+  if (!options) {
+    return objectHash(uri);
   }
-
-  get(uri: string, options: GetRequestOptions | undefined): Promise<State<T>> | undefined {
-    return this.refreshByHash.get(this.hash(uri, options));
-  }
-
-  has(uri: string, options: GetRequestOptions | undefined): boolean {
-    return !!this.get(uri, options);
-  }
-
-  remove(uri: string, options: GetRequestOptions | undefined): boolean {
-    return this.refreshByHash.delete(this.hash(uri, options));
-  }
-
-  private hash(uri: string, options: GetRequestOptions | undefined): string {
-    if (!options) {
-      return objectHash(uri);
-    }
-    const headers: Record<string, string> = {};
-    new Headers(options.getContentHeaders?.() || options.headers)
-      .forEach((value, key) => {
-        headers[key] = value;
-      });
-    return objectHash({uri, headers});
-  }
+  const headers: Record<string, string> = {};
+  new Headers(options.getContentHeaders?.() || options.headers)
+    .forEach((value, key) => {
+      headers[key] = value;
+    });
+  return objectHash({uri, headers});
 }
