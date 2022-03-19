@@ -1,5 +1,4 @@
 import problemFactory from './error';
-import './fetch-polyfill';
 
 export type FetchMiddleware =
   (request: Request, next: (request: Request) => Promise<Response>) => Promise<Response>;
