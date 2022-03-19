@@ -88,13 +88,16 @@ export type State<T = any> = {
   contentHeaders(): Headers;
 
   /**
-   * Certain formats can embed other resources, identified by their
-   * own URI.
+   * Some formats support embedding resources inside other resources.
    *
-   * When a format has embedded resources, we will use these to warm
-   * the cache.
+   * Please note: generally you should always use the .follow() and
+   * .followAll() functions to get access to linked embedded resources.
    *
-   * This method returns every embedded resource.
+   * There's several operations that change the State in the Ketting Cache,
+   * and usually this erases any associated embedded resources.
+   *
+   * .follow() and .followAll() will return the embedded resources, and also
+   * keeps their respective states fresh when changes are made.
    */
   getEmbedded(): State[];
 
