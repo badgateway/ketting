@@ -37,6 +37,7 @@ export class Resource<T = any> extends EventEmitter {
     this.client = client;
     this.uri = uri;
     this.activeRefresh = null;
+    this.setMaxListeners(500);
 
   }
 

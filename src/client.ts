@@ -154,6 +154,10 @@ export default class Client {
   cacheState(state: State) {
 
     this.cache.store(state);
+    for(const invByLink of state.links.getMany('inv-by')) {
+      this.addCacheDependency(resolve(invByLink), state.uri);
+    }
+
     const resource = this.resources.get(state.uri);
     if (resource) {
       // We have a resource for this object, notify it as well.
@@ -175,8 +179,28 @@ export default class Client {
    * expire, if another one expires.
    *
    * A server can populate this list using the `inv-by' link.
+   *
+   * @deprecated This property will go private in a future release.
    */
   public cacheDependencies: Map<string, Set<string>> = new Map();
+
+  /**
+   * Adds a cache dependency between two resources.
+   *
+   * If the 'target' resource ever expires, it will cause 'dependentUri' to
+   * also expire.
+   *
+   * Both argument MUST be absolute urls.
+   */
+  addCacheDependency(targetUri: string, dependentUri: string): void {
+
+    if (this.cacheDependencies.has(targetUri)) {
+      this.cacheDependencies.get(targetUri)!.add(dependentUri);
+    } else {
+      this.cacheDependencies.set(targetUri, new Set([dependentUri]));
+    }
+
+  }
 
   /**
    * Helper function for clearing the cache for a resource.
