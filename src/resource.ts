@@ -523,13 +523,13 @@ function optionsToRequestInit(method: string, options?: GetRequestOptions | Post
 }
 
 function requestHash(uri: string, options: GetRequestOptions | undefined): string {
-  if (!options) {
-    return objectHash(uri);
-  }
+
   const headers: Record<string, string> = {};
-  new Headers(options.getContentHeaders?.() || options.headers)
-    .forEach((value, key) => {
-      headers[key] = value;
-    });
+  if (options) {
+    new Headers(options.getContentHeaders?.() || options.headers)
+      .forEach((value, key) => {
+        headers[key] = value;
+      });
+  }
   return objectHash({uri, headers});
 }
