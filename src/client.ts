@@ -161,7 +161,7 @@ export default class Client {
     // Register all cache dependencies.
     for(const nState of newStates) {
       for(const invByLink of nState.links.getMany('inv-by')) {
-        this.addCacheDependency(resolve(invByLink), state.uri);
+        this.addCacheDependency(resolve(invByLink), nState.uri);
       }
     }
 
