@@ -1,6 +1,16 @@
 ChangeLog
 =========
 
+7.4.1-beta.0 (2022-03-17)
+-------------------------
+
+* #433: Fixed race condition when processing nested `_embedded` resources and
+  emiting `update` events. The order at which they happen is now consistent.
+  When the `update` event happens, the entire cache should be up to date.
+* #328: `Resource.go()` and `Client.go()` can now take a `Link` object as the
+  argument.
+
+
 7.4.0 (2022-03-17)
 ------------------
 
