@@ -155,20 +155,28 @@ export default class Client {
    */
   cacheState(state: State) {
 
-    this.cache.store(state);
-    for(const invByLink of state.links.getMany('inv-by')) {
-      this.addCacheDependency(resolve(invByLink), state.uri);
+    // Flatten the list of state objects.
+    const newStates = flattenState(state);
+
+    // Register all cache dependencies.
+    for(const nState of newStates) {
+      for(const invByLink of nState.links.getMany('inv-by')) {
+        this.addCacheDependency(resolve(invByLink), state.uri);
+      }
     }
 
-    const resource = this.resources.get(state.uri);
-    if (resource) {
-      // We have a resource for this object, notify it as well.
-      resource.emit('update', state);
+    // Store all new caches
+    for(const nState of newStates) {
+      this.cache.store(nState);
     }
 
-    for(const embeddedState of state.getEmbedded()) {
-      // Recursion. MADNESS
-      this.cacheState(embeddedState);
+    // Emit 'update' events
+    for(const nState of newStates) {
+      const resource = this.resources.get(nState.uri);
+      if (resource) {
+        // We have a resource for this object, notify it as well.
+        resource.emit('update', nState);
+      }
     }
 
   }
@@ -305,5 +313,19 @@ function expandCacheDependencies(uris: Set<string>, dependencies: Map<string, Se
   }
 
   return output;
+
+}
+
+/**
+ * Take a State object, find all it's embedded resources and return a flat
+ * array of all resources at any depth.
+ */
+function flattenState(state: State, result: Set<State> = new Set<State>()): Set<State> {
+
+  result.add(state);
+  for(const embedded of state.getEmbedded()) {
+    flattenState(embedded, result);
+  }
+  return result;
 
 }
