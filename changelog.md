@@ -4,8 +4,8 @@ ChangeLog
 7.4.1 (2022-03-21)
 ------------------
 
-Stable release, contains the following features that were introduced in
-the previous betas:
+Idential to the last beta. Contains the following features that were introduced
+in the previous betas:
 
 * #433: Fixed race condition when processing nested `_embedded` resources and
   emiting `update` events. The order at which they happen is now consistent.
