@@ -25,7 +25,13 @@ export class Resource<T = any> extends EventEmitter {
    */
   client: Client;
 
-  private activeRefresh: Promise<State<T>> | null;
+  /**
+   * This object tracks all in-flight requests.
+   *
+   * When 2 identical requests are made in quick succession, this object is
+   * used to de-duplicate the requests.
+   */
+  private readonly activeRefresh: Map<string, Promise<State<T>>> = new Map<string, Promise<State<T>>>();
 
   /**
    * Create the resource.
@@ -36,7 +42,6 @@ export class Resource<T = any> extends EventEmitter {
     super();
     this.client = client;
     this.uri = uri;
-    this.activeRefresh = null;
     this.setMaxListeners(500);
 
   }
@@ -54,22 +59,24 @@ export class Resource<T = any> extends EventEmitter {
     }
 
     const params = optionsToRequestInit('GET', getOptions);
+    const uri = this.uri;
 
-    if (!this.activeRefresh) {
-      this.activeRefresh = (async() : Promise<State<T>> => {
+    const hash = requestHash(this.uri, getOptions);
+
+    if (!this.activeRefresh.has(hash)) {
+      this.activeRefresh.set(hash, (async (): Promise<State<T>> => {
         try {
           const response = await this.fetchOrThrow(params);
-          const state = await this.client.getStateForResponse(this.uri, response);
+          const state = await this.client.getStateForResponse(uri, response);
           this.updateCache(state);
           return state;
         } finally {
-          this.activeRefresh = null;
+          this.activeRefresh.delete(hash);
         }
-      })();
+      })());
     }
 
-    return this.activeRefresh;
-
+    return this.activeRefresh.get(hash)!;
   }
 
   /**
@@ -105,22 +112,24 @@ export class Resource<T = any> extends EventEmitter {
 
     const params = optionsToRequestInit('GET', getOptions);
     params.cache = 'no-cache';
+    const uri = this.uri;
 
-    if (!this.activeRefresh) {
-      this.activeRefresh = (async() : Promise<State<T>> => {
+    const hash = requestHash(this.uri, getOptions);
+
+    if (!this.activeRefresh.has(hash)) {
+      this.activeRefresh.set(hash, (async (): Promise<State<T>> => {
         try {
           const response = await this.fetchOrThrow(params);
-          const state = await this.client.getStateForResponse(this.uri, response);
+          const state = await this.client.getStateForResponse(uri, response);
           this.updateCache(state);
           return state;
         } finally {
-          this.activeRefresh = null;
+          this.activeRefresh.delete(hash);
         }
-      })();
+      })());
     }
 
-    return this.activeRefresh;
-
+    return this.activeRefresh.get(hash)!;
   }
 
   /**
@@ -512,3 +521,19 @@ function optionsToRequestInit(method: string, options?: GetRequestOptions | Post
 
 }
 
+function requestHash(uri: string, options: GetRequestOptions | undefined): string {
+
+  const headers: Record<string, string> = {};
+  if (options) {
+    new Headers(options.getContentHeaders?.() || options.headers)
+      .forEach((value, key) => {
+        headers[key] = value;
+      });
+  }
+
+  const headerStr = Object.entries(headers).map( ([name, value]) => {
+    return name.toLowerCase() + ':' + value;
+  }).join(',');
+
+  return uri + '|' + headerStr;
+}
