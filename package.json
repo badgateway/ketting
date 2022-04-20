@@ -39,7 +39,6 @@
   },
   "types": "dist/index.d.ts",
   "dependencies": {
-    "fetch-mw-oauth2": "^1.0.0",
     "hal-types": "^1.7.4",
     "http-link-header": "^1.0.3",
     "querystring-browser": "^1.0.4",

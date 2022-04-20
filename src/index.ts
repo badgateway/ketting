@@ -21,7 +21,6 @@ export { NeverCache } from './cache/never';
 
 export { default as basicAuth } from './http/basic-auth';
 export { default as bearerAuth } from './http/bearer-auth';
-export { default as oauth2 } from './http/oauth2';
 
 export { Problem } from './http/error';
 
