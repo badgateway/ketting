@@ -12,7 +12,7 @@ import {
 } from './state';
 import { parseContentType } from './http/util';
 import { resolve } from './util/uri';
-import { LinkVariables } from './link';
+import { Link, LinkVariables } from './link';
 import { FollowPromiseOne } from './follow-promise';
 import { StateCache, ForeverCache } from './cache';
 import cacheExpireMiddleware from './middlewares/cache';
@@ -105,13 +105,15 @@ export default class Client {
    * @example
    * const res = ketting.go(); // bookmark
    */
-  go<TResource = any>(uri?: string): Resource<TResource> {
+  go<TResource = any>(uri?: string|Link): Resource<TResource> {
 
     let absoluteUri;
-    if (uri !== undefined) {
+    if (uri === undefined) {
+      absoluteUri = this.bookmarkUri;
+    } else if (typeof uri === 'string') {
       absoluteUri = resolve(this.bookmarkUri, uri);
     } else {
-      absoluteUri = this.bookmarkUri;
+      absoluteUri = resolve(uri);
     }
     if (!this.resources.has(absoluteUri)) {
       const resource = new Resource(this, absoluteUri);
@@ -153,20 +155,28 @@ export default class Client {
    */
   cacheState(state: State) {
 
-    this.cache.store(state);
-    for(const invByLink of state.links.getMany('inv-by')) {
-      this.addCacheDependency(resolve(invByLink), state.uri);
+    // Flatten the list of state objects.
+    const newStates = flattenState(state);
+
+    // Register all cache dependencies.
+    for(const nState of newStates) {
+      for(const invByLink of nState.links.getMany('inv-by')) {
+        this.addCacheDependency(resolve(invByLink), nState.uri);
+      }
     }
 
-    const resource = this.resources.get(state.uri);
-    if (resource) {
-      // We have a resource for this object, notify it as well.
-      resource.emit('update', state);
+    // Store all new caches
+    for(const nState of newStates) {
+      this.cache.store(nState);
     }
 
-    for(const embeddedState of state.getEmbedded()) {
-      // Recursion. MADNESS
-      this.cacheState(embeddedState);
+    // Emit 'update' events
+    for(const nState of newStates) {
+      const resource = this.resources.get(nState.uri);
+      if (resource) {
+        // We have a resource for this object, notify it as well.
+        resource.emit('update', nState);
+      }
     }
 
   }
@@ -303,5 +313,19 @@ function expandCacheDependencies(uris: Set<string>, dependencies: Map<string, Se
   }
 
   return output;
+
+}
+
+/**
+ * Take a State object, find all it's embedded resources and return a flat
+ * array of all resources at any depth.
+ */
+function flattenState(state: State, result: Set<State> = new Set<State>()): Set<State> {
+
+  result.add(state);
+  for(const embedded of state.getEmbedded()) {
+    flattenState(embedded, result);
+  }
+  return result;
 
 }

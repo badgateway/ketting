@@ -1,6 +1,6 @@
 {
   "name": "ketting",
-  "version": "7.4.0",
+  "version": "7.4.1",
   "description": "Opiniated HATEAOS / Rest client.",
   "main": "dist/index.js",
   "browser": "browser/ketting.min.js",
@@ -34,6 +34,9 @@
     "browser/ketting.min.js.map",
     "LICENSE"
   ],
+  "engines": {
+    "node": ">=12"
+  },
   "types": "dist/index.d.ts",
   "dependencies": {
     "fetch-mw-oauth2": "^1.0.0",
@@ -50,7 +53,9 @@
     "@types/koa-logger": "^3.1.1",
     "@types/koa-static": "^4.0.1",
     "@types/mocha": "^9.0.0",
-    "@types/node": "^17.0.21",
+    "@types/node": "^17.0.25",
+    "@types/node-fetch": "^2.5.8",
+    "@types/object-hash": "^2.1.1",
     "@types/sax": "^1.2.1",
     "@typescript-eslint/eslint-plugin": "^5.5.0",
     "@typescript-eslint/parser": "^5.5.0",
