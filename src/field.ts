@@ -94,6 +94,8 @@ interface DateTimeField extends RangeField<Date> {
 
 interface HiddenField extends BaseField<string | number | null | boolean> {
   type: 'hidden';
+  minLength?: number;
+  maxLength?: number;
 }
 
 interface FileField extends BaseField<never> {
