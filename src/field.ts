@@ -82,6 +82,8 @@ interface BooleanField extends BaseField<boolean> {
  */
 interface BasicStringField extends BaseField<string> {
   type: 'color' | 'email' | 'password' | 'search' | 'tel' | 'url';
+  minLength?: number;
+  maxLength?: number;
 }
 
 interface RangeStringField extends RangeField<string> {
