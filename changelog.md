@@ -1,6 +1,13 @@
 ChangeLog
 =========
 
+7.4.2 (2022-05-11)
+------------------
+
+* Added support for `minLength` and `maxLength` attributes on textarea fields
+  in HAL Forms. (@dayre).
+
+
 7.4.1 (2022-03-21)
 ------------------
 
