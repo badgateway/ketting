@@ -163,6 +163,8 @@ describe('HAL forms', () => {
           label: undefined,
           pattern: undefined,
           placeholder: undefined,
+          maxLength: undefined,
+          minLength: undefined,
           value: undefined,
         }
       ],
@@ -232,6 +234,8 @@ describe('HAL forms', () => {
           label: undefined,
           pattern: undefined,
           placeholder: undefined,
+          maxLength: undefined,
+          minLength: undefined,
           value: undefined,
         }
       ],
