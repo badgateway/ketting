@@ -335,6 +335,8 @@ function parseHalField(halField: hal.HalFormsProperty): Field {
           pattern: halField.regex ? new RegExp(halField.regex) : undefined,
           label: halField.prompt,
           placeholder: halField.placeHolder,
+          minLength: halField.minLength,
+          maxLength: halField.maxLength,
         };
       }
     case 'hidden' :
@@ -358,6 +360,8 @@ function parseHalField(halField: hal.HalFormsProperty): Field {
         placeholder: halField.placeHolder,
         cols: halField.cols,
         rows: halField.rows,
+        minLength: halField.minLength,
+        maxLength: halField.maxLength,
       };
     case 'password' :
       return {
@@ -367,6 +371,8 @@ function parseHalField(halField: hal.HalFormsProperty): Field {
         readOnly: halField.readOnly || false,
         label: halField.prompt,
         placeholder: halField.placeHolder,
+        minLength: halField.minLength,
+        maxLength: halField.maxLength,
       };
     case 'date' :
     case 'month' :
