@@ -348,8 +348,6 @@ function parseHalField(halField: hal.HalFormsProperty): Field {
         value: halField.value,
         label: halField.prompt,
         placeholder: halField.placeHolder,
-        minLength: halField.minLength,
-        maxLength: halField.maxLength,
       };
     case 'textarea' :
       return {
