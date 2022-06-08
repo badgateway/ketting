@@ -221,5 +221,5 @@ export class LinkNotFound extends Error {}
  * A key->value map of variables to place in a templated link
  */
 export type LinkVariables = {
-  [key: string]: string | number;
+  [key: string]: string | number | string[] | number[];
 };
