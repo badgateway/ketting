@@ -35,7 +35,7 @@
     "LICENSE"
   ],
   "engines": {
-    "node": ">=12"
+    "node": ">=16"
   },
   "types": "dist/index.d.ts",
   "dependencies": {
