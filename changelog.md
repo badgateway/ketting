@@ -1,6 +1,14 @@
 ChangeLog
 =========
 
+7.5.0 (2022-??-??)
+------------------
+
+* #401: The mechanism that de-duplicates identical requests is now a bit
+  smarter, and will not de-duplicate requests that are significantly different
+  such as a different `Accept` header.
+
+
 7.4.2 (2022-05-11)
 ------------------
 
