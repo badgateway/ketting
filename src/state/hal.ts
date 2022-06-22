@@ -414,8 +414,6 @@ function parseHalField(halField: hal.HalFormsProperty): Field {
         max: halField.max,
         step: halField.step,
       };
-    case 'radio' :
-    case 'checkbox' :
     case 'color' :
       return {
         name: halField.name,
@@ -423,6 +421,17 @@ function parseHalField(halField: hal.HalFormsProperty): Field {
         required: halField.required || false,
         readOnly: halField.readOnly || false,
         label: halField.prompt,
+        value: halField.value,
+      };
+    case 'radio' :
+    case 'checkbox' :
+      return {
+        name: halField.name,
+        type: halField.type,
+        required: halField.required || false,
+        readOnly: halField.readOnly || false,
+        label: halField.prompt,
+        value: !!halField.value,
       };
 
   }
