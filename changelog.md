@@ -1,12 +1,14 @@
 ChangeLog
 =========
 
-7.5.0 (2022-??-??)
+7.5.0 (2022-08-26)
 ------------------
 
 * #401: The mechanism that de-duplicates identical requests is now a bit
   smarter, and will not de-duplicate requests that are significantly different
-  such as a different `Accept` header.
+  such as a different `Accept` header. (@hugothomas @reda-alaoui)
+* #450: `value` field for some HAL inputs were ignored (color, checkbox,
+  radio).
 
 
 7.4.2 (2022-05-11)
