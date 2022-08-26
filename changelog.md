@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-7.5.0 (2022-??-??)
+7.5.0 (2022-08-26)
 ------------------
 
 * #401: The mechanism that de-duplicates identical requests is now a bit
