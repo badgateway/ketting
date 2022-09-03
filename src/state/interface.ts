@@ -54,7 +54,7 @@ export type State<T = any> = {
    *
    * If the format provides a default action, the name may be omitted.
    */
-  action<TFormData = any>(name?: string): Action<TFormData>;
+  action<TFormData extends Record<string, any>>(name?: string): Action<TFormData>;
 
   /**
    * Returns all actions
