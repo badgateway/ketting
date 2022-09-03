@@ -163,7 +163,7 @@ export class BaseState<T> extends BaseHeadState implements State<T> {
    * If no name is given, the first action is returned. This is useful for
    * formats that only supply 1 action, and no name.
    */
-  action<TFormData = any>(name?: string): Action<TFormData> {
+  action<TFormData extends Record<string, any> = any>(name?: string): Action<TFormData> {
 
     if (!this.actionInfo.length) {
       throw new ActionNotFound('This State does not define any actions');
