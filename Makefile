@@ -1,8 +1,6 @@
 .PHONY: build
 build: browser/ketting.min.js browser/mocha-tests.js tsbuild
 
-export NODE_OPTIONS='--experimental-fetch'
-
 .PHONY: clean
 clean:
 	-rm -r browser/
@@ -10,11 +8,11 @@ clean:
 
 .PHONY: test
 test: lint
-	NODE_OPTIONS="--experimental-fetch" npx nyc mocha
+	npx nyc mocha
 
 .PHONY: test-debug
 test-debug:
-	NODE_OPTIONS="--experimental-fetch" npx mocha --inspect-brk
+	npx mocha --inspect-brk
 
 .PHONY: lint
 lint:
