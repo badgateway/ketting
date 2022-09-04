@@ -81,7 +81,7 @@
   "mocha": {
     "require": [
       "ts-node/register",
-      "./test/testserver.ts"
+      "./test/testserver.ts",
       "./test/polyfills.js"
     ],
     "ignore": "test/test-entrypoint.js",
