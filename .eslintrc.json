@@ -36,6 +36,7 @@
           }
       ],
       "semi": ["error", "always"],
+      "no-console": ["error", { "allow": ["warn", "error", "info", "debug"] }],
       "no-trailing-spaces": "error",
       "eol-last": "error",
       "@typescript-eslint/ban-ts-comment": ["error",
@@ -61,7 +62,6 @@
       }],
       "@typescript-eslint/prefer-for-of": ["error"],
       "@typescript-eslint/prefer-optional-chain": ["error"],
-      "@typescript-eslint/prefer-ts-expect-error": ["error"],
-      "no-console": ["error"]
+      "@typescript-eslint/prefer-ts-expect-error": ["error"]
   }
 }
