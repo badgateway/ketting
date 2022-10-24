@@ -1,6 +1,15 @@
 ChangeLog
 =========
 
+8.0.0 (????-??-??)
+------------------
+
+* BC break: Dropped `node-fetch` dependency, because modern Node versions
+  now provide a `fetch` function. If you want support for older Node versions,
+  provide your own polyfill.
+* Support for versions older than Node 18 dropped.
+
+
 7.5.1 (2022-09-03)
 ------------------
 
