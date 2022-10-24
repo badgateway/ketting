@@ -13,7 +13,7 @@ ChangeLog
 7.5.1 (2022-09-03)
 ------------------
 
-* Support for Typescript 4.8.
+* Typescript 4.8 support!
 
 
 7.5.0 (2022-08-26)
