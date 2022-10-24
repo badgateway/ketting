@@ -54,7 +54,6 @@
     "@types/koa-static": "^4.0.1",
     "@types/mocha": "^10.0.0",
     "@types/node": "^18.7.14",
-    "@types/node-fetch": "^2.5.8",
     "@types/sax": "^1.2.1",
     "@typescript-eslint/eslint-plugin": "^5.5.0",
     "@typescript-eslint/parser": "^5.5.0",
