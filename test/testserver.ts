@@ -287,7 +287,7 @@ app.use(
         } while (resources[someId + '.json']);
 
         const body = ctx.request.body;
-        resources[someId + '.json'] = body as string;
+        resources[someId + '.json'] = body as any;
         ctx.response.status = 201;
         ctx.response.body = '';
         ctx.response.set('Location', '/' + someId + '.json');
