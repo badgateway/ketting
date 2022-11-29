@@ -110,18 +110,38 @@ export class SimpleAction<TFormData extends Record<string, any>> implements Acti
 
     const uri = new URL(this.uri);
 
+    const newFormData: TFormData = {
+      ...formData
+    };
+
+    for (const field of this.fields) {
+
+      if (!(field.name in formData)) {
+
+        if (field.value) {
+          // We don't have perfect types for fields vs. FormData and how they
+          // related, so 'any' is needed here.
+          (newFormData as any)[field.name] = field.value;
+        } else if (field.required) {
+          throw new Error(`The ${field.name} field is required in this form`);
+        }
+
+      }
+
+    }
+
     if (this.method === 'GET') {
-      uri.search = qs.stringify(formData);
+      uri.search = qs.stringify(newFormData);
       const resource = this.client.go(uri.toString());
       return resource.get();
     }
     let body;
     switch (this.contentType) {
       case 'application/x-www-form-urlencoded' :
-        body = qs.stringify(formData);
+        body = qs.stringify(newFormData);
         break;
       case 'application/json':
-        body = JSON.stringify(formData);
+        body = JSON.stringify(newFormData);
         break;
       default :
         throw new Error(`Serializing mimetype ${this.contentType} is not yet supported in actions`);
