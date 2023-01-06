@@ -251,9 +251,11 @@ describe('HAL forms', () => {
       {
         type: 'text',
         name: 'text',
+        placeholder: 'text',
       }, {
         type: 'text',
         name: 'text',
+        placeholder: 'text',
         required: false,
         readOnly: false,
       }
@@ -263,11 +265,13 @@ describe('HAL forms', () => {
       'text field with the type property omitted',
       {
         name: 'text',
+        placeholder: 'text',
         required: true,
         readOnly: false,
         regex: '[a-z]',
       }, {
         type: 'text',
+        placeholder: 'text',
         name: 'text',
         required: true,
         readOnly: false,
@@ -280,9 +284,11 @@ describe('HAL forms', () => {
       {
         type: 'hidden',
         name: 'hidden',
+        placeholder: 'text',
       }, {
         type: 'hidden',
         name: 'hidden',
+        placeholder: 'text',
         required: false,
         readOnly: false,
       });
@@ -291,9 +297,11 @@ describe('HAL forms', () => {
       {
         type: 'password',
         name: 'password',
+        placeholder: 'text',
       }, {
         type: 'password',
         name: 'password',
+        placeholder: 'text',
         required: false,
         readOnly: false,
       }
@@ -303,9 +311,11 @@ describe('HAL forms', () => {
       {
         type: 'textarea',
         name: 'textarea',
+        placeholder: 'text',
       }, {
         type: 'textarea',
         name: 'textarea',
+        placeholder: 'text',
         required: false,
         readOnly: false,
       }
