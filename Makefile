@@ -10,11 +10,11 @@ clean:
 
 .PHONY: test
 test: lint
-	NODE_OPTIONS="--experimental-fetch" npx nyc mocha
+	npx nyc mocha
 
 .PHONY: test-debug
 test-debug:
-	NODE_OPTIONS="--experimental-fetch" npx mocha --inspect-brk
+	npx mocha --inspect-brk
 
 .PHONY: lint
 lint:
