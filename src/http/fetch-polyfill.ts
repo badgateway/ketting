@@ -5,8 +5,11 @@ import {
   Response,
 } from 'node-fetch';
 
-// Registering Fetch as a glboal polyfill
-(global as any).fetch = nodeFetch;
-(global as any).Request = Request;
-(global as any).Headers = Headers;
-(global as any).Response = Response;
+const globalThis = global as any;
+
+if (!globalThis.fetch) {
+  globalThis.fetch = nodeFetch;
+  globalThis.Request = Request;
+  globalThis.Headers = Headers;
+  globalThis.Response = Response;
+}
