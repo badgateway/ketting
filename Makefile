@@ -1,8 +1,6 @@
 .PHONY: build
 build: browser/ketting.min.js browser/mocha-tests.js tsbuild
 
-export NODE_OPTIONS='--experimental-fetch'
-
 .PHONY: clean
 clean:
 	-rm -r browser/
