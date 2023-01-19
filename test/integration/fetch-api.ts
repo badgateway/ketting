@@ -20,7 +20,7 @@ describe('Using the fetch api', () => {
 
   it('should also work when passing a Request object', async () => {
 
-    const request = new Request('?foo=bar');
+    const request = new Request('http://localhost:3000/?foo=bar');
     const response = await hal2.fetch(request);
     expect(response).to.have.property('status');
     expect(response.status).to.eql(200);
