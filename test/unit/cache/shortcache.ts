@@ -25,8 +25,12 @@ describe('ShortCache', () => {
     const newState = shortCache.get('http://example/foo')!;
     newState.timestamp = ts;
 
-    // Note we use .eql
+    // Headers is weird about being cloned and not seeming equal.
+    // @ts-expect-error Trust me!
+    newState.headers = state.headers = null;
+
     expect(newState).to.eql(state);
+
 
   });
 

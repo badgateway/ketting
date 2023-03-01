@@ -4,14 +4,15 @@ ChangeLog
 8.0.0 (????-??-??)
 ------------------
 
-* BC break: Dropped `node-fetch` dependency, because modern Node versions now
-  provide a `fetch` function. If you want support for older Node versions,
-  provide your own polyfill.
+* Ketting requires Node 16 now.
+* No longer using `node-fetch`, as `fetch()` is natively supported on Node 18.
+  If you are using Ketting with Node 16, you should install `node-fetch` or run
+  node with the `--experimental-fetch` option.
 * Upgraded OAuth2 dependency to [@badgateway/oauth2-client][8].
-* Support for versions older than Node 18 dropped.
 * Submitting actions with missing required fields will now throw an exception.
 * Actions that have pre-filled values will auto submit those values unless they
   are explicitly overridden.
+* #459: Now uses the correct spelling of 'placeholder' in HAL forms (@dayre).
 
 
 7.5.1 (2022-09-03)
