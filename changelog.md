@@ -7,6 +7,7 @@ ChangeLog
 * BC break: Dropped `node-fetch` dependency, because modern Node versions now
   provide a `fetch` function. If you want support for older Node versions,
   provide your own polyfill.
+* Upgraded OAuth2 dependency to [@badgateway/oauth2-client][8].
 * Support for versions older than Node 18 dropped.
 * Submitting actions with missing required fields will now throw an exception.
 * Actions that have pre-filled values will auto submit those values unless they
@@ -1009,3 +1010,4 @@ in the previous betas:
 [5]: http://rwcbook.github.io/hal-forms/
 [6]: https://tools.ietf.org/html/rfc7807 "Problem Details for HTTP APIs"
 [7]: https://tools.ietf.org/html/draft-dalal-deprecation-header-03 "The Deprecation HTTP Header Field"
+[8]: https://github.com/badgateway/oauth2-client
