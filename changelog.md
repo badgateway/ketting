@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-8.0.0-alpha.1 (????-??-??)
+8.0.0-alpha.1 (2023-03-16)
 --------------------------
 
 * Ketting requires Node 16 now.
