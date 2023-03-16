@@ -29,3 +29,5 @@ export { Action } from './action';
 export { Field } from './field';
 
 export { FollowPromiseOne, FollowPromiseMany } from './follow-promise';
+
+export { FetchMiddleware } from './http/fetcher';
