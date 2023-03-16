@@ -8,7 +8,7 @@ import { StateFactory } from './interface';
 /**
  * Turns a HTTP response into a HtmlState
  */
-export const factory:StateFactory = async (client, uri, response): Promise<BaseState<string>> => {
+export const factory:StateFactory = async (client, uri, response): Promise<BaseState<string, string>> => {
 
   const body = await response.text();
 

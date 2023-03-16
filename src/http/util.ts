@@ -17,9 +17,9 @@ export function parseContentType(contentType: string | null): string | null {
 }
 
 
-export function parseLink(context: string, header: string|null): Links {
+export function parseLink<Rels extends string>(context: string, header: string|null): Links<Rels> {
 
-  const result = new Links(context);
+  const result = new Links<Rels>(context);
   if (!header) {
     return result;
   }
@@ -29,7 +29,7 @@ export function parseLink(context: string, header: string|null): Links {
     for (const rel of httpLink.rel.split(' ')) {
       // Looping through space separated rel values.
       const link = {
-        rel: rel,
+        rel: rel as Rels,
         href: httpLink.uri,
         context,
         title: httpLink.title,

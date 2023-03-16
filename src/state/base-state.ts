@@ -7,11 +7,11 @@ import { resolve } from '../util/uri';
 import { expand } from '../util/uri-template';
 import { entityHeaderNames } from '../http/util';
 
-type HeadStateInit = {
+type HeadStateInit<Rels extends string> = {
 
   client: Client;
   uri: string;
-  links: Links;
+  links: Links<Rels>;
 
   /**
    * The full list of HTTP headers that were sent with the response.
@@ -19,12 +19,12 @@ type HeadStateInit = {
   headers: Headers;
 }
 
-type StateInit<T> = {
+type StateInit<T, Rels extends string> = {
   client: Client;
   uri: string;
   data: T;
   headers: Headers;
-  links: Links;
+  links: Links<Rels>;
   embedded?: State[];
   actions?: ActionInfo[];
 }
@@ -32,7 +32,7 @@ type StateInit<T> = {
 /**
  * Implements a State object for HEAD responses
  */
-export class BaseHeadState implements HeadState {
+export class BaseHeadState<Rels extends string> implements HeadState<Rels> {
 
   uri: string;
 
@@ -49,14 +49,14 @@ export class BaseHeadState implements HeadState {
   /**
    * All links associated with the resource.
    */
-  links: Links;
+  links: Links<Rels>;
 
   /**
    * Reference to main client that created this state
    */
   client: Client;
 
-  constructor(init: HeadStateInit) {
+  constructor(init: HeadStateInit<Rels>) {
     this.client = init.client;
     this.uri = init.uri;
     this.headers = init.headers;
@@ -71,7 +71,7 @@ export class BaseHeadState implements HeadState {
    * This function can also follow templated uris. You can specify uri
    * variables in the optional variables argument.
    */
-  follow<TFollowedResource = any>(rel: string, variables?: LinkVariables): Resource<TFollowedResource> {
+  follow<TFollowedResource = any>(rel: Rels, variables?: LinkVariables): Resource<TFollowedResource> {
 
     const link = this.links.get(rel);
     if (!link) throw new LinkNotFound(`Link with rel ${rel} on ${this.uri} not found`);
@@ -98,7 +98,7 @@ export class BaseHeadState implements HeadState {
    *
    * If no resources were found, the array will be empty.
    */
-  followAll<TFollowedResource = any>(rel: string): Resource<TFollowedResource>[] {
+  followAll<TFollowedResource = any>(rel: Rels): Resource<TFollowedResource>[] {
 
     return this.links.getMany(rel).map( link => {
 
@@ -140,7 +140,7 @@ export class BaseHeadState implements HeadState {
 /**
  * The Base State provides a convenient way to implement a new State type.
  */
-export class BaseState<T> extends BaseHeadState implements State<T> {
+export class BaseState<T, Rels extends string> extends BaseHeadState<Rels> implements State<T, Rels> {
 
 
   data: T;
@@ -148,7 +148,7 @@ export class BaseState<T> extends BaseHeadState implements State<T> {
   protected embedded: State[];
   protected actionInfo: ActionInfo[];
 
-  constructor(init: StateInit<T>) {
+  constructor(init: StateInit<T, Rels>) {
 
     super(init);
     this.data = init.data;
@@ -241,9 +241,9 @@ export class BaseState<T> extends BaseHeadState implements State<T> {
 
   }
 
-  clone(): State<T> {
+  clone(): State<T, Rels> {
 
-    return new BaseState({
+    return new BaseState<T, Rels>({
       client: this.client,
       uri: this.uri,
       data: this.data,

@@ -11,7 +11,7 @@ import * as hal from 'hal-types';
 /**
  * Represents a resource state in the HAL format
  */
-export class HalState<T = any> extends BaseState<T> {
+export class HalState<T = any, Rels extends string = string> extends BaseState<T, Rels> {
 
   serializeBody(): string {
 
@@ -53,7 +53,7 @@ export class HalState<T = any> extends BaseState<T> {
 
   }
 
-  clone(): HalState<T> {
+  clone(): HalState<T, Rels> {
 
     return new HalState({
       client: this.client,
@@ -113,13 +113,13 @@ export const factory:StateFactory = async (client, uri, response): Promise<HalSt
 /**
  * Parse the Hal _links object and populate the 'links' property.
  */
-function parseHalLinks(context: string, body: hal.HalResource): Link[] {
+function parseHalLinks<Rels extends string>(context: string, body: hal.HalResource): Link<Rels>[] {
 
   if (body._links === undefined) {
     return [];
   }
 
-  const result: Link[] = [];
+  const result: Link<Rels>[] = [];
 
   /**
    * We're capturing all rel-link pairs so we don't duplicate them if they
@@ -139,7 +139,7 @@ function parseHalLinks(context: string, body: hal.HalResource): Link[] {
     }
 
     result.push(
-      ...parseHalLink(context, relType, linkList)
+      ...parseHalLink<Rels>(context, relType, linkList)
     );
 
 
@@ -164,7 +164,7 @@ function parseHalLinks(context: string, body: hal.HalResource): Link[] {
           continue;
         }
         result.push({
-          rel: rel,
+          rel: rel as Rels,
           href: href,
           context: context,
         });
@@ -182,13 +182,13 @@ function parseHalLinks(context: string, body: hal.HalResource): Link[] {
 /**
  * Parses a single HAL link from a _links object
  */
-function parseHalLink(context: string, rel: string, links: hal.HalLink[]): Link[] {
+function parseHalLink<Rels extends string>(context: string, rel: string, links: hal.HalLink[]): Link<Rels>[] {
 
-  const result: Link[] = [];
+  const result: Link<Rels>[] = [];
 
   for (const link of links) {
     result.push({
-      rel,
+      rel: rel as Rels,
       context,
       ...link,
     });

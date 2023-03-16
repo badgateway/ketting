@@ -6,7 +6,7 @@ import Client from '../client';
 /**
  * Turns a HTTP response into a JsonApiState
  */
-export const factory = async (client: Client, uri: string, response: Response): Promise<BaseState<JsonApiTopLevelObject>> => {
+export const factory = async (client: Client, uri: string, response: Response): Promise<BaseState<JsonApiTopLevelObject, string>> => {
 
   const body = await response.json();
 
@@ -16,7 +16,7 @@ export const factory = async (client: Client, uri: string, response: Response): 
     ...parseJsonApiCollection(uri, body),
   );
 
-  return new BaseState({
+  return new BaseState<JsonApiTopLevelObject, any>({
     client,
     uri,
     data: body,

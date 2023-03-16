@@ -13,7 +13,7 @@ import { needsJsonStringify } from './util/fetch-body-helper';
  * A resource has a uri, methods that correspond to HTTP methods,
  * and events to subscribe to state changes.
  */
-export class Resource<T = any> extends EventEmitter {
+export class Resource<T = any, Rels extends string = string> extends EventEmitter {
 
   /**
    * URI of the current resource
@@ -31,7 +31,7 @@ export class Resource<T = any> extends EventEmitter {
    * When 2 identical requests are made in quick succession, this object is
    * used to de-duplicate the requests.
    */
-  private readonly activeRefresh: Map<string, Promise<State<T>>> = new Map<string, Promise<State<T>>>();
+  private readonly activeRefresh: Map<string, Promise<State<T, Rels>>> = new Map<string, Promise<State<T, Rels>>>();
 
   /**
    * Create the resource.
@@ -51,7 +51,7 @@ export class Resource<T = any> extends EventEmitter {
    *
    * This function will return a State object.
    */
-  get(getOptions?: GetRequestOptions): Promise<State<T>> {
+  get(getOptions?: GetRequestOptions): Promise<State<T, Rels>> {
 
     const state = this.getCache();
     if (state) {
@@ -64,7 +64,7 @@ export class Resource<T = any> extends EventEmitter {
     const hash = requestHash(this.uri, getOptions);
 
     if (!this.activeRefresh.has(hash)) {
-      this.activeRefresh.set(hash, (async (): Promise<State<T>> => {
+      this.activeRefresh.set(hash, (async (): Promise<State<T, Rels>> => {
         try {
           const response = await this.fetchOrThrow(params);
           const state = await this.client.getStateForResponse(uri, response);
@@ -85,9 +85,9 @@ export class Resource<T = any> extends EventEmitter {
    * If there was a valid existing cache for a GET request, it will
    * still return that.
    */
-  async head(headOptions?: HeadRequestOptions): Promise<HeadState> {
+  async head(headOptions?: HeadRequestOptions): Promise<HeadState<Rels>> {
 
-    let state: State|HeadState|null = this.client.cache.get(this.uri);
+    let state: State<T, Rels>|HeadState<Rels>|null = this.client.cache.get(this.uri);
     if (state) {
       return state;
     }
@@ -117,7 +117,7 @@ export class Resource<T = any> extends EventEmitter {
     const hash = requestHash(this.uri, getOptions);
 
     if (!this.activeRefresh.has(hash)) {
-      this.activeRefresh.set(hash, (async (): Promise<State<T>> => {
+      this.activeRefresh.set(hash, (async (): Promise<State<T, Rels>> => {
         try {
           const response = await this.fetchOrThrow(params);
           const state = await this.client.getStateForResponse(uri, response);
@@ -244,7 +244,7 @@ export class Resource<T = any> extends EventEmitter {
    * This function can also follow templated uris. You can specify uri
    * variables in the optional variables argument.
    */
-  follow<TFollowedResource = any>(rel: string, variables?: LinkVariables): FollowPromiseOne<TFollowedResource> {
+  follow<TFollowedResource = any>(rel: Rels, variables?: LinkVariables): FollowPromiseOne<TFollowedResource> {
 
     return new FollowPromiseOne(this, rel, variables);
 
@@ -256,7 +256,7 @@ export class Resource<T = any> extends EventEmitter {
    *
    * If no resources were found, the array will be empty.
    */
-  followAll<TFollowedResource = any>(rel: string): FollowPromiseMany<TFollowedResource> {
+  followAll<TFollowedResource = any>(rel: Rels): FollowPromiseMany<TFollowedResource> {
 
     return new FollowPromiseMany(this, rel);
 
@@ -328,7 +328,7 @@ export class Resource<T = any> extends EventEmitter {
    * Retrieves the current cached resource state, and return `null` if it's
    * not available.
    */
-  getCache(): State<T>|null {
+  getCache(): State<T, Rels>|null {
 
     return this.client.cache.get(this.uri);
 
@@ -341,7 +341,7 @@ export class Resource<T = any> extends EventEmitter {
    *
    * @deprecated
    */
-  async link(rel: string): Promise<Link> {
+  async link(rel: Rels): Promise<Link<Rels>> {
 
     const state = await this.get();
     const link = state.links.get(rel);
@@ -358,7 +358,7 @@ export class Resource<T = any> extends EventEmitter {
    *
    * @deprecated
    */
-  async links(rel?: string): Promise<Link[]> {
+  async links(rel?: Rels): Promise<Link<Rels>[]> {
 
     const state = await this.get();
     if (!rel) {
@@ -376,7 +376,7 @@ export class Resource<T = any> extends EventEmitter {
    *
    * @deprecated
    */
-  async hasLink(rel: string): Promise<boolean> {
+  async hasLink(rel: Rels): Promise<boolean> {
 
     const state = await this.get();
     return state.links.has(rel);

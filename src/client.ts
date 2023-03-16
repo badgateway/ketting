@@ -258,7 +258,7 @@ export default class Client {
   /**
    * Transforms a fetch Response to a State object.
    */
-  async getStateForResponse(uri: string, response: Response): Promise<State> {
+  async getStateForResponse(uri: string, response: Response): Promise<State<any, any>> {
 
     const contentType = parseContentType(response.headers.get('Content-Type')!);
 

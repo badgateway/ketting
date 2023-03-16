@@ -9,7 +9,7 @@ import Client from '../client';
 /**
  * Represents a resource state in the Siren format
  */
-export class SirenState<T> extends BaseState<T> {
+export class SirenState<T, Rels extends string = string> extends BaseState<T, Rels> {
 
   /**
    * Returns a serialization of the state that can be used in a HTTP
@@ -24,7 +24,7 @@ export class SirenState<T> extends BaseState<T> {
 
   }
 
-  clone(): SirenState<T> {
+  clone(): SirenState<T, Rels> {
 
     return new SirenState({
       client: this.client,
@@ -43,7 +43,7 @@ export class SirenState<T> extends BaseState<T> {
 /**
  * Turns a HTTP response into a SirenState
  */
-export const factory = async (client: Client, uri: string, response: Response): Promise<SirenState<any>> => {
+export const factory = async (client: Client, uri: string, response: Response): Promise<SirenState<any, any>> => {
 
   const body:SirenEntity<any> = await response.json();
 
@@ -107,22 +107,22 @@ type SirenField = {
   title?: string;
 };
 
-function parseSirenLinks(contextUri: string, body: SirenEntity<any>): Link[] {
+function parseSirenLinks<Rels extends string>(contextUri: string, body: SirenEntity<any>): Link<Rels>[] {
 
-  const result: Link[] = [];
+  const result: Link<Rels>[] = [];
 
   if (body.links !== undefined) {
     for (const link of body.links) {
-      result.push(...parseSirenLink(contextUri, link));
+      result.push(...parseSirenLink<Rels>(contextUri, link));
     }
   }
 
   if (body.entities !== undefined) {
     for (const subEntity of body.entities) {
       if ((subEntity as SirenLink).href !== undefined) {
-        result.push(...parseSirenLink(contextUri, subEntity as SirenLink));
+        result.push(...parseSirenLink<Rels>(contextUri, subEntity as SirenLink));
       } else {
-        result.push(...parseSirenSubEntityAsLink(contextUri, subEntity as SirenSubEntity));
+        result.push(...parseSirenSubEntityAsLink<Rels>(contextUri, subEntity as SirenSubEntity));
       }
     }
   }
@@ -131,9 +131,9 @@ function parseSirenLinks(contextUri: string, body: SirenEntity<any>): Link[] {
 
 }
 
-function parseSirenLink(contextUri: string, link: SirenLink): Link[] {
+function parseSirenLink<Rels extends string>(contextUri: string, link: SirenLink): Link<Rels>[] {
 
-  const result: Link[] = [];
+  const result: Link<Rels>[] = [];
 
   const {
     rel: rels,
@@ -141,8 +141,8 @@ function parseSirenLink(contextUri: string, link: SirenLink): Link[] {
   } = link;
   for (const rel of rels) {
 
-    const newLink: Link = {
-      rel,
+    const newLink: Link<Rels> = {
+      rel: rel as Rels,
       context: contextUri,
       ...attributes,
     };
@@ -154,17 +154,17 @@ function parseSirenLink(contextUri: string, link: SirenLink): Link[] {
 
 }
 
-function parseSirenEmbedded(client: Client, contextUri: string, body: SirenEntity<any>, headers: Headers): SirenState<SirenEntity<any>>[] {
+function parseSirenEmbedded<Rels extends string>(client: Client, contextUri: string, body: SirenEntity<any>, headers: Headers): SirenState<SirenEntity<any>, Rels>[] {
 
   if (body.entities === undefined) {
     return [];
   }
 
-  const result: SirenState<SirenEntity<any>>[] = [];
+  const result: SirenState<SirenEntity<any>, Rels>[] = [];
 
   for (const entity of body.entities) {
     if (isSubEntity(entity)) {
-      const subState = parseSirenSubEntityAsEmbedded(client, contextUri, entity, headers);
+      const subState = parseSirenSubEntityAsEmbedded<Rels>(client, contextUri, entity, headers);
       if (subState !== null) {
         result.push(subState);
       }
@@ -175,7 +175,7 @@ function parseSirenEmbedded(client: Client, contextUri: string, body: SirenEntit
 
 }
 
-function parseSirenSubEntityAsLink(contextUri: string, subEntity: SirenSubEntity): Link[] {
+function parseSirenSubEntityAsLink<Rels extends string>(contextUri: string, subEntity: SirenSubEntity): Link<Rels>[] {
 
   if (subEntity.links === undefined) {
     // We don't yet support subentities that don't have a URI.
@@ -194,9 +194,9 @@ function parseSirenSubEntityAsLink(contextUri: string, subEntity: SirenSubEntity
 
   return subEntity.rel.map(rel => {
     const title = subEntity.title;
-    const link: Link = {
+    const link: Link<Rels> = {
       href: selfHref!,
-      rel,
+      rel: rel as Rels,
       context: contextUri,
     };
     if (title) {
@@ -207,7 +207,7 @@ function parseSirenSubEntityAsLink(contextUri: string, subEntity: SirenSubEntity
 
 }
 
-function parseSirenSubEntityAsEmbedded(client: Client, contextUri: string, subEntity: SirenSubEntity, headers: Headers): SirenState<SirenEntity<any>> | null {
+function parseSirenSubEntityAsEmbedded<Rels extends string>(client: Client, contextUri: string, subEntity: SirenSubEntity, headers: Headers): SirenState<SirenEntity<any>, Rels> | null {
 
   if (subEntity.links === undefined) {
     // We don't yet support subentities that don't have a URI.

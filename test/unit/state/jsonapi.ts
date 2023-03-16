@@ -120,7 +120,7 @@ describe('JsonApi representor', () => {
 
 });
 
-function callFactory(body: any): Promise<BaseState<any>> {
+function callFactory(body: any): Promise<BaseState<any, string>> {
 
   const response = new Response(JSON.stringify(body));
   return factory(new Client('http://example/'), '/foo.json', response);

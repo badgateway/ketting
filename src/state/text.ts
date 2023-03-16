@@ -6,7 +6,7 @@ import Client from '../client';
 /**
  * Turns a HTTP response into a TextState
  */
-export const factory: StateFactory<string> = async (client: Client, uri: string, response: Response): Promise<BaseState<string>> => {
+export const factory: StateFactory<string> = async (client: Client, uri: string, response: Response): Promise<BaseState<string, string>> => {
 
   return new BaseState({
     client,
