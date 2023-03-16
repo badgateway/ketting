@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-8.0.0-alpha.1 (2023-03-16)
+8.0.0-alpha.1 (????-??-??)
 --------------------------
 
 * Ketting requires Node 16 now.
@@ -14,6 +14,8 @@ ChangeLog
   are explicitly overridden.
 * #459: Now uses the correct spelling of 'placeholder' in HAL forms (@dayre).
 * Export the `FetchMiddleware` type.
+* #444: Allow multiple query parameters to be set with the same key when
+  specifying template variables. (@qmachard)
 
 
 7.5.1 (2022-09-03)
