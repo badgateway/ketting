@@ -13,6 +13,7 @@ ChangeLog
 * Actions that have pre-filled values will auto submit those values unless they
   are explicitly overridden.
 * #459: Now uses the correct spelling of 'placeholder' in HAL forms (@dayre).
+* Export the FetchMiddleware type
 
 
 7.5.1 (2022-09-03)
@@ -43,7 +44,6 @@ ChangeLog
 
 Idential to the last beta. Contains the following features that were introduced
 in the previous betas:
-
 * #433: Fixed race condition when processing nested `_embedded` resources and
   emiting `update` events. The order at which they happen is now consistent.
   When the `update` event happens, the entire cache should be up to date.
@@ -674,8 +674,6 @@ in the previous betas:
   the library to define specific 'types of resources' and leverage static
   typing for `GET` and `PUT` requests.
 * A few documentation updates.
-
-
 
 
 2.3.0 (2018-10-10)
