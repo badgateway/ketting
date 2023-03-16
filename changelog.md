@@ -16,6 +16,7 @@ ChangeLog
 * Export the `FetchMiddleware` type.
 * #444: Allow multiple query parameters to be set with the same key when
   specifying template variables. (@qmachard)
+* Upgrade to Typescript 5
 
 
 7.5.1 (2022-09-03)
