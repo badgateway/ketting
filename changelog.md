@@ -1,8 +1,8 @@
 ChangeLog
 =========
 
-8.0.0 (????-??-??)
-------------------
+8.0.0-alpha.1 (2023-03-16)
+--------------------------
 
 * Ketting requires Node 16 now.
 * No longer using `node-fetch`, as `fetch()` is natively supported on Node 18.
@@ -13,7 +13,7 @@ ChangeLog
 * Actions that have pre-filled values will auto submit those values unless they
   are explicitly overridden.
 * #459: Now uses the correct spelling of 'placeholder' in HAL forms (@dayre).
-* Export the FetchMiddleware type
+* Export the `FetchMiddleware` type.
 
 
 7.5.1 (2022-09-03)
