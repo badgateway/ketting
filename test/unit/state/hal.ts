@@ -252,6 +252,36 @@ describe('HAL state factory', () => {
 
   });
 
+  it('should support the "name" property', async () => {
+
+    const hal = await callFactory({
+      _links: {
+        author: {
+          href: 'https://evertpot.com/',
+        },
+        foo: {
+          href: '/bar',
+          name: 'WHATS-MY-NAME',
+        }
+      },
+    });
+
+    expect(hal.links.getAll()).to.eql([
+      {
+        href: 'https://evertpot.com/',
+        context: 'http://example/',
+        rel: 'author',
+      },
+      {
+        href: '/bar',
+        context: 'http://example/',
+        rel: 'foo',
+        name: 'WHATS-MY-NAME',
+      },
+    ]);
+
+  });
+
 });
 
 function callFactory(body: any, url = 'http://example/') {
