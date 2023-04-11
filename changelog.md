@@ -1,10 +1,11 @@
 ChangeLog
 =========
 
-8.0.0-alpha.2 (2023-03-16)
+8.0.0-alpha.2 (2023-04-11)
 --------------------------
 
 * Added HAL 'name' property to links.
+* Updates for changes in Typescript strictness.
 
 
 8.0.0-alpha.1 (2023-03-16)
