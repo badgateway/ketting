@@ -57,6 +57,17 @@ export type Link = {
    */
   hints?: LinkHints;
 
+  /**
+   * Link name
+   *
+   * This is sometimes used as a machine-readable secondary key for links.
+   *
+   * This is at least used in HAL, but there may be other formats:
+   *
+   * @see https://datatracker.ietf.org/doc/html/draft-kelly-json-hal-06#section-5.5
+   */
+  name?: string;
+
 }
 
 type NewLink = Omit<Link, 'context'>;

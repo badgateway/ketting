@@ -159,7 +159,7 @@ export class FollowPromiseOne<T = any> extends FollowPromise<Resource<T>> {
     const newResource = state.follow(this.rel, this.variables);
 
     if (this.prefetchEnabled) {
-      newResource.get().catch( err => {
+      newResource.get().catch( (err: Error) => {
         // eslint-disable-next-line no-console
         console.warn('Error while prefetching linked resource', err);
       });
