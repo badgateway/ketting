@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { factory } from '../../../src/state/hal';
+import { factory, fromJSON } from '../../../src/state/hal';
 import { Client } from '../../../src';
 
 describe('HAL state factory', () => {
@@ -228,6 +228,38 @@ describe('HAL state factory', () => {
       },
       happy: 2020,
     });
+
+  });
+  it('should correctly rebuild HAL documents', async() => {
+
+    const base = {
+      _links: {
+        self: {
+          href: '/foo',
+        },
+        author: {
+          href: 'https://evertpot.com/',
+        },
+        foo: [
+          {
+            href: '/bar',
+          },
+          {
+            href: '/bar2',
+          },
+          {
+            href: '/bar3',
+          },
+        ]
+      },
+      happy: 2020,
+    };
+    const hal = await callFactory(base, base._links.self.href);
+    // const json = (hal as HalState).toJSON();
+    const json = hal.toJSON();
+    const result = fromJSON(hal.client, json);
+    expect(result.uri).to.eql(hal.uri);
+    expect(JSON.parse(result.serializeBody())).to.eql(base);
 
   });
   it('should handle JSON documents that are arrays', async () => {

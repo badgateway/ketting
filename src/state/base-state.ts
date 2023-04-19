@@ -226,6 +226,12 @@ export class BaseState<T> extends BaseHeadState implements State<T> {
 
   }
 
+  toJSON() {
+
+    return this.data;
+
+  }
+
   /**
    * Certain formats can embed other resources, identified by their
    * own URI.
