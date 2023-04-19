@@ -1,6 +1,7 @@
 import { expect } from 'chai';
-import { factory } from '../../../src/state/hal';
-import { Client } from '../../../src';
+import { HalState, factory, parseHalLinks } from '../../../src/state/hal';
+import { Client, Links } from '../../../src';
+import { HalResource } from 'hal-types';
 
 describe('HAL state factory', () => {
 
@@ -228,6 +229,75 @@ describe('HAL state factory', () => {
       },
       happy: 2020,
     });
+
+  });
+  it('should correctly build HALState from scratch', async() => {
+
+    const hal = await callFactory({
+      _links: {
+        self: {
+          href: '/foo',
+        },
+        author: {
+          href: 'https://evertpot.com/',
+        },
+        foo: [
+          {
+            href: '/bar',
+          },
+          {
+            href: '/bar2',
+          },
+          {
+            href: '/bar3',
+          },
+        ]
+      },
+      happy: 2020,
+    }) as HalState;
+
+    // More direct way to get a json
+    const json : HalResource = {
+      _links: hal.serializeLinks(),
+      ...hal.data
+    };
+    // Building an HalState
+    const {
+      _links,
+      ...newBody
+    } = json;
+    const context = json._links.self.href;
+    const links = new Links(context, parseHalLinks(context, json));
+    const hal2 = new HalState({
+      client: hal.client,
+      uri: context,
+      data: newBody,
+      headers: new Headers(),
+      links,
+    });
+    expect(JSON.parse(hal2.serializeBody())).to.eql({
+      _links: {
+        self: {
+          href: 'http://example/',
+        },
+        author: {
+          href: 'https://evertpot.com/',
+        },
+        foo: [
+          {
+            href: '/bar',
+          },
+          {
+            href: '/bar2',
+          },
+          {
+            href: '/bar3',
+          },
+        ]
+      },
+      happy: 2020,
+    });
+
 
   });
   it('should handle JSON documents that are arrays', async () => {
