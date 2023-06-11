@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-8.0.0-alpha.3 (????-??-??)
+8.0.0-alpha.3 (2023-06-11)
 --------------------------
 
 * #476: When `cache: no-store` is specified on `fetch()` functions, Ketting
