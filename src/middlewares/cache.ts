@@ -74,7 +74,7 @@ export default function(client: Client): FetchMiddleware {
       const cl = resolve(request.url, response.headers.get('Content-Location')!);
       const clState = await client.getStateForResponse(
         cl,
-        response
+        response.clone()
       );
       client.cacheState(clState);
     }
