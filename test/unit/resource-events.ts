@@ -207,6 +207,21 @@ describe('Resource Events', () => {
       expect(triggered).to.equal(true);
 
     });
+    it('should not trigger with Content-Location and cache: no-store', async() => {
+
+      const client = new Client('http://example');
+      client.use( mockFetchMw );
+      const resource = client.go('/res');
+      await resource.get();
+
+      let triggered = false;
+      resource.once('update', () => {
+        triggered = true;
+      });
+      await client.fetcher.fetch('http://example/content-location', { method: 'POST', cache: 'no-store' });
+      expect(triggered).to.equal(false);
+
+    });
   });
 
   describe('"delete" event', () => {

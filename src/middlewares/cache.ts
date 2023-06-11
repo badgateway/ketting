@@ -70,7 +70,7 @@ export default function(client: Client): FetchMiddleware {
     // If the response had a 'Content-Location' header, it means that the
     // response body is the _new_ state for the url in the content-location
     // header, so we store it!
-    if (response.headers.has('Content-Location')) {
+    if (request.cache !== 'no-store' && response.headers.has('Content-Location')) {
       const cl = resolve(request.url, response.headers.get('Content-Location')!);
       const clState = await client.getStateForResponse(
         cl,

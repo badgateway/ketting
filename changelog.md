@@ -4,8 +4,9 @@ ChangeLog
 8.0.0-alpha.3 (????-??-??)
 --------------------------
 
+* When `cache: no-store` is specified on `fetch()` functions, Ketting will now
+  no longer store responses with a `Content-Location` in its internal cache.
 * Testing Node 20.
-
 
 8.0.0-alpha.2 (2023-04-11)
 --------------------------
