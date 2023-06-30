@@ -65,6 +65,7 @@ ChangeLog
 
 Idential to the last beta. Contains the following features that were introduced
 in the previous betas:
+
 * #433: Fixed race condition when processing nested `_embedded` resources and
   emiting `update` events. The order at which they happen is now consistent.
   When the `update` event happens, the entire cache should be up to date.
@@ -1029,5 +1030,6 @@ in the previous betas:
 [4]: http://amundsen.com/media-types/collection/format/
 [5]: http://rwcbook.github.io/hal-forms/
 [6]: https://tools.ietf.org/html/rfc7807 "Problem Details for HTTP APIs"
-[7]: https://tools.ietf.org/html/draft-dalal-deprecation-header-03 "The Deprecation HTTP Header Field"
+[7]: https://tools.ietf.org/html/draft-dalal-deprecation-header-03 "The
+     Deprecation HTTP Header Field"
 [8]: https://github.com/badgateway/oauth2-client
