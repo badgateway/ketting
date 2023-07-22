@@ -6,7 +6,7 @@ import { StateFactory } from './interface';
 /**
  * Represents a resource state in the HAL format
  */
-export class CjState<T = any> extends BaseState<T> {
+export class CjState<T = any, Rels extends string = string> extends BaseState<T, Rels> {
 
   serializeBody(): string {
 
@@ -97,9 +97,9 @@ type CjLink = {
 };
 
 
-function parseCjLinks(contextUri: string, body: CjDocument) {
+function parseCjLinks<Rels extends string>(contextUri: string, body: CjDocument) {
 
-  const result: Link[] = [];
+  const result: Link<Rels>[] = [];
   if (body.collection.links !== undefined) {
 
     // Lets start with all links from the links property.
@@ -107,7 +107,7 @@ function parseCjLinks(contextUri: string, body: CjDocument) {
       result.push({
         context: contextUri,
         href: link.href,
-        rel: link.rel,
+        rel: link.rel as Rels,
         title: link.name,
       });
     }
@@ -126,7 +126,7 @@ function parseCjLinks(contextUri: string, body: CjDocument) {
       result.push({
         context: contextUri,
         href: item.href,
-        rel: 'item',
+        rel: 'item' as Rels,
       });
     }
 
@@ -143,7 +143,7 @@ function parseCjLinks(contextUri: string, body: CjDocument) {
         result.push({
           context: contextUri,
           href: query.href,
-          rel: query.rel,
+          rel: query.rel as Rels,
           title: query.name,
         });
       } else {
@@ -154,7 +154,7 @@ function parseCjLinks(contextUri: string, body: CjDocument) {
             property => '{?' + property.name + '}'
           ).join(''),
           templated: true,
-          rel: query.rel,
+          rel: query.rel as Rels,
           title: query.name,
         });
       }

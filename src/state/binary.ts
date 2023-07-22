@@ -5,9 +5,9 @@ import { parseLink } from '../http/util';
 /**
  * Turns a HTTP response into a BinaryState
  */
-export const factory: StateFactory<Blob> = async (client, uri, response): Promise<BaseState<Blob>> => {
+export const factory: StateFactory<Blob> = async (client, uri, response): Promise<BaseState<Blob, string>> => {
 
-  return new BaseState({
+  return new BaseState<Blob, string>({
     client,
     uri,
     data: await response.blob(),

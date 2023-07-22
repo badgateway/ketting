@@ -1,7 +1,7 @@
 import { LinkHints } from 'hal-types';
 import { resolve } from './util/uri';
 
-export type Link = {
+export type Link<Rels extends string = string> = {
   /**
    * Target URI
    */
@@ -17,7 +17,7 @@ export type Link = {
   /**
    * Relation type
    */
-  rel: string;
+  rel: Rels;
 
   /**
    * Link title
@@ -70,17 +70,17 @@ export type Link = {
 
 }
 
-type NewLink = Omit<Link, 'context'>;
+type NewLink<Rels extends string> = Omit<Link<Rels>, 'context'>;
 
 
 /**
  * Links container, providing an easy way to manage a set of links.
  */
-export class Links {
+export class Links<Rels extends string = string> {
 
-  private store: Map<string, Link[]>;
+  private store: Map<Rels, Link<Rels>[]>;
 
-  constructor(public defaultContext: string, links?: Link[] | Links) {
+  constructor(public defaultContext: string, links?: Link<Rels>[] | Links<Rels>) {
 
     this.store = new Map();
 
@@ -99,15 +99,15 @@ export class Links {
   /**
    * Adds a link to the list
    */
-  add(...links: (Link | NewLink)[]): void
-  add(rel: string, href: string): void
+  add(...links: (Link<Rels> | NewLink<Rels>)[]): void
+  add(rel: Rels, href: string): void
   add(...args: any[]): void {
 
-    let links: Link[];
+    let links: Link<Rels>[];
 
     if (typeof args[0] === 'string') {
       links = [{
-        rel: args[0],
+        rel: args[0] as Rels,
         href: args[1],
         context: this.defaultContext,
       }];
@@ -130,14 +130,14 @@ export class Links {
    *
    * If a link with the provided 'rel' already existed, it will be overwritten.
    */
-  set(link: Link | NewLink): void
-  set(rel: string, href: string): void
+  set(link: Link<Rels> | NewLink<Rels>): void
+  set(rel: Rels, href: string): void
   set(arg1: any, arg2?: any): void {
 
-    let link: Link;
+    let link: Link<Rels>;
     if (typeof arg1 === 'string') {
       link = {
-        rel: arg1,
+        rel: arg1 as Rels,
         href: arg2,
         context: this.defaultContext,
       };
@@ -156,7 +156,7 @@ export class Links {
    *
    * If the link does not exist, undefined is returned.
    */
-  get(rel: string): Link|undefined {
+  get(rel: Rels): Link<Rels>|undefined {
 
     const links = this.store.get(rel);
     if (!links || links.length < 0) {
@@ -172,7 +172,7 @@ export class Links {
    * If the second argument is provided, only links that match the href will
    * be removed.
    */
-  delete(rel: string, href?: string): void {
+  delete(rel: Rels, href?: string): void {
 
     if (href===undefined) {
       this.store.delete(rel);
@@ -194,7 +194,7 @@ export class Links {
    *
    * If no links with the rel were found, an empty array is returned.
    */
-  getMany(rel: string): Link[] {
+  getMany(rel: Rels): Link<Rels>[] {
 
     return this.store.get(rel) || [];
 
@@ -203,7 +203,7 @@ export class Links {
   /**
    * Return all links.
    */
-  getAll(): Link[] {
+  getAll(): Link<Rels>[] {
     const result = [];
     for(const links of this.store.values()) {
       result.push(...links);
@@ -214,7 +214,7 @@ export class Links {
   /**
    * Returns true if at least 1 link with the given rel exists.
    */
-  has(rel: string): boolean {
+  has(rel: Rels): boolean {
 
     return this.store.has(rel);
 

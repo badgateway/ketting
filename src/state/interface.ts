@@ -3,7 +3,7 @@ import { Links, LinkVariables } from '../link';
 import Client from '../client';
 import { Resource } from '../resource';
 
-export type State<T = any> = {
+export type State<T = any, Rels extends string = any> = {
 
   /**
    * The URI associated with this state
@@ -20,7 +20,7 @@ export type State<T = any> = {
   /**
    * All links associated with the resource.
    */
-  links: Links;
+  links: Links<Rels>;
 
   /**
    * The full list of HTTP headers that were sent with the response.
@@ -106,7 +106,7 @@ export type State<T = any> = {
    */
   timestamp: number;
 
-  clone(): State<T>;
+  clone(): State<T, Rels>;
 
 }
 
@@ -116,13 +116,13 @@ export type State<T = any> = {
  * Some information in HEAD responses might be available, but many aren't.
  * Notably, the body.
  */
-export type HeadState = Omit<State, 'data' | 'action' | 'actions' | 'hasAction' | 'serializeBody' | 'getEmbedded' | 'client' | 'clone'>;
+export type HeadState<Rels extends string> = Omit<State<Rels>, 'data' | 'action' | 'actions' | 'hasAction' | 'serializeBody' | 'getEmbedded' | 'client' | 'clone'>;
 
 /**
  * A 'StateFactory' is responsible for taking a Fetch Response, and returning
  * an object that impements the State interface
  */
-export type StateFactory<T = any> = (client: Client, uri: string, request: Response) => Promise<State<T>>;
+export type StateFactory<T = any> = (client: Client, uri: string, request: Response) => Promise<State<T, any>>;
 
 export function isState(input: Record<string, any>): input is State {
 
