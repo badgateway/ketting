@@ -38,7 +38,6 @@ export interface ActionInfo {
    * Returns the list of fields associated to an action
    */
   fields: Field[];
-
 }
 
 /**
@@ -51,6 +50,10 @@ export interface Action<T extends Record<string, any> = Record<string, any>> ext
    */
   submit(formData: T): Promise<State>;
 
+  /**
+   * Return a field by name.
+   */
+  field(name: string): Field | undefined;
 }
 
 export class SimpleAction<TFormData extends Record<string, any>> implements Action {
@@ -156,6 +159,10 @@ export class SimpleAction<TFormData extends Record<string, any>> implements Acti
     const state = this.client.getStateForResponse(uri.toString(), response);
     return state;
 
+  }
+
+  field(name: string): Field | undefined {
+    return this.fields.find(field => field.name === name);
   }
 }
 
