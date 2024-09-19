@@ -37,7 +37,7 @@ describe('Issuing a DELETE request', async () => {
     let ok = false;
     try {
       await ketting.go().get();
-    } catch (e) {
+    } catch {
       // we're expecting an exception
       ok = true;
     }

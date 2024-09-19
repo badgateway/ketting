@@ -49,7 +49,7 @@ describe('Resource', () => {
       let err = false;
       try {
         await res.postFollow({});
-      } catch (e) {
+      } catch {
         err = true;
       }
       expect(err).to.eql(true);
@@ -62,7 +62,7 @@ describe('Resource', () => {
       let err = false;
       try {
         await res.postFollow({});
-      } catch (e) {
+      } catch {
         err = true;
       }
       expect(err).to.eql(true);

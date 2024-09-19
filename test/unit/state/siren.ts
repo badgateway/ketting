@@ -223,7 +223,7 @@ describe('Siren representor', () => {
       let err = false;
       try {
         await siren.action('add-item');
-      } catch (e) {
+      } catch {
         err = true;
       }
       expect(err).to.equal(true);
@@ -246,7 +246,7 @@ describe('Siren representor', () => {
       let err = false;
       try {
         await siren.action();
-      } catch (e) {
+      } catch {
         err = true;
       }
       expect(err).to.equal(true);
@@ -325,7 +325,7 @@ describe('Siren representor', () => {
           productCode: 'foo-bar',
           quantity: 5
         });
-      } catch (e) {
+      } catch {
         err = true;
       }
       expect(err).to.equal(true);
