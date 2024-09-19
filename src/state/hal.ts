@@ -334,7 +334,7 @@ function parseHalField(halField: hal.HalFormsProperty): Field {
           value: halField.value,
           pattern: halField.regex ? new RegExp(halField.regex) : undefined,
           label: halField.prompt,
-          placeholder: halField.placeHolder,
+          placeholder: halField.placeholder,
           minLength: halField.minLength,
           maxLength: halField.maxLength,
         };
@@ -347,7 +347,7 @@ function parseHalField(halField: hal.HalFormsProperty): Field {
         readOnly: halField.readOnly || false,
         value: halField.value,
         label: halField.prompt,
-        placeholder: halField.placeHolder,
+        placeholder: halField.placeholder,
       };
     case 'textarea' :
       return {
@@ -357,7 +357,7 @@ function parseHalField(halField: hal.HalFormsProperty): Field {
         readOnly: halField.readOnly || false,
         value: halField.value,
         label: halField.prompt,
-        placeholder: halField.placeHolder,
+        placeholder: halField.placeholder,
         cols: halField.cols,
         rows: halField.rows,
         minLength: halField.minLength,
@@ -370,7 +370,7 @@ function parseHalField(halField: hal.HalFormsProperty): Field {
         required: halField.required || false,
         readOnly: halField.readOnly || false,
         label: halField.prompt,
-        placeholder: halField.placeHolder,
+        placeholder: halField.placeholder,
         minLength: halField.minLength,
         maxLength: halField.maxLength,
       };
