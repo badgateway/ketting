@@ -3,7 +3,7 @@ import { factory } from '../../../src/state/hal';
 import { Action, Client, Field } from '../../../src';
 import { HalFormsProperty } from 'hal-types';
 
-type CompareAction = Omit<Omit<Action, 'submit'>, 'field'>;
+type CompareAction = Omit<Action, 'submit' | 'field'>;
 
 describe('HAL forms', () => {
 
