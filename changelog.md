@@ -37,6 +37,12 @@ ChangeLog
 * Upgrade to Typescript 5
 
 
+7.5.2 (2024-09-19)
+------------------
+
+* Updating dependencies.
+
+
 7.5.1 (2022-09-03)
 ------------------
 
