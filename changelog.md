@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+7.5.2 (????-??-??)
+------------------
+
+* Updating dependencies.
+
+
 7.5.1 (2022-09-03)
 ------------------
 
@@ -68,20 +74,20 @@ in the previous betas:
 
 * #416: Cache-dependencies setup with `inv-by` links are now respected when
   manually clearing resource caches.
-* #414: Don't attempt to parse the response if it had a `204` status, even
-  if there was a `Content-Type` header.
+* #414: Don't attempt to parse the response if it had a `204` status, even if
+  there was a `Content-Type` header.
 * #408: Emit a warning when an `_embedded` HAL item is missing a good `self`
   link.
 
 
 7.2.0 (2021-08-04)
------------------
+------------------
 
 * #395: Relative URIs in embedded HAL documents are now resolved using the
   'self' link in the embedded document, instead of the parent. Although not
-  explicitly said in the HAL standards, I feel this is the right behavior.
-  Most users will not see a difference, but if you relied on the old behavior
-  this could cause some subtle BC breaks.
+  explicitly said in the HAL standards, I feel this is the right behavior. Most
+  users will not see a difference, but if you relied on the old behavior this
+  could cause some subtle BC breaks.
 
 
 7.1.1 (2021-06-15)
@@ -97,8 +103,8 @@ in the previous betas:
 ------------------
 
 * Support for the `inv-by` Link relationship type from the [Linked Cache
-  Invalidation draft][2]. This link lets a resource tell the client that
-  it's cache should expire when the linked resource's cache also expires.
+  Invalidation draft][2]. This link lets a resource tell the client that it's
+  cache should expire when the linked resource's cache also expires.
 * The 'prompt' field in HAL Forms for properties with 'options' set was
   ignored.
 
@@ -126,7 +132,7 @@ in the previous betas:
 
 
 7.0.0-beta.4 (2021-02-26)
-------------------------
+-------------------------
 
 * Added renderAs 'checkbox' to multi-select fields in actions.
 * Export `OptionDataSource`.
@@ -138,14 +144,14 @@ in the previous betas:
 * Support for HAL Forms version `2021-02-20`, which adds the 'options'
   property.
 * Kettings now has support for 'dropdown' fields, allowing users to provide
-  lists of possible options in 3 different ways:
-  1. An inline list
-  2. An external HTTP resource (JSON body or CSV body)
-  3. Provided as links from a hypermedia source.
-  Only 1 and 2 are supported by HAL Forms, 3 is just an internal feature until
-  there is a format that has first-class support for this.
-* A bit of a rewrite of 'fields' again. Only a single type is exported, and
-  all the types are cleaned up.
+  lists of possible options in 3 different ways: 1. An inline list 2. An
+  external HTTP resource (JSON body or CSV body) 3. Provided as links from a
+  hypermedia source. Only 1 and 2 are supported by HAL Forms, 3 is just an
+  internal feature until there is a format that has first-class support for
+  this.
+* A bit of a rewrite of 'fields' again. Only a single type is exported, and all
+  the types are cleaned up.
+
 
 7.0.0-beta.2 (2021-01-25)
 -------------------------
@@ -157,8 +163,8 @@ in the previous betas:
 -------------------------
 
 * Remove support for `Prefer-Push`. Browsers are basically dropping HTTP/2
-  Push, and not enough work is done to make this very interesting.
-  [More background](https://evertpot.com/http-2-push-is-dead/).
+  Push, and not enough work is done to make this very interesting. [More
+  background](https://evertpot.com/http-2-push-is-dead/).
 * Revert 'unifiying URLs' PR, we're back to using `url.resolve` in node.
 
 
@@ -177,20 +183,22 @@ in the previous betas:
   information from the `Sunset` header and include the uri of the `deprecation`
   link relation.
 * Support for the latest [HAL-Forms][5] features, including `target`, `step`,
-  `min`, `max`, `type`, `minLength`, `maxLength`, `placeholder`, `cols`, `rows`.
+  `min`, `max`, `type`, `minLength`, `maxLength`, `placeholder`, `cols`,
+  `rows`.
 * Support multiple HAL Forms, as per the latest spec updates. Before only a
   'default' form was supported.
 * Add `textarea` form field type.
 * #324: Only use `{cache: 'no-cache'}` with `.refresh()`, not `.get()`.
 * Fixed a subtle URL resolving bug in browsers. (Node was not affected).
 
+
 6.2.0 (2020-12-01)
 ------------------
 
-* Updated `fetch-mw-oauth2`, which has a few new features:
-  * Fixed a race condition where two 401's in quick succession could result
-    in two OAuth2 refresh requests, ultimately causing 1 to fail.
-  * Preemptively refresh if we know when the access token will expire.
+* Updated `fetch-mw-oauth2`, which has a few new features: * Fixed a race
+  condition where two 401's in quick succession could result in two OAuth2
+  refresh requests, ultimately causing 1 to fail. * Preemptively refresh if we
+  know when the access token will expire.
 
 
 6.1.4 (2020-11-30)
@@ -238,15 +246,14 @@ in the previous betas:
 6.0.4 (2020-10-04)
 ------------------
 
-* State objects now have an `actions()` method that return all defined
-  actions.
+* State objects now have an `actions()` method that return all defined actions.
 
 
 6.0.3 (2020-09-30)
 ------------------
 
-* #241: Add `application/prs.hal-forms+json` to Accept header and treat as
-  HAL (@reda-alaoui).
+* #241: Add `application/prs.hal-forms+json` to Accept header and treat as HAL
+  (@reda-alaoui).
 * #260: `action()` could not be successfully called on a HAL action.
   (@reda-alaoui).
 * Add `action()` function to `State` interface.
@@ -263,8 +270,8 @@ in the previous betas:
 6.0.1 (2020-09-09)
 ------------------
 
-* Quick re-release. Some files were left in the `dist/` directory that were
-  not cleaned up.
+* Quick re-release. Some files were left in the `dist/` directory that were not
+  cleaned up.
 
 
 6.0.0 (2020-09-09)
@@ -349,14 +356,13 @@ in the previous betas:
   methods via the `Link` header.
 * Added a `NeverCache` and `ShortCache` if automatically storing every `State`
   object until invalidation is not desired.
-* When calling `put()` with a new `State` object, that object will now be placed
-  in cache.
+* When calling `put()` with a new `State` object, that object will now be
+  placed in cache.
 * When refreshing, `fetch()` is now given the 'reload' cache setting, so that
   `refresh()` is a true Refresh, even with a browser cache.
 * #130: Support relative bookmark URIs when using Ketting in a browser.
 * Siren was not correctly parsed.
 * Add `.clone()` method to all `State` object.
-
 
 
 6.0.0-alpha.2 (2020-05-03)
@@ -384,31 +390,30 @@ in the previous betas:
   body. This object has methods to make it easier to manipulate and get
   information about the response, including links. It's also a stable,
   non-async object.
-* `Ketting` class is now called `Client`. It's still exposed as `Ketting`
-  as well for BC purposes.
+* `Ketting` class is now called `Client`. It's still exposed as `Ketting` as
+  well for BC purposes.
 * `Client.getResource()` has been removed. Use `Client.go()` instead.
 * A HTTP Fetch middleware system has been added, for easier manipulation of
-  requests and responses. Middlewares can be added for every request, or
-  for specific origins (domains).
-* All authentication settings have been removed, and reimplemented as
-  fetch middlewares. They take roughly the same options, but the setup
-  has changed.
-* `Resource.get()`, `Resource.put()`, etc. can now all take custom headers
-  and other options to manipulate the request.
+  requests and responses. Middlewares can be added for every request, or for
+  specific origins (domains).
+* All authentication settings have been removed, and reimplemented as fetch
+  middlewares. They take roughly the same options, but the setup has changed.
+* `Resource.get()`, `Resource.put()`, etc. can now all take custom headers and
+  other options to manipulate the request.
 * In the past you could just send a body with `Resource.post()`, `.put()`,
-  .`patch()`. Now this body must be a wrapped in an object with at least a `.body`
-  property. This is an annoying BC break but will allow for more flexibility
-  that was previous impossible.
+  .`patch()`. Now this body must be a wrapped in an object with at least a
+  `.body` property. This is an annoying BC break but will allow for more
+  flexibility that was previous impossible.
 * Proper support for 'binary' resources.
 * Hal Links will now be reserialized on `put()`.
 * `Resource.link`, `Resource.links` and `Resource.hasLink` has been deprecated,
   but not removed.
-* `Link` objects are now a simple typescript type, and no longer implemented
-  as a class.
+* `Link` objects are now a simple typescript type, and no longer implemented as
+  a class.
 * `FollowerOne` is now `FollowPromiseOne` and `FollowerMany` is now
   `FollowPromiseMany`.
-* All things called `Representor` has been removed, and rewritten with
-  a completely new API. A `HAL representor` is now a `HalState`.
+* All things called `Representor` has been removed, and rewritten with a
+  completely new API. A `HAL representor` is now a `HalState`.
 * #175: Nested embedded items are now also placed in the cache.
 
 
@@ -416,6 +421,7 @@ in the previous betas:
 ------------------
 
 * Use the `title=` attribute from the HTTP Link header, if it exists.
+
 
 5.2.0 (2020-02-17)
 ------------------
@@ -427,8 +433,8 @@ in the previous betas:
 5.1.2 (2020-02-12)
 ------------------
 
-* Correct return type on followAll, so it may be chained with preFetch.
-  This was only an issue when doing 'multiple hops'.
+* Correct return type on followAll, so it may be chained with preFetch. This
+  was only an issue when doing 'multiple hops'.
 
 
 5.1.1 (2020-01-10)
@@ -518,8 +524,8 @@ in the previous betas:
 --------------------------
 
 * Now supports the 'invalidates' link rel. When specified in a HTTP response,
-  Ketting will automatically clear the cache of any related resources.
-  See [draft-nottingham-linked-cache-inv-04][2].
+  Ketting will automatically clear the cache of any related resources. See
+  [draft-nottingham-linked-cache-inv-04][2].
 
 
 5.0.0-alpha.0 (2019-10-18)
@@ -530,8 +536,8 @@ in the previous betas:
   all the different media types. This results in a few small BC breaks.
 * NEW: `follow()` and `followAll()` now throw `LinkNotFound` instead of the
   generic `Error` when a link could not be found.
-* NEW: Resources now have a `link(rel: string)` function, which returns a
-  a single `Link` object.
+* NEW: Resources now have a `link(rel: string)` function, which returns a a
+  single `Link` object.
 * BC BREAK: `Ketting.getRepresentor()` is now `Ketting.createRepresentation()`
   and is responsible for constructing the object instead of just returning a
   constructor.
@@ -543,6 +549,7 @@ in the previous betas:
 * NEW: Hal responses from the HAL representor are now properly typed.
 * CHANGE: Link chaining system has been rewritten, opening the door to new
   features that weren't possible before.
+
 
 4.0.4 (2019-10-31)
 ------------------
@@ -575,16 +582,16 @@ in the previous betas:
 
 * #129: Using the package in non-typescript node.js now works with a simple
   `const Ketting = require('ketting')`.
-* #129: Fixed the browser distribution. the `Ketting` constructor is
-  registered globally again.
+* #129: Fixed the browser distribution. the `Ketting` constructor is registered
+  globally again.
 
 
 4.0.0-alpha.0 (2019-04-22)
 --------------------------
 
 * The old format for OAuth2 setup is now no longer supported.
-* It's now possible to specify per-domain authentication using wildcards.
-  This allows you to set up specific authentication credentials for specific
+* It's now possible to specify per-domain authentication using wildcards. This
+  allows you to set up specific authentication credentials for specific
   domains. This might be useful in case you talk to multiple API's with a
   single client.
 
@@ -592,12 +599,11 @@ in the previous betas:
 3.1.0 (2019-03-28)
 ------------------
 
-* If Ketting anticipates that a user might want to fetch multiple resources
-  in sequence (a follow chain), it will now add `Prefer-Push` header and
-  a `Prefer: transclude` header. Both are experimental internet drafts to
-  suggest to a server to do a HTTP/2 push or embed a child resource
-  respecitvely. This feature is experimental and might change as these drafts
-  change.
+* If Ketting anticipates that a user might want to fetch multiple resources in
+  sequence (a follow chain), it will now add `Prefer-Push` header and a
+  `Prefer: transclude` header. Both are experimental internet drafts to suggest
+  to a server to do a HTTP/2 push or embed a child resource respecitvely. This
+  feature is experimental and might change as these drafts change.
 
 
 3.0.2 (2019-03-19)
@@ -612,6 +618,7 @@ in the previous betas:
 ------------------
 
 * Updated dependencies
+
 
 3.0.0 (2019-03-18)
 ------------------
@@ -655,10 +662,11 @@ in the previous betas:
 2.4.0 (2018-11-05)
 ------------------
 
-* The `Resource` class is now a generic typescript type. This allows a user
-  of the library to define specific 'types of resources' and leverage static
- typing for `GET` and `PUT` requests.
+* The `Resource` class is now a generic typescript type. This allows a user of
+  the library to define specific 'types of resources' and leverage static
 * A few documentation updates.
+
+ typing for `GET` and `PUT` requests.
 
 
 2.3.0 (2018-10-10)
@@ -683,10 +691,9 @@ in the previous betas:
 2.2.1 (2018-09-19)
 ------------------
 
-* Refreshing OAuth2 tokens without having a refresh_token.
-  `client_credentials` in particular shouldn't return a `refresh_token`, so
-  for these cases, new access tokens are acquired using a new
-  `client_credentials` request.
+* Refreshing OAuth2 tokens without having a refresh_token. `client_credentials`
+  in particular shouldn't return a `refresh_token`, so for these cases, new
+  access tokens are acquired using a new `client_credentials` request.
 
 
 2.2.0 (2018-09-18)
@@ -698,9 +705,9 @@ in the previous betas:
 2.1.0 (2018-09-14)
 ------------------
 
-* No longer ships with `cross-fetch` and `whatwg-fetch`. To use this library
-  in a browser, you must run this in a browser that supports `fetch` or
-  provide your own polyfill.
+* No longer ships with `cross-fetch` and `whatwg-fetch`. To use this library in
+  a browser, you must run this in a browser that supports `fetch` or provide
+  your own polyfill.
 * Updated dependencies
 
 
@@ -728,6 +735,7 @@ in the previous betas:
 
 * Same as last build.
 
+
 2.0.0 (2018-06-17)
 ------------------
 
@@ -736,8 +744,8 @@ in the previous betas:
   directory.
 * #78: Webpack build had a broken version of `querystring`, which caused
   `Link:` header parsing to fail in browsers.
-* #80: `resource.fetch()` would throw an exception with some combinations
-  of arguments.
+* #80: `resource.fetch()` would throw an exception with some combinations of
+  arguments.
 * #90: `get()` and `refresh()` will now throw an Error when a server did not
   include a content-type.
 * #89: Refactored OAuth utility to be a bit more clear.
@@ -785,9 +793,9 @@ in the previous betas:
 0.10.0 (2017-11-16)
 -------------------
 
-* #19: Support for OAuth2 access and refresh tokens. When used, the library
-  can automatically refresh the access token if the previous one expired. It
-  can also supports the `client_credentials` OAuth2 grant (@mhum).
+* #19: Support for OAuth2 access and refresh tokens. When used, the library can
+  automatically refresh the access token if the previous one expired. It can
+  also supports the `client_credentials` OAuth2 grant (@mhum).
 
 
 0.9.0 (2017-09-23)
@@ -795,21 +803,20 @@ in the previous betas:
 
 * #52: Now using the new URL object in browsers for resolving relative urls,
   and falling back to a DOM based url resolving mechanism if it's not
-  available. This causes the browser distribution to drop another 10KB to
-  46KB.
-* Moved a bunch of utility objects into a `util/` directory, so it's more
-  clear what the important API's are.
+  available. This causes the browser distribution to drop another 10KB to 46KB.
+* Moved a bunch of utility objects into a `util/` directory, so it's more clear
+  what the important API's are.
 * #55: Fixed another problem related to the fetchInit function in firefox.
 
 
 0.8.3 (2017-09-10)
------------------
+------------------
 
 * Including the sourcemap file in the NPM distribution.
 
 
 0.8.2 (2017-09-10)
------------------
+------------------
 
 * #53: Regression related to the new 'fetchInit' option.
 * Now generating source maps.
@@ -863,8 +870,8 @@ in the previous betas:
   elements with `rel` attributes.
 * Removed the `accept` option. This should now be controlled with the
   `contentTypes` property.
-* #40: Removed support for the Requests library. This library now only used
-  the Fetch API, to make it compatible with browsers in the future.
+* #40: Removed support for the Requests library. This library now only used the
+  Fetch API, to make it compatible with browsers in the future.
 
 
 0.4.2 (2017-08-03)
@@ -950,7 +957,7 @@ in the previous betas:
 
 
 0.0.4 (2017-02-06)
------------------
+------------------
 
 * Bugfixes.
 * Linting with eslint.
@@ -967,7 +974,8 @@ in the previous betas:
   `Resource` object again if the response contained a `Location` header.
 * #4: Things in the `_embedded` property are now also treated as links and can
   be followed.
-* The `links()` method on Resource now have a `rel` argument for easy filtering.
+* The `links()` method on Resource now have a `rel` argument for easy
+  filtering.
 * Added a `followAll()` function for getting collections.
 
 
@@ -993,4 +1001,5 @@ in the previous betas:
 [4]: http://amundsen.com/media-types/collection/format/
 [5]: http://rwcbook.github.io/hal-forms/
 [6]: https://tools.ietf.org/html/rfc7807 "Problem Details for HTTP APIs"
-[7]: https://tools.ietf.org/html/draft-dalal-deprecation-header-03 "The Deprecation HTTP Header Field"
+[7]: https://tools.ietf.org/html/draft-dalal-deprecation-header-03 "The
+     Deprecation HTTP Header Field"
