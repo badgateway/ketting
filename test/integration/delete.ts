@@ -25,7 +25,7 @@ describe('Issuing a DELETE request', async () => {
     let ok = false;
     try {
       await resource.get();
-    } catch (e) {
+    } catch {
       // we're expecting an exception
       ok = true;
     }

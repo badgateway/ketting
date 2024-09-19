@@ -31,7 +31,7 @@ export class Fetcher {
     mws.push((innerRequest: Request) => {
 
       if (!innerRequest.headers.has('User-Agent') && this.advertiseKetting) {
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         innerRequest.headers.set('User-Agent', 'Ketting/' + require('../../package.json').version);
       }
 
