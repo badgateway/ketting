@@ -28,7 +28,6 @@ export { Problem } from './http/error';
 export { Action } from './action';
 export {
   Field,
-  BaseField,
   BooleanField,
   BasicStringField,
   DateTimeField,

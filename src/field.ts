@@ -17,7 +17,7 @@ export type Field =
  * Fields can be used to automatically render forms or other UIs based on
  * hypermedia actions.
  */
-export interface BaseField<T> {
+interface BaseField<T> {
   /**
    * Name of the field.
    *
