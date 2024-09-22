@@ -26,7 +26,20 @@ export { default as oauth2 } from './http/oauth2';
 export { Problem } from './http/error';
 
 export { Action } from './action';
-export { Field } from './field';
+export {
+  Field,
+  BooleanField,
+  BasicStringField,
+  DateTimeField,
+  FileField,
+  HiddenField,
+  NumberField,
+  SelectFieldSingle,
+  SelectFieldMulti,
+  RangeStringField,
+  TextAreaField,
+  TextField
+} from './field';
 
 export { FollowPromiseOne, FollowPromiseMany } from './follow-promise';
 
