@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+8.0.0-alpha.4 (????-??-??)
+--------------------------
+
+* Ketting now requires Node 18.
+
+
 8.0.0-alpha.3 (2023-06-11)
 --------------------------
 
@@ -35,6 +41,12 @@ ChangeLog
 * #444: Allow multiple query parameters to be set with the same key when
   specifying template variables. (@qmachard)
 * Upgrade to Typescript 5
+
+
+7.5.2 (2024-09-19)
+------------------
+
+* Updating dependencies.
 
 
 7.5.1 (2022-09-03)

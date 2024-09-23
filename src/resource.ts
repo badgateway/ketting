@@ -13,6 +13,7 @@ import { needsJsonStringify } from './util/fetch-body-helper';
  * A resource has a uri, methods that correspond to HTTP methods,
  * and events to subscribe to state changes.
  */
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class Resource<T = any> extends EventEmitter {
 
   /**

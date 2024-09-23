@@ -149,7 +149,7 @@ describe('HTML representor', () => {
       let err = false;
       try {
         await htmlState.action('add-item2');
-      } catch (e) {
+      } catch {
         err = true;
       }
       expect(err).to.equal(true);
@@ -169,7 +169,7 @@ describe('HTML representor', () => {
       let err = false;
       try {
         await htmlState.action();
-      } catch (e) {
+      } catch {
         err = true;
       }
       expect(err).to.equal(true);
@@ -241,7 +241,7 @@ describe('HTML representor', () => {
           productCode: 'foo-bar',
           quantity: 5
         });
-      } catch (e) {
+      } catch {
         err = true;
       }
       expect(err).to.equal(true);

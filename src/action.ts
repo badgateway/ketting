@@ -39,7 +39,6 @@ export interface ActionInfo {
    * Returns the list of fields associated to an action
    */
   fields: Field[];
-
 }
 
 /**
@@ -51,6 +50,11 @@ export interface Action<T extends Record<string, any> = Record<string, any>> ext
    * Execute the action or submit the form.
    */
   submit(formData: T): Promise<State>;
+
+  /**
+   * Return a field by name.
+   */
+  field(name: string): Field | undefined;
 
   /**
    * Execute the action or submit the form, then return the next resource.
@@ -200,6 +204,10 @@ export class SimpleAction<TFormData extends Record<string, any>> implements Acti
         'Content-Type': this.contentType
       }
     });
+  }
+
+  field(name: string): Field | undefined {
+    return this.fields.find(field => field.name === name);
   }
 }
 

@@ -40,7 +40,7 @@ describe('Issuing a PUT request', async () => {
     try {
       const errResource = await ketting.follow('error400');
       await errResource.put({data: {foo: 'bar'}});
-    } catch (e) {
+    } catch {
       ok = true;
     }
     expect(ok).to.eql(true);

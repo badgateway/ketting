@@ -27,7 +27,7 @@ describe('Issuing a PATCH request', async () => {
     try {
       const errResource = await ketting.follow('error400');
       await errResource.patch({data: {foo: 'bar'}});
-    } catch (e) {
+    } catch {
       ok = true;
     }
     expect(ok).to.eql(true);
