@@ -1,9 +1,13 @@
+import { describe, it } from 'node:test';
+import testServer from '../testserver';
+
 import { expect } from 'chai';
 import { Ketting, Resource, BaseState } from '../../src';
 
 describe('Following a JSON API link', async () => {
 
-  const ketting = new Ketting('http://localhost:3000/hal1.json');
+  const serverUri = testServer();
+  const ketting = new Ketting(serverUri + '/hal1.json');
 
   let jsonapi: Resource;
 
@@ -29,7 +33,7 @@ describe('Following a JSON API link', async () => {
   it('should allow following collection members via the "item" rel', async () => {
 
     const item = await jsonapi.follow('item');
-    expect(item.uri).to.equal('http://localhost:3000/json-api-member1.json');
+    expect(item.uri).to.equal(serverUri + '/json-api-member1.json');
 
   });
 });

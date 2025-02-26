@@ -1,3 +1,5 @@
+import { describe, it } from 'node:test';
+
 import { expect } from 'chai';
 import { ShortCache, BaseState, Links, Client } from '../../../src';
 
@@ -31,6 +33,7 @@ describe('ShortCache', () => {
 
     expect(newState).to.eql(state);
 
+    shortCache.destroy();
 
   });
 
@@ -57,6 +60,7 @@ describe('ShortCache', () => {
     // Note we use .equal, and not .eql. They check for different things.
     expect(newState).to.not.equal(state);
 
+    shortCache.destroy();
   });
 
   it('should allow items to be deleted', () => {
@@ -79,6 +83,7 @@ describe('ShortCache', () => {
     // Note we use .eql
     expect(newState).to.eql(null);
 
+    shortCache.destroy();
   });
 
   it('clear() should work', () => {
@@ -99,6 +104,7 @@ describe('ShortCache', () => {
     // Note we use .eql
     expect(newState).to.eql(null);
 
+    shortCache.destroy();
   });
 
   it('should automatically expire items after a the timeout has hit', async() => {
@@ -118,6 +124,7 @@ describe('ShortCache', () => {
 
     expect(shortCache.has('http://example/foo')).to.equal(false);
 
+    shortCache.destroy();
   });
 
   it('should still work when storing 1 object after another', async() => {
@@ -138,5 +145,6 @@ describe('ShortCache', () => {
 
     expect(shortCache.has('http://example/foo')).to.equal(false);
 
+    shortCache.destroy();
   });
 });

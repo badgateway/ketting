@@ -1,3 +1,5 @@
+import { describe, it } from 'node:test';
+
 import { expect } from 'chai';
 import { factory } from '../../../src/state/hal';
 import { Action, Client, Field } from '../../../src';

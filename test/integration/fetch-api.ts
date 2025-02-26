@@ -1,12 +1,16 @@
+import { describe, it, before } from 'node:test';
+import testServer from '../testserver';
 import { expect } from 'chai';
 import { Ketting, Resource } from '../../src';
 
 describe('Using the fetch api', () => {
 
+  const serverUri = testServer();
+
   let hal2: Resource;
   let ketting: Ketting;
   before( async () => {
-    ketting = new Ketting('http://localhost:3000/hal1.json');
+    ketting = new Ketting(serverUri + '/hal1.json');
     hal2 = await ketting.follow('next');
   });
 
@@ -20,7 +24,7 @@ describe('Using the fetch api', () => {
 
   it('should also work when passing a Request object', async () => {
 
-    const request = new Request('http://localhost:3000/?foo=bar');
+    const request = new Request(serverUri + '/?foo=bar');
     const response = await hal2.fetch(request);
     expect(response).to.have.property('status');
     expect(response.status).to.eql(200);
@@ -37,7 +41,7 @@ describe('Using the fetch api', () => {
 
   it('should allow overriding the Content-Type header', async () => {
 
-    const tempKetting = new Ketting('http://localhost:3000/hal1.json');
+    const tempKetting = new Ketting(serverUri + '/hal1.json');
 
     tempKetting.use( (request, next) => {
       if (!request.headers.has('Content-Type')) {
@@ -71,13 +75,6 @@ describe('Using the fetch api', () => {
 
     const body = await response.json();
     expect(body['user-agent']).to.eql('foo-bar/1.2');
-
-  });
-
-  after( async () => {
-
-    // Clearing any changes.
-    await ketting.go('/reset').fetch({method: 'POST'});
 
   });
 
