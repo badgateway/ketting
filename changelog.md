@@ -1,8 +1,8 @@
 ChangeLog
 =========
 
-8.0.0 (????-??-??)
------------------
+8.0.0 (2025-02-26)
+------------------
 
 A new major release! It's been too long. This release has been in alpha state
 for a while, and it was time to bless it as a major release.
