@@ -10,6 +10,8 @@ ChangeLog
   this was important to you, so we can add this back with a more modern stack.
 * Removed mocha from the test suite, and now using the Node.js test runner.
   Mocha is painful to use with a modern Node / Typescript stack.
+* Updated to hal-types 2, which updates to the latest link-hints draft, and is
+  a bit looser with what it requires from a HAL document.
 
 
 8.0.0-alpha.3 (2023-06-11)

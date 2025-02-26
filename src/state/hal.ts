@@ -149,13 +149,9 @@ function parseHalLinks(context: string, body: hal.HalResource): Link[] {
     // eslint-disable-next-line prefer-const
     for (let [rel, innerBodies] of Object.entries(body._embedded)) {
 
-      if (!Array.isArray(innerBodies)) {
-        innerBodies = [innerBodies];
-      }
+      for(const innerBody of Array.isArray(innerBodies) ? innerBodies : [innerBodies]) {
 
-      for(const innerBody of innerBodies) {
-
-        const href:string = innerBody?._links?.self?.href;
+        const href:string = (innerBody?._links?.self as hal.HalLink)?.href;
         if (!href) {
           continue;
         }
@@ -222,13 +218,13 @@ function parseHalEmbedded(client: Client, context: string, body: hal.HalResource
     }
     for (const embeddedItem of embeddedList) {
 
-      if (embeddedItem._links?.self?.href === undefined) {
+      if ((embeddedItem._links?.self as hal.HalLink)?.href === undefined) {
         // eslint-disable-next-line no-console
         console.warn('An item in _embedded was ignored. Each item must have a single "self" link');
         continue;
       }
 
-      const embeddedSelf = resolve(context, embeddedItem._links.self.href);
+      const embeddedSelf = resolve(context, (embeddedItem._links?.self as hal.HalLink)?.href);
 
       // Remove _links and _embedded from body
       const {
