@@ -1,3 +1,5 @@
+import { describe, it } from 'node:test';
+
 import { Client } from '../../src';
 import { expect } from 'chai';
 

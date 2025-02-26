@@ -69,4 +69,11 @@ export class ForeverCache implements StateCache {
     this.cache.clear();
   }
 
+  /**
+   * Clean up any dangling references to avoid memory leaks.
+   */
+  destroy() {
+
+  }
+
 }

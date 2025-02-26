@@ -1,3 +1,5 @@
+import { describe, it } from 'node:test';
+
 import { expect } from 'chai';
 import { htmlStateFactory } from '../../../src/state';
 import { Link, Client } from '../../../src';

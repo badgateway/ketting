@@ -9,11 +9,7 @@ clean:
 
 .PHONY: test
 test: lint
-	npx nyc mocha
-
-.PHONY: test-debug
-test-debug:
-	npx mocha --inspect-brk
+	npx tsx --test
 
 .PHONY: lint
 lint:
