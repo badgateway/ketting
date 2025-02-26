@@ -29,14 +29,3 @@ tsbuild:
 .PHONY: watch
 watch:
 	npx tsc --watch
-
-.PHONY: browserbuild
-browserbuild: tsbuild
-	mkdir -p browser
-	npx webpack
-
-browser/ketting.min.js: browserbuild
-browser/mocha-tests.js: browserbuild
-
-testserver: build
-	npx ts-node test/testserver.ts
