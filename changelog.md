@@ -8,6 +8,8 @@ ChangeLog
 * We're no longer building a minified browser build with Webpack. It's not
   known how many people took advantage of this feature. Please let us know if
   this was important to you, so we can add this back with a more modern stack.
+* Removed mocha from the test suite, and now using the Node.js test runner.
+  Mocha is painful to use with a modern Node / Typescript stack.
 
 
 8.0.0-alpha.3 (2023-06-11)
