@@ -5,6 +5,9 @@ ChangeLog
 --------------------------
 
 * Ketting now requires Node 18.
+* We're no longer building a minified browser build with Webpack. It's not
+  known how many people took advantage of this feature. Please let us know if
+  this was important to you, so we can add this back with a more modern stack.
 
 
 8.0.0-alpha.3 (2023-06-11)
