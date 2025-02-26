@@ -1,8 +1,11 @@
 ChangeLog
 =========
 
-8.0.0-alpha.4 (????-??-??)
---------------------------
+8.0.0 (????-??-??)
+-----------------
+
+A new major release! It's been too long. This release has been in alpha state
+for a while, and it was time to bless it as a major release.
 
 * Ketting now requires Node 18.
 * We're no longer building a minified browser build with Webpack. It's not
