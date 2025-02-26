@@ -24,7 +24,7 @@ for a while, and it was time to bless it as a major release.
   will now no longer store responses with a `Content-Location` in its internal
   cache.
 * #477: When storing responses with `Content-Location`, bodies are now cloned
-  before storing so callees can still read the date.
+  before storing so callees can still read the data.
 * Testing Node 20.
 
 
