@@ -78,6 +78,11 @@ export type State<T = any> = {
   serializeBody(): Buffer|Blob|string;
 
   /**
+   * Returns a JSON of the state that can be used in a HTTP response.
+   */
+  toJSON(): any;
+
+  /**
    * Content-headers are a subset of HTTP headers that related directly
    * to the content. The obvious ones are Content-Type.
    *
@@ -116,7 +121,7 @@ export type State<T = any> = {
  * Some information in HEAD responses might be available, but many aren't.
  * Notably, the body.
  */
-export type HeadState = Omit<State, 'data' | 'action' | 'actions' | 'hasAction' | 'serializeBody' | 'getEmbedded' | 'client' | 'clone'>;
+export type HeadState = Omit<State, 'data' | 'action' | 'actions' | 'hasAction' | 'serializeBody' | 'toJSON' | 'getEmbedded' | 'client' | 'clone'>;
 
 /**
  * A 'StateFactory' is responsible for taking a Fetch Response, and returning
