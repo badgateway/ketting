@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+9.0.0 (????-??-??)
+------------------
+
+* Converted entire library from CommonJS (`require`) to ESM (`import`).
+
+
 8.0.0 (2025-02-26)
 ------------------
 
