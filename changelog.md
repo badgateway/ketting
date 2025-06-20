@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-8.0.1 (????-??-??)
+8.0.1 (2025-06-20)
 ------------------
 
 * #505: Remove browser key from `package.json`. This was causing problems for
