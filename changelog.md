@@ -1,6 +1,13 @@
 ChangeLog
 =========
 
+8.0.1 (????-??-??)
+------------------
+
+* #505: Remove browser key from `package.json`. This was causing problems for
+  vite users.
+
+
 8.0.0 (2025-02-26)
 ------------------
 
