@@ -415,6 +415,7 @@ describe('HAL forms', () => {
         name: 'dropdown',
         required: false,
         readOnly: false,
+        multiple: true,
         options: {
           v1: 'l1',
           v2: 'l2'
@@ -434,6 +435,7 @@ describe('HAL forms', () => {
         name: 'dropdown',
         required: false,
         readOnly: false,
+        multiple: true,
         options: {
           v1: 'v1',
           v2: 'v2'
@@ -455,10 +457,101 @@ describe('HAL forms', () => {
         name: 'dropdown',
         required: false,
         readOnly: false,
+        multiple: true,
         dataSource: {
           href: '/get-options',
           labelField: 'prompt',
           valueField: 'value',
+        }
+      });
+
+    testField(
+      'dropdown with inline options and undefined maxItems',
+      {
+        type: 'text',
+        name: 'dropdown',
+        options: {
+          maxItems: undefined,
+          inline: [
+            {
+              prompt: 'l1',
+              value: 'v1',
+            },
+            {
+              prompt: 'l2',
+              value: 'v2',
+            },
+          ]
+        }
+      }, {
+        type: 'select',
+        name: 'dropdown',
+        required: false,
+        readOnly: false,
+        multiple: true,
+        options: {
+          v1: 'l1',
+          v2: 'l2'
+        }
+      });
+
+    testField(
+      'dropdown with inline options and maxItems == 2',
+      {
+        type: 'text',
+        name: 'dropdown',
+        options: {
+          maxItems: 2,
+          inline: [
+            {
+              prompt: 'l1',
+              value: 'v1',
+            },
+            {
+              prompt: 'l2',
+              value: 'v2',
+            },
+          ]
+        }
+      }, {
+        type: 'select',
+        name: 'dropdown',
+        required: false,
+        readOnly: false,
+        multiple: true,
+        options: {
+          v1: 'l1',
+          v2: 'l2'
+        }
+      });
+
+    testField(
+      'dropdown with inline options and maxItems == 1',
+      {
+        type: 'text',
+        name: 'dropdown',
+        options: {
+          maxItems: 1,
+          inline: [
+            {
+              prompt: 'l1',
+              value: 'v1',
+            },
+            {
+              prompt: 'l2',
+              value: 'v2',
+            },
+          ]
+        }
+      }, {
+        type: 'select',
+        name: 'dropdown',
+        required: false,
+        readOnly: false,
+        multiple: false,
+        options: {
+          v1: 'l1',
+          v2: 'l2'
         }
       });
 
