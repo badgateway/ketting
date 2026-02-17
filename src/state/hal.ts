@@ -287,7 +287,7 @@ function parseHalField(halField: hal.HalFormsProperty): Field {
           label: halField.prompt,
           required: halField.required || false,
           readOnly: halField.readOnly || false,
-          multiple: halField.options.multiple as any,
+          multiple: !('maxItems' in halField.options) || !halField.options.maxItems || halField.options.maxItems > 1 as any,
           value: (halField.options.selectedValues || halField.value) as any
         };
 
