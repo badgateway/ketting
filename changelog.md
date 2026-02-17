@@ -1,6 +1,15 @@
 ChangeLog
 =========
 
+8.0.2 (2026-02-17)
+------------------
+
+* #509: In a browser context, needsJsonStringify fails with Buffer is not
+  defined
+* #511: Attribute multiple of type Field is incorrectly valued when parsed from
+  HalFormsProperty
+
+
 8.0.1 (2025-06-20)
 ------------------
 
