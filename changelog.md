@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-8.0.2 (????-??-??)
+8.0.2 (2026-02-17)
 ------------------
 
 * #509: In a browser context, needsJsonStringify fails with Buffer is not
