@@ -11,14 +11,18 @@ import * as hal from 'hal-types';
 /**
  * Represents a resource state in the HAL format
  */
-export class HalState<T = any> extends BaseState<T> {
+export class HalState<T extends Record<string, any> = any> extends BaseState<T> {
+
+  toJSON(): hal.HalResource<T> {
+    return {
+      _links: this.serializeLinks(),
+      ...this.data
+    };
+  }
 
   serializeBody(): string {
 
-    return JSON.stringify({
-      _links: this.serializeLinks(),
-      ...this.data
-    });
+    return JSON.stringify(this.toJSON());
 
   }
 
@@ -75,6 +79,22 @@ export const factory:StateFactory = async (client, uri, response): Promise<HalSt
 
   const body = await response.json();
   const links = parseLink(uri, response.headers.get('Link'));
+  const headers = response.headers;
+
+  return buildState(client, uri, body, links, headers);
+
+};
+
+export const fromJSON = (client: Client, body: hal.HalResource, uri?: string) : HalState => {
+
+  uri = uri || body._links.self.href;
+  const links = new Links(uri);
+  const headers = new Headers();
+  return buildState(client, uri, body, links, headers);
+
+};
+
+export const buildState = (client: Client, uri: string, body: hal.HalResource, links: Links, headers: Headers) : HalState => {
 
   // The HAL factory is also respondible for plain JSON, which might be an
   // array.
@@ -83,7 +103,7 @@ export const factory:StateFactory = async (client, uri, response): Promise<HalSt
       client,
       uri,
       data: body,
-      headers: response.headers,
+      headers,
       links,
     });
   }
@@ -102,9 +122,9 @@ export const factory:StateFactory = async (client, uri, response): Promise<HalSt
     client,
     uri: uri,
     data: newBody,
-    headers: response.headers,
+    headers,
     links: links,
-    embedded: parseHalEmbedded(client, uri, body, response.headers),
+    embedded: parseHalEmbedded(client, uri, body, headers),
     actions: parseHalForms(uri, body),
   });
 
