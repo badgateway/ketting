@@ -22,7 +22,7 @@ export class HalState<T = any> extends BaseState<T> {
 
   }
 
-  private serializeLinks(): hal.HalResource['_links'] {
+  serializeLinks(): hal.HalResource['_links'] {
 
     const links: hal.HalResource['_links'] = {
       self: { href: this.uri },
@@ -113,7 +113,7 @@ export const factory:StateFactory = async (client, uri, response): Promise<HalSt
 /**
  * Parse the Hal _links object and populate the 'links' property.
  */
-function parseHalLinks(context: string, body: hal.HalResource): Link[] {
+export function parseHalLinks(context: string, body: hal.HalResource): Link[] {
 
   if (body._links === undefined) {
     return [];
