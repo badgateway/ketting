@@ -52,9 +52,16 @@ export default function(client: Client): FetchMiddleware {
     // If the response had a Link: rel=invalidate header, we want to
     // expire those too.
     if (response.headers.has('Link')) {
-      for (const httpLink of LinkHeader.parse(response.headers.get('Link')!).rel('invalidates')) {
+      const httpLinks = LinkHeader.parse(response.headers.get('Link')!);
+
+      for (const httpLink of httpLinks.rel('invalidates')) {
         const uri = resolve(request.url, httpLink.uri);
         stale.push(uri);
+      }
+
+      for (const httpLink of httpLinks.rel('deletes')) {
+        const uri = resolve(request.url, httpLink.uri);
+        deleted.push(uri);
       }
     }
 
