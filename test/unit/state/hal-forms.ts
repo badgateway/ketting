@@ -572,7 +572,7 @@ describe('HAL forms', () => {
       });
 
       expect(hal.action('default').fields.length).eq(0);
-    })
+    });
 
   });
 
