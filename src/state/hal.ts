@@ -264,7 +264,7 @@ function parseHalForms(context: string, body: hal.HalResource): ActionInfo[] {
       title: hf.title,
       method: hf.method,
       contentType: hf.contentType || 'application/json',
-      fields: hf.properties ? hf.properties.map(prop => parseHalField(prop)).filter(prop => prop !== undefined) : [],
+      fields: hf.properties ? hf.properties.map(prop => parseHalField(prop)).filter(prop => !!prop) : [],
     };
   });
 
