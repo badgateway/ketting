@@ -555,6 +555,25 @@ describe('HAL forms', () => {
         }
       });
 
+    it('should ignore unknown fields', async () => {
+      const hal = await callFactory({
+        _links: {
+        },
+        _templates: {
+          default: {
+            target: '/submit',
+            method: 'POST',
+            properties: [{
+              type: 'my_own_type',
+              name: 'field'
+            }]
+          }
+        }
+      });
+
+      expect(hal.action('default').fields.length).eq(0);
+    })
+
   });
 
 });
