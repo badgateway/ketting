@@ -264,13 +264,13 @@ function parseHalForms(context: string, body: hal.HalResource): ActionInfo[] {
       title: hf.title,
       method: hf.method,
       contentType: hf.contentType || 'application/json',
-      fields: hf.properties ? hf.properties.map(prop => parseHalField(prop)) : [],
+      fields: hf.properties ? hf.properties.map(prop => parseHalField(prop)).filter(prop => !!prop) : [],
     };
   });
 
 }
 
-function parseHalField(halField: hal.HalFormsProperty): Field {
+function parseHalField(halField: hal.HalFormsProperty): Field | undefined {
 
   switch(halField.type) {
     case undefined:
@@ -429,7 +429,8 @@ function parseHalField(halField: hal.HalFormsProperty): Field {
         label: halField.prompt,
         value: !!halField.value,
       };
-
+    default:
+      return undefined;
   }
 
 }
