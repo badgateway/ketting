@@ -1,6 +1,11 @@
 ChangeLog
 =========
 
+8.0.3 (????-??-??)
+------------------
+
+* #514 Unrecognized template property types produce undefined fields
+
 8.0.2 (2026-02-17)
 ------------------
 
