@@ -1,9 +1,12 @@
+import { describe, it } from 'node:test';
+import testServer from '../testserver';
 import { expect } from 'chai';
 import { Client, Resource } from '../../src';
 
 describe('Following a link', async () => {
 
-  const client = new Client('http://localhost:3000/hal1.json');
+  const serverUri = testServer();
+  const client = new Client(serverUri + '/hal1.json');
 
   let hal2: Resource;
 

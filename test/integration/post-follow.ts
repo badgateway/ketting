@@ -1,10 +1,14 @@
+import { describe, it, before } from 'node:test';
+import testServer from '../testserver';
+
 import { expect } from 'chai';
 import { Ketting } from '../../src';
 import Resource from '../../src/resource';
 
 describe('Issuing a POST request', async () => {
 
-  const ketting = new Ketting('http://localhost:3000/hal1.json');
+  const serverUri = testServer();
+  const ketting = new Ketting(serverUri + '/hal1.json');
   let resource: Resource;
   let newResource: Resource;
 

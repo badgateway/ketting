@@ -149,13 +149,9 @@ function parseHalLinks(context: string, body: hal.HalResource): Link[] {
     // eslint-disable-next-line prefer-const
     for (let [rel, innerBodies] of Object.entries(body._embedded)) {
 
-      if (!Array.isArray(innerBodies)) {
-        innerBodies = [innerBodies];
-      }
+      for(const innerBody of Array.isArray(innerBodies) ? innerBodies : [innerBodies]) {
 
-      for(const innerBody of innerBodies) {
-
-        const href:string = innerBody?._links?.self?.href;
+        const href:string = (innerBody?._links?.self as hal.HalLink)?.href;
         if (!href) {
           continue;
         }
@@ -222,13 +218,13 @@ function parseHalEmbedded(client: Client, context: string, body: hal.HalResource
     }
     for (const embeddedItem of embeddedList) {
 
-      if (embeddedItem._links?.self?.href === undefined) {
+      if ((embeddedItem._links?.self as hal.HalLink)?.href === undefined) {
         // eslint-disable-next-line no-console
         console.warn('An item in _embedded was ignored. Each item must have a single "self" link');
         continue;
       }
 
-      const embeddedSelf = resolve(context, embeddedItem._links.self.href);
+      const embeddedSelf = resolve(context, (embeddedItem._links?.self as hal.HalLink)?.href);
 
       // Remove _links and _embedded from body
       const {
@@ -268,13 +264,13 @@ function parseHalForms(context: string, body: hal.HalResource): ActionInfo[] {
       title: hf.title,
       method: hf.method,
       contentType: hf.contentType || 'application/json',
-      fields: hf.properties ? hf.properties.map(prop => parseHalField(prop)) : [],
+      fields: hf.properties ? hf.properties.map(prop => parseHalField(prop)).filter(prop => !!prop) : [],
     };
   });
 
 }
 
-function parseHalField(halField: hal.HalFormsProperty): Field {
+function parseHalField(halField: hal.HalFormsProperty): Field | undefined {
 
   switch(halField.type) {
     case undefined:
@@ -291,7 +287,7 @@ function parseHalField(halField: hal.HalFormsProperty): Field {
           label: halField.prompt,
           required: halField.required || false,
           readOnly: halField.readOnly || false,
-          multiple: halField.options.multiple as any,
+          multiple: !('maxItems' in halField.options) || !halField.options.maxItems || halField.options.maxItems > 1 as any,
           value: (halField.options.selectedValues || halField.value) as any
         };
 
@@ -433,7 +429,8 @@ function parseHalField(halField: hal.HalFormsProperty): Field {
         label: halField.prompt,
         value: !!halField.value,
       };
-
+    default:
+      return undefined;
   }
 
 }

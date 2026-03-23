@@ -1,9 +1,13 @@
+import { describe, it, before } from 'node:test';
+import testServer from '../testserver';
+
 import { expect } from 'chai';
 import { Ketting, Link, Resource } from '../../src';
 
 describe('Issuing a HEAD request', async () => {
 
-  const ketting = new Ketting('http://localhost:3000/hal1.json');
+  const serverUri = testServer();
+  const ketting = new Ketting(serverUri + '/hal1.json');
   let resource: Resource;
 
   before( async () => {
@@ -39,7 +43,7 @@ describe('Issuing a HEAD request', async () => {
     const expected:Link[] = [
       {
         rel: 'next',
-        context: 'http://localhost:3000/link-header',
+        context: serverUri + '/link-header',
         href: '/hal2.json',
         hreflang: undefined,
         title: undefined,
@@ -47,7 +51,7 @@ describe('Issuing a HEAD request', async () => {
       },
       {
         rel: 'previous',
-        context: 'http://localhost:3000/link-header',
+        context: serverUri + '/link-header',
         href: '/TheBook/chapter2',
         hreflang: undefined,
         title: undefined,
@@ -55,7 +59,7 @@ describe('Issuing a HEAD request', async () => {
       },
       {
         rel: 'start',
-        context: 'http://localhost:3000/link-header',
+        context: serverUri + '/link-header',
         href: 'http://example.org/',
         hreflang: undefined,
         title: undefined,
@@ -63,7 +67,7 @@ describe('Issuing a HEAD request', async () => {
       },
       {
         rel: 'http://example.net/relation/other',
-        context: 'http://localhost:3000/link-header',
+        context: serverUri + '/link-header',
         href: 'http://example.org/',
         hreflang: undefined,
         title: undefined,

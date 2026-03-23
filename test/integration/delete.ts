@@ -1,9 +1,14 @@
+import { describe, it, before } from 'node:test';
+import testServer from '../testserver';
+
 import { expect } from 'chai';
 import { Client, Problem, Resource } from '../../src';
 
-describe('Issuing a DELETE request', async () => {
+describe('Issuing a DELETE request', () => {
 
-  const ketting = new Client('http://localhost:3000/hal1.json');
+  const serverUri = testServer();
+
+  const ketting = new Client(serverUri + '/hal1.json');
   let resource: Resource;
 
   before( async () => {
@@ -76,12 +81,6 @@ describe('Issuing a DELETE request', async () => {
     expect(exception.status).to.equal(410);
     expect(exception).to.be.an.instanceof(Problem);
     expect(exception.message).to.equal('HTTP Error 410: Some sort of error!');
-
-  });
-
-  after( async () => {
-
-    await ketting.go('/reset').post({});
 
   });
 

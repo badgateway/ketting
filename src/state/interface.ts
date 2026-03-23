@@ -57,6 +57,13 @@ export type State<T = any> = {
   action<TFormData extends Record<string, any> = any>(name?: string): Action<TFormData>;
 
   /**
+   * Find an action by name.
+   *
+   * If the format provides a default action, the name may be omitted.
+   */
+  findAction<TFormData extends Record<string, any> = any>(name?: string): Action<TFormData> | undefined;
+
+  /**
    * Returns all actions
    */
   actions(): Action[];
@@ -116,7 +123,7 @@ export type State<T = any> = {
  * Some information in HEAD responses might be available, but many aren't.
  * Notably, the body.
  */
-export type HeadState = Omit<State, 'data' | 'action' | 'actions' | 'hasAction' | 'serializeBody' | 'getEmbedded' | 'client' | 'clone'>;
+export type HeadState = Omit<State, 'data' | 'action' | 'findAction' | 'actions' | 'hasAction' | 'serializeBody' | 'getEmbedded' | 'client' | 'clone'>;
 
 /**
  * A 'StateFactory' is responsible for taking a Fetch Response, and returning

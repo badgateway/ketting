@@ -1,3 +1,5 @@
+import { describe, it } from 'node:test';
+
 import { BaseState, BaseHeadState, Resource, FollowPromiseOne, FollowPromiseMany, Links } from '../../src';
 import { expect } from 'chai';
 

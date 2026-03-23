@@ -1,3 +1,5 @@
+import { describe, it } from 'node:test';
+
 import { expect } from 'chai';
 import { htmlStateFactory } from '../../../src/state';
 import { Link, Client } from '../../../src';
@@ -153,6 +155,22 @@ describe('HTML representor', () => {
         err = true;
       }
       expect(err).to.equal(true);
+
+    });
+
+    it('should return undefined when an unknown action is searched for', async () => {
+
+      const html = `
+<html>
+  <body>
+    <form method="POST" type="application/x-www-form-urlencoded" action="http://example/items" rel="add-item">
+    </form>
+  </body>
+</html>
+`;
+      const htmlState = await callFactory(html);
+
+      expect(htmlState.findAction('add-item2')).to.equal(undefined);
 
     });
 

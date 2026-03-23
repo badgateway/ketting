@@ -1,3 +1,5 @@
+import { describe, it } from 'node:test';
+
 import { expect } from 'chai';
 import { factory } from '../../../src/state/siren';
 import { SirenState, Client } from '../../../src';
@@ -227,6 +229,22 @@ describe('Siren representor', () => {
         err = true;
       }
       expect(err).to.equal(true);
+
+    });
+    it('should return undefined when an unknown action is searched for', async () => {
+
+      const exampleObj:any = {
+        'class': [ 'order' ],
+        'properties': {
+          'orderNumber': 42,
+          'itemCount': 3,
+          'status': 'pending'
+        },
+        'actions': []
+      };
+
+      const siren = await callFactory(exampleObj);
+      expect(siren.findAction('add-item')).to.equal(undefined);
 
     });
     it('should throw an error an action without a name is ran', async () => {

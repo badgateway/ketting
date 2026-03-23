@@ -1,10 +1,42 @@
 ChangeLog
 =========
 
-8.0.0-alpha.4 (????-??-??)
---------------------------
+8.0.3 (2026-03-03)
+------------------
+
+* #514 Unrecognized template property types produce undefined fields
+
+
+8.0.2 (2026-02-17)
+------------------
+
+* #509: In a browser context, needsJsonStringify fails with Buffer is not
+  defined
+* #511: Attribute multiple of type Field is incorrectly valued when parsed from
+  HalFormsProperty
+
+
+8.0.1 (2025-06-20)
+------------------
+
+* #505: Remove browser key from `package.json`. This was causing problems for
+  vite users.
+
+
+8.0.0 (2025-02-26)
+------------------
+
+A new major release! It's been too long. This release has been in alpha state
+for a while, and it was time to bless it as a major release.
 
 * Ketting now requires Node 18.
+* We're no longer building a minified browser build with Webpack. It's not
+  known how many people took advantage of this feature. Please let us know if
+  this was important to you, so we can add this back with a more modern stack.
+* Removed mocha from the test suite, and now using the Node.js test runner.
+  Mocha is painful to use with a modern Node / Typescript stack.
+* Updated to hal-types 2, which updates to the latest link-hints draft, and is
+  a bit looser with what it requires from a HAL document.
 
 
 8.0.0-alpha.3 (2023-06-11)
@@ -14,7 +46,7 @@ ChangeLog
   will now no longer store responses with a `Content-Location` in its internal
   cache.
 * #477: When storing responses with `Content-Location`, bodies are now cloned
-  before storing so callees can still read the date.
+  before storing so callees can still read the data.
 * Testing Node 20.
 
 

@@ -1,10 +1,14 @@
+import { describe, it, before } from 'node:test';
+import testServer from '../testserver';
+
 import { expect } from 'chai';
 
 import { Ketting, Resource } from '../../src';
 
 describe('Issuing a PUT request', async () => {
 
-  const ketting = new Ketting('http://localhost:3000/hal1.json');
+  const serverUri = testServer();
+  const ketting = new Ketting(serverUri + '/hal1.json');
   let resource: Resource;
 
   before( async () => {
@@ -44,12 +48,6 @@ describe('Issuing a PUT request', async () => {
       ok = true;
     }
     expect(ok).to.eql(true);
-
-  });
-
-  after( async () => {
-
-    await ketting.go('/reset').post({});
 
   });
 

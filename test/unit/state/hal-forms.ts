@@ -1,3 +1,5 @@
+import { describe, it } from 'node:test';
+
 import { expect } from 'chai';
 import { factory } from '../../../src/state/hal';
 import { Action, Client, Field } from '../../../src';
@@ -244,6 +246,55 @@ describe('HAL forms', () => {
     expect(embeddedAction).to.eql(expected);
   });
 
+  it('should return undefined when an unknown action is searched for', async () => {
+
+    const hal = await callFactory({
+      _links: {
+      },
+      _templates: {
+        default: {
+          target: '/submit',
+          method: 'POST',
+          properties: []
+        }
+      }
+    });
+
+    expect(hal.findAction('foo')).eq(undefined);
+
+  });
+
+  it('should parse a basic HAL form using findAction', async () => {
+
+    const hal = await callFactory({
+      _links: {
+      },
+      _templates: {
+        delete: {
+          target: '/delete',
+          method: 'DELETE'
+        }
+      }
+    });
+
+    const deleteAction:any = hal.findAction('delete');
+    expect(typeof deleteAction).eq('object');
+    delete deleteAction.client;
+    delete deleteAction.submit;
+
+    const expectedDeleteAction: CompareAction = {
+      uri: 'http://example/delete',
+      name: 'delete',
+      title: undefined,
+      contentType: 'application/json',
+      method: 'DELETE',
+      fields: [],
+    };
+
+    expect(deleteAction).to.eql(expectedDeleteAction);
+
+  });
+
   describe('fields', () => {
 
     testField(
@@ -413,6 +464,7 @@ describe('HAL forms', () => {
         name: 'dropdown',
         required: false,
         readOnly: false,
+        multiple: true,
         options: {
           v1: 'l1',
           v2: 'l2'
@@ -432,6 +484,7 @@ describe('HAL forms', () => {
         name: 'dropdown',
         required: false,
         readOnly: false,
+        multiple: true,
         options: {
           v1: 'v1',
           v2: 'v2'
@@ -453,12 +506,122 @@ describe('HAL forms', () => {
         name: 'dropdown',
         required: false,
         readOnly: false,
+        multiple: true,
         dataSource: {
           href: '/get-options',
           labelField: 'prompt',
           valueField: 'value',
         }
       });
+
+    testField(
+      'dropdown with inline options and undefined maxItems',
+      {
+        type: 'text',
+        name: 'dropdown',
+        options: {
+          maxItems: undefined,
+          inline: [
+            {
+              prompt: 'l1',
+              value: 'v1',
+            },
+            {
+              prompt: 'l2',
+              value: 'v2',
+            },
+          ]
+        }
+      }, {
+        type: 'select',
+        name: 'dropdown',
+        required: false,
+        readOnly: false,
+        multiple: true,
+        options: {
+          v1: 'l1',
+          v2: 'l2'
+        }
+      });
+
+    testField(
+      'dropdown with inline options and maxItems == 2',
+      {
+        type: 'text',
+        name: 'dropdown',
+        options: {
+          maxItems: 2,
+          inline: [
+            {
+              prompt: 'l1',
+              value: 'v1',
+            },
+            {
+              prompt: 'l2',
+              value: 'v2',
+            },
+          ]
+        }
+      }, {
+        type: 'select',
+        name: 'dropdown',
+        required: false,
+        readOnly: false,
+        multiple: true,
+        options: {
+          v1: 'l1',
+          v2: 'l2'
+        }
+      });
+
+    testField(
+      'dropdown with inline options and maxItems == 1',
+      {
+        type: 'text',
+        name: 'dropdown',
+        options: {
+          maxItems: 1,
+          inline: [
+            {
+              prompt: 'l1',
+              value: 'v1',
+            },
+            {
+              prompt: 'l2',
+              value: 'v2',
+            },
+          ]
+        }
+      }, {
+        type: 'select',
+        name: 'dropdown',
+        required: false,
+        readOnly: false,
+        multiple: false,
+        options: {
+          v1: 'l1',
+          v2: 'l2'
+        }
+      });
+
+    it('should ignore unknown fields', async () => {
+      const hal = await callFactory({
+        _links: {
+        },
+        _templates: {
+          default: {
+            target: '/submit',
+            method: 'POST',
+            properties: [{
+              type: 'my_own_type',
+              name: 'field'
+            }]
+          }
+        }
+      });
+
+      expect(hal.action('default').fields.length).eq(0);
+    });
 
   });
 

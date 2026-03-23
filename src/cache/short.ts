@@ -60,4 +60,14 @@ export class ShortCache extends ForeverCache {
 
   }
 
+  /**
+   * Clean up any dangling references to avoid memory leaks.
+   */
+  destroy() {
+
+    for (const timer of this.activeTimers.values()) {
+      clearTimeout(timer);
+    }
+
+  }
 }

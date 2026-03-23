@@ -1,9 +1,8 @@
 {
   "name": "ketting",
-  "version": "8.0.0-alpha.3",
+  "version": "8.0.3",
   "description": "Opiniated HATEAOS / Rest client.",
   "main": "dist/index.js",
-  "browser": "browser/ketting.min.js",
   "scripts": {
     "test": "make test",
     "prepublishOnly": "make build",
@@ -40,14 +39,15 @@
   "types": "dist/index.d.ts",
   "dependencies": {
     "@badgateway/oauth2-client": "^2.0.17",
-    "hal-types": "^1.7.7",
+    "hal-types": "^2.0.0",
     "http-link-header": "^1.0.3",
     "querystring-browser": "^1.0.4",
     "sax": "^1.2.4",
     "uri-template": "^2.0.0"
   },
   "devDependencies": {
-    "@types/chai": "^4.2.15",
+    "@eslint/js": "^9.14.0",
+    "@types/chai": "^5.0.1",
     "@types/http-link-header": "^1.0.2",
     "@types/koa-bodyparser": "^4.3.0",
     "@types/koa-logger": "^3.1.1",
@@ -55,44 +55,15 @@
     "@types/mocha": "^10.0.0",
     "@types/node": "^18.7.14",
     "@types/sax": "^1.2.1",
-    "chai": "^4.5.0",
-    "eslint": "^9.10.0",
-    "koa": "^2.13.1",
+    "chai": "^5.2.0",
+    "koa": "^3.1.2",
     "koa-bodyparser": "^4.3.0",
     "koa-logger": "^3.2.1",
-    "koa-path-match": "^4.0.0",
+    "koa-path-match": "^3.0.0",
     "koa-static": "^5.0.0",
-    "mocha": "^10.0.0",
-    "nyc": "^17.1.0",
-    "ts-loader": "^9.1.1",
-    "ts-node": "^10.0.0",
-    "typescript": "^5.0.2",
-    "typescript-eslint": "^8.6.0",
-    "webpack": "^5.24.3",
-    "webpack-cli": "^5.0.1"
-  },
-  "nyc": {
-    "extension": [
-      ".ts"
-    ]
-  },
-  "mocha": {
-    "require": [
-      "ts-node/register",
-      "./test/testserver.ts"
-    ],
-    "ignore": "test/test-entrypoint.js",
-    "recursive": true,
-    "extension": [
-      "ts",
-      "js",
-      "tsx"
-    ],
-    "exit": true
-  },
-  "browserslist": [
-    "last 2 versions",
-    "not ie 11",
-    "not op_mini all"
-  ]
+    "mocha": "^11.1.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.13.0"
+  }
 }

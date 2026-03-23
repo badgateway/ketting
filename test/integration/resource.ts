@@ -1,8 +1,14 @@
+import { describe, it } from 'node:test';
+import testServer from '../testserver';
+
 import {expect} from 'chai';
 import {Ketting, NeverCache} from '../../src';
 
 describe('Resource', async () => {
-  const ketting = new Ketting('http://localhost:3000/hal1.json');
+
+  const serverUri = testServer();
+
+  const ketting = new Ketting(serverUri + '/hal1.json');
 
   it('should do 2 distinct HTTP calls if request headers are different on concurrent calls', async () => {
     ketting.cache = new NeverCache();

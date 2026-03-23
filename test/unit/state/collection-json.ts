@@ -1,3 +1,5 @@
+import { describe, it } from 'node:test';
+
 import { expect } from 'chai';
 import { Client } from '../../../src';
 import { factory } from '../../../src/state/collection-json';
