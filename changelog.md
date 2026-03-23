@@ -1,6 +1,13 @@
 ChangeLog
 =========
 
+8.1.0 (????-??-??)
+------------------
+
+* #519 Add a method allowing to retrieve <Action | undefined> by action name
+* #484 Add a 'submitFollow' method to 'Action'
+* #518 Allow chaining from FollowPromiseOne/FollowPromiseMany to State
+
 8.0.3 (2026-03-03)
 ------------------
 
