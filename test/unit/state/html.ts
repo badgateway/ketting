@@ -158,6 +158,22 @@ describe('HTML representor', () => {
 
     });
 
+    it('should return undefined when an unknown action is searched for', async () => {
+
+      const html = `
+<html>
+  <body>
+    <form method="POST" type="application/x-www-form-urlencoded" action="http://example/items" rel="add-item">
+    </form>
+  </body>
+</html>
+`;
+      const htmlState = await callFactory(html);
+
+      expect(htmlState.findAction('add-item2')).to.equal(undefined);
+
+    });
+
     it('should throw an error when no actions are defined', async () => {
 
       const html = `

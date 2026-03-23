@@ -165,8 +165,30 @@ export class BaseState<T> extends BaseHeadState implements State<T> {
    */
   action<TFormData extends Record<string, any> = any>(name?: string): Action<TFormData> {
 
-    if (!this.actionInfo.length) {
+    const actionSearchResult = this.doFindAction(name);
+    if (actionSearchResult === 'NO_ACTION_DEFINED') {
       throw new ActionNotFound('This State does not define any actions');
+    }
+    if (actionSearchResult === 'NO_ACTION_FOR_THE_PROVIDED_NAME') {
+      throw new ActionNotFound('This State defines no action');
+    }
+    return actionSearchResult;
+
+  }
+
+  findAction<TFormData extends Record<string, any> = any>(name?: string): Action<TFormData> | undefined {
+
+    const actionSearchResult = this.doFindAction(name);
+    if (typeof actionSearchResult !== 'object') {
+      return undefined;
+    }
+    return actionSearchResult;
+  }
+
+  private doFindAction<TFormData extends Record<string, any> = any>(name?: string): Action<TFormData> | ActionNotFoundReason {
+
+    if (!this.actionInfo.length) {
+      return 'NO_ACTION_DEFINED';
     }
     if (name === undefined) {
       return new SimpleAction(this.client, this.actionInfo[0]);
@@ -176,8 +198,7 @@ export class BaseState<T> extends BaseHeadState implements State<T> {
         return new SimpleAction(this.client, action);
       }
     }
-    throw new ActionNotFound('This State defines no action');
-
+    return 'NO_ACTION_FOR_THE_PROVIDED_NAME';
   }
 
   /**
@@ -255,3 +276,5 @@ export class BaseState<T> extends BaseHeadState implements State<T> {
   }
 
 }
+
+type ActionNotFoundReason = 'NO_ACTION_DEFINED' | 'NO_ACTION_FOR_THE_PROVIDED_NAME';
