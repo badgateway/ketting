@@ -1,0 +1,18 @@
+{
+    "_links" : {
+        "self" : { "href" : "/hal-forms.json" }
+    },
+    "_templates": {
+      "create": {
+        "method": "POST"
+      },
+      "createFailingWithStatus400": {
+        "target": "/error/400",
+        "method": "POST"
+      },
+      "update": {
+        "method": "PUT"
+      }
+    },
+    "foo" : "bar"
+}
