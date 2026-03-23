@@ -246,6 +246,55 @@ describe('HAL forms', () => {
     expect(embeddedAction).to.eql(expected);
   });
 
+  it('should return undefined when an unknown action is searched for', async () => {
+
+    const hal = await callFactory({
+      _links: {
+      },
+      _templates: {
+        default: {
+          target: '/submit',
+          method: 'POST',
+          properties: []
+        }
+      }
+    });
+
+    expect(hal.findAction('foo')).eq(undefined);
+
+  });
+
+  it('should parse a basic HAL form using findAction', async () => {
+
+    const hal = await callFactory({
+      _links: {
+      },
+      _templates: {
+        delete: {
+          target: '/delete',
+          method: 'DELETE'
+        }
+      }
+    });
+
+    const deleteAction:any = hal.findAction('delete');
+    expect(typeof deleteAction).eq('object');
+    delete deleteAction.client;
+    delete deleteAction.submit;
+
+    const expectedDeleteAction: CompareAction = {
+      uri: 'http://example/delete',
+      name: 'delete',
+      title: undefined,
+      contentType: 'application/json',
+      method: 'DELETE',
+      fields: [],
+    };
+
+    expect(deleteAction).to.eql(expectedDeleteAction);
+
+  });
+
   describe('fields', () => {
 
     testField(
