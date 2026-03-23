@@ -1,7 +1,7 @@
 import { describe, it } from 'node:test';
 import testServer from '../testserver';
 import { expect } from 'chai';
-import { Client, Resource } from '../../src';
+import {Client, isState, Resource} from '../../src';
 
 describe('Following a link', async () => {
 
@@ -55,6 +55,13 @@ describe('Following a link', async () => {
 
   });
 
+  it('should be chainable with a GET', async () => {
+
+    const hal1State = await client.follow('next').follow('prev').follow('next').follow('prev').get();
+    expect(hal1State.data).to.eql({title: 'Hal 1', foo: 'bar'});
+
+  });
+
   describe('followAll', () => {
     it('should work with embedded resources', async () => {
 
@@ -62,6 +69,15 @@ describe('Following a link', async () => {
       expect(items).to.have.length(2);
       expect(items[0]).to.be.an.instanceof(Resource);
       expect(items[1]).to.be.an.instanceof(Resource);
+
+    });
+
+    it('should be chainable to embedded states', async () => {
+
+      const items = await client.follow('collection').followAll('item').get();
+      expect(items).to.have.length(2);
+      expect(isState(items[0])).to.eq(true);
+      expect(isState(items[1])).to.eq(true);
 
     });
 

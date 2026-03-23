@@ -1,5 +1,7 @@
 import Resource from './resource';
 import { LinkVariables } from './link';
+import {State} from './state';
+import {GetRequestOptions} from './types';
 
 /**
  * Base interface for both FollowOne and FollowAll
@@ -124,6 +126,15 @@ export class FollowPromiseOne<T = any> extends FollowPromise<Resource<T>> {
   }
 
   /**
+   * Gets the current state of the resource.
+   *
+   * This function will return a State object.
+   */
+  async get(getOptions?: GetRequestOptions): Promise<State<T>> {
+    return (await this).get(getOptions);
+  }
+
+  /**
    * Follows a set of links immediately after following this link.
    *
    * For example: resource.follow('foo').followAll('item');
@@ -217,6 +228,15 @@ export class FollowPromiseMany<T = any> extends FollowPromise<Resource<T>[]> {
       () => onfinally()
     );
 
+  }
+
+  /**
+   * Gets the current states of the resources.
+   *
+   * This function will return an array of State object.
+   */
+  async get(getOptions?: GetRequestOptions): Promise<State<T>[]> {
+    return Promise.all((await this).map(resource => resource.get(getOptions)));
   }
 
   /**

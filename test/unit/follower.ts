@@ -13,6 +13,14 @@ describe('FollowPromiseOne', () => {
 
   });
 
+  it('should be chainable to state', async() => {
+
+    const follower = new FollowPromiseOne(getFakeResource(), 'rel1').get();
+    const newState = await follower;
+    expect(newState.uri).to.equal('https://example.org/child1');
+
+  });
+
   it('should support templated links', async() => {
 
     const follower = new FollowPromiseOne(getFakeResource(), 'templated', {q: 'foo'});
@@ -105,6 +113,13 @@ describe('FollowPromiseMany', () => {
     const follower = new FollowPromiseMany(getFakeResource(), 'rel1');
     const resources = await follower;
     expect(resources[0].uri).to.equal('https://example.org/child1');
+
+  });
+  it('should be chainable to an array of linked states', async() => {
+
+    const follower = new FollowPromiseMany(getFakeResource(), 'rel1').get();
+    const states = await follower;
+    expect(states[0].uri).to.equal('https://example.org/child1');
 
   });
   it('should support HEAD requests', async() => {
