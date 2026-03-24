@@ -3,7 +3,7 @@ import { parseLink } from '../http/util';
 import { Link, Links } from '../link';
 import { resolve } from '../util/uri';
 import { ActionInfo } from '../action';
-import { Field } from '../field';
+import {Field, OptionsDataSource} from '../field';
 import { StateFactory } from './interface';
 import Client from '../client';
 import * as hal from 'hal-types';
@@ -219,7 +219,7 @@ function parseHalEmbedded(client: Client, context: string, body: hal.HalResource
     for (const embeddedItem of embeddedList) {
 
       if ((embeddedItem._links?.self as hal.HalLink)?.href === undefined) {
-        // eslint-disable-next-line no-console
+
         console.warn('An item in _embedded was ignored. Each item must have a single "self" link');
         continue;
       }
@@ -281,44 +281,51 @@ function parseHalField(halField: hal.HalFormsProperty): Field | undefined {
     case 'email' :
 
       if (halField.options) {
+        const multiple: boolean | undefined = !('maxItems' in halField.options) || !halField.options.maxItems || halField.options.maxItems > 1;
+
         const baseField = {
           name: halField.name,
           type: 'select' as const,
           label: halField.prompt,
           required: halField.required || false,
           readOnly: halField.readOnly || false,
-          multiple: !('maxItems' in halField.options) || !halField.options.maxItems || halField.options.maxItems > 1 as any,
           value: (halField.options.selectedValues || halField.value) as any
         };
 
-        const labelField = halField.options.promptField || 'prompt';
-        const valueField = halField.options.valueField || 'value';
-        if (isInlineOptions(halField.options)) {
+        const optionsDataSource = toOptionsDataSource(halField.options);
 
-          const options: Record<string, string> = {};
-
-          for(const entry of halField.options.inline) {
-
-            if (typeof entry === 'string') {
-              options[entry] = entry;
-            } else {
-              options[entry[valueField]] = entry[labelField];
-            }
+        const rawSelectedValues = halField.options.selectedValues;
+        if (multiple) {
+          let selectedValues: (string | number | boolean)[] | undefined;
+          if (Array.isArray(rawSelectedValues)) {
+            selectedValues = rawSelectedValues;
+          } else if (rawSelectedValues !== undefined) {
+            selectedValues = [rawSelectedValues];
           }
 
           return {
+            multiple: true,
+            selectedValues: selectedValues?.map(value => value.toString()),
             ...baseField,
-            options
+            ...optionsDataSource
           };
         } else {
-          return {
-            ...baseField,
-            dataSource: {
-              href: halField.options.link.href,
-              type: halField.options.link.type,
-              labelField,
-              valueField,
+          let selectedValue: string | number | boolean | undefined;
+          if (Array.isArray(rawSelectedValues)) {
+            if (rawSelectedValues.length === 1) {
+              selectedValue = rawSelectedValues[0];
+            } else if (rawSelectedValues.length > 1) {
+              console.warn(`More than 1 selected value received for single select field ${baseField.name}. Ignoring all selected values for this field.`);
             }
+          } else if (rawSelectedValues !== undefined) {
+            selectedValue = rawSelectedValues;
+          }
+
+          return {
+            multiple,
+            selectedValue: selectedValue?.toString(),
+            ...baseField,
+            ...optionsDataSource
           };
         }
       } else {
@@ -433,6 +440,35 @@ function parseHalField(halField: hal.HalFormsProperty): Field | undefined {
       return undefined;
   }
 
+}
+
+function toOptionsDataSource(halFieldOptions: NonNullable<hal.HalFormsSimpleProperty['options']>): OptionsDataSource {
+  const labelField = halFieldOptions.promptField || 'prompt';
+  const valueField = halFieldOptions.valueField || 'value';
+  if (isInlineOptions(halFieldOptions)) {
+
+    const options: Record<string, string> = {};
+
+    for (const entry of halFieldOptions.inline) {
+
+      if (typeof entry === 'string') {
+        options[entry] = entry;
+      } else {
+        options[entry[valueField]] = entry[labelField];
+      }
+    }
+
+    return {options};
+  } else {
+    return {
+      dataSource: {
+        href: halFieldOptions.link.href,
+        type: halFieldOptions.link.type,
+        labelField,
+        valueField,
+      }
+    };
+  }
 }
 
 function isInlineOptions(options: hal.HalFormsSimpleProperty['options']): options is hal.HalFormsOptionsInline {
