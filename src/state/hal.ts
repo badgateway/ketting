@@ -294,36 +294,26 @@ function parseHalField(halField: hal.HalFormsProperty): Field | undefined {
 
         const optionsDataSource = toOptionsDataSource(halField.options);
 
-        const rawSelectedValues = halField.options.selectedValues;
         if (multiple) {
-          let selectedValues: (string | number | boolean)[] | undefined;
-          if (Array.isArray(rawSelectedValues)) {
-            selectedValues = rawSelectedValues;
-          } else if (rawSelectedValues !== undefined) {
-            selectedValues = [rawSelectedValues];
-          }
-
           return {
             multiple: true,
-            selectedValues: selectedValues?.map(value => value.toString()),
+            selectedValues: halField.options.selectedValues,
             ...baseField,
             ...optionsDataSource
           };
         } else {
-          let selectedValue: string | number | boolean | undefined;
-          if (Array.isArray(rawSelectedValues)) {
-            if (rawSelectedValues.length === 1) {
-              selectedValue = rawSelectedValues[0];
-            } else if (rawSelectedValues.length > 1) {
+          const selectedValues = halField.options.selectedValues;
+          let selectedValue: string | undefined;
+          if (selectedValues) {
+            if (selectedValues.length === 1) {
+              selectedValue = selectedValues[0];
+            } else if (selectedValues.length > 1) {
               console.warn(`More than 1 selected value received for single select field ${baseField.name}. Ignoring all selected values for this field.`);
             }
-          } else if (rawSelectedValues !== undefined) {
-            selectedValue = rawSelectedValues;
           }
-
           return {
             multiple,
-            selectedValue: selectedValue?.toString(),
+            selectedValue,
             ...baseField,
             ...optionsDataSource
           };
