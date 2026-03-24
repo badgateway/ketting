@@ -237,8 +237,8 @@ export class BaseState<T> extends BaseHeadState implements State<T> {
   serializeBody(): Buffer|Blob|string {
 
     if (
-      ((global as any).Buffer && this.data instanceof Buffer) ||
-      ((global as any).Blob && this.data instanceof Blob) ||
+      (globalThis.Buffer && this.data instanceof Buffer) ||
+      (globalThis.Blob && this.data instanceof Blob) ||
       typeof this.data === 'string')
     {
       return this.data;
