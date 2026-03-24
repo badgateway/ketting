@@ -1,6 +1,14 @@
 ChangeLog
 =========
 
+8.2.0 (2026-03-24)
+------------------
+
+* #522 Deprecate and add an alternative for attribute `value` of
+  SelectFieldSingle and SelectFieldMulti
+* #521 Runtime failure when no variable `global` is defined by the browser
+
+
 8.1.0 (2026-03-23)
 ------------------
 
