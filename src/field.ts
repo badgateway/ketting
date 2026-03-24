@@ -33,11 +33,6 @@ interface BaseField<T> {
   type: string;
 
   /**
-   * The current (pre-filed) value on the form.
-   */
-  value?: T;
-
-  /**
    * This could be used to describe a sample value.
    */
   placeholder?: T;
@@ -58,12 +53,19 @@ interface BaseField<T> {
   label?: string;
 }
 
+interface SingleValueField<T> extends BaseField<T> {
+  /**
+   * The current (pre-filed) value on the form.
+   */
+  value?: T;
+}
+
 /**
  * The base type for things that are range-like.
  *
  * This includes numbers, dates and time fields.
  */
-export interface RangeField<T> extends BaseField<T>  {
+export interface RangeField<T> extends SingleValueField<T>  {
   max?: number;
   min?: number;
   step?: number;
@@ -72,7 +74,7 @@ export interface RangeField<T> extends BaseField<T>  {
 /**
  * Toggles/checkboxes
  */
-export interface BooleanField extends BaseField<boolean> {
+export interface BooleanField extends SingleValueField<boolean> {
   type: 'checkbox' | 'radio';
 }
 
@@ -80,7 +82,7 @@ export interface BooleanField extends BaseField<boolean> {
  * Any field that encodes itself as a string but with no
  * special features.
  */
-export interface BasicStringField extends BaseField<string> {
+export interface BasicStringField extends SingleValueField<string> {
   type: 'color' | 'email' | 'password' | 'search' | 'tel' | 'url';
   minLength?: number;
   maxLength?: number;
@@ -94,11 +96,11 @@ export interface DateTimeField extends RangeField<Date> {
   type: 'datetime' | 'datetime-local';
 }
 
-export interface HiddenField extends BaseField<string | number | null | boolean> {
+export interface HiddenField extends SingleValueField<string | number | null | boolean> {
   type: 'hidden';
 }
 
-export interface FileField extends BaseField<never> {
+export interface FileField extends SingleValueField<never> {
   type: 'file';
 }
 
@@ -170,6 +172,15 @@ export type SelectFieldSingle = BaseField<string> & {
   type: 'select';
   renderAs?: 'radio' | 'dropdown';
   multiple?: false;
+  /**
+   * The current (pre-filed) value on the form.
+   */
+  selectedValue?: string;
+  /**
+   * The current (pre-filed) value on the form.
+   * @deprecated Use selectedValue instead
+   */
+  value?: string;
 } & OptionsDataSource;
 
 /**
@@ -179,17 +190,26 @@ export type SelectFieldMulti = BaseField<string> & {
   type: 'select';
   renderAs?: 'checkbox' | 'dropdown';
   multiple: true;
+  /**
+   * The current (pre-filed) values on the form.
+   */
+  selectedValues?: string[];
+  /**
+   * The current (pre-filed) value on the form.
+   * @deprecated Use selectedValues instead
+   */
+  value?: string;
 } & OptionsDataSource;
 
 
-export interface TextField extends BaseField<string> {
+export interface TextField extends SingleValueField<string> {
   type: 'text';
   minLength?: number;
   maxLength?: number;
   pattern?: RegExp;
 }
 
-export interface TextAreaField extends BaseField<string> {
+export interface TextAreaField extends SingleValueField<string> {
   type: 'textarea';
   minLength?: number;
   maxLength?: number;

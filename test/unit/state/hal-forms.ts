@@ -604,6 +604,199 @@ describe('HAL forms', () => {
         }
       });
 
+    testField(
+      'single value dropdown with one selected value',
+      {
+        type: 'text',
+        name: 'dropdown',
+        options: {
+          maxItems: 1,
+          inline: [
+            {
+              prompt: 'l1',
+              value: 'v1',
+            },
+            {
+              prompt: 'l2',
+              value: 'v2',
+            },
+          ],
+          selectedValues: ['v1']
+        }
+      }, {
+        type: 'select',
+        name: 'dropdown',
+        required: false,
+        readOnly: false,
+        multiple: false,
+        options: {
+          v1: 'l1',
+          v2: 'l2'
+        },
+        value: ['v1'] as any,
+        selectedValue: 'v1'
+      });
+
+    testField(
+      'single value dropdown with two selected values',
+      {
+        type: 'text',
+        name: 'dropdown',
+        options: {
+          maxItems: 1,
+          inline: [
+            {
+              prompt: 'l1',
+              value: 'v1',
+            },
+            {
+              prompt: 'l2',
+              value: 'v2',
+            },
+          ],
+          selectedValues: ['v1', 'v2']
+        }
+      }, {
+        type: 'select',
+        name: 'dropdown',
+        required: false,
+        readOnly: false,
+        multiple: false,
+        options: {
+          v1: 'l1',
+          v2: 'l2'
+        },
+        value: ['v1', 'v2'] as any
+      });
+
+    testField(
+      'single value dropdown with zero selected value',
+      {
+        type: 'text',
+        name: 'dropdown',
+        options: {
+          maxItems: 1,
+          inline: [
+            {
+              prompt: 'l1',
+              value: 'v1',
+            },
+            {
+              prompt: 'l2',
+              value: 'v2',
+            },
+          ],
+          selectedValues: []
+        }
+      }, {
+        type: 'select',
+        name: 'dropdown',
+        required: false,
+        readOnly: false,
+        multiple: false,
+        options: {
+          v1: 'l1',
+          v2: 'l2'
+        },
+        value: [] as any
+      });
+
+    testField(
+      'multi value dropdown with one selected value',
+      {
+        type: 'text',
+        name: 'dropdown',
+        options: {
+          inline: [
+            {
+              prompt: 'l1',
+              value: 'v1',
+            },
+            {
+              prompt: 'l2',
+              value: 'v2',
+            },
+          ],
+          selectedValues: ['v1']
+        }
+      }, {
+        type: 'select',
+        name: 'dropdown',
+        required: false,
+        readOnly: false,
+        multiple: true,
+        options: {
+          v1: 'l1',
+          v2: 'l2'
+        },
+        value: ['v1'] as any,
+        selectedValues: ['v1']
+      });
+
+    testField(
+      'multi value dropdown with two selected values',
+      {
+        type: 'text',
+        name: 'dropdown',
+        options: {
+          inline: [
+            {
+              prompt: 'l1',
+              value: 'v1',
+            },
+            {
+              prompt: 'l2',
+              value: 'v2',
+            },
+          ],
+          selectedValues: ['v1', 'v2']
+        }
+      }, {
+        type: 'select',
+        name: 'dropdown',
+        required: false,
+        readOnly: false,
+        multiple: true,
+        options: {
+          v1: 'l1',
+          v2: 'l2'
+        },
+        value: ['v1', 'v2'] as any,
+        selectedValues: ['v1', 'v2']
+      });
+
+    testField(
+      'multi value dropdown with zero selected value',
+      {
+        type: 'text',
+        name: 'dropdown',
+        options: {
+          inline: [
+            {
+              prompt: 'l1',
+              value: 'v1',
+            },
+            {
+              prompt: 'l2',
+              value: 'v2',
+            },
+          ],
+          selectedValues: []
+        }
+      }, {
+        type: 'select',
+        name: 'dropdown',
+        required: false,
+        readOnly: false,
+        multiple: true,
+        options: {
+          v1: 'l1',
+          v2: 'l2'
+        },
+        value: [] as any,
+        selectedValues: []
+      });
+
     it('should ignore unknown fields', async () => {
       const hal = await callFactory({
         _links: {
