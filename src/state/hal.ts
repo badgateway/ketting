@@ -289,7 +289,7 @@ function parseHalField(halField: hal.HalFormsProperty): Field | undefined {
           label: halField.prompt,
           required: halField.required || false,
           readOnly: halField.readOnly || false,
-          value: (halField.options.selectedValues || halField.value) as any
+          value: (halField.options.selectedValues || halField.value) as any,
         };
 
         const optionsDataSource = toOptionsDataSource(halField.options);
