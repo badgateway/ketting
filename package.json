@@ -2,7 +2,14 @@
   "name": "ketting",
   "version": "8.2.0",
   "description": "Opiniated HATEAOS / Rest client.",
-  "main": "dist/index.js",
+  "main": "dist/main/index.js",
+  "browser": "dist/browser/index.mjs",
+  "types": "dist/main/index.d.ts",
+  "files": [
+    "src/",
+    "dist/",
+    "LICENSE"
+  ],
   "scripts": {
     "test": "make test",
     "prepublishOnly": "make build",
@@ -26,22 +33,15 @@
     "url": "https://github.com/badgateway/ketting/issues"
   },
   "homepage": "https://github.com/badgateway/ketting#readme",
-  "files": [
-    "src/",
-    "dist/",
-    "browser/ketting.min.js",
-    "browser/ketting.min.js.map",
-    "LICENSE"
-  ],
   "engines": {
     "node": ">=16"
   },
-  "types": "dist/index.d.ts",
   "dependencies": {
     "@badgateway/oauth2-client": "^2.0.17",
+    "events": "^3.3.0",
     "hal-types": "^3.0.0",
     "http-link-header": "^1.0.3",
-    "querystring-browser": "^1.0.4",
+    "query-string": "^9.3.1",
     "sax": "^1.2.4",
     "uri-template": "^2.0.0"
   },
@@ -62,6 +62,7 @@
     "koa-path-match": "^3.0.0",
     "koa-static": "^5.0.0",
     "mocha": "^11.1.0",
+    "tsdown": "^0.21.6",
     "tsx": "^4.19.3",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.13.0"

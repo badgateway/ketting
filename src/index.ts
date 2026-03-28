@@ -1,14 +1,14 @@
 export { default as Client, default as Ketting, default } from './client';
 export { default as Resource } from './resource';
 
-export { Link, LinkNotFound, Links } from './link';
+export { type Link, LinkNotFound, Links } from './link';
 
 export { resolve } from './util/uri';
 
 export {
   BaseState,
   BaseHeadState,
-  State,
+  type State,
   HalState,
   SirenState,
   CjState,
@@ -25,22 +25,22 @@ export { default as oauth2 } from './http/oauth2';
 
 export { Problem } from './http/error';
 
-export { Action } from './action';
+export { type Action } from './action';
 export {
-  Field,
-  BooleanField,
-  BasicStringField,
-  DateTimeField,
-  FileField,
-  HiddenField,
-  NumberField,
-  SelectFieldSingle,
-  SelectFieldMulti,
-  RangeStringField,
-  TextAreaField,
-  TextField
+  type Field,
+  type BooleanField,
+  type BasicStringField,
+  type DateTimeField,
+  type FileField,
+  type HiddenField,
+  type NumberField,
+  type SelectFieldSingle,
+  type SelectFieldMulti,
+  type RangeStringField,
+  type TextAreaField,
+  type TextField
 } from './field';
 
 export { FollowPromiseOne, FollowPromiseMany } from './follow-promise';
 
-export { FetchMiddleware } from './http/fetcher';
+export { type FetchMiddleware } from './http/fetcher';

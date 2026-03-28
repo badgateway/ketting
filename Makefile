@@ -1,10 +1,9 @@
 .PHONY: build
 build:
-	npx tsc
+	npx tsc && npx tsdown
 
 .PHONY: clean
 clean:
-	-rm -r browser/
 	-rm -r dist/
 
 .PHONY: test

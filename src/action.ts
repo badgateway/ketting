@@ -1,5 +1,5 @@
 import { State } from './state';
-import * as qs from 'querystring';
+import qs from 'query-string';
 import Client from './client';
 import { Field } from './field';
 import Resource from './resource';
