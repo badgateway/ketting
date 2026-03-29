@@ -3,9 +3,9 @@ import { State, headStateFactory, HeadState, isState } from './state/index.js';
 import { resolve } from './util/uri.js';
 import { FollowPromiseOne, FollowPromiseMany } from './follow-promise.js';
 import { Link, LinkNotFound, LinkVariables } from './link.js';
-import { EventEmitter } from 'events';
+import { EventEmitter } from '#events';
 import { GetRequestOptions, PostRequestOptions, PatchRequestOptions, PutRequestOptions, HeadRequestOptions } from './types.js';
-import { needsJsonStringify } from './util/fetch-body-helper.js';
+import { needsJsonStringify } from '#fetch-body-helper';
 
 /**
  * A 'resource' represents an endpoint on a server.

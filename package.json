@@ -10,6 +10,20 @@
     },
     "./package.json": "./package.json"
   },
+  "imports": {
+    "#fetch-body-helper": {
+      "node": "./src/util/fetch-body-helper.ts",
+      "default": "./src/util/fetch-body-helper.web.ts"
+    },
+    "#html": {
+      "node": "./src/util/html.ts",
+      "default": "./src/util/html.web.ts"
+    },
+    "#events": {
+      "node": "events",
+      "default": "events"
+    }
+  },
   "files": [
     "src/",
     "dist/",
@@ -53,6 +67,7 @@
   "devDependencies": {
     "@eslint/js": "^9.14.0",
     "@types/chai": "^5.0.1",
+    "@types/events": "^3.0.3",
     "@types/http-link-header": "^1.0.2",
     "@types/koa-bodyparser": "^4.3.0",
     "@types/koa-logger": "^3.1.1",

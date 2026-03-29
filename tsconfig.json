@@ -15,6 +15,7 @@
                 "src/types/*"
             ]
         },
+        "rootDir": "src",
         "declaration": true
     },
     "include": [

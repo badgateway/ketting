@@ -1,6 +1,6 @@
 import { BaseState } from './base-state.js';
 import { parseLink } from '../http/util.js';
-import { parseHtml, HtmlForm } from '../util/html.js';
+import { parseHtml, HtmlForm } from '#html';
 import { ActionInfo } from '../action.js';
 import { resolve } from '../util/uri.js';
 import { StateFactory } from './interface.js';

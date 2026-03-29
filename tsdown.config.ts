@@ -11,12 +11,5 @@ export default defineConfig(
         failOnWarn: true,
         sourcemap: true,
         minify: true,
-        inputOptions: {
-            resolve: {
-                alias: {
-                    'node:events': 'events'
-                }
-            }
-        },
     }
 );
