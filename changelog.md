@@ -1,10 +1,11 @@
 ChangeLog
 =========
 
-8.4.0 (????-??-??)
+8.4.0 (2026-03-29)
 ------------------
 
 * #526 Make the index export LinkVariables, StateCache and expand
+
 
 8.3.0 (2026-03-29)
 ------------------
