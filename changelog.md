@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+8.4.2 (????-??-??)
+------------------
+
+* #530 node:events fails browser environment build
+
+
 8.4.1 (2026-03-29)
 ------------------
 
