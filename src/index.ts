@@ -1,9 +1,10 @@
 export { default as Client, default as Ketting, default } from './client';
 export { default as Resource } from './resource';
 
-export { type Link, LinkNotFound, Links } from './link';
+export { type Link, LinkNotFound, Links, type LinkVariables } from './link';
 
 export { resolve } from './util/uri';
+export { expand } from './util/uri-template';
 
 export {
   BaseState,
@@ -15,6 +16,7 @@ export {
   isState,
 } from './state';
 
+export { type StateCache } from './cache';
 export { ForeverCache } from './cache/forever';
 export { ShortCache } from './cache/short';
 export { NeverCache } from './cache/never';
