@@ -1,4 +1,4 @@
-import * as sax from 'sax';
+import sax from 'sax';
 import { Link } from '../link.js';
 import { resolve } from './uri.js';
 
