@@ -3,7 +3,6 @@
   "version": "8.4.0",
   "description": "Opiniated HATEAOS / Rest client.",
   "main": "dist/main/index.js",
-  "browser": "dist/browser/index.mjs",
   "types": "dist/main/index.d.ts",
   "files": [
     "src/",
