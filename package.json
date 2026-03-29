@@ -2,9 +2,14 @@
   "name": "ketting",
   "version": "8.4.3",
   "description": "Opiniated HATEAOS / Rest client.",
-  "main": "dist/main/index.js",
   "type": "module",
-  "types": "dist/main/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/main/index.d.ts",
+      "default": "./dist/main/index.js"
+    },
+    "./package.json": "./package.json"
+  },
   "files": [
     "src/",
     "dist/",
