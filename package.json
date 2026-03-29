@@ -1,7 +1,7 @@
 {
   "name": "ketting",
   "version": "8.4.3",
-  "description": "Opiniated HATEAOS / Rest client.",
+  "description": "Opinionated HATEOAS / Rest client.",
   "type": "module",
   "exports": {
     ".": {
