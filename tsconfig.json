@@ -10,7 +10,7 @@
 
         "moduleResolution": "node",
         "sourceMap": true,
-        "outDir": "dist",
+        "outDir": "dist/main",
         "baseUrl": ".",
         "paths": {
             "*": [

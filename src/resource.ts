@@ -3,7 +3,7 @@ import { State, headStateFactory, HeadState, isState } from './state';
 import { resolve } from './util/uri';
 import { FollowPromiseOne, FollowPromiseMany } from './follow-promise';
 import { Link, LinkNotFound, LinkVariables } from './link';
-import { EventEmitter } from 'events';
+import { EventEmitter } from 'node:events';
 import { GetRequestOptions, PostRequestOptions, PatchRequestOptions, PutRequestOptions, HeadRequestOptions } from './types';
 import { needsJsonStringify } from './util/fetch-body-helper';
 
