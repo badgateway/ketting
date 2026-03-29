@@ -26,7 +26,7 @@ describe('Issuing a GET request', async () => {
   it('should have sent the correct headers', async () => {
 
     expect(result.data).to.have.property('user-agent');
-    expect(result.data['user-agent']).to.match(/^Ketting\//);
+    expect(result.data['user-agent']).to.match(/^Ketting/);
 
     const mediaTypes = [
       'application/prs.hal-forms+json;q=1.0',

@@ -32,7 +32,7 @@ export class Fetcher {
 
       if (!innerRequest.headers.has('User-Agent') && this.advertiseKetting) {
         // eslint-disable-next-line @typescript-eslint/no-require-imports
-        innerRequest.headers.set('User-Agent', 'Ketting/' + require('../../package.json').version);
+        innerRequest.headers.set('User-Agent', 'Ketting');
       }
 
       return fetch(innerRequest);
