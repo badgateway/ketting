@@ -1,14 +1,12 @@
 {
     "compilerOptions": {
-        "module": "commonjs",
-        "target": "es2021",
-
+        "target": "es2023",
+        "module": "nodenext",
+        "moduleResolution": "nodenext",
         "strict": true,
         "noFallthroughCasesInSwitch": true,
         "experimentalDecorators": true,
         "noUnusedLocals": true,
-
-        "moduleResolution": "node",
         "sourceMap": true,
         "outDir": "dist/main",
         "baseUrl": ".",
@@ -17,12 +15,6 @@
                 "src/types/*"
             ]
         },
-        "lib": [
-          "DOM",
-          "DOM.Iterable",
-          "ES2021",
-          "ESNext.bigint"
-        ],
         "declaration": true
     },
     "include": [
