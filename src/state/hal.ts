@@ -1,11 +1,11 @@
-import { BaseState } from './base-state';
-import { parseLink } from '../http/util';
-import { Link, Links } from '../link';
-import { resolve } from '../util/uri';
-import { ActionInfo } from '../action';
-import {Field, OptionsDataSource} from '../field';
-import { StateFactory } from './interface';
-import Client from '../client';
+import { BaseState } from './base-state.js';
+import { parseLink } from '../http/util.js';
+import { Link, Links } from '../link.js';
+import { resolve } from '../util/uri.js';
+import { ActionInfo } from '../action.js';
+import {Field, OptionsDataSource} from '../field.js';
+import { StateFactory } from './interface.js';
+import Client from '../client.js';
 import * as hal from 'hal-types';
 
 /**

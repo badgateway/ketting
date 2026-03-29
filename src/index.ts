@@ -1,10 +1,10 @@
-export { default as Client, default as Ketting, default } from './client';
-export { default as Resource } from './resource';
+export { default as Client, default as Ketting, default } from './client.js';
+export { default as Resource } from './resource.js';
 
-export { type Link, LinkNotFound, Links, type LinkVariables } from './link';
+export { type Link, LinkNotFound, Links, type LinkVariables } from './link.js';
 
-export { resolve } from './util/uri';
-export { expand } from './util/uri-template';
+export { resolve } from './util/uri.js';
+export { expand } from './util/uri-template.js';
 
 export {
   BaseState,
@@ -14,20 +14,20 @@ export {
   SirenState,
   CjState,
   isState,
-} from './state';
+} from './state/index.js';
 
-export { type StateCache } from './cache';
-export { ForeverCache } from './cache/forever';
-export { ShortCache } from './cache/short';
-export { NeverCache } from './cache/never';
+export { type StateCache } from './cache/index.js';
+export { ForeverCache } from './cache/forever.js';
+export { ShortCache } from './cache/short.js';
+export { NeverCache } from './cache/never.js';
 
-export { default as basicAuth } from './http/basic-auth';
-export { default as bearerAuth } from './http/bearer-auth';
-export { default as oauth2 } from './http/oauth2';
+export { default as basicAuth } from './http/basic-auth.js';
+export { default as bearerAuth } from './http/bearer-auth.js';
+export { default as oauth2 } from './http/oauth2.js';
 
-export { Problem } from './http/error';
+export { Problem } from './http/error.js';
 
-export { type Action } from './action';
+export { type Action } from './action.js';
 export {
   type Field,
   type BooleanField,
@@ -41,8 +41,8 @@ export {
   type RangeStringField,
   type TextAreaField,
   type TextField
-} from './field';
+} from './field.js';
 
-export { FollowPromiseOne, FollowPromiseMany } from './follow-promise';
+export { FollowPromiseOne, FollowPromiseMany } from './follow-promise.js';
 
-export { type FetchMiddleware } from './http/fetcher';
+export { type FetchMiddleware } from './http/fetcher.js';

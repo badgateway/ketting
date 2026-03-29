@@ -1,11 +1,14 @@
-import * as fs from 'fs';
-import { default as Koa } from 'koa';
-import { Context as KoaContext } from 'koa';
+import * as fs from 'node:fs';
+import Koa, {Context as KoaContext,} from 'koa';
 import bodyParser from 'koa-bodyparser';
 import logger from 'koa-logger';
 import Route from 'koa-path-match';
 import koaStatic from 'koa-static';
-import { before, after } from 'node:test';
+import {after, before} from 'node:test';
+import {fileURLToPath} from 'node:url';
+import {dirname} from 'node:path';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 type Context = KoaContext & {
   params: { [s: string]: string };

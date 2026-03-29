@@ -1,6 +1,6 @@
-import { BaseState } from './base-state';
-import { StateFactory } from './interface';
-import { parseLink } from '../http/util';
+import { BaseState } from './base-state.js';
+import { StateFactory } from './interface.js';
+import { parseLink } from '../http/util.js';
 
 /**
  * Turns a HTTP response into a BinaryState

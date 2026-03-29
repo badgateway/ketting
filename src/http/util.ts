@@ -1,5 +1,5 @@
-import * as LinkHeader from 'http-link-header';
-import { Links } from '../link';
+import LinkHeader from 'http-link-header';
+import { Links } from '../link.js';
 
 /**
  * Takes a Content-Type header, and only returns the mime-type part.

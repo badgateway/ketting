@@ -1,7 +1,7 @@
-import { Action } from '../action';
-import { Links, LinkVariables } from '../link';
-import Client from '../client';
-import { Resource } from '../resource';
+import { Action } from '../action.js';
+import { Links, LinkVariables } from '../link.js';
+import Client from '../client.js';
+import { Resource } from '../resource.js';
 
 export type State<T = any> = {
 

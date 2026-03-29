@@ -1,5 +1,5 @@
-import { State } from '../state';
-import { ForeverCache } from './forever';
+import { State } from '../state/index.js';
+import { ForeverCache } from './forever.js';
 
 /**
  * ShortCache stores items in the cache for a short time.

@@ -1,10 +1,10 @@
-import { BaseState } from './base-state';
-import { parseLink } from '../http/util';
-import { Link, Links } from '../link';
-import { resolve } from '../util/uri';
-import { ActionInfo } from '../action';
-import { Field } from '../field';
-import Client from '../client';
+import { BaseState } from './base-state.js';
+import { parseLink } from '../http/util.js';
+import { Link, Links } from '../link.js';
+import { resolve } from '../util/uri.js';
+import { ActionInfo } from '../action.js';
+import { Field } from '../field.js';
+import Client from '../client.js';
 
 /**
  * Represents a resource state in the Siren format

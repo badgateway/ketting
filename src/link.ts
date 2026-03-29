@@ -1,5 +1,5 @@
 import { LinkHints } from 'hal-types';
-import { resolve } from './util/uri';
+import { resolve } from './util/uri.js';
 
 export type Link = {
   /**

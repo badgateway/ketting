@@ -1,6 +1,6 @@
 .PHONY: build
 build:
-	npx tsc && npx tsdown
+	npx tsc
 
 .PHONY: clean
 clean:

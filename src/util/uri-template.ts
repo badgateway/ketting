@@ -1,6 +1,6 @@
 import * as uriTemplate from 'uri-template';
-import { resolve } from './uri';
-import { LinkVariables, Link } from '../link';
+import { resolve } from './uri.js';
+import { LinkVariables, Link } from '../link.js';
 
 export function expand(context: string, template: string, vars: LinkVariables): string;
 export function expand(link: Link, vars: LinkVariables): string;

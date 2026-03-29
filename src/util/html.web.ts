@@ -1,5 +1,5 @@
-import { Link } from '../link';
-import { resolve } from './uri';
+import { Link } from '../link.js';
+import { resolve } from './uri.js';
 
 export type HtmlForm = {
   action: string;

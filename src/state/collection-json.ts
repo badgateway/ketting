@@ -1,7 +1,7 @@
-import { BaseState } from './base-state';
-import { parseLink } from '../http/util';
-import { Link } from '../link';
-import { StateFactory } from './interface';
+import { BaseState } from './base-state.js';
+import { parseLink } from '../http/util.js';
+import { Link } from '../link.js';
+import { StateFactory } from './interface.js';
 
 /**
  * Represents a resource state in the HAL format

@@ -1,8 +1,8 @@
-import { FetchMiddleware } from '../http/fetcher';
-import { isSafeMethod } from '../http/util';
-import * as LinkHeader from 'http-link-header';
-import { resolve } from '../util/uri';
-import Client from '../client';
+import { FetchMiddleware } from '../http/fetcher.js';
+import { isSafeMethod } from '../http/util.js';
+import LinkHeader from 'http-link-header';
+import { resolve } from '../util/uri.js';
+import Client from '../client.js';
 
 /**
  * This middleware manages the cache based on information in requests

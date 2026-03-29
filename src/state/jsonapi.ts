@@ -1,7 +1,7 @@
-import { BaseState } from './base-state';
-import { parseLink } from '../http/util';
-import { Link } from '../link';
-import Client from '../client';
+import { BaseState } from './base-state.js';
+import { parseLink } from '../http/util.js';
+import { Link } from '../link.js';
+import Client from '../client.js';
 
 /**
  * Turns a HTTP response into a JsonApiState

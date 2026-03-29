@@ -1,7 +1,7 @@
-export { ForeverCache } from './forever';
-export { ShortCache } from './short';
-export { NeverCache } from './never';
-import { State } from '../state';
+export { ForeverCache } from './forever.js';
+export { ShortCache } from './short.js';
+export { NeverCache } from './never.js';
+import { State } from '../state/index.js';
 
 /**
  * Cache interface
