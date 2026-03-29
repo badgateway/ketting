@@ -1,6 +1,6 @@
-import { BaseHeadState } from './base-state';
-import { parseLink } from '../http/util';
-import Client from '../client';
+import { BaseHeadState } from './base-state.js';
+import { parseLink } from '../http/util.js';
+import Client from '../client.js';
 
 /**
  * Turns the response to a HTTP Head request into a HeadState object.

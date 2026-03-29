@@ -1,4 +1,4 @@
-import problemFactory from './error';
+import problemFactory from './error.js';
 
 export type FetchMiddleware =
   (request: Request, next: (request: Request) => Promise<Response>) => Promise<Response>;

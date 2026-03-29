@@ -1,6 +1,5 @@
-import { Fetcher, FetchMiddleware } from './http/fetcher';
-import Resource from './resource';
-import { State, StateFactory } from './state';
+import { Fetcher, FetchMiddleware } from './http/fetcher.js';
+import Resource from './resource.js';
 import {
   halStateFactory,
   binaryStateFactory,
@@ -8,16 +7,18 @@ import {
   sirenStateFactory,
   textStateFactory,
   cjStateFactory,
-  htmlStateFactory
-} from './state';
-import { parseContentType } from './http/util';
-import { resolve } from './util/uri';
-import { Link, LinkVariables } from './link';
-import { FollowPromiseOne } from './follow-promise';
-import { StateCache, ForeverCache } from './cache';
-import cacheExpireMiddleware from './middlewares/cache';
-import acceptMiddleware from './middlewares/accept-header';
-import warningMiddleware from './middlewares/warning';
+  htmlStateFactory,
+  State,
+  StateFactory
+} from './state/index.js';
+import { parseContentType } from './http/util.js';
+import { resolve } from './util/uri.js';
+import { Link, LinkVariables } from './link.js';
+import { FollowPromiseOne } from './follow-promise.js';
+import { StateCache, ForeverCache } from './cache/index.js';
+import cacheExpireMiddleware from './middlewares/cache.js';
+import acceptMiddleware from './middlewares/accept-header.js';
+import warningMiddleware from './middlewares/warning.js';
 
 export default class Client {
 

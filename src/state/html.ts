@@ -1,9 +1,9 @@
-import { BaseState } from './base-state';
-import { parseLink } from '../http/util';
-import { parseHtml, HtmlForm } from '../util/html';
-import { ActionInfo } from '../action';
-import { resolve } from '../util/uri';
-import { StateFactory } from './interface';
+import { BaseState } from './base-state.js';
+import { parseLink } from '../http/util.js';
+import { parseHtml, HtmlForm } from '../util/html.js';
+import { ActionInfo } from '../action.js';
+import { resolve } from '../util/uri.js';
+import { StateFactory } from './interface.js';
 
 /**
  * Turns a HTTP response into a HtmlState

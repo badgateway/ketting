@@ -1,5 +1,5 @@
-import { FetchMiddleware } from '../http/fetcher';
-import Client from '../client';
+import { FetchMiddleware } from '../http/fetcher.js';
+import Client from '../client.js';
 
 /**
  * This middleware injects a default Accept header.

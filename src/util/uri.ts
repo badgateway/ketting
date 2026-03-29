@@ -1,4 +1,4 @@
-import { Link } from '../link';
+import { Link } from '../link.js';
 
 type UrlParts = {
   host?: string|null;

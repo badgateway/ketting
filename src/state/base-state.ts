@@ -1,11 +1,11 @@
-import { State, HeadState } from './interface';
-import { Links, LinkVariables, LinkNotFound } from '../link';
-import Client from '../client';
-import { Action, ActionNotFound, ActionInfo, SimpleAction } from '../action';
-import { Resource } from '../resource';
-import { resolve } from '../util/uri';
-import { expand } from '../util/uri-template';
-import { entityHeaderNames } from '../http/util';
+import { State, HeadState } from './interface.js';
+import { Links, LinkVariables, LinkNotFound } from '../link.js';
+import Client from '../client.js';
+import { Action, ActionNotFound, ActionInfo, SimpleAction } from '../action.js';
+import { Resource } from '../resource.js';
+import { resolve } from '../util/uri.js';
+import { expand } from '../util/uri-template.js';
+import { entityHeaderNames } from '../http/util.js';
 
 type HeadStateInit = {
 

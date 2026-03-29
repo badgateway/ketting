@@ -1,4 +1,4 @@
-import { FetchMiddleware } from './fetcher';
+import { FetchMiddleware } from './fetcher.js';
 
 export default (token: string): FetchMiddleware => {
 

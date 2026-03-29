@@ -1,11 +1,11 @@
-import Client from './client';
-import { State, headStateFactory, HeadState, isState } from './state';
-import { resolve } from './util/uri';
-import { FollowPromiseOne, FollowPromiseMany } from './follow-promise';
-import { Link, LinkNotFound, LinkVariables } from './link';
+import Client from './client.js';
+import { State, headStateFactory, HeadState, isState } from './state/index.js';
+import { resolve } from './util/uri.js';
+import { FollowPromiseOne, FollowPromiseMany } from './follow-promise.js';
+import { Link, LinkNotFound, LinkVariables } from './link.js';
 import { EventEmitter } from 'events';
-import { GetRequestOptions, PostRequestOptions, PatchRequestOptions, PutRequestOptions, HeadRequestOptions } from './types';
-import { needsJsonStringify } from './util/fetch-body-helper';
+import { GetRequestOptions, PostRequestOptions, PatchRequestOptions, PutRequestOptions, HeadRequestOptions } from './types.js';
+import { needsJsonStringify } from './util/fetch-body-helper.js';
 
 /**
  * A 'resource' represents an endpoint on a server.

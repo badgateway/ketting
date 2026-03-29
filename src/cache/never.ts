@@ -1,5 +1,5 @@
-import { StateCache } from './';
-import { State } from '../state';
+import { StateCache } from './index.js';
+import { State } from '../state/index.js';
 
 /**
  * The NeverCache caches absolutely nothing.

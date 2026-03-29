@@ -1,7 +1,7 @@
-import Resource from './resource';
-import { LinkVariables } from './link';
-import {State} from './state';
-import {GetRequestOptions} from './types';
+import Resource from './resource.js';
+import { LinkVariables } from './link.js';
+import {State} from './state/index.js';
+import {GetRequestOptions} from './types.js';
 
 /**
  * Base interface for both FollowOne and FollowAll

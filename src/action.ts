@@ -1,8 +1,8 @@
-import { State } from './state';
+import { State } from './state/index.js';
 import qs from 'query-string';
-import Client from './client';
-import { Field } from './field';
-import Resource from './resource';
+import Client from './client.js';
+import { Field } from './field.js';
+import Resource from './resource.js';
 
 export interface ActionInfo {
 

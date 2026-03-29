@@ -1,6 +1,6 @@
-import { FetchMiddleware } from '../http/fetcher';
-import * as LinkHeader from 'http-link-header';
-import { resolve } from '../util/uri';
+import { FetchMiddleware } from '../http/fetcher.js';
+import LinkHeader from 'http-link-header';
+import { resolve } from '../util/uri.js';
 
 /**
  * This middleware will emit warnings based on HTTP responses.

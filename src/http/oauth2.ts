@@ -1,4 +1,4 @@
-import { FetchMiddleware } from './fetcher';
+import { FetchMiddleware } from './fetcher.js';
 import { OAuth2Client, OAuth2Fetch } from '@badgateway/oauth2-client';
 
 function oauth2mw(oauth2Options: OAuth2Options, token?: OAuth2Token): FetchMiddleware {
