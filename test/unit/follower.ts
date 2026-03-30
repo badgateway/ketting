@@ -1,6 +1,6 @@
 import { describe, it } from 'node:test';
 
-import { BaseState, BaseHeadState, Resource, FollowPromiseOne, FollowPromiseMany, Links } from '../../src';
+import { BaseState, BaseHeadState, Resource, FollowPromiseOne, FollowPromiseMany, Links } from '../../src/index.js';
 import { expect } from 'chai';
 
 describe('FollowPromiseOne', () => {

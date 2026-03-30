@@ -1,8 +1,8 @@
 import { describe, it } from 'node:test';
 
 import { expect } from 'chai';
-import { factory } from '../../../src/state/jsonapi';
-import { BaseState, Client } from '../../../src';
+import { factory } from '../../../src/state/jsonapi.js';
+import { BaseState, Client } from '../../../src/index.js';
 
 describe('JsonApi representor', () => {
 

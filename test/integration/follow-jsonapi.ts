@@ -1,8 +1,8 @@
 import { describe, it } from 'node:test';
-import testServer from '../testserver';
+import testServer from '../testserver.js';
 
 import { expect } from 'chai';
-import { Ketting, Resource, BaseState } from '../../src';
+import { Ketting, Resource, BaseState } from '../../src/index.js';
 
 describe('Following a JSON API link', async () => {
 

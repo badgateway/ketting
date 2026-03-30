@@ -1,7 +1,7 @@
 import { describe, it } from 'node:test';
-import testServer from '../testserver';
+import testServer from '../testserver.js';
 import { expect } from 'chai';
-import {Client, isState, Resource} from '../../src';
+import {Client, isState, Resource} from '../../src/index.js';
 
 describe('Following a link', async () => {
 

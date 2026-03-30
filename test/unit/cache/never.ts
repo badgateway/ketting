@@ -1,7 +1,7 @@
 import { describe, it } from 'node:test';
 
 import { expect } from 'chai';
-import { Client, NeverCache, BaseState, Links } from '../../../src';
+import { Client, NeverCache, BaseState, Links } from '../../../src/index.js';
 
 describe('NeverCache', () => {
 

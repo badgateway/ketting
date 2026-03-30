@@ -1,6 +1,6 @@
 import { describe, it } from 'node:test';
 
-import { Client } from '../../src';
+import { Client } from '../../src/index.js';
 import { expect } from 'chai';
 
 describe('Resource Events', () => {

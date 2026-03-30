@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "target": "es2023",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "strict": true,
+    "noFallthroughCasesInSwitch": true,
+    "experimentalDecorators": true,
+    "noUnusedLocals": true
+  }
+}

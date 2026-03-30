@@ -1,8 +1,8 @@
 import { describe, it } from 'node:test';
-import testServer from '../testserver';
+import testServer from '../testserver.js';
 
 import { expect } from 'chai';
-import { Client, basicAuth } from '../../src';
+import { Client, basicAuth } from '../../src/index.js';
 
 describe('Basic Authentication', () => {
 

@@ -1,8 +1,8 @@
 import { describe, it } from 'node:test';
 
 import { expect } from 'chai';
-import { htmlStateFactory } from '../../../src/state';
-import { Link, Client } from '../../../src';
+import { htmlStateFactory } from '../../../src/state/index.js';
+import { Link, Client } from '../../../src/index.js';
 
 describe('HTML representor', () => {
 

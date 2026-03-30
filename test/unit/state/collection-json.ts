@@ -1,8 +1,8 @@
 import { describe, it } from 'node:test';
 
 import { expect } from 'chai';
-import { Client } from '../../../src';
-import { factory } from '../../../src/state/collection-json';
+import { Client } from '../../../src/index.js';
+import { factory } from '../../../src/state/collection-json.js';
 
 describe('collection+json representor', () => {
 

@@ -1,7 +1,7 @@
 import { describe, it } from 'node:test';
 
 import { expect } from 'chai';
-import { Resource, Links } from '../../src';
+import { Resource, Links } from '../../src/index.js';
 
 describe('Resource', () => {
 

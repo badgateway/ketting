@@ -7,6 +7,7 @@ import koaStatic from 'koa-static';
 import {after, before} from 'node:test';
 import {fileURLToPath} from 'node:url';
 import {dirname} from 'node:path';
+import {Server} from 'node:http';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -314,14 +315,14 @@ export default () => {
   const port = Math.floor(Math.random() * 60000) + 3000; // a port between 3000 and 63000
 
   const app = getApp();
-  let server;
+  let server: Server | undefined;
 
   before(async () => {
     console.info('Server is now online. Head to http://localhost:' + port + '/ to run tests in a browser');
     server = app.listen(port);
   });
   after(async () => {
-    await server.close();
+    await server?.close();
   });
 
   return 'http://localhost:' + port;

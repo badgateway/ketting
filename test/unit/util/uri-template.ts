@@ -1,7 +1,7 @@
 import { describe, it } from 'node:test';
 
 import { expect } from 'chai';
-import { expand } from '../../../src/util/uri-template';
+import { expand } from '../../../src/index.js';
 
 describe('uri-template utility', () => {
 

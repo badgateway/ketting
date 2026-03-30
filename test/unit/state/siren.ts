@@ -1,8 +1,8 @@
 import { describe, it } from 'node:test';
 
 import { expect } from 'chai';
-import { factory } from '../../../src/state/siren';
-import { SirenState, Client } from '../../../src';
+import { factory } from '../../../src/state/siren.js';
+import { SirenState, Client } from '../../../src/index.js';
 
 describe('Siren representor', () => {
 

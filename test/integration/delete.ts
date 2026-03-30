@@ -1,8 +1,8 @@
 import { describe, it, before } from 'node:test';
-import testServer from '../testserver';
+import testServer from '../testserver.js';
 
 import { expect } from 'chai';
-import { Client, Problem, Resource } from '../../src';
+import { Client, Problem, Resource } from '../../src/index.js';
 
 describe('Issuing a DELETE request', () => {
 
