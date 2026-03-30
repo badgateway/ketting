@@ -1,8 +1,8 @@
 import { describe, it } from 'node:test';
 
 import { expect } from 'chai';
-import { factory } from '../../../src/state/hal';
-import { Client } from '../../../src';
+import { factory } from '../../../src/state/hal.js';
+import { Client } from '../../../src/index.js';
 
 describe('HAL state factory', () => {
 

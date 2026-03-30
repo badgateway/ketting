@@ -1,7 +1,7 @@
 import { describe, it, before } from 'node:test';
-import testServer from '../testserver';
+import testServer from '../testserver.js';
 import { expect } from 'chai';
-import { Ketting, Resource } from '../../src';
+import { Ketting, Resource } from '../../src/index.js';
 
 describe('Using the fetch api', () => {
 

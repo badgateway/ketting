@@ -1,7 +1,7 @@
 import { describe, it } from 'node:test';
 
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
-import problemFactory, { HttpError, Problem } from '../../src/http/error';
+import problemFactory, { HttpError, Problem } from '../../src/http/error.js';
 import { expect } from 'chai';
 
 describe('HttpError', () => {

@@ -1,8 +1,8 @@
 import { describe, it } from 'node:test';
 
 import { expect } from 'chai';
-import { factory } from '../../../src/state/hal';
-import { Action, Client, Field } from '../../../src';
+import { factory } from '../../../src/state/hal.js';
+import { Action, Client, Field } from '../../../src/index.js';
 import { HalFormsProperty } from 'hal-types';
 
 type CompareAction = Omit<Action, 'submit' | 'field' |  'submitFollow'>;

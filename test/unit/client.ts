@@ -1,7 +1,7 @@
 import { describe, it } from 'node:test';
 
 import { expect } from 'chai';
-import { Client, BaseState, Links, HalState } from '../../src';
+import { Client, BaseState, Links, HalState } from '../../src/index.js';
 
 describe('Client', () => {
 

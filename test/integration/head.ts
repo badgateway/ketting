@@ -1,8 +1,8 @@
 import { describe, it, before } from 'node:test';
-import testServer from '../testserver';
+import testServer from '../testserver.js';
 
 import { expect } from 'chai';
-import { Ketting, Link, Resource } from '../../src';
+import { Ketting, Link, Resource } from '../../src/index.js';
 
 describe('Issuing a HEAD request', async () => {
 

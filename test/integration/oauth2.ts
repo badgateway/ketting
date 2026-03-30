@@ -1,8 +1,8 @@
 import { describe, it } from 'node:test';
-import testServer from '../testserver';
+import testServer from '../testserver.js';
 
 import { expect } from 'chai';
-import { Ketting, oauth2 } from '../../src';
+import { Ketting, oauth2 } from '../../src/index.js';
 
 describe('OAuth2 Authentication', () => {
 

@@ -1,6 +1,6 @@
 import { describe, it} from 'node:test';
 
-import { Links } from '../../src';
+import { Links } from '../../src/index.js';
 import { expect } from 'chai';
 
 describe('Links object', () => {

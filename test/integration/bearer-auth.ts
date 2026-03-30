@@ -1,7 +1,7 @@
 import { describe, it } from 'node:test';
-import testServer from '../testserver';
+import testServer from '../testserver.js';
 import { expect } from 'chai';
-import { Client, bearerAuth } from '../../src';
+import { Client, bearerAuth } from '../../src/index.js';
 
 describe('Bearer Authentication', () => {
 

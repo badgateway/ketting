@@ -1,7 +1,7 @@
 import { describe, it , before, after} from 'node:test';
 
 /* eslint-disable no-console */
-import warningMiddleware from '../../../src/middlewares/warning';
+import warningMiddleware from '../../../src/middlewares/warning.js';
 import { expect } from 'chai';
 
 const invoke = (response: Response) => {

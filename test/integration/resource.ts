@@ -1,8 +1,8 @@
 import { describe, it } from 'node:test';
-import testServer from '../testserver';
+import testServer from '../testserver.js';
 
 import {expect} from 'chai';
-import {Ketting, NeverCache} from '../../src';
+import {Ketting, NeverCache} from '../../src/index.js';
 
 describe('Resource', async () => {
 

@@ -1,6 +1,6 @@
 .PHONY: build
 build:
-	npx tsc
+	npx tsc -p tsconfig.lib.json && npx tsc -p tsconfig.test.json
 
 .PHONY: clean
 clean:
@@ -8,7 +8,7 @@ clean:
 
 .PHONY: test
 test: lint
-	npx tsx --test
+	npx tsx --tsconfig tsconfig.test.json --test
 
 .PHONY: lint
 lint:
@@ -20,4 +20,4 @@ fix:
 
 .PHONY: watch
 watch:
-	npx tsc --watch
+	npx tsc -p tsconfig.lib.json --watch

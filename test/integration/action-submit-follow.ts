@@ -1,9 +1,9 @@
 import {describe, it} from 'node:test';
-import testServer from '../testserver';
+import testServer from '../testserver.js';
 
 import {expect} from 'chai';
-import {Ketting} from '../../src';
-import Resource from '../../src/resource';
+import {Ketting} from '../../src/index.js';
+import Resource from '../../src/resource.js';
 
 describe('Invoking submitFollow on an action', async () => {
 
