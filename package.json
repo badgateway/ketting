@@ -12,15 +12,15 @@
   },
   "imports": {
     "#fetch-body-helper": {
-      "node": "./src/util/fetch-body-helper.ts",
-      "default": "./src/util/fetch-body-helper.web.ts"
+      "browser": "./src/util/fetch-body-helper.web.ts",
+      "default": "./src/util/fetch-body-helper.ts"
     },
     "#html": {
-      "node": "./src/util/html.ts",
-      "default": "./src/util/html.web.ts"
+      "browser": "./src/util/html.web.ts",
+      "default": "./src/util/html.ts"
     },
     "#events": {
-      "node": "events",
+      "browser": "events",
       "default": "events"
     }
   },
