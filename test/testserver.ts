@@ -3,13 +3,12 @@ import Koa, {Context as KoaContext,} from 'koa';
 import bodyParser from 'koa-bodyparser';
 import logger from 'koa-logger';
 import Route from 'koa-path-match';
-import koaStatic from 'koa-static';
 import {after, before} from 'node:test';
 import {fileURLToPath} from 'node:url';
 import {dirname} from 'node:path';
 import {Server} from 'node:http';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+const currentDirectory = dirname(fileURLToPath(import.meta.url));
 
 type Context = KoaContext & {
   params: { [s: string]: string };
@@ -29,23 +28,6 @@ function getApp() {
 
   // Use body parser
   app.use(bodyParser());
-
-  function staticFile(url: string, path: string, type: string) {
-    app.use(
-      route(url)
-        .get((ctx: Context) => {
-          ctx.response.body = fs.readFileSync(path);
-          ctx.response.type = type;
-        })
-    );
-
-  }
-
-  app.use(koaStatic(__dirname + '/../browser/'));
-
-  staticFile('/', __dirname + '/fixtures/index.html', 'text/html');
-  staticFile('/mocha.js', __dirname + '/../node_modules/mocha/mocha.js', 'text/javascript');
-  staticFile('/mocha.css', __dirname + '/../node_modules/mocha/mocha.css', 'text/css');
 
   app.use(
     route('/headers', (ctx: Context) => {
@@ -241,7 +223,7 @@ function getApp() {
           await new Promise(resolve => setTimeout(resolve, parseInt(delayInMsHeader.toString())));
         }
         if (resources[ctx.params.id] === undefined) {
-          resources[ctx.params.id] = fs.readFileSync(__dirname + '/fixtures/' + ctx.params.id);
+          resources[ctx.params.id] = fs.readFileSync(currentDirectory + '/fixtures/' + ctx.params.id);
         }
 
         if (resources[ctx.params.id] === null) {
@@ -322,7 +304,7 @@ export default () => {
     server = app.listen(port);
   });
   after(async () => {
-    await server?.close();
+    server?.close();
   });
 
   return 'http://localhost:' + port;
