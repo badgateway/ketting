@@ -1,8 +1,8 @@
 {
     "_links" : {
-        "self" : { "href" : "/hal1.json" },
-        "next" : { "href" : "/hal2.json" },
-        "collection" : { "href" : "/hal-collection.json" },
+        "self" : { "href" : "/{{tenantId}}/hal1.json" },
+        "next" : { "href" : "/{{tenantId}}/hal2.json" },
+        "collection" : { "href" : "/{{tenantId}}/hal-collection.json" },
         "headerTest": { "href" : "/headers" },
         "error400" : { "href" : "/error/400" },
         "redirect" : { "href" : "/redirect" },
@@ -10,8 +10,8 @@
         "auth-basic" : { "href" : "/auth/basic" },
         "auth-bearer" : { "href" : "/auth/bearer" },
         "auth-oauth" : { "href" : "/auth/oauth" },
-        "templated" : { "href" : "/templated.json{?foo}", "templated": true },
-        "linkHeader" : { "href" : "/link-header" },
+        "templated" : { "href" : "/{{tenantId}}/templated.json{?foo}", "templated": true },
+        "linkHeader" : { "href" : "/{{tenantId}}/link-header" },
         "problem" : { "href" : "/problem" },
         "no-content-type": { "href": "/no-content-type" },
         "c:foo" : { "href": "/curietarget" },
@@ -22,8 +22,8 @@
             "templated": true
           }
         ],
-        "content-type-link" : { "href" : "/hal2.json", "type": "application/foo+json" },
-        "json-api" : { "href" : "/json-api.json", "type": "application/vnd.api+json" },
+        "content-type-link" : { "href" : "/{{tenantId}}/hal2.json", "type": "application/foo+json" },
+        "json-api" : { "href" : "/{{tenantId}}/json-api.json", "type": "application/vnd.api+json" },
         "counter" : { "href" : "/counter" }
     },
     "title"  : "Hal 1",

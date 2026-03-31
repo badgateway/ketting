@@ -1,11 +1,11 @@
-import { describe, it } from 'node:test';
-import testServer from '../testserver.js';
-import { expect } from 'chai';
+import {describe, it} from 'node:test';
+import {expect} from 'chai';
 import {Client, isState, Resource} from '../../src/index.js';
+import {createTenantUri} from '../test-application-uris.js';
 
 describe('Following a link', async () => {
 
-  const serverUri = testServer();
+  const serverUri = createTenantUri();
   const client = new Client(serverUri + '/hal1.json');
 
   let hal2: Resource;

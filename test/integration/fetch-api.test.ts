@@ -1,11 +1,11 @@
-import { describe, it, before } from 'node:test';
-import testServer from '../testserver.js';
-import { expect } from 'chai';
-import { Ketting, Resource } from '../../src/index.js';
+import {before, describe, it} from 'node:test';
+import {expect} from 'chai';
+import {Ketting, Resource} from '../../src/index.js';
+import {createTenantUri} from '../test-application-uris.js';
 
 describe('Using the fetch api', () => {
 
-  const serverUri = testServer();
+  const serverUri = createTenantUri();
 
   let hal2: Resource;
   let ketting: Ketting;

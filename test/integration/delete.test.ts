@@ -1,12 +1,12 @@
-import { describe, it, before } from 'node:test';
-import testServer from '../testserver.js';
+import {before, describe, it} from 'node:test';
 
-import { expect } from 'chai';
-import { Client, Problem, Resource } from '../../src/index.js';
+import {expect} from 'chai';
+import {Client, Problem, Resource} from '../../src/index.js';
+import {createTenantUri} from '../test-application-uris.js';
 
 describe('Issuing a DELETE request', () => {
 
-  const serverUri = testServer();
+  const serverUri = createTenantUri();
 
   const ketting = new Client(serverUri + '/hal1.json');
   let resource: Resource;
@@ -53,7 +53,7 @@ describe('Issuing a DELETE request', () => {
   it('should throw an exception when there was a HTTP error', async () => {
 
     // Resetting the server
-    await ketting.go('/reset').post({});
+    await ketting.go(serverUri + '/reset').post({});
     ketting.clearCache();
     const resource2 = await ketting.follow('error400');
     let exception = null;
@@ -69,7 +69,7 @@ describe('Issuing a DELETE request', () => {
   it('should throw a Problem exception when there was a HTTP error with a application/problem+json response', async () => {
 
     // Resetting the server
-    await ketting.go('/reset').fetch({method: 'POST'});
+    await ketting.go(serverUri + '/reset').fetch({method: 'POST'});
     ketting.clearCache();
     const resource2 = await ketting.follow('problem');
     let exception;

@@ -1,12 +1,12 @@
-import { describe, it } from 'node:test';
-import testServer from '../testserver.js';
+import {describe, it} from 'node:test';
 
-import { expect } from 'chai';
-import { Client, basicAuth } from '../../src/index.js';
+import {expect} from 'chai';
+import {basicAuth, Client} from '../../src/index.js';
+import {createTenantUri} from '../test-application-uris.js';
 
 describe('Basic Authentication', () => {
 
-  const serverUri = testServer();
+  const serverUri = createTenantUri();
 
   it('should return 401 if no credentials were passed.', async () => {
 
