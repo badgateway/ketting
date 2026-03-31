@@ -14,6 +14,10 @@ test: lint
 lint:
 	npx eslint --quiet 'src/**/*.ts' 'test/**/*.ts'
 
+.PHONY: lint-package
+lint-package:
+	npx publint --strict
+
 .PHONY: fix
 fix:
 	npx eslint --quiet 'src/**/*.ts' 'test/**/*.ts' --fix
