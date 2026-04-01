@@ -70,11 +70,26 @@ class Tenants {
   }
 }
 
+class HandlebarsTemplates {
+  private static readonly templateByFilePath = new Map<string, HandlebarsTemplateDelegate>();
+
+  static get(filePath: string): HandlebarsTemplateDelegate {
+    let template = this.templateByFilePath.get(filePath);
+    if (!template) {
+      template = handlebars.compile(fs.readFileSync(filePath, {encoding: 'utf-8'}));
+      this.templateByFilePath.set(filePath, template);
+    }
+    return template;
+  }
+}
+
+
 export class TestApplication {
+
+  readonly uri: string;
 
   private readonly tenants = new Tenants();
   private readonly server: Server;
-  readonly uri: string;
 
   private constructor() {
     const route = Route();
@@ -284,7 +299,7 @@ export class TestApplication {
           const resource = this.tenants.computeResourceIfAbsent(
             tenantId,
             ctx.params.id,
-            () => handlebars.compile(fs.readFileSync(currentDirectory + '/fixtures/' + ctx.params.id + '.mustache', {encoding: 'utf-8'}))({tenantId})
+            () => HandlebarsTemplates.get(currentDirectory + '/fixtures/' + ctx.params.id + '.mustache')({tenantId})
           );
 
           if (resource === null) {
