@@ -13,7 +13,8 @@ const testOutput = run({
     `${currentDirectory}/**/*.test.ts`
   ],
   execArgv: ['--import', 'tsx'],
-  argv: ['--test-application-uri', testApplication.uri]
+  argv: ['--test-application-uri', testApplication.uri],
+  concurrency: true
 })
   .on('test:fail', () => process.exitCode = 1)
   .compose(spec);
