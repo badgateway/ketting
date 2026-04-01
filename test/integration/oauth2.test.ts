@@ -1,12 +1,12 @@
-import { describe, it } from 'node:test';
-import testServer from '../testserver.js';
+import {describe, it} from 'node:test';
 
-import { expect } from 'chai';
-import { Ketting, oauth2 } from '../../src/index.js';
+import {expect} from 'chai';
+import {Ketting, oauth2} from '../../src/index.js';
+import {createTenantUri} from '../test-application-uris.js';
 
 describe('OAuth2 Authentication', () => {
 
-  const serverUri = testServer();
+  const serverUri = createTenantUri();
 
   describe('Owner flow', () => {
 

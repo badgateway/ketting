@@ -1,11 +1,11 @@
-import { describe, it } from 'node:test';
-import testServer from '../testserver.js';
-import { expect } from 'chai';
-import { Client, bearerAuth } from '../../src/index.js';
+import {describe, it} from 'node:test';
+import {expect} from 'chai';
+import {bearerAuth, Client} from '../../src/index.js';
+import {createTenantUri} from '../test-application-uris.js';
 
 describe('Bearer Authentication', () => {
 
-  const serverUri = testServer();
+  const serverUri = createTenantUri();
 
   it('should return 401 if no credentials were passed.', async () => {
 

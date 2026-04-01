@@ -1,12 +1,12 @@
-import { describe, it } from 'node:test';
-import testServer from '../testserver.js';
+import {describe, it} from 'node:test';
 
-import { expect } from 'chai';
-import { Ketting, Resource, BaseState } from '../../src/index.js';
+import {expect} from 'chai';
+import {BaseState, Ketting, Resource} from '../../src/index.js';
+import {createTenantUri} from '../test-application-uris.js';
 
 describe('Following a JSON API link', async () => {
 
-  const serverUri = testServer();
+  const serverUri = createTenantUri();
   const ketting = new Ketting(serverUri + '/hal1.json');
 
   let jsonapi: Resource;

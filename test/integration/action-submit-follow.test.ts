@@ -1,15 +1,15 @@
 import {describe, it} from 'node:test';
-import testServer from '../testserver.js';
 
 import {expect} from 'chai';
 import {Ketting} from '../../src/index.js';
 import Resource from '../../src/resource.js';
+import {createTenantUri} from '../test-application-uris.js';
 
 describe('Invoking submitFollow on an action', async () => {
 
   it('should return the new resource when a header Local with HTTP status 201 is received', async () => {
 
-    const serverUri = testServer();
+    const serverUri = createTenantUri();
     const ketting = new Ketting(serverUri + '/hal-forms.json');
 
     const state = await ketting.go().get();
@@ -25,7 +25,7 @@ describe('Invoking submitFollow on an action', async () => {
   });
 
   it('should return the same resource when an HTTP status 204 is received', async () => {
-    const serverUri = testServer();
+    const serverUri = createTenantUri();
     const ketting = new Ketting(serverUri + '/hal-forms.json');
 
     const state = await ketting.go().get();
@@ -40,7 +40,7 @@ describe('Invoking submitFollow on an action', async () => {
   });
 
   it('should throw an exception when there was an HTTP error', async () => {
-    const serverUri = testServer();
+    const serverUri = createTenantUri();
     const ketting = new Ketting(serverUri + '/hal-forms.json');
 
     const state = await ketting.go().get();

@@ -8,7 +8,7 @@ clean:
 
 .PHONY: test
 test: lint
-	npx tsx --tsconfig tsconfig.test.json --test
+	npx tsx --tsconfig tsconfig.test.json test/index.ts
 
 .PHONY: lint
 lint:

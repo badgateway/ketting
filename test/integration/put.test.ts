@@ -1,13 +1,13 @@
-import { describe, it, before } from 'node:test';
-import testServer from '../testserver.js';
+import {before, describe, it} from 'node:test';
 
-import { expect } from 'chai';
+import {expect} from 'chai';
 
-import { Ketting, Resource } from '../../src/index.js';
+import {Ketting, Resource} from '../../src/index.js';
+import {createTenantUri} from '../test-application-uris.js';
 
 describe('Issuing a PUT request', async () => {
 
-  const serverUri = testServer();
+  const serverUri = createTenantUri();
   const ketting = new Ketting(serverUri + '/hal1.json');
   let resource: Resource;
 
