@@ -1,20 +1,13 @@
-import {before, describe, it} from 'node:test';
-import {expect} from 'chai';
-import {Ketting, Resource} from '../../src/index.js';
-import {createTenantUri} from '../test-application-uris.js';
+import {describe, it, expect} from '#ketting-test';
+import {Ketting} from '../../src/index.js';
 
 describe('Using the fetch api', () => {
 
-  const serverUri = createTenantUri();
+  it('should return a response object', async ({testApplicationUris}) => {
 
-  let hal2: Resource;
-  let ketting: Ketting;
-  before( async () => {
-    ketting = new Ketting(serverUri + '/hal1.json');
-    hal2 = await ketting.follow('next');
-  });
-
-  it('should return a response object', async () => {
+    const serverUri = testApplicationUris.createTenantUri();
+    const ketting = new Ketting(serverUri + '/hal1.json');
+    const hal2 = await ketting.follow('next');
 
     const response = await hal2.fetch();
     expect(response).to.have.property('status');
@@ -22,7 +15,11 @@ describe('Using the fetch api', () => {
 
   });
 
-  it('should also work when passing a Request object', async () => {
+  it('should also work when passing a Request object', async ({testApplicationUris}) => {
+
+    const serverUri = testApplicationUris.createTenantUri();
+    const ketting = new Ketting(serverUri + '/hal1.json');
+    const hal2 = await ketting.follow('next');
 
     const request = new Request(serverUri + '/?foo=bar');
     const response = await hal2.fetch(request);
@@ -31,7 +28,10 @@ describe('Using the fetch api', () => {
 
   });
 
-  it('should allow overriding the HTTP method', async () => {
+  it('should allow overriding the HTTP method', async ({testApplicationUris}) => {
+    const serverUri = testApplicationUris.createTenantUri();
+    const ketting = new Ketting(serverUri + '/hal1.json');
+    const hal2 = await ketting.follow('next');
 
     const response = await hal2.fetch({ method: 'PUT' });
     expect(response).to.have.property('status');
@@ -39,7 +39,9 @@ describe('Using the fetch api', () => {
 
   });
 
-  it('should allow overriding the Content-Type header', async () => {
+  it('should allow overriding the Content-Type header', async ({testApplicationUris}) => {
+
+    const serverUri = testApplicationUris.createTenantUri();
 
     const tempKetting = new Ketting(serverUri + '/hal1.json');
 
@@ -63,7 +65,14 @@ describe('Using the fetch api', () => {
 
   });
 
-  it('should allow overriding the User-Agent  header', async () => {
+  it('should allow overriding the User-Agent  header', async ({testApplicationUris}) => {
+
+    if (globalThis.window) {
+      return;
+    }
+
+    const serverUri = testApplicationUris.createTenantUri();
+    const ketting = new Ketting(serverUri + '/hal1.json');
 
     const headersResource = await ketting.follow('headerTest');
     const response = await headersResource.fetch({

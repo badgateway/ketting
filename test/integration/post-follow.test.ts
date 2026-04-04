@@ -1,45 +1,27 @@
-import {before, describe, it} from 'node:test';
+import {describe, it, expect} from '#ketting-test';
 
-import {expect} from 'chai';
 import {Ketting} from '../../src/index.js';
 import Resource from '../../src/resource.js';
-import {createTenantUri} from '../test-application-uris.js';
 
 describe('Issuing a POST request', async () => {
 
-  const serverUri = createTenantUri();
-  const ketting = new Ketting(serverUri + '/hal1.json');
-  let resource: Resource;
-  let newResource: Resource;
 
-  before( async () => {
+  it('should have returned and created a new resource', async ({testApplicationUris}) => {
 
-    resource = ketting.go();
-
-  });
-
-  it('should not fail', async () => {
-
-    newResource = await resource.postFollow({
+    const resource = new Ketting(testApplicationUris.createTenantUri() + '/hal1.json').go();
+    const newResource = await resource.postFollow({
       data: { title: 'Posted resource' }
     }) as Resource;
-
-  });
-
-  it('should have returned a new resource', async () => {
 
     expect(newResource).to.be.an.instanceof(Resource);
     expect(newResource.uri).to.match(/\.json$/);
 
-  });
-  it('should have created the new resource', async () => {
-
     const newBody = await newResource.get();
     expect(newBody.data).to.eql({title: 'Posted resource'});
-
   });
 
-  it('should throw an exception when there was a HTTP error', async () => {
+  it('should throw an exception when there was a HTTP error', async ({testApplicationUris}) => {
+    const ketting = new Ketting(testApplicationUris.createTenantUri() + '/hal1.json');
 
     const resource400 = await ketting.follow('error400');
     let exception;

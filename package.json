@@ -22,7 +22,8 @@
     "#events": {
       "browser": "events",
       "default": "events"
-    }
+    },
+    "#ketting-test": "./test/ketting-test.ts"
   },
   "files": [
     "src/",
@@ -54,7 +55,7 @@
   },
   "homepage": "https://github.com/badgateway/ketting#readme",
   "engines": {
-    "node": ">=22"
+    "node": ">=18"
   },
   "dependencies": {
     "@badgateway/oauth2-client": "^2.0.17",
@@ -67,26 +68,27 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.14.0",
+    "@koa/cors": "^5.0.0",
     "@types/chai": "^5.0.1",
     "@types/events": "^3.0.3",
     "@types/http-link-header": "^1.0.2",
     "@types/koa-bodyparser": "^4.3.0",
     "@types/koa-logger": "^3.1.1",
     "@types/koa-static": "^4.0.1",
-    "@types/minimist": "^1.2.5",
     "@types/node": "^22.19.11",
     "@types/sax": "^1.2.1",
-    "chai": "^5.2.0",
+    "@vitest/browser-playwright": "^4.1.2",
     "handlebars": "^4.7.9",
     "koa": "^3.1.2",
     "koa-bodyparser": "^4.3.0",
     "koa-logger": "^3.2.1",
     "koa-path-match": "^3.0.0",
     "koa-static": "^5.0.0",
-    "minimist": "^1.2.8",
+    "playwright": "^1.59.1",
     "publint": "^0.3.18",
     "tsx": "^4.19.3",
     "typescript": "^5.7.3",
-    "typescript-eslint": "^8.13.0"
+    "typescript-eslint": "^8.13.0",
+    "vitest": "^4.1.2"
   }
 }

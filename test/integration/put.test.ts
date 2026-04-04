@@ -1,44 +1,32 @@
-import {before, describe, it} from 'node:test';
+import {describe, it, expect} from '#ketting-test';
 
-import {expect} from 'chai';
-
-import {Ketting, Resource} from '../../src/index.js';
-import {createTenantUri} from '../test-application-uris.js';
+import {Ketting} from '../../src/index.js';
 
 describe('Issuing a PUT request', async () => {
 
-  const serverUri = createTenantUri();
-  const ketting = new Ketting(serverUri + '/hal1.json');
-  let resource: Resource;
+  it('should not fail', async ({testApplicationUris}) => {
 
-  before( async () => {
-
-    resource = await ketting.go().follow('next');
+    const serverUri = testApplicationUris.createTenantUri();
+    const ketting = new Ketting(serverUri + '/hal1.json');
+    const resource = await ketting.go().follow('next');
     // Priming the cache
     await resource.get();
-
-  });
-
-  it('should not fail', async () => {
 
     await resource.put({
       data: { newData: 'hi!'}
     });
 
-  });
-  it('should have cleared the resource representation', async () => {
-
     const newBody = await resource.get();
     expect(newBody.data).to.eql({newData: 'hi!'});
 
+    const newBody2 = await (await ketting.follow('next')).get();
+    expect(newBody2.data).to.eql({newData: 'hi!'});
   });
-  it('should have cleared the global cache', async () => {
 
-    const newBody = await (await ketting.follow('next')).get();
-    expect(newBody.data).to.eql({newData: 'hi!'});
+  it('should throw an exception if there was an http error', async ({testApplicationUris}) => {
 
-  });
-  it('should throw an exception if there was an http error', async () => {
+    const serverUri = testApplicationUris.createTenantUri();
+    const ketting = new Ketting(serverUri + '/hal1.json');
 
     let ok = false;
     try {

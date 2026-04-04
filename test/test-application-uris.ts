@@ -1,7 +1,9 @@
-import minimist from 'minimist';
+export class TestApplicationUris {
 
-const testApplicationUri: string = minimist(process.argv.slice(2))['test-application-uri'];
+  constructor(private readonly testApplicationUri: string) {
+  }
 
-const createRandomString = () => (Math.random() + 1).toString(36).substring(7);
-
-export const createTenantUri = (): string => `${testApplicationUri}/${createRandomString()}`;
+  createTenantUri() {
+    return `${this.testApplicationUri}/${(Math.random() + 1).toString(36).substring(7)}`;
+  }
+}

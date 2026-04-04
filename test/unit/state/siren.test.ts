@@ -1,6 +1,5 @@
-import { describe, it } from 'node:test';
+import { describe, it, expect } from '#ketting-test';
 
-import { expect } from 'chai';
 import { factory } from '../../../src/state/siren.js';
 import { SirenState, Client } from '../../../src/index.js';
 

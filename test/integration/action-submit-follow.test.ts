@@ -1,15 +1,13 @@
-import {describe, it} from 'node:test';
+import {expect, describe, it} from '#ketting-test';
 
-import {expect} from 'chai';
 import {Ketting} from '../../src/index.js';
 import Resource from '../../src/resource.js';
-import {createTenantUri} from '../test-application-uris.js';
 
 describe('Invoking submitFollow on an action', async () => {
 
-  it('should return the new resource when a header Local with HTTP status 201 is received', async () => {
+  it('should return the new resource when a header Local with HTTP status 201 is received', async ({testApplicationUris}) => {
 
-    const serverUri = createTenantUri();
+    const serverUri = testApplicationUris.createTenantUri();
     const ketting = new Ketting(serverUri + '/hal-forms.json');
 
     const state = await ketting.go().get();
@@ -24,8 +22,8 @@ describe('Invoking submitFollow on an action', async () => {
     expect(newState.data).to.eql({title: 'Posted resource'});
   });
 
-  it('should return the same resource when an HTTP status 204 is received', async () => {
-    const serverUri = createTenantUri();
+  it('should return the same resource when an HTTP status 204 is received', async ({testApplicationUris}) => {
+    const serverUri = testApplicationUris.createTenantUri();
     const ketting = new Ketting(serverUri + '/hal-forms.json');
 
     const state = await ketting.go().get();
@@ -39,8 +37,8 @@ describe('Invoking submitFollow on an action', async () => {
     expect(updatedState.data).to.eql({foo: 'baz'});
   });
 
-  it('should throw an exception when there was an HTTP error', async () => {
-    const serverUri = createTenantUri();
+  it('should throw an exception when there was an HTTP error', async ({testApplicationUris}) => {
+    const serverUri = testApplicationUris.createTenantUri();
     const ketting = new Ketting(serverUri + '/hal-forms.json');
 
     const state = await ketting.go().get();

@@ -1,8 +1,7 @@
-import { describe, it } from 'node:test';
+import { describe, it, expect } from '#ketting-test';
 
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
 import problemFactory, { HttpError, Problem } from '../../src/http/error.js';
-import { expect } from 'chai';
 
 describe('HttpError', () => {
   it('should instantiate', () => {

@@ -3,6 +3,7 @@ import Koa, {Context as KoaContext,} from 'koa';
 import bodyParser from 'koa-bodyparser';
 import logger from 'koa-logger';
 import Route from 'koa-path-match';
+import cors from '@koa/cors';
 import {Server} from 'node:http';
 import {dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -95,6 +96,9 @@ export class TestApplication {
     const route = Route();
 
     const koa = new Koa();
+    koa.use(cors({
+      exposeHeaders: '*'
+    }));
     // Log to console
     koa.use(logger());
 

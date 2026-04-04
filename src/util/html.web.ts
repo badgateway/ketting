@@ -77,7 +77,7 @@ function formFromTags(contextUri: string, elements: HTMLCollectionOf<HTMLFormEle
   for (const node of elements) {
 
     const rels = node.getAttribute('rel');
-    const action = node.getAttribute('action')!;
+    const action = node.getAttribute('action') || '';
     const enctype = node.getAttribute('enctype') || 'application/x-www-form-urlencoded';
     const id = node.getAttribute('id');
     const method = node.getAttribute('method') || 'GET';

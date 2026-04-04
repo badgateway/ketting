@@ -1,28 +1,23 @@
-import {before, describe, it} from 'node:test';
+import {describe, it, expect} from '#ketting-test';
 
-import {expect} from 'chai';
-import {Ketting, Link, Resource} from '../../src/index.js';
-import {createTenantUri} from '../test-application-uris.js';
+import {Ketting, Link} from '../../src/index.js';
 
 describe('Issuing a HEAD request', async () => {
 
-  const serverUri = createTenantUri();
-  const ketting = new Ketting(serverUri + '/hal1.json');
-  let resource: Resource;
+  it('should not fail', async ({testApplicationUris}) => {
 
-  before( async () => {
-
-    resource = await ketting.follow('headerTest');
-
-  });
-
-  it('should not fail', async () => {
+    const serverUri = testApplicationUris.createTenantUri();
+    const ketting = new Ketting(serverUri + '/hal1.json');
+    const resource = await ketting.follow('headerTest');
 
     await resource.head();
 
   });
 
-  it('should throw an exception when there was a HTTP error', async () => {
+  it('should throw an exception when there was a HTTP error', async ({testApplicationUris}) => {
+
+    const serverUri = testApplicationUris.createTenantUri();
+    const ketting = new Ketting(serverUri + '/hal1.json');
 
     const resource2 = await ketting.follow('error400');
     let exception;
@@ -35,7 +30,10 @@ describe('Issuing a HEAD request', async () => {
 
   });
 
-  it('should support the HTTP Link header', async () => {
+  it('should support the HTTP Link header', async ({testApplicationUris}) => {
+
+    const serverUri = testApplicationUris.createTenantUri();
+    const ketting = new Ketting(serverUri + '/hal1.json');
 
     const resource2 = await ketting.follow('linkHeader');
     const links = (await resource2.head()).links.getAll();
