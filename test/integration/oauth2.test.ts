@@ -1,16 +1,14 @@
-import {describe, it} from 'node:test';
+import {describe, it, expect} from '#ketting-test';
 
-import {expect} from 'chai';
 import {Ketting, oauth2} from '../../src/index.js';
-import {createTenantUri} from '../test-application-uris.js';
 
 describe('OAuth2 Authentication', () => {
 
-  const serverUri = createTenantUri();
-
   describe('Owner flow', () => {
 
-    it('should return 401 if no credentials were passed.', async () => {
+    it('should return 401 if no credentials were passed.', async ({testApplicationUris}) => {
+
+      const serverUri = testApplicationUris.createTenantUri();
 
       const ketting = new Ketting(serverUri + '/hal1.json');
       const resource = await ketting.follow('auth-oauth');
@@ -19,8 +17,9 @@ describe('OAuth2 Authentication', () => {
 
     });
 
-    it('should throw error if incorrect client credentials were passed.', async () => {
+    it('should throw error if incorrect client credentials were passed.', async ({testApplicationUris}) => {
 
+      const serverUri = testApplicationUris.createTenantUri();
       const ketting = new Ketting(serverUri + '/hal1.json');
       ketting.use(
         oauth2({
@@ -44,8 +43,9 @@ describe('OAuth2 Authentication', () => {
 
     });
 
-    it('should return 401 if incorrect owner credentials were passed.', async () => {
+    it('should return 401 if incorrect owner credentials were passed.', async ({testApplicationUris}) => {
 
+      const serverUri = testApplicationUris.createTenantUri();
       const ketting = new Ketting(serverUri + '/hal1.json');
 
       ketting.use(
@@ -69,8 +69,9 @@ describe('OAuth2 Authentication', () => {
 
     });
 
-    it('should return 200 OK if correct credentials were passed.', async () => {
+    it('should return 200 OK if correct credentials were passed.', async ({testApplicationUris}) => {
 
+      const serverUri = testApplicationUris.createTenantUri();
       const ketting = new Ketting(serverUri + '/hal1.json');
       ketting.use(
         oauth2({
@@ -94,8 +95,9 @@ describe('OAuth2 Authentication', () => {
 
   describe('Client credentials flow', () => {
 
-    it('should throw error if incorrect client credentials were passed.', async () => {
+    it('should throw error if incorrect client credentials were passed.', async ({testApplicationUris}) => {
 
+      const serverUri = testApplicationUris.createTenantUri();
       const ketting = new Ketting(serverUri + '/hal1.json');
       ketting.use(
         oauth2({
@@ -116,8 +118,9 @@ describe('OAuth2 Authentication', () => {
 
     });
 
-    it('should return 200 OK if correct credentials were passed.', async () => {
+    it('should return 200 OK if correct credentials were passed.', async ({testApplicationUris}) => {
 
+      const serverUri = testApplicationUris.createTenantUri();
       const ketting = new Ketting(serverUri + '/hal1.json');
       ketting.use(
         oauth2({

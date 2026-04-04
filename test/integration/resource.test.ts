@@ -1,16 +1,11 @@
-import {describe, it} from 'node:test';
+import {describe, it, expect} from '#ketting-test';
 
-import {expect} from 'chai';
 import {Ketting, NeverCache} from '../../src/index.js';
-import {createTenantUri} from '../test-application-uris.js';
 
 describe('Resource', async () => {
 
-  const serverUri = createTenantUri();
-
-  const ketting = new Ketting(serverUri + '/hal1.json');
-
-  it('should do 2 distinct HTTP calls if request headers are different on concurrent calls', async () => {
+  it('should do 2 distinct HTTP calls if request headers are different on concurrent calls', async ({testApplicationUris}) => {
+    const ketting = new Ketting(testApplicationUris.createTenantUri() + '/hal1.json');
     ketting.cache = new NeverCache();
 
     const resource = await ketting.follow('collection');
@@ -25,7 +20,8 @@ describe('Resource', async () => {
     expect(firstState.headers.get('response-id')).to.not.eql(secondState.headers.get('response-id'));
   });
 
-  it('should produce only one HTTP call if request headers are the same on concurrent calls', async () => {
+  it('should produce only one HTTP call if request headers are the same on concurrent calls', async ({testApplicationUris}) => {
+    const ketting = new Ketting(testApplicationUris.createTenantUri() + '/hal1.json');
     ketting.cache = new NeverCache();
 
     const resource = await ketting.follow('collection');

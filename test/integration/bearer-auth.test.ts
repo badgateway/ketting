@@ -1,13 +1,11 @@
-import {describe, it} from 'node:test';
-import {expect} from 'chai';
+import {describe, it, expect} from '#ketting-test';
 import {bearerAuth, Client} from '../../src/index.js';
-import {createTenantUri} from '../test-application-uris.js';
 
 describe('Bearer Authentication', () => {
 
-  const serverUri = createTenantUri();
+  it('should return 401 if no credentials were passed.', async ({testApplicationUris}) => {
 
-  it('should return 401 if no credentials were passed.', async () => {
+    const serverUri = testApplicationUris.createTenantUri();
 
     const ketting = new Client(serverUri + '/hal1.json');
     const resource = await ketting.follow('auth-bearer');
@@ -16,7 +14,9 @@ describe('Bearer Authentication', () => {
 
   });
 
-  it('should return 401 if incorrect credentials were passed.', async () => {
+  it('should return 401 if incorrect credentials were passed.', async ({testApplicationUris}) => {
+
+    const serverUri = testApplicationUris.createTenantUri();
 
     const ketting = new Client(serverUri + '/hal1.json');
     ketting.use(bearerAuth('bar'));
@@ -26,7 +26,9 @@ describe('Bearer Authentication', () => {
 
   });
 
-  it('should return 200 OK if correct credentials were passed.', async () => {
+  it('should return 200 OK if correct credentials were passed.', async ({testApplicationUris}) => {
+
+    const serverUri = testApplicationUris.createTenantUri();
 
     const ketting = new Client(serverUri + '/hal1.json');
     ketting.use(bearerAuth('foo'));

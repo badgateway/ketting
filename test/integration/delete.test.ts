@@ -1,31 +1,17 @@
-import {before, describe, it} from 'node:test';
+import {it, describe, expect} from '#ketting-test';
 
-import {expect} from 'chai';
-import {Client, Problem, Resource} from '../../src/index.js';
-import {createTenantUri} from '../test-application-uris.js';
+import {Client, Problem} from '../../src/index.js';
 
 describe('Issuing a DELETE request', () => {
 
-  const serverUri = createTenantUri();
+  it('should have cleared the resource representation', async ({testApplicationUris}) => {
 
-  const ketting = new Client(serverUri + '/hal1.json');
-  let resource: Resource;
+    const ketting = new Client(testApplicationUris.createTenantUri() + '/hal1.json');
 
-  before( async () => {
-
-    resource = ketting.go();
+    const resource = ketting.go();
     // Priming the cache
     await resource.get();
-
-  });
-
-  it('should not fail', async () => {
-
     await resource.delete();
-
-  });
-
-  it('should have cleared the resource representation', async () => {
 
     let ok = false;
     try {
@@ -35,9 +21,14 @@ describe('Issuing a DELETE request', () => {
       ok = true;
     }
     expect(ok).to.eql(true);
-
   });
-  it('should have cleared the global cache', async () => {
+
+  it('should have cleared the global cache', async ({testApplicationUris}) => {
+    const ketting = new Client(testApplicationUris.createTenantUri() + '/hal1.json');
+    const resource = ketting.go();
+    // Priming the cache
+    await resource.get();
+    await resource.delete();
 
     let ok = false;
     try {
@@ -50,15 +41,13 @@ describe('Issuing a DELETE request', () => {
 
   });
 
-  it('should throw an exception when there was a HTTP error', async () => {
+  it('should throw an exception when there was a HTTP error', async ({testApplicationUris}) => {
 
-    // Resetting the server
-    await ketting.go(serverUri + '/reset').post({});
-    ketting.clearCache();
-    const resource2 = await ketting.follow('error400');
+    const ketting = new Client(testApplicationUris.createTenantUri() + '/hal1.json');
+    const resource = await ketting.follow('error400');
     let exception = null;
     try {
-      await resource2.delete();
+      await resource.delete();
     } catch (ex: any) {
       exception = ex;
     }
@@ -66,15 +55,13 @@ describe('Issuing a DELETE request', () => {
 
   });
 
-  it('should throw a Problem exception when there was a HTTP error with a application/problem+json response', async () => {
+  it('should throw a Problem exception when there was a HTTP error with a application/problem+json response', async ({testApplicationUris}) => {
 
-    // Resetting the server
-    await ketting.go(serverUri + '/reset').fetch({method: 'POST'});
-    ketting.clearCache();
-    const resource2 = await ketting.follow('problem');
+    const ketting = new Client(testApplicationUris.createTenantUri() + '/hal1.json');
+    const resource = await ketting.follow('problem');
     let exception;
     try {
-      await resource2.delete();
+      await resource.delete();
     } catch (ex: any) {
       exception = ex;
     }

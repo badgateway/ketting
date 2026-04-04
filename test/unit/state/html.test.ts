@@ -1,6 +1,5 @@
-import { describe, it } from 'node:test';
+import { describe, it, expect } from '#ketting-test';
 
-import { expect } from 'chai';
 import { htmlStateFactory } from '../../../src/state/index.js';
 import { Link, Client } from '../../../src/index.js';
 

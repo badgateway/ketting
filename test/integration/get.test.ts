@@ -1,32 +1,20 @@
-import {before, describe, it} from 'node:test';
+import {describe, it, expect} from '#ketting-test';
 
-import {expect} from 'chai';
-import {Ketting, Link, Resource} from '../../src/index.js';
-import {createTenantUri} from '../test-application-uris.js';
+import {Ketting, Link} from '../../src/index.js';
 
 describe('Issuing a GET request', async () => {
 
-  const serverUri = createTenantUri();
-  const ketting = new Ketting(serverUri + '/hal1.json');
-  let resource: Resource;
-  let result: any;
+  it('should have sent the correct headers', async ({testApplicationUris}) => {
 
-  before( async () => {
+    const ketting = new Ketting(testApplicationUris.createTenantUri() + '/hal1.json');
+    const resource = await ketting.follow('headerTest');
 
-    resource = await ketting.follow('headerTest');
-
-  });
-
-  it('should not fail', async () => {
-
-    result = await resource.get();
-
-  });
-
-  it('should have sent the correct headers', async () => {
+    const result = await resource.get();
 
     expect(result.data).to.have.property('user-agent');
-    expect(result.data['user-agent']).to.match(/^Ketting/);
+    if (!globalThis.window) {
+      expect(result.data['user-agent']).to.match(/^Ketting/);
+    }
 
     const mediaTypes = [
       'application/prs.hal-forms+json;q=1.0',
@@ -42,8 +30,9 @@ describe('Issuing a GET request', async () => {
 
   });
 
-  it('should throw an exception when there was a HTTP error', async () => {
+  it('should throw an exception when there was a HTTP error', async ({testApplicationUris}) => {
 
+    const ketting = new Ketting(testApplicationUris.createTenantUri() + '/hal1.json');
     const resource2 = await ketting.follow('error400');
     let exception;
     try {
@@ -55,8 +44,10 @@ describe('Issuing a GET request', async () => {
 
   });
 
-  it('should support the HTTP Link header', async () => {
+  it('should support the HTTP Link header', async ({testApplicationUris}) => {
 
+    const serverUri = testApplicationUris.createTenantUri();
+    const ketting = new Ketting(serverUri + '/hal1.json');
     const resource2 = await ketting.follow('linkHeader');
     const links = await resource2.links();
 
@@ -99,7 +90,9 @@ describe('Issuing a GET request', async () => {
 
   });
 
-  it('should successfully de-duplicate multiple parallel refreshes', async() => {
+  it('should successfully de-duplicate multiple parallel refreshes', async({testApplicationUris}) => {
+
+    const ketting = new Ketting(testApplicationUris.createTenantUri() + '/hal1.json');
 
     const counterResource = await ketting.follow('counter');
     const [result1, result2] = await Promise.all([

@@ -1,6 +1,5 @@
-import { describe, it } from 'node:test';
+import { describe, it, expect } from '#ketting-test';
 
-import { expect } from 'chai';
 import { Client, BaseState, Links, HalState } from '../../src/index.js';
 
 describe('Client', () => {

@@ -1,6 +1,5 @@
-import { describe, it } from 'node:test';
+import { describe, it, expect } from '#ketting-test';
 
-import { expect } from 'chai';
 import { Client } from '../../../src/index.js';
 import { factory } from '../../../src/state/collection-json.js';
 
@@ -19,14 +18,6 @@ describe('collection+json representor', () => {
 
     const cj = await callFactory('http://example.org/friends/', exampleObj);
 
-    /*
-    const cj = new CollectionJson(
-      'http://example.org/friends/',
-      'application/vnd.collection+json',
-      JSON.stringify(exampleObj),
-      new Map()
-    );
-     */
     expect(cj.links.getAll()).to.eql([]);
 
   });

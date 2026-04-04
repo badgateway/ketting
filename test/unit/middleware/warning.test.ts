@@ -1,8 +1,6 @@
-import { describe, it , before, after} from 'node:test';
+import { describe, it , beforeAll, afterAll, expect} from '#ketting-test';
 
-/* eslint-disable no-console */
 import warningMiddleware from '../../../src/middlewares/warning.js';
-import { expect } from 'chai';
 
 const invoke = (response: Response) => {
 
@@ -16,7 +14,7 @@ describe('Warning middleware', () => {
   let oldWarning: any;
   let lastMessage = '';
 
-  before(() => {
+  beforeAll(() => {
 
     lastMessage = '';
     oldWarning = console.warn;
@@ -71,7 +69,7 @@ describe('Warning middleware', () => {
   });
 
 
-  after(() => {
+  afterAll(() => {
 
     console.warn = oldWarning;
 

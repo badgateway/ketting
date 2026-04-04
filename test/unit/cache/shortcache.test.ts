@@ -1,6 +1,5 @@
-import { describe, it } from 'node:test';
+import { describe, it, expect } from '#ketting-test';
 
-import { expect } from 'chai';
 import { ShortCache, BaseState, Links, Client } from '../../../src/index.js';
 
 describe('ShortCache', () => {

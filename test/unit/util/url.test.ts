@@ -1,6 +1,5 @@
-import { describe, it } from 'node:test';
+import { describe, it, expect } from '#ketting-test';
 
-import { expect } from 'chai';
 import { resolve, parse } from '../../../src/util/uri.js';
 
 describe('Uri utility', () => {

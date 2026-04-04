@@ -1,37 +1,37 @@
-import {describe, it} from 'node:test';
+import {describe, it, expect} from '#ketting-test';
 
-import {expect} from 'chai';
 import {BaseState, Ketting, Resource} from '../../src/index.js';
-import {createTenantUri} from '../test-application-uris.js';
 
 describe('Following a JSON API link', async () => {
 
-  const serverUri = createTenantUri();
-  const ketting = new Ketting(serverUri + '/hal1.json');
+  it('should return a resource', async ({testApplicationUris}) => {
 
-  let jsonapi: Resource;
-
-  it('should return a resource', async () => {
-
-    jsonapi = await ketting.follow('json-api');
+    const ketting = new Ketting(testApplicationUris.createTenantUri() + '/hal1.json');
+    const jsonapi = await ketting.follow('json-api');
     expect(jsonapi).to.be.an.instanceof(Resource);
-
-
   });
-  it('should use the JSON:API representor', async () => {
 
+  it('should use the JSON:API representor', async ({testApplicationUris}) => {
+
+    const ketting = new Ketting(testApplicationUris.createTenantUri() + '/hal1.json');
+    const jsonapi = await ketting.follow('json-api');
     const rep = await jsonapi.get();
     expect(rep).to.be.an.instanceof(BaseState);
 
   });
-  it('should allow following links further', async () => {
+  it('should allow following links further', async ({testApplicationUris}) => {
 
+    const ketting = new Ketting(testApplicationUris.createTenantUri() + '/hal1.json');
+    const jsonapi = await ketting.follow('json-api');
     const next = await jsonapi.follow('next');
     expect(next.uri).to.equal('https://example.org/next-jsonapi');
 
   });
-  it('should allow following collection members via the "item" rel', async () => {
+  it('should allow following collection members via the "item" rel', async ({testApplicationUris}) => {
 
+    const serverUri = testApplicationUris.createTenantUri();
+    const ketting = new Ketting(serverUri + '/hal1.json');
+    const jsonapi = await ketting.follow('json-api');
     const item = await jsonapi.follow('item');
     expect(item.uri).to.equal(serverUri + '/json-api-member1.json');
 

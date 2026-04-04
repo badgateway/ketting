@@ -1,16 +1,14 @@
-import {describe, it} from 'node:test';
-import {expect} from 'chai';
+import {describe, it, expect} from '#ketting-test';
 import {Client, isState, Resource} from '../../src/index.js';
-import {createTenantUri} from '../test-application-uris.js';
 
 describe('Following a link', async () => {
 
-  const serverUri = createTenantUri();
-  const client = new Client(serverUri + '/hal1.json');
-
   let hal2: Resource;
 
-  it('should return a resource', async () => {
+  it('should return a resource', async ({testApplicationUris}) => {
+
+    const serverUri = testApplicationUris.createTenantUri();
+    const client = new Client(serverUri + '/hal1.json');
 
     hal2 = await client.follow('next');
     expect(hal2).to.be.an.instanceof(Resource);
@@ -18,14 +16,16 @@ describe('Following a link', async () => {
 
   });
 
-  it('should get the correct response to GET', async () => {
+  it('should get the correct response to GET', async ({testApplicationUris}) => {
 
     const state = await hal2.get();
     expect(state.data).to.eql({title: 'HAL 2!'});
 
 
   });
-  it('should be chainable', async () => {
+  it('should be chainable', async ({testApplicationUris}) => {
+    const serverUri = testApplicationUris.createTenantUri();
+    const client = new Client(serverUri + '/hal1.json');
 
     const hal1 = await client.follow('next').follow('prev');
     const hal1State = await hal1.get();
@@ -33,7 +33,10 @@ describe('Following a link', async () => {
 
   });
 
-  it('should throw an error following non-existent relationships', async () => {
+  it('should throw an error following non-existent relationships', async ({testApplicationUris}) => {
+
+    const serverUri = testApplicationUris.createTenantUri();
+    const client = new Client(serverUri + '/hal1.json');
 
     let result;
     try {
@@ -47,7 +50,10 @@ describe('Following a link', async () => {
 
   });
 
-  it('should be chainable several times', async () => {
+  it('should be chainable several times', async ({testApplicationUris}) => {
+
+    const serverUri = testApplicationUris.createTenantUri();
+    const client = new Client(serverUri + '/hal1.json');
 
     const hal1 = await client.follow('next').follow('prev').follow('next').follow('prev');
     const hal1State = await hal1.get();
@@ -55,7 +61,10 @@ describe('Following a link', async () => {
 
   });
 
-  it('should be chainable with a GET', async () => {
+  it('should be chainable with a GET', async ({testApplicationUris}) => {
+
+    const serverUri = testApplicationUris.createTenantUri();
+    const client = new Client(serverUri + '/hal1.json');
 
     const hal1State = await client.follow('next').follow('prev').follow('next').follow('prev').get();
     expect(hal1State.data).to.eql({title: 'Hal 1', foo: 'bar'});
@@ -63,7 +72,10 @@ describe('Following a link', async () => {
   });
 
   describe('followAll', () => {
-    it('should work with embedded resources', async () => {
+    it('should work with embedded resources', async ({testApplicationUris}) => {
+
+      const serverUri = testApplicationUris.createTenantUri();
+      const client = new Client(serverUri + '/hal1.json');
 
       const items = await client.follow('collection').followAll('item');
       expect(items).to.have.length(2);
@@ -72,7 +84,10 @@ describe('Following a link', async () => {
 
     });
 
-    it('should be chainable to embedded states', async () => {
+    it('should be chainable to embedded states', async ({testApplicationUris}) => {
+
+      const serverUri = testApplicationUris.createTenantUri();
+      const client = new Client(serverUri + '/hal1.json');
 
       const items = await client.follow('collection').followAll('item').get();
       expect(items).to.have.length(2);
@@ -81,7 +96,10 @@ describe('Following a link', async () => {
 
     });
 
-    it('should remember the type="" property for later usage', async () => {
+    it('should remember the type="" property for later usage', async ({testApplicationUris}) => {
+
+      const serverUri = testApplicationUris.createTenantUri();
+      const client = new Client(serverUri + '/hal1.json');
 
       const newResource = await client.follow('self').followAll('content-type-link');
       expect(newResource[0]).to.be.an.instanceof(Resource);
