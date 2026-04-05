@@ -1,5 +1,5 @@
 import type { TestProject } from 'vitest/node';
-import {TestApplication} from './test-application.js';
+import {TestApplication} from '#ketting-test/test-application.js';
 
 export default function setup(project: TestProject) {
 
