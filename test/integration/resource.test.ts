@@ -1,6 +1,6 @@
 import {describe, it, expect} from '#ketting-test';
 
-import {Ketting, NeverCache} from '../../src/index.js';
+import {Ketting, NeverCache} from '#ketting-src';
 
 describe('Resource', async () => {
 

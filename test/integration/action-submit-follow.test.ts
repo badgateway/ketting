@@ -1,7 +1,6 @@
 import {expect, describe, it} from '#ketting-test';
 
-import {Ketting} from '../../src/index.js';
-import Resource from '../../src/resource.js';
+import {Ketting, Resource} from '#ketting-src';
 
 describe('Invoking submitFollow on an action', async () => {
 

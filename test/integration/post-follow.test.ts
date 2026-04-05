@@ -1,7 +1,6 @@
 import {describe, it, expect} from '#ketting-test';
 
-import {Ketting} from '../../src/index.js';
-import Resource from '../../src/resource.js';
+import {Ketting, Resource} from '#ketting-src';
 
 describe('Issuing a POST request', async () => {
 

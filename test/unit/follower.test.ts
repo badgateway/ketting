@@ -1,6 +1,6 @@
 import { describe, it, expect } from '#ketting-test';
 
-import { BaseState, BaseHeadState, Resource, FollowPromiseOne, FollowPromiseMany, Links } from '../../src/index.js';
+import { BaseState, BaseHeadState, Resource, FollowPromiseOne, FollowPromiseMany, Links } from '#ketting-src';
 
 describe('FollowPromiseOne', () => {
 

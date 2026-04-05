@@ -1,7 +1,7 @@
 import { describe, it, expect } from '#ketting-test';
 
-import { factory } from '../../../src/state/hal.js';
-import { Client } from '../../../src/index.js';
+import { factory } from '#ketting-src/state/hal.js';
+import { Client } from '#ketting-src/index.js';
 
 describe('HAL state factory', () => {
 

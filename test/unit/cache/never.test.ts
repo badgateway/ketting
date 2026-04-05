@@ -1,6 +1,6 @@
 import { describe, it, expect } from '#ketting-test';
 
-import { Client, NeverCache, BaseState, Links } from '../../../src/index.js';
+import { Client, NeverCache, BaseState, Links } from '#ketting-src';
 
 describe('NeverCache', () => {
 

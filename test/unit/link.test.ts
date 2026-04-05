@@ -1,6 +1,6 @@
 import { describe, it, expect} from '#ketting-test';
 
-import { Links } from '../../src/index.js';
+import { Links } from '#ketting-src';
 
 describe('Links object', () => {
 

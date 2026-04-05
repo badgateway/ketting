@@ -1,5 +1,5 @@
 import {describe, it, expect} from '#ketting-test';
-import {bearerAuth, Client} from '../../src/index.js';
+import {bearerAuth, Client} from '#ketting-src';
 
 describe('Bearer Authentication', () => {
 

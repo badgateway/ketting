@@ -23,7 +23,9 @@
       "browser": "events",
       "default": "events"
     },
-    "#ketting-test": "./test/ketting-test.ts"
+    "#ketting-test": "./test/ketting-test.ts",
+    "#ketting-src": "./src/index.ts",
+    "#ketting-src/*": "./src/*"
   },
   "files": [
     "src/",

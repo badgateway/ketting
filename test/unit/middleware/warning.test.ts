@@ -1,6 +1,6 @@
 import { describe, it , beforeAll, afterAll, expect} from '#ketting-test';
 
-import warningMiddleware from '../../../src/middlewares/warning.js';
+import warningMiddleware from '#ketting-src/middlewares/warning.js';
 
 const invoke = (response: Response) => {
 
