@@ -6,6 +6,7 @@ import { Resource } from '../resource.js';
 import { resolve } from '../util/uri.js';
 import { expand } from '../util/uri-template.js';
 import { entityHeaderNames } from '../http/util.js';
+import { StateSerializedBody, serializeBody } from '#state-serialized-body';
 
 type HeadStateInit = {
 
@@ -234,16 +235,9 @@ export class BaseState<T> extends BaseHeadState implements State<T> {
    * For example, a JSON object might simply serialize using
    * JSON.serialize().
    */
-  serializeBody(): Buffer|Blob|string {
+  serializeBody(): StateSerializedBody {
 
-    if (
-      (globalThis.Buffer && this.data instanceof Buffer) ||
-      (globalThis.Blob && this.data instanceof Blob) ||
-      typeof this.data === 'string')
-    {
-      return this.data;
-    }
-    return JSON.stringify(this.data);
+    return serializeBody(this.data);
 
   }
 

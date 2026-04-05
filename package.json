@@ -23,6 +23,10 @@
       "browser": "events",
       "default": "events"
     },
+    "#state-serialized-body": {
+      "browser": "./dist/state/state-serialized-body.web.js",
+      "default": "./dist/state/state-serialized-body.js"
+    },
     "#ketting-test": "./test/ketting-test.js",
     "#ketting-test/*": "./test/*",
     "#ketting-dist/*": "./dist/*"
