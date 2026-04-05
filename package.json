@@ -1,6 +1,6 @@
 {
   "name": "ketting",
-  "version": "9.0.0-alpha.2",
+  "version": "9.0.0",
   "description": "Opinionated HATEOAS / Rest client.",
   "type": "module",
   "exports": {
