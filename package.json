@@ -61,7 +61,7 @@
   },
   "homepage": "https://github.com/badgateway/ketting#readme",
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "dependencies": {
     "@badgateway/oauth2-client": "^2.0.17",
