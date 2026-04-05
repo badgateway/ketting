@@ -1,17 +1,18 @@
 ChangeLog
 =========
 
-9.0.0-alpha.1 (????-??-??)
+9.0.0-alpha.1 (2026-04-05)
 --------------------------
 
 * If you use Node, version `20` is now the minimum required.
-* `Ketting` source and distribution files now make exclusive use of ESM modules and target `es2023`.
-* `Ketting` entrypoints are now defined by `package.json#exports`. 
-  Some imports are now resolved via `package.json#imports`.
-  These conventional fields have been supported by `node` and major bundlers for years, therefore, 
-  it shouldn't be a big deal for consumers.
-* Automated tests now run against the distribution files rather than the source files, making them 
-  more representative of real-world consumer usage.
+* `Ketting` source and distribution files now make exclusive use of ESM modules
+  and target `es2023`.
+* `Ketting` entrypoints are now defined by `package.json#exports`. Some imports
+  are now resolved via `package.json#imports`. These conventional fields have
+  been supported by `node` and major bundlers for years, therefore, it
+  shouldn't be a big deal for consumers.
+* Automated tests now run against the distribution files rather than the source
+  files, making them more representative of real-world consumer usage.
 * Before, tests were only run on `node`. Now, tests are also run on `chromium`.
 * #534 Add node 24 to the build matrix
 * #535 Convert to ESM
@@ -23,6 +24,7 @@ ChangeLog
 * #548 Tests should use dist to simulate library consumers
 * #549 Enforce absolute imports on test files
 * #550 Version 8.x is not compatible with tsconfig --skipLibCheck false
+
 
 8.4.3 (2026-03-29)
 ------------------
