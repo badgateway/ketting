@@ -4,10 +4,5 @@ export function needsJsonStringify(input: any): boolean {
     return false;
   }
 
-  if (globalThis.Buffer && input instanceof Buffer) {
-    return false;
-  }
-
-  return true;
-
+  return !(input instanceof Buffer);
 }
