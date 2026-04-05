@@ -1,7 +1,7 @@
 import { describe, it, expect } from '#ketting-test';
 
-import { factory } from '../../../src/state/jsonapi.js';
-import { BaseState, Client } from '../../../src/index.js';
+import { factory } from '#ketting-src/state/jsonapi.js';
+import { BaseState, Client } from '#ketting-src';
 
 describe('JsonApi representor', () => {
 

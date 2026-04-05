@@ -1,6 +1,6 @@
 import {it, describe, expect} from '#ketting-test';
 
-import {Client, Problem} from '../../src/index.js';
+import {Client, Problem} from '#ketting-src';
 
 describe('Issuing a DELETE request', () => {
 

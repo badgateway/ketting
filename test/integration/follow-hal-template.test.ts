@@ -1,6 +1,6 @@
 import {describe, it, expect} from '#ketting-test';
 
-import {Ketting, Resource} from '../../src/index.js';
+import {Ketting, Resource} from '#ketting-src';
 
 describe('Following a templated link', async () => {
 

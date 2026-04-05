@@ -1,6 +1,6 @@
 import { describe, it, expect } from '#ketting-test';
 
-import { Client, ForeverCache, BaseState, Links } from '../../../src/index.js';
+import { Client, ForeverCache, BaseState, Links } from '#ketting-src';
 
 describe('ForeverCache', () => {
 

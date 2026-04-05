@@ -1,7 +1,7 @@
 import { describe, it, expect } from '#ketting-test';
 
-import { Client } from '../../../src/index.js';
-import { factory } from '../../../src/state/collection-json.js';
+import { Client } from '#ketting-src';
+import { factory } from '#ketting-src/state/collection-json.js';
 
 describe('collection+json representor', () => {
 

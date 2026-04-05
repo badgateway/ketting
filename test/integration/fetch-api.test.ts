@@ -1,5 +1,5 @@
 import {describe, it, expect} from '#ketting-test';
-import {Ketting} from '../../src/index.js';
+import {Ketting} from '#ketting-src';
 
 describe('Using the fetch api', () => {
 
