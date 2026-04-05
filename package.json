@@ -1,6 +1,6 @@
 {
   "name": "ketting",
-  "version": "8.4.3",
+  "version": "9.0.0-alpha.1",
   "description": "Opinionated HATEOAS / Rest client.",
   "type": "module",
   "exports": {
@@ -61,7 +61,7 @@
   },
   "homepage": "https://github.com/badgateway/ketting#readme",
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "dependencies": {
     "@badgateway/oauth2-client": "^2.0.17",
