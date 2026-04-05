@@ -1,6 +1,6 @@
 import {describe, it, expect} from '#ketting-test';
 
-import {Ketting, Resource} from '#ketting-src';
+import {Ketting, Resource} from 'ketting';
 
 describe('Issuing a POST request', async () => {
 

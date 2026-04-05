@@ -1,6 +1,6 @@
 import {describe, it, expect} from '#ketting-test';
 
-import {Ketting, Link} from '#ketting-src';
+import {Ketting, Link} from 'ketting';
 
 describe('Issuing a HEAD request', async () => {
 
