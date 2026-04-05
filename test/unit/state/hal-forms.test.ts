@@ -1,7 +1,7 @@
 import { describe, it, expect } from '#ketting-test';
 
-import { factory } from '#ketting-src/state/hal.js';
-import { Action, Client, Field } from '#ketting-src';
+import { factory } from '#ketting-dist/state/hal.js';
+import { Action, Client, Field } from 'ketting';
 import { HalFormsProperty } from 'hal-types';
 
 type CompareAction = Omit<Action, 'submit' | 'field' |  'submitFollow'>;

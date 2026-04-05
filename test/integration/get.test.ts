@@ -1,7 +1,7 @@
 import {describe, it, expect} from '#ketting-test';
 import packageJson from 'ketting/package.json' with { type: 'json' };
 
-import {Ketting, Link} from '#ketting-src';
+import {Ketting, Link} from 'ketting';
 
 describe('Issuing a GET request', async () => {
 

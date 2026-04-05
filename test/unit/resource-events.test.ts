@@ -1,6 +1,6 @@
 import { describe, it, expect } from '#ketting-test';
 
-import { Client } from '#ketting-src';
+import { Client } from 'ketting';
 
 describe('Resource Events', () => {
 

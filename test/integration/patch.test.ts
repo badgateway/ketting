@@ -1,6 +1,6 @@
 import {describe, it, expect} from '#ketting-test';
 
-import {Ketting} from '#ketting-src';
+import {Ketting} from 'ketting';
 
 describe('Issuing a PATCH request', async () => {
 

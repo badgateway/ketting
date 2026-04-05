@@ -1,6 +1,6 @@
 import { describe, it, expect } from '#ketting-test';
 
-import { expand } from '#ketting-src';
+import { expand } from 'ketting';
 
 describe('uri-template utility', () => {
 

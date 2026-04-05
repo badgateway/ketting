@@ -1,6 +1,6 @@
 import { describe, it, expect } from '#ketting-test';
 
-import { Resource, Links } from '#ketting-src';
+import { Resource, Links } from 'ketting';
 
 describe('Resource', () => {
 

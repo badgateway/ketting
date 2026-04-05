@@ -1,6 +1,6 @@
 import {describe, it, expect} from '#ketting-test';
 
-import {BaseState, Ketting, Resource} from '#ketting-src';
+import {BaseState, Ketting, Resource} from 'ketting';
 
 describe('Following a JSON API link', async () => {
 

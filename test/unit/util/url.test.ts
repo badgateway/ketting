@@ -1,6 +1,6 @@
 import { describe, it, expect } from '#ketting-test';
 
-import { resolve, parse } from '#ketting-src/util/uri.js';
+import { resolve, parse } from '#ketting-dist/util/uri.js';
 
 describe('Uri utility', () => {
 

@@ -1,6 +1,6 @@
 import {describe, it, expect} from '#ketting-test';
 
-import {Ketting, oauth2} from '#ketting-src';
+import {Ketting, oauth2} from 'ketting';
 
 describe('OAuth2 Authentication', () => {
 

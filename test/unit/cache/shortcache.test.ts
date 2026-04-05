@@ -1,6 +1,6 @@
 import { describe, it, expect } from '#ketting-test';
 
-import { ShortCache, BaseState, Links, Client } from '#ketting-src';
+import { ShortCache, BaseState, Links, Client } from 'ketting';
 
 describe('ShortCache', () => {
 

@@ -5,27 +5,26 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": "./dist/main/index.d.ts",
-      "default": "./dist/main/index.js"
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
     },
     "./package.json": "./package.json"
   },
   "imports": {
     "#fetch-body-helper": {
-      "browser": "./src/util/fetch-body-helper.web.ts",
-      "default": "./src/util/fetch-body-helper.ts"
+      "browser": "./dist/util/fetch-body-helper.web.js",
+      "default": "./dist/util/fetch-body-helper.js"
     },
     "#html": {
-      "browser": "./src/util/html.web.ts",
-      "default": "./src/util/html.ts"
+      "browser": "./dist/util/html.web.js",
+      "default": "./dist/util/html.js"
     },
     "#events": {
       "browser": "events",
       "default": "events"
     },
-    "#ketting-test": "./test/ketting-test.ts",
-    "#ketting-src": "./src/index.ts",
-    "#ketting-src/*": "./src/*"
+    "#ketting-test": "./test/ketting-test.js",
+    "#ketting-dist/*": "./dist/*"
   },
   "files": [
     "src/",
@@ -36,7 +35,7 @@
     "test": "make test",
     "prepublishOnly": "make build",
     "build": "make build",
-    "lint:package": "make lint-package"
+    "ci-workflow-test": "make ci-workflow-test"
   },
   "repository": {
     "type": "git",

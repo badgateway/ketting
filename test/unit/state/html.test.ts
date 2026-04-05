@@ -1,7 +1,7 @@
 import { describe, it, expect } from '#ketting-test';
 
-import { htmlStateFactory } from '#ketting-src/state/index.js';
-import { Link, Client } from '#ketting-src';
+import { htmlStateFactory } from '#ketting-dist/state/index.js';
+import { Link, Client } from 'ketting';
 
 describe('HTML representor', () => {
 

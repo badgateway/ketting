@@ -1,7 +1,7 @@
 import { describe, it, expect } from '#ketting-test';
 
-import { factory } from '#ketting-src/state/siren.js';
-import { SirenState, Client } from '#ketting-src';
+import { factory } from '#ketting-dist/state/siren.js';
+import { SirenState, Client } from 'ketting';
 
 describe('Siren representor', () => {
 

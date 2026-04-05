@@ -1,5 +1,5 @@
 import {describe, it, expect} from '#ketting-test';
-import {Client, isState, Resource} from '#ketting-src';
+import {Client, isState, Resource} from 'ketting';
 
 describe('Following a link', async () => {
 

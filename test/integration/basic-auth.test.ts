@@ -1,6 +1,6 @@
 import {describe, it, expect} from '#ketting-test';
 
-import {basicAuth, Client} from '#ketting-src';
+import {basicAuth, Client} from 'ketting';
 
 describe('Basic Authentication', () => {
 
