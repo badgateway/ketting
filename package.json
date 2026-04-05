@@ -24,6 +24,7 @@
       "default": "events"
     },
     "#ketting-test": "./test/ketting-test.js",
+    "#ketting-test/*": "./test/*",
     "#ketting-dist/*": "./dist/*"
   },
   "files": [
@@ -79,6 +80,7 @@
     "@types/node": "^22.19.11",
     "@types/sax": "^1.2.1",
     "@vitest/browser-playwright": "^4.1.2",
+    "eslint": "^10.2.0",
     "handlebars": "^4.7.9",
     "koa": "^3.1.2",
     "koa-bodyparser": "^4.3.0",

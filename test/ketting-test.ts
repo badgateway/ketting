@@ -1,5 +1,5 @@
 import { test as baseTest } from 'vitest';
-import {TestApplicationUris} from './test-application-uris.js';
+import {TestApplicationUris} from '#ketting-test/test-application-uris.js';
 
 export const test = baseTest.extend<{
     testApplicationUri: string,

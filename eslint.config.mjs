@@ -1,12 +1,13 @@
 // @ts-check
 import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
+import { defineConfig } from 'eslint/config';
 
-export default tseslint.config({
- 
+export default defineConfig([{
+
   files: ['src/**/*.ts', 'test/**/*.ts'],
 
-  extends: [ 
+  extends: [
     eslint.configs.recommended,
     ...tseslint.configs.recommended,
   ],
@@ -62,4 +63,14 @@ export default tseslint.config({
     "@typescript-eslint/prefer-for-of": ["error"],
     "@typescript-eslint/prefer-ts-expect-error": ["error"],
   },
-});
+}, {
+  files: ['test/**/*.ts'],
+  rules: {
+    "no-restricted-imports": ["error", {
+      "patterns": [{
+        "group": [".*"],
+        "message": "Test files must use absolute imports instead of relative imports.",
+      }]
+    }]
+  }
+}]);
