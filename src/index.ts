@@ -25,6 +25,7 @@ export { default as basicAuth } from './http/basic-auth.js';
 export { default as bearerAuth } from './http/bearer-auth.js';
 export { default as oauth2 } from './http/oauth2.js';
 
+export { HttpError } from './http/error.js';
 export { Problem } from './http/error.js';
 
 export { type Action } from './action.js';
