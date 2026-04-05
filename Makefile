@@ -8,7 +8,7 @@ clean:
 
 .PHONY: test
 test: lint
-	npx playwright install && npx vitest --browser.headless
+	npx playwright install && npx vitest run --browser.headless
 
 .PHONY: lint
 lint:
