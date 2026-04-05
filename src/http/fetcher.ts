@@ -1,4 +1,5 @@
 import problemFactory from './error.js';
+import packageJson from 'ketting/package.json' with { type: 'json' };
 
 export type FetchMiddleware =
   (request: Request, next: (request: Request) => Promise<Response>) => Promise<Response>;
@@ -32,7 +33,7 @@ export class Fetcher {
 
       if (!innerRequest.headers.has('User-Agent') && this.advertiseKetting) {
         // eslint-disable-next-line @typescript-eslint/no-require-imports
-        innerRequest.headers.set('User-Agent', 'Ketting');
+        innerRequest.headers.set('User-Agent', `Ketting/${packageJson.version}`);
       }
 
       return fetch(innerRequest);

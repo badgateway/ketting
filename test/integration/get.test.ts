@@ -1,4 +1,5 @@
 import {describe, it, expect} from '#ketting-test';
+import packageJson from 'ketting/package.json' with { type: 'json' };
 
 import {Ketting, Link} from '../../src/index.js';
 
@@ -13,7 +14,7 @@ describe('Issuing a GET request', async () => {
 
     expect(result.data).to.have.property('user-agent');
     if (!globalThis.window) {
-      expect(result.data['user-agent']).to.match(/^Ketting/);
+      expect(result.data['user-agent']).to.eq(`Ketting/${packageJson.version}`);
     }
 
     const mediaTypes = [
