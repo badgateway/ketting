@@ -2,6 +2,7 @@ import { Action } from '../action.js';
 import { Links, LinkVariables } from '../link.js';
 import Client from '../client.js';
 import { Resource } from '../resource.js';
+import { StateSerializedBody } from '#state-serialized-body';
 
 export type State<T = any> = {
 
@@ -82,7 +83,7 @@ export type State<T = any> = {
    * For example, a JSON object might simply serialize using
    * JSON.serialize().
    */
-  serializeBody(): Buffer|Blob|string;
+  serializeBody(): StateSerializedBody;
 
   /**
    * Content-headers are a subset of HTTP headers that related directly
