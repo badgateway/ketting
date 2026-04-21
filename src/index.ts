@@ -1,6 +1,8 @@
 export { default as Client, default as Ketting, default } from './client.js';
 export { default as Resource } from './resource.js';
 
+export { Resources } from './state/resources.js'
+
 export { type Link, LinkNotFound, Links, type LinkVariables } from './link.js';
 
 export { resolve } from './util/uri.js';
