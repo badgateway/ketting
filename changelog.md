@@ -1,6 +1,11 @@
 ChangeLog
 =========
 
+9.1.0 (????-??-??)
+------------------
+
+* #555 Add Resources class for batch state fetching
+
 9.0.0 (2026-04-05)
 ------------------
 
