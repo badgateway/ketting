@@ -96,6 +96,20 @@ describe('Following a link', async () => {
 
     });
 
+    it('should resolve states when .get() is called on the State#followAll() result', async ({testApplicationUris}) => {
+
+      const serverUri = testApplicationUris.createTenantUri();
+      const client = new Client(serverUri + '/hal1.json');
+
+      const collectionState = await client.follow('collection').get();
+
+      const items = await collectionState.followAll('item').get();
+      expect(items).to.have.length(2);
+      expect(isState(items[0])).to.eq(true);
+      expect(isState(items[1])).to.eq(true);
+
+    });
+
     it('should remember the type="" property for later usage', async ({testApplicationUris}) => {
 
       const serverUri = testApplicationUris.createTenantUri();
