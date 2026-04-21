@@ -14,6 +14,10 @@ describe('Resources', () => {
     const uris = resources.map(r => r.uri);
     expect(uris).to.eql(['/a', '/b']);
 
+    resources.push(getFakeResource('/c'));
+
+    expect(resources[2].uri).to.eql('/c');
+
   });
 
   it('should resolve all resources to their state when get() is called', async () => {
