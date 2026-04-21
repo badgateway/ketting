@@ -3,6 +3,7 @@ import { Links, LinkVariables } from '../link.js';
 import Client from '../client.js';
 import { Resource } from '../resource.js';
 import { StateSerializedBody } from '#state-serialized-body';
+import { Resources } from './resources.js';
 
 export type State<T = any> = {
 
@@ -48,7 +49,7 @@ export type State<T = any> = {
    *
    * If no resources were found, the array will be empty.
    */
-  followAll<TFollowedResource = any>(rel: string): Resource<TFollowedResource>[];
+  followAll<TFollowedResource = any>(rel: string): Resources<TFollowedResource>;
 
   /**
    * Return an action by name.

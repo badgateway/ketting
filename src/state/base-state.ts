@@ -1,4 +1,5 @@
 import { State, HeadState } from './interface.js';
+import { Resources } from './resources.js';
 import { Links, LinkVariables, LinkNotFound } from '../link.js';
 import Client from '../client.js';
 import { Action, ActionNotFound, ActionInfo, SimpleAction } from '../action.js';
@@ -99,19 +100,16 @@ export class BaseHeadState implements HeadState {
    *
    * If no resources were found, the array will be empty.
    */
-  followAll<TFollowedResource = any>(rel: string): Resource<TFollowedResource>[] {
-
-    return this.links.getMany(rel).map( link => {
-
+  followAll<TFollowedResource = any>(rel: string): Resources<TFollowedResource> {
+    const resources = this.links.getMany(rel).map( link => {
       if (link.hints?.status === 'deprecated') {
         /* eslint-disable-next-line no-console */
         console.warn(`[ketting] The ${link.rel} link on ${this.uri} is marked deprecated.`, link);
       }
       const href = resolve(link);
-      return this.client.go(href);
-
+      return this.client.go<TFollowedResource>(href);
     });
-
+    return new Resources(resources);
   }
 
 
