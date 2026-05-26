@@ -32,7 +32,7 @@ export class SirenState<T> extends BaseState<T> {
       data: this.data,
       headers: new Headers(this.headers),
       links: new Links(this.uri, this.links),
-      actions: this.actionInfo,
+      actions: this._actions,
     });
 
   }

@@ -145,13 +145,13 @@ export class BaseState<T> extends BaseHeadState implements State<T> {
   data: T;
 
   protected embedded: State[];
-  protected actionInfo: ActionInfo[];
+  protected _actions: Action[];
 
   constructor(init: StateInit<T>) {
 
     super(init);
     this.data = init.data;
-    this.actionInfo = init.actions || [];
+    this._actions = (init.actions || []).map(actionInfo => new SimpleAction(() => this.client, actionInfo));
     this.embedded = init.embedded || [];
 
   }
@@ -186,15 +186,15 @@ export class BaseState<T> extends BaseHeadState implements State<T> {
 
   private doFindAction<TFormData extends Record<string, any> = any>(name?: string): Action<TFormData> | ActionNotFoundReason {
 
-    if (!this.actionInfo.length) {
+    if (!this._actions.length) {
       return 'NO_ACTION_DEFINED';
     }
     if (name === undefined) {
-      return new SimpleAction(this.client, this.actionInfo[0]);
+      return this._actions[0];
     }
-    for(const action of this.actionInfo) {
+    for(const action of this._actions) {
       if (action.name === name) {
-        return new SimpleAction(this.client, action);
+        return action;
       }
     }
     return 'NO_ACTION_FOR_THE_PROVIDED_NAME';
@@ -205,7 +205,7 @@ export class BaseState<T> extends BaseHeadState implements State<T> {
    */
   actions(): Action[] {
 
-    return this.actionInfo.map(action => new SimpleAction(this.client, action));
+    return [...this._actions];
 
   }
 
@@ -216,8 +216,8 @@ export class BaseState<T> extends BaseHeadState implements State<T> {
    */
   hasAction(name?: string): boolean {
 
-    if (name===undefined) return this.actionInfo.length>0;
-    for(const action of this.actionInfo) {
+    if (name === undefined) return this._actions.length > 0;
+    for (const action of this._actions) {
       if (name === action.name) {
         return true;
       }
@@ -262,7 +262,7 @@ export class BaseState<T> extends BaseHeadState implements State<T> {
       data: this.data,
       headers: new Headers(this.headers),
       links: new Links(this.links.defaultContext, this.links.getAll()),
-      actions: this.actionInfo,
+      actions: this._actions,
     });
 
   }

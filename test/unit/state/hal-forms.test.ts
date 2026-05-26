@@ -26,7 +26,7 @@ describe('HAL forms', () => {
     });
 
     const defaultAction:any = hal.action('default');
-    delete defaultAction.client;
+    delete defaultAction.clientSupplier;
     delete defaultAction.submit;
 
     const expectedDefaultAction: CompareAction = {
@@ -41,7 +41,7 @@ describe('HAL forms', () => {
     expect(defaultAction).to.eql(expectedDefaultAction);
 
     const deleteAction:any = hal.action('delete');
-    delete deleteAction.client;
+    delete deleteAction.clientSupplier;
     delete deleteAction.submit;
 
     const expectedDeleteAction: CompareAction = {
@@ -77,7 +77,7 @@ describe('HAL forms', () => {
     });
 
     const defaultAction:any = hal.getEmbedded()[0].action('default');
-    delete defaultAction.client;
+    delete defaultAction.clientSupplier;
 
     const expectedDefaultAction: CompareAction = {
       uri: 'http://example/foo/bar',
@@ -111,7 +111,7 @@ describe('HAL forms', () => {
     });
 
     const defaultAction:any = hal.getEmbedded()[0].action('default');
-    delete defaultAction.client;
+    delete defaultAction.clientSupplier;
 
     const expectedDefaultAction: CompareAction = {
       uri: 'http://example/foo/',
@@ -145,7 +145,7 @@ describe('HAL forms', () => {
     });
 
     const action:any = hal.action('default');
-    delete action.client;
+    delete action.clientSupplier;
     delete action.submit;
 
     const expected: CompareAction = {
@@ -217,7 +217,7 @@ describe('HAL forms', () => {
       }
     });
     const embeddedAction: any = hal.getEmbedded()[0].action('default');
-    delete embeddedAction.client;
+    delete embeddedAction.clientSupplier;
     delete embeddedAction.submit;
 
     const expected: CompareAction = {
@@ -278,7 +278,7 @@ describe('HAL forms', () => {
 
     const deleteAction:any = hal.findAction('delete');
     expect(typeof deleteAction).eq('object');
-    delete deleteAction.client;
+    delete deleteAction.clientSupplier;
     delete deleteAction.submit;
 
     const expectedDeleteAction: CompareAction = {

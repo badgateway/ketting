@@ -61,7 +61,7 @@ export class HalState<T = any> extends BaseState<T> {
       data: this.data,
       headers: new Headers(this.headers),
       links: new Links(this.links.defaultContext, this.links.getAll()),
-      actions: this.actionInfo,
+      actions: this._actions,
     });
 
   }
