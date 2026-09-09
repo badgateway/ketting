@@ -426,6 +426,14 @@ function parseHalField(halField: hal.HalFormsProperty): Field | undefined {
         label: halField.prompt,
         value: !!halField.value,
       };
+    case 'file' :
+      return {
+        name: halField.name,
+        type: 'file',
+        required: halField.required || false,
+        readOnly: halField.readOnly || false,
+        label: halField.prompt,
+      };
     default:
       return undefined;
   }

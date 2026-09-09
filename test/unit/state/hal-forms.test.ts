@@ -349,6 +349,21 @@ describe('HAL forms', () => {
       }
     );
     testField(
+      'file field',
+      {
+        type: 'file',
+        name: 'attachment',
+        prompt: 'Attachment',
+        required: true,
+      }, {
+        type: 'file',
+        name: 'attachment',
+        label: 'Attachment',
+        required: true,
+        readOnly: false,
+      }
+    );
+    testField(
       'textarea field',
       {
         type: 'textarea',

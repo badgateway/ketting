@@ -186,13 +186,22 @@ export class SimpleAction<TFormData extends Record<string, any>> implements Acti
   }
 
   private fetchOrThrowWithBody(uri: URL, formData: TFormData): Promise<Response> {
-    let body;
+    let body: BodyInit;
+    const headers: Record<string, string> = {};
     switch (this.contentType) {
       case 'application/x-www-form-urlencoded' :
         body = qs.stringify(formData);
+        headers['Content-Type'] = this.contentType;
         break;
       case 'application/json':
         body = JSON.stringify(formData);
+        headers['Content-Type'] = this.contentType;
+        break;
+      case 'multipart/form-data':
+        // The Content-Type header is intentionally not set here. fetch()
+        // generates it from the FormData body, including the boundary
+        // parameter that a multipart body requires.
+        body = toMultipartFormData(formData);
         break;
       default :
         throw new Error(`Serializing mimetype ${this.contentType} is not yet supported in actions`);
@@ -200,9 +209,7 @@ export class SimpleAction<TFormData extends Record<string, any>> implements Acti
     return this.client.fetcher.fetchOrThrow(uri.toString(), {
       method: this.method,
       body,
-      headers: {
-        'Content-Type': this.contentType
-      }
+      headers,
     });
   }
 
@@ -212,3 +219,41 @@ export class SimpleAction<TFormData extends Record<string, any>> implements Acti
 }
 
 export class ActionNotFound extends Error {}
+
+function toMultipartFormData(formData: Record<string, any>): FormData {
+  const result = new FormData();
+  for (const [name, value] of Object.entries(formData)) {
+    appendMultipartValue(result, name, value);
+  }
+  return result;
+}
+
+function appendMultipartValue(target: FormData, name: string, value: unknown): void {
+  if (value === undefined) {
+    return;
+  }
+  if (Array.isArray(value)) {
+    for (const item of value) {
+      appendMultipartValue(target, name, item);
+    }
+    return;
+  }
+  if (value instanceof Blob) {
+    target.append(name, value);
+    return;
+  }
+  if (value instanceof Uint8Array) {
+    // slice() copies the bytes into a plain ArrayBuffer, which Blob requires.
+    target.append(name, new Blob([value.slice()]));
+    return;
+  }
+  if (value === null) {
+    target.append(name, '');
+    return;
+  }
+  if (typeof value === 'object') {
+    target.append(name, JSON.stringify(value));
+    return;
+  }
+  target.append(name, String(value));
+}

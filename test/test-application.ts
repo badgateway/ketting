@@ -5,6 +5,7 @@ import logger from 'koa-logger';
 import Route from 'koa-path-match';
 import cors from '@koa/cors';
 import {Server} from 'node:http';
+import {Readable} from 'node:stream';
 import {dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import handlebars from 'handlebars';
@@ -131,9 +132,19 @@ export class TestApplication {
 
     // Return request body as we received it
     koa.use(
-      route('/echo', (ctx: Context) => {
+      route('/echo', async (ctx: Context) => {
         ctx.response.status = 200;
-        ctx.response.type = ctx.request.headers['content-type']!;
+        const contentType = ctx.request.headers['content-type'] ?? '';
+        if (contentType.startsWith('multipart/form-data')) {
+          ctx.response.type = 'application/json';
+          ctx.response.body = {
+            headers: ctx.request.headers,
+            body: await parseMultipartBody(ctx, contentType),
+            method: ctx.request.method,
+          };
+          return;
+        }
+        ctx.response.type = contentType;
         ctx.response.body = {
           headers: ctx.request.headers,
           body: ctx.request.body,
@@ -399,4 +410,47 @@ export class TestApplication {
 
 function createRandomString(): string {
   return (Math.random() + 1).toString(36).substring(7);
+}
+
+type MultipartFile = {
+  filename: string;
+  type: string;
+  size: number;
+  content: string;
+};
+type MultipartValue = string | MultipartFile;
+
+/**
+ * Parses a multipart/form-data request body using the web Response API,
+ * and describes each part in a JSON-friendly way.
+ *
+ * Fields that appear once are returned as a single value, fields that appear
+ * multiple times are returned as an array.
+ */
+async function parseMultipartBody(ctx: Context, contentType: string): Promise<Record<string, MultipartValue | MultipartValue[]>> {
+
+  const formData = await new Response(
+    Readable.toWeb(ctx.req) as ReadableStream,
+    {headers: {'content-type': contentType}}
+  ).formData();
+
+  const result: Record<string, MultipartValue | MultipartValue[]> = {};
+  for (const name of new Set(formData.keys())) {
+    const values = await Promise.all(formData.getAll(name).map(describeMultipartValue));
+    result[name] = values.length === 1 ? values[0] : values;
+  }
+  return result;
+
+}
+
+async function describeMultipartValue(value: FormDataEntryValue): Promise<MultipartValue> {
+  if (typeof value === 'string') {
+    return value;
+  }
+  return {
+    filename: value.name,
+    type: value.type,
+    size: value.size,
+    content: await value.text(),
+  };
 }

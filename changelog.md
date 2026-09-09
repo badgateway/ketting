@@ -14,6 +14,10 @@ ChangeLog
 * #478 Added `State.mayFollow()`. It works like `State.follow()` but returns
   `undefined` instead of throwing `LinkNotFound` when the link is absent, so
   optional links can be followed with `state.mayFollow('rel')?.get()`.
+* #443 Actions with a `multipart/form-data` content type can now be
+  submitted. `Blob` and `File` values are sent as binary parts, so HAL Forms
+  actions can be used to upload files. HAL Forms properties with
+  `type: "file"` are now exposed as fields instead of being ignored.
 
 
 9.1.0 (2026-04-21)
