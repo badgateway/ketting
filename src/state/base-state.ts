@@ -7,7 +7,7 @@ import { Resource } from '../resource.js';
 import { resolve } from '../util/uri.js';
 import { expand } from '../util/uri-template.js';
 import { entityHeaderNames } from '../http/util.js';
-import { StateSerializedBody, serializeBody } from '#state-serialized-body';
+import { StateSerializedBody, serializeBody } from './state-serialized-body.js';
 
 type HeadStateInit = {
 

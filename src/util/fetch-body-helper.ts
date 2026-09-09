@@ -1,8 +1,8 @@
 export function needsJsonStringify(input: any): boolean {
 
-  if (typeof input ==='string') {
+  if (typeof input === 'string') {
     return false;
   }
 
-  return !(input instanceof Buffer);
+  return !(input instanceof Uint8Array) && !(input instanceof Blob);
 }

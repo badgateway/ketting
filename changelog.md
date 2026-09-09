@@ -1,6 +1,18 @@
 ChangeLog
 =========
 
+9.2.0 (????-??-??)
+------------------
+
+* #506 The published typings are now usable with `skipLibCheck: false` in
+  projects that don't have `@types/node` installed. `Buffer` was replaced with
+  `Uint8Array` in public types (a `Buffer` is a `Uint8Array`, so Node users
+  are unaffected), and `@types/events` is now a regular dependency.
+* `serializeBody()` and `RequestOptions.serializeBody` may now return a
+  `Uint8Array` or `Blob` in Node as well; both are sent as-is instead of being
+  JSON-encoded.
+
+
 9.1.0 (2026-04-21)
 ------------------
 

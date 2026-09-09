@@ -9,17 +9,17 @@ export type HttpHeaders = Record<string, string>;
 export type RequestOptions<T = any> = {
 
   /**
-   * Should return a string or a Buffer.
+   * Should return a string, a Uint8Array (such as a Node Buffer) or a Blob.
    *
    * Will be used as the body in the HTTP request.
    * If not set, `body` will be used instead.
    */
-  serializeBody?: () => string | Buffer | Blob;
+  serializeBody?: () => string | Uint8Array | Blob;
 
   /**
    * If set, contains the body of the current state.
    *
-   * If body is not a `string` or a `Buffer`, the body will
+   * If body is not a `string`, a `Uint8Array` or a `Blob`, the body will
    * be json encoded.
    */
   data?: T;
