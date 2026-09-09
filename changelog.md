@@ -11,6 +11,9 @@ ChangeLog
 * `serializeBody()` and `RequestOptions.serializeBody` may now return a
   `Uint8Array` or `Blob` in Node as well; both are sent as-is instead of being
   JSON-encoded.
+* #478 Added `State.mayFollow()`. It works like `State.follow()` but returns
+  `undefined` instead of throwing `LinkNotFound` when the link is absent, so
+  optional links can be followed with `state.mayFollow('rel')?.get()`.
 
 
 9.1.0 (2026-04-21)
