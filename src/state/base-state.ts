@@ -75,8 +75,27 @@ export class BaseHeadState implements HeadState {
    */
   follow<TFollowedResource = any>(rel: string, variables?: LinkVariables): Resource<TFollowedResource> {
 
+    const resource = this.mayFollow<TFollowedResource>(rel, variables);
+    if (!resource) {
+      throw new LinkNotFound(`Link with rel ${rel} on ${this.uri} not found`);
+    }
+    return resource;
+
+  }
+
+  /**
+   * Follows a relationship, based on its reltype, if a link with that
+   * reltype exists.
+   *
+   * This behaves exactly like follow(), except that it returns undefined
+   * instead of throwing a LinkNotFound error when the link is absent.
+   */
+  mayFollow<TFollowedResource = any>(rel: string, variables?: LinkVariables): Resource<TFollowedResource> | undefined {
+
     const link = this.links.get(rel);
-    if (!link) throw new LinkNotFound(`Link with rel ${rel} on ${this.uri} not found`);
+    if (!link) {
+      return undefined;
+    }
 
     let href;
 

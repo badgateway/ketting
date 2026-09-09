@@ -44,6 +44,15 @@ export type State<T = any> = {
   follow<TFollowedResource = any>(rel: string, variables?: LinkVariables): Resource<TFollowedResource>;
 
   /**
+   * Follows a relationship, based on its reltype, if a link with that
+   * reltype exists.
+   *
+   * This behaves exactly like follow(), except that it returns undefined
+   * instead of throwing a LinkNotFound error when the link is absent.
+   */
+  mayFollow<TFollowedResource = any>(rel: string, variables?: LinkVariables): Resource<TFollowedResource> | undefined;
+
+  /**
    * Follows a relationship based on its reltype. This function returns a
    * Promise that resolves to an array of Resource objects.
    *
