@@ -2,7 +2,7 @@ import { Action } from '../action.js';
 import { Links, LinkVariables } from '../link.js';
 import Client from '../client.js';
 import { Resource } from '../resource.js';
-import { StateSerializedBody } from '#state-serialized-body';
+import { StateSerializedBody } from './state-serialized-body.js';
 import { Resources } from './resources.js';
 
 export type State<T = any> = {
