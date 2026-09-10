@@ -12,6 +12,15 @@
       },
       "update": {
         "method": "PUT"
+      },
+      "upload": {
+        "target": "/echo",
+        "method": "PUT",
+        "contentType": "multipart/form-data",
+        "properties": [
+          { "name": "title", "type": "text", "required": true },
+          { "name": "attachment", "type": "file", "required": true }
+        ]
       }
     },
     "foo" : "bar"
