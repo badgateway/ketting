@@ -4,3 +4,6 @@
 
 dist/
 browser/
+
+/.vitest-attachments
+/.idea
