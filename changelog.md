@@ -1,12 +1,12 @@
 ChangeLog
 =========
 
-9.3.0 (????-??-??)
+9.3.0 (2026-09-28)
 ------------------
 
-* #564 Added `Client.mayFollow()`. It works like `Client.follow()` but
-  resolves to `undefined` instead of rejecting with `LinkNotFound` when the
-  bookmark resource has no such link.
+* #564 Added `Client.mayFollow()`. It works like `Client.follow()` but resolves
+  to `undefined` instead of rejecting with `LinkNotFound` when the bookmark
+  resource has no such link.
 
 
 9.2.0 (2026-09-10)
