@@ -91,6 +91,20 @@ export default class Client {
   }
 
   /**
+   * Follows a relationship from the bookmark resource, based on its reltype,
+   * if a link with that reltype exists.
+   *
+   * This behaves like follow(), except that it resolves to undefined
+   * instead of rejecting with a LinkNotFound error when the link is absent.
+   */
+  async mayFollow<TFollowedResource = any>(rel: string, variables?: LinkVariables): Promise<Resource<TFollowedResource> | undefined> {
+
+    const state = await this.go().get();
+    return state.mayFollow<TFollowedResource>(rel, variables);
+
+  }
+
+  /**
    * Returns a resource by its uri.
    *
    * This function doesn't do any HTTP requests. The uri is optional. If it's
