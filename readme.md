@@ -1,7 +1,7 @@
 ![Logo][4] Ketting - The HATEOAS client for javascript
 =======================================================
 
-Check out the [Wiki][9] for full documentation.
+Check out the [documentation](docs/README.md).
 
 Introduction
 ------------
@@ -47,9 +47,10 @@ await author.put(authorState);
 Docs
 ----
 
-* [Installation][7]
-* [Full documentation][9]
-* [Authentication][2]
+* [Installation](docs/installation.md)
+* [Getting started](docs/getting-started.md)
+* [Authentication](docs/authentication.md)
+* [Full documentation](docs/README.md)
 
 
 Notable Features
@@ -70,18 +71,14 @@ OAuth2 support, but also opens the door to development of other plugins.
 Using this library it becomes very easy to follow links from a single bookmark,
 and discover resources and features on the server.
 
-Read further on the [Wiki][9]
+Read further in the [documentation](docs/README.md).
 
 
 [1]: https://tools.ietf.org/html/rfc8288 "Web Linking"
-[2]: https://github.com/evert/ketting/wiki/Authentication
 [3]: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API
 
-[4]: https://raw.githubusercontent.com/badgateway/ketting/master/logo.png
+[4]: logo.png
 
-[7]: https://github.com/evert/ketting/wiki/Installation
-[8]: https://github.com/evert/ketting/wiki/Getting-Started
-[9]: https://github.com/evert/ketting/wiki/
 
 [hal]: http://stateless.co/hal_specification.html "HAL - Hypertext Application Language"
 [hal-forms]: https://rwcbook.github.io/hal-forms/ "The HAL-FORMS Media Type"

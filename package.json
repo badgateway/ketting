@@ -21,8 +21,11 @@
   },
   "files": [
     "src/",
+    "docs/",
     "dist/",
-    "LICENSE"
+    "LICENSE",
+    "changelog.md",
+    "logo.png"
   ],
   "scripts": {
     "test": "make test",
