@@ -17,8 +17,8 @@ export.
 | `go(uri?)` | Returns the `Resource` for a URI or a `Link`, or the bookmark resource. No request. |
 | `follow(rel, variables?)` | Same as `go().follow(rel, variables)`. |
 | `mayFollow(rel, variables?)` | Resolves to the resource linked from the bookmark, or `undefined` if there is no such link. |
-| `use(middleware, origin?)` | Adds a [fetch middleware](middlewares.md), optionally for an origin pattern. |
-| `cache` | The `StateCache`. See [Caching and events](caching.md#cache-strategies). |
+| `use(middleware, origin?)` | Adds a [fetch middleware](../readme.md#fetch-middlewares), optionally for an origin pattern. |
+| `cache` | The `StateCache`. See [Caching and events](../readme.md#cache-strategies). |
 | `clearCache()` | Empties the state cache. |
 | `contentTypeMap` | Supported content types. See [below](#content-types). |
 | `fetcher` | The `Fetcher` running the middlewares. `fetcher.advertiseKetting` toggles the `User-Agent` header. |
@@ -49,7 +49,7 @@ per URI.
 | `getCache()` | The cached `State`, or `null`. |
 | `updateCache(state)` | Stores a state in the cache and emits `update`. |
 | `clearCache()` | Expires the cached state and emits `stale`. |
-| `on()`, `once()`, `off()` | Subscribe to `update`, `stale` and `delete`. See [events](caching.md#events). |
+| `on()`, `once()`, `off()` | Subscribe to `update`, `stale` and `delete`. See [events](../readme.md#events). |
 | `link(rel)`, `links(rel?)`, `hasLink(rel)` | Deprecated. Use `(await resource.get()).links` instead. |
 
 Request options passed to `put()`, `post()`, `postFollow()` and `patch()`:
@@ -147,17 +147,17 @@ and:
 | `submitFollow(formData)` | Submits the form, resolves to the created `Resource`. |
 | `field(name)` | A field, or `undefined`. |
 
-See [Actions and forms](actions.md) for the `Field` types.
+See [Actions and forms](../readme.md#fields) for the `Field` types.
 
 Middlewares and authentication
 ------------------------------
 
 | Export | Description |
 | --- | --- |
-| `FetchMiddleware` | `(request, next) => Promise<Response>`. See [Fetch middlewares](middlewares.md). |
+| `FetchMiddleware` | `(request, next) => Promise<Response>`. See [Fetch middlewares](../readme.md#fetch-middlewares). |
 | `basicAuth(userName, password)` | HTTP Basic middleware. |
 | `bearerAuth(token)` | Bearer token middleware. |
-| `oauth2(options, token?)` | Deprecated OAuth2 middleware. See [Authentication](authentication.md#oauth2). |
+| `oauth2(options, token?)` | Deprecated OAuth2 middleware. See [Authentication](../readme.md#oauth2). |
 
 Errors
 ------
@@ -168,14 +168,14 @@ Errors
 | `Problem` | An `HttpError` for `application/problem+json` responses. Has `body`. |
 | `LinkNotFound` | Thrown by `follow()` when a link is missing. |
 
-See [Error handling](errors.md).
+See [Error handling](../readme.md#error-handling).
 
 Caches
 ------
 
 `StateCache` is the cache interface, implemented by `ForeverCache`,
 `ShortCache` and `NeverCache`. See
-[Caching and events](caching.md#cache-strategies).
+[Caching and events](../readme.md#cache-strategies).
 
 Utilities
 ---------

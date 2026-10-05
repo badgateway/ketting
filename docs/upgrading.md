@@ -20,11 +20,11 @@ Ketting 7 to 8
 * Node.js 18 or later is required. Ketting uses the native `fetch()` and no
   longer depends on `node-fetch`.
 * The minified browser build (`browser/ketting.min.js`) is no longer
-  published. Use a bundler. See [Installation](installation.md#browsers).
+  published. Use a bundler. See [Installation](../readme.md#browsers).
 * The `oauth2()` middleware now uses
   [@badgateway/oauth2-client][oauth2-client] and is deprecated. Its OAuth2
   scopes option is named `scope`. Prefer `OAuth2Fetch` from that library; see
-  [Authentication](authentication.md#oauth2).
+  [Authentication](../readme.md#oauth2).
 * Submitting an action without one of its required fields now throws.
 * Actions now submit the pre-filled values of fields you do not provide.
 
@@ -109,6 +109,6 @@ const client = new Client('https://api.example/');
 client.use(basicAuth('foo', 'bar'));
 ```
 
-See [Authentication](authentication.md).
+See [Authentication](../readme.md#authentication).
 
 [oauth2-client]: https://www.npmjs.com/package/@badgateway/oauth2-client
