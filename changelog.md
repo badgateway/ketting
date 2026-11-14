@@ -1,6 +1,13 @@
 ChangeLog
 =========
 
+9.3.1 (????-??-??)
+------------------
+
+* #569 `Link` header entries without a `rel` parameter are now ignored
+  instead of throwing a `TypeError` (RFC 8288 Appendix B.2).
+
+
 9.3.0 (2026-09-28)
 ------------------
 
