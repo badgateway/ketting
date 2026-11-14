@@ -25,6 +25,11 @@ export function parseLink(context: string, header: string|null): Links {
   }
 
   for (const httpLink of LinkHeader.parse(header).refs) {
+    if (!httpLink.rel) {
+      // A link without a relation type can't be used, so it's ignored.
+      // See RFC 8288 Appendix B.2.
+      continue;
+    }
     // Looping through individual links
     for (const rel of httpLink.rel.split(' ')) {
       // Looping through space separated rel values.
